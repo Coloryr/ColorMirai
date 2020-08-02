@@ -2,32 +2,39 @@ package Color_yr.ColorMirai;
 
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
-import Color_yr.ColorMirai.Config.Logs;
+import Color_yr.ColorMirai.Socket.SocketServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.File;
+import java.util.Date;
+import java.util.Scanner;
 
 public class Start {
+    public static final Logger logger = LogManager.getLogger("ColorMirai");
+    private static final Date date = new Date();
     public static String RunDir;
-    public static Logs log;
     public static ConfigObj Config;
 
-    private static final String[] Libs = new String[]
-            {
-                    "gson-2.8.6.jar",
-                    "mirai-core-1.1.3.jar",
-                    "mirai-core-qqandroid-1.1.3.jar"
-            };
-
     public static void main(String[] args) {
-        System.out.println("正在检查库文件");
         RunDir = System.getProperty("user.dir") + "\\";
-        for (String item : Libs) {
-            if (!new File(RunDir + item).exists()) {
-                System.out.println("库文件不齐");
-                return;
-            }
+        logger.info("正在启动");
+        if (ConfigRead.ReadStart(RunDir)) {
+            return;
         }
-        log = new Logs(RunDir);
-        ConfigRead.ReadStart(RunDir);
+        logger.info("初始化完成");
+        BotStart.Start();
+        SocketServer.start();
+
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String data = scanner.nextLine();
+            switch (data) {
+                case "stop":
+                    logger.info("正在停止");
+                    SocketServer.stop();
+                    break;
+            }
+
+        }
     }
 }
