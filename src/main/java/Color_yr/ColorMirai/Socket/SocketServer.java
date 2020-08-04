@@ -15,7 +15,7 @@ public class SocketServer {
     private static Thread ServerThread;
     private static boolean isStart;
 
-    public static void start() {
+    public static boolean start() {
         try {
             ServerSocket = new ServerSocket(Start.Config.getPort());
             Start.logger.info("Socket已启动");
@@ -33,9 +33,10 @@ public class SocketServer {
             isStart = true;
             ServerThread = new Thread(accept);
             ServerThread.start();
+            return true;
         } catch (Exception e) {
-            Start.logger.info("Socket启动失败");
-            e.printStackTrace();
+            Start.logger.error("Socket启动失败", e);
+            return false;
         }
     }
 

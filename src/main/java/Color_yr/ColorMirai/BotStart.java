@@ -22,13 +22,11 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.DeviceInfo;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
-
 public class BotStart {
     private static Bot bot;
 
-    public static void Start() {
-        bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration(){
+    public static boolean Start() {
+        bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
                 setProtocol(MiraiProtocol.ANDROID_WATCH);
@@ -38,7 +36,7 @@ public class BotStart {
             bot.login();
         } catch (Exception e) {
             Start.logger.error("机器人错误", e);
-            return;
+            return false;
         }
 
         Events.registerEvents(bot, new SimpleListenerHost() {
@@ -70,9 +68,10 @@ public class BotStart {
         });
 
         Start.logger.info("机器人已启动");
+        return true;
     }
 
-    public static void eventCalltoPlugin(byte index, byte[] data) {
+    public static void eventCallToPlugin(byte index, byte[] data) {
         byte[] temp = new byte[data.length + 1];
         temp[data.length] = index;
         for (Plugins item : SocketServer.PluginList.values()) {
@@ -80,7 +79,7 @@ public class BotStart {
         }
     }
 
-    public static boolean SendGroupMessage(long group, String message) {
+    public static boolean sendGroupMessage(long group, String message) {
         try {
             bot.getGroup(group).sendMessage(message);
             return true;
@@ -88,9 +87,5 @@ public class BotStart {
             Start.logger.error("发送群消息失败", e);
             return false;
         }
-    }
-
-    private static String toString_(MessageChain chain) {
-        return chain.contentToString();
     }
 }
