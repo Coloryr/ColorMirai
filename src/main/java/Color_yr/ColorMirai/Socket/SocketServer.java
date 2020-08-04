@@ -1,18 +1,15 @@
 package Color_yr.ColorMirai.Socket;
 
-import Color_yr.ColorMirai.Pack.PackBase;
 import Color_yr.ColorMirai.Start;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketServer {
-    private static final Map<String, Plugins> PluginList = new HashMap<>();
+    public static final Map<String, Plugins> PluginList = new ConcurrentHashMap<>();
     private static final Object Lock = new Object();
     private static ServerSocket ServerSocket;
     private static Thread ServerThread;
@@ -65,14 +62,9 @@ public class SocketServer {
         }
     }
 
-    public static void sendPack(PackBase pack, Socket socket) {
-        String data = new Gson().toJson(pack);
-        byte[] temp = data.getBytes(StandardCharsets.UTF_8);
-        byte[] temp1 = new byte[temp.length + 1];
-        temp1[0] = pack.getState();
-        System.arraycopy(temp, 0, temp1, 1, temp.length);
+    public static void sendPack(byte[] data, Socket socket) {
         try {
-            socket.getOutputStream().write(temp1);
+            socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
         } catch (IOException e) {
             Start.logger.error("插件通信出现问题", e);

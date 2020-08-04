@@ -23,7 +23,7 @@ public class ConfigRead {
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
                 Start.Config = new Gson().fromJson(bf, ConfigObj.class);
-                if (Start.Config.getQQ() == null) {
+                if (Start.Config.getQQ() == 0) {
                     Start.Config = new ConfigObj();
                     Save();
                 }
