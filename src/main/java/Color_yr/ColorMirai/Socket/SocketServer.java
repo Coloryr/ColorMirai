@@ -40,6 +40,10 @@ public class SocketServer {
         }
     }
 
+    public static boolean havePlugin() {
+        return !PluginList.isEmpty();
+    }
+
     public static void addPlugin(String name, Plugins plugin) {
         synchronized (Lock) {
             if (PluginList.containsKey(name)) {

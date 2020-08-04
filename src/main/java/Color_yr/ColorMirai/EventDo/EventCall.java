@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.EventDo;
 
-import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
+import net.mamoe.mirai.event.events.*;
 
 import java.util.Map;
 import java.util.Random;

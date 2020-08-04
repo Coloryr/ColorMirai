@@ -5,7 +5,6 @@ import Color_yr.ColorMirai.Start;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -13,13 +12,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Plugins {
     private final Socket Socket;
+    private final List<byte[]> Tasks = new CopyOnWriteArrayList<>();
+    private final Gson Gson;
     private String name;
     private Thread read;
     private Thread doRead;
-    private final List<byte[]> Tasks = new CopyOnWriteArrayList<>();
     private List<Byte> Events = null;
     private boolean isRun;
-    private final Gson Gson;
 
     public Plugins(Socket Socket) {
         this.Socket = Socket;

@@ -2,10 +2,7 @@ package Color_yr.ColorMirai;
 
 import Color_yr.ColorMirai.EventDo.EventBase;
 import Color_yr.ColorMirai.EventDo.EventCall;
-import Color_yr.ColorMirai.Pack.BotAvatarChangedPack;
-import Color_yr.ColorMirai.Pack.BotGroupPermissionChangePack;
-import Color_yr.ColorMirai.Pack.BeforeImageUploadPack;
-import Color_yr.ColorMirai.Pack.BotInvitedJoinGroupRequestEventPack;
+import Color_yr.ColorMirai.Pack.*;
 import Color_yr.ColorMirai.Socket.Plugins;
 import Color_yr.ColorMirai.Socket.SocketServer;
 import com.google.gson.Gson;
@@ -16,10 +13,7 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
-import net.mamoe.mirai.event.events.BeforeImageUploadEvent;
-import net.mamoe.mirai.event.events.BotAvatarChangedEvent;
-import net.mamoe.mirai.event.events.BotGroupPermissionChangeEvent;
-import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
+import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,8 +22,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BotStart {
-    private static Bot bot;
     private static final List<Task> Tasks = new CopyOnWriteArrayList<>();
+    private static Bot bot;
     private static Thread EventDo;
     private static boolean isRun;
     private static Gson Gson;
@@ -49,40 +43,52 @@ public class BotStart {
         }
 
         Events.registerEvents(bot, new SimpleListenerHost() {
+            //1 [机器人]图片上传前. 可以阻止上传（事件）
             @EventHandler
             public ListeningStatus BeforeImageUploadEvent(BeforeImageUploadEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
                 String name = event.getSource().toString();
                 long id = event.getTarget().getId();
                 BeforeImageUploadPack pack = new BeforeImageUploadPack(name, id);
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new Task((byte) 1, data));
+                Tasks.add(new Task(1, data));
                 return ListeningStatus.LISTENING;
             }
 
+            //2 [机器人]头像被修改（通过其他客户端修改了头像）（事件）
             @EventHandler
             public ListeningStatus BotAvatarChangedEvent(BotAvatarChangedEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
                 String name = event.getBot().getNick();
                 BotAvatarChangedPack pack = new BotAvatarChangedPack(name);
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new Task((byte) 2, data));
+                Tasks.add(new Task(2, data));
                 return ListeningStatus.LISTENING;
             }
 
+            //3 [机器人]在群里的权限被改变. 操作人一定是群主（事件）
             @EventHandler
             public ListeningStatus BotGroupPermissionChangeEvent(BotGroupPermissionChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 String name = event.getNew().name();
                 BotGroupPermissionChangePack pack = new BotGroupPermissionChangePack(name, id);
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new Task((byte) 3, data));
+                Tasks.add(new Task(3, data));
                 return ListeningStatus.LISTENING;
             }
 
-            public ListeningStatus BotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event)
-            {
+            //4 [机器人]被邀请加入一个群（事件）
+            @EventHandler
+            public ListeningStatus BotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
                 long id = event.getGroupId();
                 String name = event.getInvitor().getNick();
                 long fid = event.getInvitorId();
@@ -90,8 +96,201 @@ public class BotStart {
                         new BotInvitedJoinGroupRequestEventPack(name, id, fid, event.getEventId());
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new Task((byte) 3, data));
+                Tasks.add(new Task(4, data));
                 EventCall.AddEvent(new EventBase(event.getEventId(), (byte) 4, event));
+                return ListeningStatus.LISTENING;
+            }
+
+            //5 [机器人]成功加入了一个新群（不确定. 可能是主动加入）（事件）
+            @EventHandler
+            public ListeningStatus BotJoinGroupEventA(BotJoinGroupEvent.Active event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                BotJoinGroupEventAPack pack = new BotJoinGroupEventAPack(id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(5, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //6 [机器人]成功加入了一个新群（机器人被一个群内的成员直接邀请加入了群）（事件）
+            @EventHandler
+            public ListeningStatus BotJoinGroupEventB(BotJoinGroupEvent.Invite event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getInvitor().getId();
+                String name = event.getInvitor().getNick();
+                BotJoinGroupEventBPack pack = new BotJoinGroupEventBPack(name, id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(6, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //7 [机器人]主动退出一个群（事件）
+            @EventHandler
+            public ListeningStatus BotLeaveEventA(BotLeaveEvent.Active event)
+            {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                BotLeaveEventAPack pack = new BotLeaveEventAPack(id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(7, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //8 [机器人]被管理员或群主踢出群（事件）
+            @EventHandler
+            public ListeningStatus BotLeaveEventB(BotLeaveEvent.Kick event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                String name = event.getOperator().getNick();
+                long fid = event.getOperator().getId();
+                BotLeaveEventBPack pack = new BotLeaveEventBPack(name, id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(7, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //9 [机器人]被禁言（事件）
+            @EventHandler
+            public ListeningStatus BotMuteEvent(BotMuteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                int time = event.getDurationSeconds();
+                String name = event.getOperator().getNick();
+                long fid = event.getOperator().getId();
+                BotMuteEventPack pack = new BotMuteEventPack(name, id, fid, time);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(9, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //10 [机器人]主动离线（事件）
+            @EventHandler
+            public ListeningStatus BotOfflineEventA(BotOfflineEvent.Active event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                String message = event.getCause().getMessage();
+                BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(10, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //11 [机器人]被挤下线（事件）
+            @EventHandler
+            public ListeningStatus BotOfflineEventB(BotOfflineEvent.Force event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                String title = event.getTitle();
+                String message = event.getMessage();
+                BotOfflineEventBPack pack = new BotOfflineEventBPack(message, title);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(11, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //12 [机器人]被服务器断开（事件）
+            @EventHandler
+            public ListeningStatus BotOfflineEventC(BotOfflineEvent.MsfOffline event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                String message = event.getCause().getMessage();
+                BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(12, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //13 [机器人]因网络问题而掉线（事件）
+            @EventHandler
+            public ListeningStatus BotOfflineEventD(BotOfflineEvent.Dropped event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                String message = event.getCause().getMessage();
+                BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(13, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //14 [机器人]服务器主动要求更换另一个服务器（事件）
+            @EventHandler
+            public ListeningStatus BotOfflineEventE(BotOfflineEvent.RequireReconnect event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getBot().getId();
+                BotOfflineEventCPack pack = new BotOfflineEventCPack(id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(14, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //15 [机器人]登录完成, 好友列表, 群组列表初始化完成（事件）
+            @EventHandler
+            public ListeningStatus BotOnlineEvent(BotOnlineEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getBot().getId();
+                BotOnlineEventPack pack = new BotOnlineEventPack(id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(15, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //16 [机器人]主动或被动重新登录（事件）
+            @EventHandler
+            public ListeningStatus BotReloginEvent(BotReloginEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                String message = event.getCause().getMessage();
+                BotReloginEventPack pack = new BotReloginEventPack(message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(16, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //17 [机器人]被取消禁言（事件）
+            @EventHandler
+            public ListeningStatus BotUnmuteEvent(BotUnmuteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getOperator().getId();
+                BotUnmuteEventPack pack = new BotUnmuteEventPack(id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(17, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //18 [机器人]成功添加了一个新好友（事件）
+            @EventHandler
+            public ListeningStatus FriendAddEvent(FriendAddEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String name = event.getFriend().getNick();
+                FriendAddEventPack pack = new FriendAddEventPack(name, id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(18, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -109,7 +308,7 @@ public class BotStart {
                 try {
                     if (!Tasks.isEmpty()) {
                         Task Task = Tasks.remove(0);
-                        eventCallToPlugin(Task.index, Task.data);
+                        eventCallToPlugin((byte) Task.index, Task.data);
                     }
                     Thread.sleep(50);
                 } catch (Exception e) {
@@ -141,10 +340,10 @@ public class BotStart {
     }
 
     static class Task {
-        public byte index;
+        public int index;
         public byte[] data;
 
-        public Task(byte index, byte[] data) {
+        public Task(int index, byte[] data) {
             this.index = index;
             this.data = data;
         }

@@ -13,27 +13,27 @@ public class EventBase {
         this.event = event;
     }
 
-    public void setEvent(BotEvent event) {
-        this.event = event;
-    }
-
     public BotEvent getEvent() {
         return event;
     }
 
-    public void setType(byte type) {
-        this.type = type;
+    public void setEvent(BotEvent event) {
+        this.event = event;
     }
 
     public byte getType() {
         return type;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void setType(byte type) {
+        this.type = type;
     }
 
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

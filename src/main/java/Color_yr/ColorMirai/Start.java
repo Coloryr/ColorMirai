@@ -22,9 +22,9 @@ public class Start {
             return;
         }
         logger.info("初始化完成");
-        if(!BotStart.Start())
+        if (!BotStart.Start())
             return;
-        if(!SocketServer.start())
+        if (!SocketServer.start())
             return;
 
         Scanner scanner = new Scanner(System.in);
