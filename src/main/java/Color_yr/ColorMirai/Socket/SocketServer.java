@@ -41,7 +41,7 @@ public class SocketServer {
     }
 
     public static boolean havePlugin() {
-        return !PluginList.isEmpty();
+        return PluginList.isEmpty();
     }
 
     public static void addPlugin(String name, Plugins plugin) {
