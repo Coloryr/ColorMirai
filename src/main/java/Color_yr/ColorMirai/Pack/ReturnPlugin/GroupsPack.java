@@ -20,12 +20,12 @@ public class GroupsPack {
         return oid;
     }
 
-    public String getOname() {
-        return oname;
-    }
-
     public void setOid(long oid) {
         this.oid = oid;
+    }
+
+    public String getOname() {
+        return oname;
     }
 
     public void setOname(String oname) {
@@ -40,19 +40,19 @@ public class GroupsPack {
         this.img = img;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public long getId() {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

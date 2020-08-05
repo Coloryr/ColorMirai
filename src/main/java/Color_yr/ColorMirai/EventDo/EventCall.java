@@ -1,7 +1,9 @@
 package Color_yr.ColorMirai.EventDo;
 
 import Color_yr.ColorMirai.Start;
-import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
+import net.mamoe.mirai.event.events.MemberJoinRequestEvent;
+import net.mamoe.mirai.event.events.NewFriendRequestEvent;
 
 import java.util.List;
 import java.util.Map;

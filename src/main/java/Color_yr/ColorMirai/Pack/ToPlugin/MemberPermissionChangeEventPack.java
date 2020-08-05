@@ -6,16 +6,15 @@ public class MemberPermissionChangeEventPack {
     private String old;
     private String new_;
 
-    public MemberPermissionChangeEventPack(long id, long fid, String old, String new_)
-    {
+    public MemberPermissionChangeEventPack(long id, long fid, String old, String new_) {
         this.fid = fid;
         this.id = id;
         this.old = old;
         this.new_ = new_;
     }
 
-    public MemberPermissionChangeEventPack()
-    {}
+    public MemberPermissionChangeEventPack() {
+    }
 
     public long getFid() {
         return fid;

@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
-public class MessageRecallEventBPack  extends MessageRecallEventAPack {
+public class MessageRecallEventBPack extends MessageRecallEventAPack {
     private long fid;
 
     public MessageRecallEventBPack(long id, long fid, int mid, int time) {

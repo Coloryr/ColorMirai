@@ -11,8 +11,8 @@
                                  filePattern="logs/logs-%d{yyyy-MM-dd HH-mm}-%i.log">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1" />
-                <SizeBasedTriggeringPolicy size="10 MB" />
+                <TimeBasedTriggeringPolicy interval="1"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
             </Policies>
         </RollingRandomAccessFile>
     </appenders>

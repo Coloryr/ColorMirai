@@ -6,16 +6,15 @@ public class MemberSpecialTitleChangeEventPack {
     private String old;
     private String new_;
 
-    public MemberSpecialTitleChangeEventPack(long id, long fid, String old, String new_)
-    {
+    public MemberSpecialTitleChangeEventPack(long id, long fid, String old, String new_) {
         this.fid = fid;
         this.id = id;
         this.old = old;
         this.new_ = new_;
     }
 
-    public MemberSpecialTitleChangeEventPack()
-    {}
+    public MemberSpecialTitleChangeEventPack() {
+    }
 
     public long getFid() {
         return fid;
