@@ -16,11 +16,13 @@ import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -97,12 +99,13 @@ public class BotStart {
                 long id = event.getGroupId();
                 String name = event.getInvitor().getNick();
                 long fid = event.getInvitorId();
+                long eventid = EventCall.AddEvent(new EventBase(event.getEventId(), (byte) 4, event));
                 BotInvitedJoinGroupRequestEventPack pack =
-                        new BotInvitedJoinGroupRequestEventPack(name, id, fid, event.getEventId());
+                        new BotInvitedJoinGroupRequestEventPack(name, id, fid, eventid);
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
                 Tasks.add(new Task(4, data));
-                EventCall.AddEvent(new EventBase(event.getEventId(), (byte) 4, event));
+
                 return ListeningStatus.LISTENING;
             }
 
@@ -466,6 +469,244 @@ public class BotStart {
                 String temp = Gson.toJson(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
                 Tasks.add(new Task(28, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //29 [机器人]在发送群消息前广播（事件）
+            @EventHandler
+            public ListeningStatus GroupMessagePreSendEvent(GroupMessagePreSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getTarget().getId();
+                Message message = event.getMessage();
+                GroupMessagePreSendEventPack pack = new GroupMessagePreSendEventPack(id, message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(29, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //30 [机器人]群 "全员禁言" 功能状态改变（事件）
+            @EventHandler
+            public ListeningStatus GroupMuteAllEvent(GroupMuteAllEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = 0;
+                if (event.getOperator() != null) {
+                    fid = event.getOperator().getId();
+                }
+                boolean old = event.getOrigin();
+                boolean new_ = event.getNew();
+                GroupMuteAllEventPack pack = new GroupMuteAllEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(30, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //31 [机器人]群名改变（事件）
+            @EventHandler
+            public ListeningStatus GroupNameChangeEvent(GroupNameChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = 0;
+                if (event.getOperator() != null) {
+                    fid = event.getOperator().getId();
+                }
+                String old = event.getOrigin();
+                String new_ = event.getNew();
+                GroupNameChangeEventPack pack = new GroupNameChangeEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(31, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //32 [机器人]图片上传成功（事件）
+            @EventHandler
+            public ListeningStatus ImageUploadEventA(ImageUploadEvent.Succeed event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getTarget().getId();
+                String name = event.getImage().getImageId();
+                ImageUploadEventAPack pack = new ImageUploadEventAPack(id, name);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(32, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //33 [机器人]图片上传失败（事件）
+            @EventHandler
+            public ListeningStatus ImageUploadEventB(ImageUploadEvent.Failed event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getTarget().getId();
+                String name = event.getSource().toString();
+                String error = event.getMessage();
+                int index = event.getErrno();
+                ImageUploadEventBPack pack = new ImageUploadEventBPack(id, name, error, index);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(33, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //34 [机器人]成员群名片改动（事件）
+            @EventHandler
+            public ListeningStatus MemberCardChangeEvent(MemberCardChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                String old = event.getOrigin();
+                String new_ = event.getNew();
+                MemberCardChangeEventPack pack = new MemberCardChangeEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(34, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //35 [机器人]成成员被邀请加入群（事件）
+            @EventHandler
+            public ListeningStatus MemberJoinEventA(MemberJoinEvent.Invite event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                MemberJoinEventAPack pack = new MemberJoinEventAPack(id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(35, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //36 [机器人]成员主动加入群（事件）
+            @EventHandler
+            public ListeningStatus MemberJoinEventB(MemberJoinEvent.Active event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                MemberJoinEventAPack pack = new MemberJoinEventAPack(id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(36, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）
+            @EventHandler
+            public ListeningStatus MemberJoinRequestEvent(MemberJoinRequestEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getFromId();
+                String message = event.getMessage();
+                long eventid = EventCall.AddEvent(new EventBase(event.getEventId(), 37, event));
+                MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(id, fid, message, eventid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(37, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //38 [机器人]成员被踢出群（事件）
+            @EventHandler
+            public ListeningStatus MemberLeaveEventA(MemberLeaveEvent.Kick event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                long eid = 0;
+                if (event.getOperator() != null) {
+                    eid = event.getOperator().getId();
+                }
+                MemberLeaveEventAPack pack = new MemberLeaveEventAPack(id, fid, eid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(38, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //39 [机器人]成员主动离开（事件）
+            @EventHandler
+            public ListeningStatus MemberLeaveEventB(MemberLeaveEvent.Quit event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                MemberLeaveEventBPack pack = new MemberLeaveEventBPack(id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(39, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //40 [机器人]群成员被禁言（事件）
+            @EventHandler
+            public ListeningStatus MemberMuteEvent(MemberMuteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                long eid = 0;
+                if (event.getOperator() != null) {
+                    eid = event.getOperator().getId();
+                }
+                MemberMuteEventPack pack = new MemberMuteEventPack(id, fid, eid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(40, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //41 [机器人]成员权限改变（事件）
+            @EventHandler
+            public ListeningStatus MemberPermissionChangeEvent(MemberPermissionChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                String old = event.getOrigin().name();
+                String new_ = event.getNew().name();
+                MemberPermissionChangeEventPack pack = new MemberPermissionChangeEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(41, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //42 [机器人]成员群头衔改动（事件）
+            @EventHandler
+            public ListeningStatus MemberSpecialTitleChangeEvent(MemberSpecialTitleChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                String old = event.getOrigin();
+                String new_ = event.getNew();
+                MemberSpecialTitleChangeEventPack pack = new MemberSpecialTitleChangeEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(42, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //43 [机器人]群成员被取消禁言（事件）
+            @EventHandler
+            public ListeningStatus MemberUnmuteEvent(MemberUnmuteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                MemberUnmuteEventPack pack = new MemberUnmuteEventPack(id, fid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(43, data));
                 return ListeningStatus.LISTENING;
             }
 

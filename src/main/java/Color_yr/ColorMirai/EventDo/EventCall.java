@@ -7,19 +7,19 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventCall {
-    private static final Map<Integer, EventBase> EventsDo = new ConcurrentHashMap<>();
+    private static final Map<Long, EventBase> EventsDo = new ConcurrentHashMap<>();
     private static final Random Random = new Random();
 
-    public static void AddEvent(EventBase event) {
-        int a;
-        do {
-            a = Random.nextInt();
+    public static long AddEvent(EventBase event) {
+        long a = event.getId();
+        while (EventsDo.containsKey(a)) {
+            a = Random.nextLong();
         }
-        while (EventsDo.containsKey(a));
         EventsDo.put(a, event);
+        return a;
     }
 
-    public static void DoEvent(int id, int dofun) {
+    public static void DoEvent(long id, int dofun, Object... arg) {
         if (EventsDo.containsKey(id)) {
             EventBase event = EventsDo.remove(id);
             switch (event.getType()) {
@@ -29,6 +29,16 @@ public class EventCall {
                         data.accept();
                     } else if (dofun == 1) {
                         data.ignore();
+                    }
+                    break;
+                case 37:
+                    MemberJoinRequestEvent data1 = (MemberJoinRequestEvent) event.getEvent();
+                    if (dofun == 0) {
+                        data1.accept();
+                    } else if (dofun == 1) {
+                        data1.reject((Boolean) arg[0], (String) arg[1]);
+                    } else if (dofun == 2) {
+                        data1.ignore((Boolean) arg[0]);
                     }
                     break;
             }

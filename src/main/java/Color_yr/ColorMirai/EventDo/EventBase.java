@@ -4,10 +4,10 @@ import net.mamoe.mirai.event.events.BotEvent;
 
 public class EventBase {
     private long id;
-    private byte type;
+    private int type;
     private BotEvent event;
 
-    public EventBase(long id, byte type, BotEvent event) {
+    public EventBase(long id, int type, BotEvent event) {
         this.type = type;
         this.id = id;
         this.event = event;
@@ -21,7 +21,7 @@ public class EventBase {
         this.event = event;
     }
 
-    public byte getType() {
+    public int getType() {
         return type;
     }
 
