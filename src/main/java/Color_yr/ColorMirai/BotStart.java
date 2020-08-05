@@ -22,6 +22,9 @@ import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.message.FriendMessageEvent;
+import net.mamoe.mirai.message.GroupMessageEvent;
+import net.mamoe.mirai.message.TempMessageEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.utils.BotConfiguration;
@@ -783,7 +786,7 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
-            //48 [机器人在发送群临时会话消息前广播（事件）
+            //48 [机器人]在发送群临时会话消息前广播（事件）
             @EventHandler
             public ListeningStatus TempMessagePreSendEvent(TempMessagePreSendEvent event) {
                 if (SocketServer.havePlugin())
@@ -798,14 +801,61 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
+            //49 [机器人]收到群消息（事件）
+            @EventHandler
+            public ListeningStatus GroupMessageEvent(GroupMessageEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getSubject().getId();
+                long fid = event.getSender().getId();
+                String name = event.getSenderName();
+                MessageChain message = event.getMessage();
+                GroupMessageEventPack pack = new GroupMessageEventPack(id, fid, name, message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new PackTask(49, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //50 [机器人]收到群临时会话消息（事件）
+            @EventHandler
+            public ListeningStatus TempMessageEvent(TempMessageEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getSubject().getId();
+                long fid = event.getSender().getId();
+                String name = event.getSenderName();
+                MessageChain message = event.getMessage();
+                int time = event.getTime();
+                TempMessageEventPack pack = new TempMessageEventPack(id, fid, name, message, time);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new PackTask(50, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //51 [机器人]收到朋友消息（事件）
+            @EventHandler
+            public ListeningStatus FriendMessageEvent(FriendMessageEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getSender().getId();
+                String name = event.getSenderName();
+                MessageChain message = event.getMessage();
+                int time = event.getTime();
+                FriendMessageEventPack pack = new FriendMessageEventPack(id, name, message, time);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new PackTask(51, data));
+                return ListeningStatus.LISTENING;
+            }
+
             //处理在处理事件中发生的未捕获异常
             @Override
             public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
                 Start.logger.error("在事件处理中发生异常" + "\n" + context, exception);
             }
         });
-
-        getGroupInfo(571239090);
 
         isRun = true;
         EventDo = new Thread(() -> {
