@@ -29,16 +29,21 @@ public class Plugins {
             if (len > 0) {
                 String temp = new String(buf, StandardCharsets.UTF_8);
                 PackStart pack = new Gson().fromJson(temp, PackStart.class);
-                name = pack.getName();
-                Events = pack.getReg();
-                SocketServer.addPlugin(name, this);
+                if (name != null && Events != null) {
+                    name = pack.getName();
+                    Events = pack.getReg();
+                    SocketServer.addPlugin(name, this);
+                } else {
+                    Start.logger.warn("插件连接初始化失败");
+                    return;
+                }
             } else {
                 Start.logger.warn("插件连接初始化失败");
                 return;
             }
-
         } catch (IOException e) {
-            e.printStackTrace();
+            Start.logger.error("插件连接初始化失败", e);
+            return;
         }
         isRun = true;
         read = new Thread(() -> {

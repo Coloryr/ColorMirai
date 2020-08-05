@@ -9,11 +9,15 @@ import com.google.gson.Gson;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
+import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.Message;
+import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +33,7 @@ public class BotStart {
     private static Gson Gson;
 
     public static boolean Start() {
+        Gson = new Gson();
         bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
@@ -131,8 +136,7 @@ public class BotStart {
 
             //7 [机器人]主动退出一个群（事件）
             @EventHandler
-            public ListeningStatus BotLeaveEventA(BotLeaveEvent.Active event)
-            {
+            public ListeningStatus BotLeaveEventA(BotLeaveEvent.Active event) {
                 if (!SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
@@ -294,6 +298,177 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
+            //19 [机器人]头像被修改（事件）
+            @EventHandler
+            public ListeningStatus FriendAvatarChangedEvent(FriendAvatarChangedEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String name = event.getFriend().getNick();
+                String url = event.getFriend().getAvatarUrl();
+                FriendAvatarChangedEventPack pack = new FriendAvatarChangedEventPack(name, id, url);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(19, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //20 [机器人]好友已被删除（事件）
+            @EventHandler
+            public ListeningStatus FriendDeleteEvent(FriendDeleteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String name = event.getFriend().getNick();
+                FriendDeleteEventPack pack = new FriendDeleteEventPack(name, id);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(20, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //21 [机器人]在好友消息发送后广播（事件）
+            @EventHandler
+            public ListeningStatus FriendMessagePostSendEvent(FriendMessagePostSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                MessageChain message = event.getMessage();
+                long id = event.getTarget().getId();
+                String name = event.getTarget().getNick();
+                boolean res = event.getReceipt() != null;
+                String error = "";
+                if (event.getException() != null) {
+                    error = event.getException().getMessage();
+                }
+                FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(message, id, name, res, error);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(21, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //22 [机器人]在发送好友消息前广播（事件）
+            @EventHandler
+            public ListeningStatus FriendMessagePreSendEvent(FriendMessagePreSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                Message message = event.getMessage();
+                long id = event.getTarget().getId();
+                String name = event.getTarget().getNick();
+                FriendMessagePreSendEventPack pack = new FriendMessagePreSendEventPack(message, id, name);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(22, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //23 [机器人]好友昵称改变（事件）
+            @EventHandler
+            public ListeningStatus FriendRemarkChangeEvent(FriendRemarkChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String name = event.getNewName();
+                FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(id, name);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(23, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //24 [机器人]群 "匿名聊天" 功能状态改变（事件）
+            @EventHandler
+            public ListeningStatus GroupAllowAnonymousChatEvent(GroupAllowAnonymousChatEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = 0;
+                if (event.getOperator() != null) {
+                    fid = event.getOperator().getId();
+                }
+                boolean old = event.getOrigin();
+                boolean new_ = event.getNew();
+                GroupAllowAnonymousChatEventPack pack = new GroupAllowAnonymousChatEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(24, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //25 [机器人]群 "坦白说" 功能状态改变（事件）
+            @EventHandler
+            public ListeningStatus GroupAllowConfessTalkEvent(GroupAllowConfessTalkEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                boolean old = event.getOrigin();
+                boolean new_ = event.getNew();
+                boolean bot = event.isByBot();
+                GroupAllowConfessTalkEventPack pack = new GroupAllowConfessTalkEventPack(id, old, new_, bot);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(25, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //26 [机器人]群 "允许群员邀请好友加群" 功能状态改变（事件）
+            @EventHandler
+            public ListeningStatus GroupAllowMemberInviteEvent(GroupAllowMemberInviteEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = 0;
+                if (event.getOperator() != null) {
+                    fid = event.getOperator().getId();
+                }
+                boolean old = event.getOrigin();
+                boolean new_ = event.getNew();
+                GroupAllowMemberInviteEventPack pack = new GroupAllowMemberInviteEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(26, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //27 [机器人]入群公告改变（事件）
+            @EventHandler
+            public ListeningStatus GroupEntranceAnnouncementChangeEvent(GroupEntranceAnnouncementChangeEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = 0;
+                if (event.getOperator() != null) {
+                    fid = event.getOperator().getId();
+                }
+                String old = event.getOrigin();
+                String new_ = event.getNew();
+                GroupEntranceAnnouncementChangeEventPack pack =
+                        new GroupEntranceAnnouncementChangeEventPack(id, fid, old, new_);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(27, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //28 [机器人]在群消息发送后广播（事件）
+            @EventHandler
+            public ListeningStatus GroupMessagePostSendEvent(GroupMessagePostSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getTarget().getId();
+                boolean res = event.getReceipt() != null;
+                MessageChain message = event.getMessage();
+                String error = "";
+                if (event.getException() != null) {
+                    error = event.getException().getMessage();
+                }
+                GroupMessagePostSendEventPack pack = new GroupMessagePostSendEventPack(id, res, message, error);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(28, data));
+                return ListeningStatus.LISTENING;
+            }
+
             //处理在处理事件中发生的未捕获异常
             @Override
             public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
@@ -301,7 +476,6 @@ public class BotStart {
             }
         });
 
-        Gson = new Gson();
         isRun = true;
         EventDo = new Thread(() -> {
             while (isRun) {
