@@ -9,13 +9,21 @@ Reg：注册的事件
  */
 public class PackStart {
     private String Name;
-    private List<Byte> Reg;
+    private List<Integer> Reg;
 
     public String getName() {
         return Name;
     }
 
-    public List<Byte> getReg() {
+    public void setName(String name) {
+        Name = name;
+    }
+
+    public List<Integer> getReg() {
         return Reg;
+    }
+
+    public void setReg(List<Integer> reg) {
+        Reg = reg;
     }
 }

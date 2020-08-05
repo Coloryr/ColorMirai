@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.Config;
 
 import Color_yr.ColorMirai.Start;
-import com.google.gson.Gson;
+import com.alibaba.fastjson.JSON;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -22,11 +22,18 @@ public class ConfigRead {
                 InputStreamReader reader = new InputStreamReader(
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
-                Start.Config = new Gson().fromJson(bf, ConfigObj.class);
+                StringBuilder buffer = new StringBuilder();
+                String line;
+                while ((line = bf.readLine()) != null) {
+                    buffer.append(line);
+                }
+                Start.Config = JSON.parseObject(buffer.toString(), ConfigObj.class);
                 if (Start.Config.getQQ() == 0) {
                     Start.Config = new ConfigObj();
                     Save();
                 }
+                bf.close();
+                reader.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -39,7 +46,7 @@ public class ConfigRead {
             FileOutputStream out = new FileOutputStream(ConfigFile);
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
-            write.write(new Gson().toJson(Start.Config));
+            write.write(JSON.toJSONString(Start.Config));
             write.close();
             out.close();
         } catch (Exception e) {

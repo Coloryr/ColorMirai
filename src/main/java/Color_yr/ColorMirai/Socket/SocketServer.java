@@ -18,7 +18,7 @@ public class SocketServer {
     public static boolean start() {
         try {
             ServerSocket = new ServerSocket(Start.Config.getPort());
-            Start.logger.info("Socket已启动");
+            Start.logger.info("Socket已启动:" + Start.Config.getPort());
             Runnable accept = () -> {
                 while (isStart) {
                     try {

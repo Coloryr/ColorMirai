@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.Config;
 
 public class ConfigObj {
-    private long QQ;
-    private String Password;
-    private int Port;
+    private final long QQ;
+    private final String Password;
+    private final int Port;
 
     public ConfigObj() {
         QQ = 0;
