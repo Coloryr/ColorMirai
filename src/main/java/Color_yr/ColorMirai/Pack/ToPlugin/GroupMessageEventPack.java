@@ -6,16 +6,32 @@ public class GroupMessageEventPack {
     private long id;
     private long fid;
     private String name;
-    private MessageChain message;
+    private String message;
 
     public GroupMessageEventPack(long id, long fid, String name, MessageChain message) {
         this.fid = fid;
         this.id = id;
-        this.message = message;
+        this.message = message.contentToString();
         this.name = name;
     }
 
     public GroupMessageEventPack() {
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public void setFid(long fid) {
+        this.fid = fid;
     }
 
     public long getId() {
@@ -30,7 +46,7 @@ public class GroupMessageEventPack {
         return fid;
     }
 
-    public MessageChain getMessage() {
+    public String getMessage() {
         return message;
     }
 }

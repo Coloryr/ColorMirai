@@ -58,10 +58,6 @@ public class SocketServer {
 
     public static void removePlugin(String name) {
         synchronized (Lock) {
-            if (PluginList.containsKey(name)) {
-                Plugins temp = PluginList.get(name);
-                temp.close();
-            }
             PluginList.remove(name);
             Start.logger.info("插件[" + name + "]已断开");
         }

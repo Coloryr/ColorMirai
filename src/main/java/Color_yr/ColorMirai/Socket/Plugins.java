@@ -107,7 +107,7 @@ public class Plugins {
             if (len > 0) {
                 String temp = new String(buf, StandardCharsets.UTF_8);
                 PackStart pack = JSON.parseObject(temp, PackStart.class);
-                if (name != null && Events != null) {
+                if (pack.getName() != null && pack.getReg() != null) {
                     name = pack.getName();
                     Events = pack.getReg();
                     SocketServer.addPlugin(name, this);
@@ -148,7 +148,7 @@ public class Plugins {
         }
     }
 
-    public void callEvent(byte index, byte[] data) {
+    public void callEvent(int index, byte[] data) {
         if (Events.contains(index)) {
             SocketServer.sendPack(data, Socket);
         }

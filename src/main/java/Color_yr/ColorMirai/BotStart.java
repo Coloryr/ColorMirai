@@ -45,7 +45,7 @@ public class BotStart {
         bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
-                setProtocol(MiraiProtocol.ANDROID_PHONE);
+                setProtocol(MiraiProtocol.ANDROID_WATCH);
             }
         });
         try {

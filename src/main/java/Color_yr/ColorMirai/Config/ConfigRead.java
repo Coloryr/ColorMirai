@@ -22,12 +22,14 @@ public class ConfigRead {
                 InputStreamReader reader = new InputStreamReader(
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
-                StringBuilder buffer = new StringBuilder();
-                String line;
-                while ((line = bf.readLine()) != null) {
-                    buffer.append(line);
+                char[] buf = new char[1024];
+                int length;
+                StringBuilder data = new StringBuilder();
+                while((length = bf.read(buf)) != -1){
+                    data.append(new String(buf, 0, length));
                 }
-                Start.Config = JSON.parseObject(buffer.toString(), ConfigObj.class);
+                String temp = data.toString();
+                Start.Config = JSON.parseObject(temp, ConfigObj.class);
                 if (Start.Config.getQQ() == 0) {
                     Start.Config = new ConfigObj();
                     Save();
