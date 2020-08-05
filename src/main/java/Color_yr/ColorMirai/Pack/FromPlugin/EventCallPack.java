@@ -11,11 +11,23 @@ public class EventCallPack {
         return eventid;
     }
 
+    public void setEventid(long eventid) {
+        this.eventid = eventid;
+    }
+
     public int getDofun() {
         return dofun;
     }
 
+    public void setDofun(int dofun) {
+        this.dofun = dofun;
+    }
+
     public List<Object> getArg() {
         return arg;
+    }
+
+    public void setArg(List<Object> arg) {
+        this.arg = arg;
     }
 }

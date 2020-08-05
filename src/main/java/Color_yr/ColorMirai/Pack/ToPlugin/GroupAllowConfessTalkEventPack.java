@@ -20,15 +20,31 @@ public class GroupAllowConfessTalkEventPack {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public boolean isNew_() {
         return new_;
+    }
+
+    public void setNew_(boolean new_) {
+        this.new_ = new_;
     }
 
     public boolean isOld() {
         return old;
     }
 
+    public void setOld(boolean old) {
+        this.old = old;
+    }
+
     public boolean isBot() {
         return bot;
+    }
+
+    public void setBot(boolean bot) {
+        this.bot = bot;
     }
 }

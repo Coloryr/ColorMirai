@@ -22,15 +22,31 @@ public class FriendMessageEventPack {
         return time;
     }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

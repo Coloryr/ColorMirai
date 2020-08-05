@@ -17,7 +17,15 @@ public class BotLeaveEventBPack extends BotLeaveEventAPack {
         return fid;
     }
 
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

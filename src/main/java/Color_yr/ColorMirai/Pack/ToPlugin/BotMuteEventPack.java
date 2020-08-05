@@ -20,15 +20,31 @@ public class BotMuteEventPack {
         return time;
     }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getFid() {
         return fid;
     }
 
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

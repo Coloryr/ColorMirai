@@ -14,4 +14,8 @@ public class BotOfflineEventBPack extends BotOfflineEventAPack {
     public String getTitle() {
         return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }
