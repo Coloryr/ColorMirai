@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
-public class BotLeaveEventBPack extends BotLeaveEventAPack{
+public class BotLeaveEventBPack extends BotLeaveEventAPack {
     private String name;
     private long fid;
 
