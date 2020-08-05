@@ -710,6 +710,89 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
+            //44 [机器人]好友消息撤回（事件）
+            @EventHandler
+            public ListeningStatus MessageRecallEventA(MessageRecallEvent.FriendRecall event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getAuthorId();
+                int mid = event.getMessageId();
+                int time = event.getMessageTime();
+                MessageRecallEventAPack pack = new MessageRecallEventAPack(id, mid, time);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(44, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //45 [机器人]群消息撤回事件（事件）
+            @EventHandler
+            public ListeningStatus MessageRecallEventB(MessageRecallEvent.GroupRecall event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getAuthorId();
+                int mid = event.getMessageId();
+                int time = event.getMessageTime();
+                MessageRecallEventBPack pack = new MessageRecallEventBPack(id, fid, mid, time);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(45, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //46 [机器人]一个账号请求添加机器人为好友（事件）
+            @EventHandler
+            public ListeningStatus NewFriendRequestEvent(NewFriendRequestEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFromGroupId();
+                long fid = event.getFromId();
+                String name = event.getFromNick();
+                String message = event.getMessage();
+                long eventid = EventCall.AddEvent(new EventBase(event.getEventId(), 46, event));
+                NewFriendRequestEventPack pack = new NewFriendRequestEventPack(id, fid, name, message, eventid);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(46, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //47 [机器人]在群临时会话消息发送后广播（事件）
+            @EventHandler
+            public ListeningStatus TempMessagePostSendEvent(TempMessagePostSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getTarget().getId();
+                boolean res = event.getReceipt() != null;
+                MessageChain message = event.getMessage();
+                String error = "";
+                if (event.getException() != null) {
+                    error = event.getException().getMessage();
+                }
+                TempMessagePostSendEventPack pack = new TempMessagePostSendEventPack(id, fid, res, message, error);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(47, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //48 [机器人在发送群临时会话消息前广播（事件）
+            @EventHandler
+            public ListeningStatus TempMessagePreSendEvent(TempMessagePreSendEvent event) {
+                if (!SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getTarget().getId();
+                Message message = event.getMessage();
+                TempMessagePreSendEventPack pack = new TempMessagePreSendEventPack(id, fid, message);
+                String temp = Gson.toJson(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new Task(48, data));
+                return ListeningStatus.LISTENING;
+            }
+
             //处理在处理事件中发生的未捕获异常
             @Override
             public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {

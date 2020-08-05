@@ -40,6 +40,13 @@ public class EventCall {
                     } else if (dofun == 2) {
                         data1.ignore((Boolean) arg[0]);
                     }
+                case 46:
+                    NewFriendRequestEvent data2 = (NewFriendRequestEvent) event.getEvent();
+                    if (dofun == 0) {
+                        data2.accept();
+                    } else if (dofun == 1) {
+                        data2.reject((Boolean) arg[0]);
+                    }
                     break;
             }
         }
