@@ -16,8 +16,8 @@ public class Plugins {
     private final Socket Socket;
     private final List<byte[]> Tasks = new CopyOnWriteArrayList<>();
     private final Thread read;
-    private String name;
     private final Thread doRead;
+    private String name;
     private List<Integer> Events = null;
     private boolean isRun;
 

@@ -5,12 +5,12 @@ import net.mamoe.mirai.message.data.Message;
 public class TempMessagePreSendEventPack {
     private long id;
     private long fid;
-    private Message message;
+    private String message;
 
     public TempMessagePreSendEventPack(long id, long fid, Message message) {
         this.fid = fid;
         this.id = id;
-        this.message = message;
+        this.message = message.contentToString();
     }
 
     public TempMessagePreSendEventPack() {
@@ -20,11 +20,23 @@ public class TempMessagePreSendEventPack {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getFid() {
         return fid;
     }
 
-    public Message getMessage() {
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
+    public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

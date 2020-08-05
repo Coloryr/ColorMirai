@@ -17,7 +17,15 @@ public class ImageUploadEventBPack extends ImageUploadEventAPack {
         return error;
     }
 
+    public void setError(String error) {
+        this.error = error;
+    }
+
     public int getIndex() {
         return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

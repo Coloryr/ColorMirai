@@ -5,13 +5,13 @@ import net.mamoe.mirai.message.data.MessageChain;
 public class GroupMessagePostSendEventPack {
     private long id;
     private boolean res;
-    private MessageChain message;
+    private String message;
     private String error;
 
     public GroupMessagePostSendEventPack(long id, boolean res, MessageChain message, String error) {
         this.error = error;
         this.id = id;
-        this.message = message;
+        this.message = message.contentToString();
         this.res = res;
     }
 
@@ -22,15 +22,31 @@ public class GroupMessagePostSendEventPack {
         return id;
     }
 
-    public MessageChain getMessage() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public boolean isRes() {
         return res;
     }
 
+    public void setRes(boolean res) {
+        this.res = res;
+    }
+
     public String getError() {
         return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }

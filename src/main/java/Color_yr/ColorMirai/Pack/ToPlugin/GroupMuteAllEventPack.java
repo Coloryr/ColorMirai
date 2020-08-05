@@ -20,15 +20,31 @@ public class GroupMuteAllEventPack {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getFid() {
         return fid;
+    }
+
+    public void setFid(long fid) {
+        this.fid = fid;
     }
 
     public boolean isOld() {
         return old;
     }
 
+    public void setOld(boolean old) {
+        this.old = old;
+    }
+
     public boolean isNew_() {
         return new_;
+    }
+
+    public void setNew_(boolean new_) {
+        this.new_ = new_;
     }
 }

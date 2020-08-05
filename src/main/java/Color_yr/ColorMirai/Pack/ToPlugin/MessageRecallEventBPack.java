@@ -14,4 +14,8 @@ public class MessageRecallEventBPack extends MessageRecallEventAPack {
     public long getFid() {
         return fid;
     }
+
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
 }

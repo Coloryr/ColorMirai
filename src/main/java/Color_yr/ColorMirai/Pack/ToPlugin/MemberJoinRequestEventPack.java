@@ -20,15 +20,31 @@ public class MemberJoinRequestEventPack {
         return id;
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public long getFid() {
         return fid;
+    }
+
+    public void setFid(long fid) {
+        this.fid = fid;
     }
 
     public String getMessage() {
         return message;
     }
 
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     public long getEventid() {
         return eventid;
+    }
+
+    public void setEventid(long eventid) {
+        this.eventid = eventid;
     }
 }

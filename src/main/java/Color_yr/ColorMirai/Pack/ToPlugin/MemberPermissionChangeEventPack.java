@@ -20,15 +20,31 @@ public class MemberPermissionChangeEventPack {
         return fid;
     }
 
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getOld() {
         return old;
     }
 
+    public void setOld(String old) {
+        this.old = old;
+    }
+
     public String getNew_() {
         return new_;
+    }
+
+    public void setNew_(String new_) {
+        this.new_ = new_;
     }
 }

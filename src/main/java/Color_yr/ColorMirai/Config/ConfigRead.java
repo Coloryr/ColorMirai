@@ -25,7 +25,7 @@ public class ConfigRead {
                 char[] buf = new char[1024];
                 int length;
                 StringBuilder data = new StringBuilder();
-                while((length = bf.read(buf)) != -1){
+                while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
                 String temp = data.toString();

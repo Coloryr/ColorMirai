@@ -16,7 +16,15 @@ public class MemberJoinEventAPack {
         return fid;
     }
 
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

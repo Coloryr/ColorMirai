@@ -4,11 +4,11 @@ import net.mamoe.mirai.message.data.Message;
 
 public class GroupMessagePreSendEventPack {
     private long id;
-    private Message message;
+    private String message;
 
     public GroupMessagePreSendEventPack(long id, Message message) {
         this.id = id;
-        this.message = message;
+        this.message = message.contentToString();
     }
 
     public GroupMessagePreSendEventPack() {
@@ -18,7 +18,15 @@ public class GroupMessagePreSendEventPack {
         return id;
     }
 
-    public Message getMessage() {
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

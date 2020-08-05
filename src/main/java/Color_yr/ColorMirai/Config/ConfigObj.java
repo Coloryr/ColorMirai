@@ -11,27 +11,27 @@ public class ConfigObj {
         Port = 23333;
     }
 
-    public void setPassword(String password) {
-        Password = password;
-    }
-
-    public void setPort(int port) {
-        Port = port;
+    public long getQQ() {
+        return QQ;
     }
 
     public void setQQ(long QQ) {
         this.QQ = QQ;
     }
 
-    public long getQQ() {
-        return QQ;
-    }
-
     public String getPassword() {
         return Password;
     }
 
+    public void setPassword(String password) {
+        Password = password;
+    }
+
     public int getPort() {
         return Port;
+    }
+
+    public void setPort(int port) {
+        Port = port;
     }
 }

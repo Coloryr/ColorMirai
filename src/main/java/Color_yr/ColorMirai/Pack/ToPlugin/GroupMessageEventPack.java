@@ -18,35 +18,35 @@ public class GroupMessageEventPack {
     public GroupMessageEventPack() {
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public long getId() {
+        return id;
     }
 
     public void setId(long id) {
         this.id = id;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
-
-    public long getId() {
-        return id;
-    }
-
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getFid() {
         return fid;
     }
 
+    public void setFid(long fid) {
+        this.fid = fid;
+    }
+
     public String getMessage() {
         return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
