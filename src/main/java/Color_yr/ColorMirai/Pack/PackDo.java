@@ -63,6 +63,8 @@ package Color_yr.ColorMirai.Pack;
 57 [插件]获取群成员
 58 [插件]获取群设置
 59 [插件]回应事件
+
+60 心跳包
 */
 public class PackDo {
 

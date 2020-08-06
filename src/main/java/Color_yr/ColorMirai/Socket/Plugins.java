@@ -137,6 +137,10 @@ public class Plugins {
                         close();
                         break;
                     }
+                } else if (Socket.getInputStream().available() < 0) {
+                    Start.logger.warn("插件连接断开");
+                    close();
+                    return;
                 }
                 Thread.sleep(50);
             } catch (Exception e) {
@@ -146,6 +150,14 @@ public class Plugins {
                 close();
             }
         }
+    }
+
+    public void pack() {
+        byte[] data = new byte[3];
+        data[0] = '{';
+        data[1] = '}';
+        data[2] = 60;
+        SocketServer.sendPack(data, Socket);
     }
 
     public void callEvent(int index, byte[] data) {

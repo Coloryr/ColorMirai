@@ -6,11 +6,14 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class SocketServer {
     public static final Map<String, Plugins> PluginList = new ConcurrentHashMap<>();
     private static final Object Lock = new Object();
+    private static final Timer timer = new Timer();
     private static ServerSocket ServerSocket;
     private static Thread ServerThread;
     private static boolean isStart;
@@ -33,6 +36,14 @@ public class SocketServer {
             isStart = true;
             ServerThread = new Thread(accept);
             ServerThread.start();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    for (Plugins plugin : PluginList.values()) {
+                        plugin.pack();
+                    }
+                }
+            }, 30 * 1000);
             return true;
         } catch (Exception e) {
             Start.logger.error("Socket启动失败", e);
