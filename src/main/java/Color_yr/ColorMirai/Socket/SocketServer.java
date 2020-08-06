@@ -74,12 +74,14 @@ public class SocketServer {
         }
     }
 
-    public static void sendPack(byte[] data, Socket socket) {
+    public static boolean sendPack(byte[] data, Socket socket) {
         try {
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
+            return true;
         } catch (IOException e) {
             Start.logger.error("插件通信出现问题", e);
+            return false;
         }
     }
 

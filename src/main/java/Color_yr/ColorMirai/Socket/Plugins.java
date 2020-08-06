@@ -55,14 +55,16 @@ public class Plugins {
                                 byte[] temp = groups.getBytes(StandardCharsets.UTF_8);
                                 byte[] temp1 = new byte[temp.length + 1];
                                 temp1[temp.length] = 52;
-                                SocketServer.sendPack(temp1, Socket);
+                                if (!SocketServer.sendPack(temp1, Socket))
+                                    close();
                                 break;
                             case 56:
                                 String friends = JSON.toJSONString(BotStart.getFriends());
                                 byte[] temp2 = friends.getBytes(StandardCharsets.UTF_8);
                                 byte[] temp3 = new byte[temp2.length + 1];
                                 temp3[temp2.length] = 53;
-                                SocketServer.sendPack(temp3, Socket);
+                                if (!SocketServer.sendPack(temp3, Socket))
+                                    close();
                                 break;
                             case 57:
                                 GetGroupMemberInfo pack3 = JSON.parseObject(a, GetGroupMemberInfo.class);
@@ -70,7 +72,8 @@ public class Plugins {
                                 byte[] temp4 = members.getBytes(StandardCharsets.UTF_8);
                                 byte[] temp5 = new byte[temp4.length + 1];
                                 temp5[temp4.length] = 54;
-                                SocketServer.sendPack(temp5, Socket);
+                                if (!SocketServer.sendPack(temp5, Socket))
+                                    close();
                                 break;
                             case 58:
                                 GetGroupSettingPack pack4 = JSON.parseObject(a, GetGroupSettingPack.class);
@@ -78,7 +81,8 @@ public class Plugins {
                                 byte[] temp6 = groupinfo.getBytes(StandardCharsets.UTF_8);
                                 byte[] temp7 = new byte[temp6.length + 1];
                                 temp7[temp6.length] = 55;
-                                SocketServer.sendPack(temp7, Socket);
+                                if (!SocketServer.sendPack(temp7, Socket))
+                                    close();
                                 break;
                             case 59:
                                 EventCallPack pack5 = JSON.parseObject(a, EventCallPack.class);
@@ -157,12 +161,14 @@ public class Plugins {
         data[0] = '{';
         data[1] = '}';
         data[2] = 60;
-        SocketServer.sendPack(data, Socket);
+        if (!SocketServer.sendPack(data, Socket))
+            close();
     }
 
     public void callEvent(int index, byte[] data) {
         if (Events.contains(index)) {
-            SocketServer.sendPack(data, Socket);
+            if (!SocketServer.sendPack(data, Socket))
+                close();
         }
     }
 
