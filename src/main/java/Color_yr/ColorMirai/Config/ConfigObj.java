@@ -4,11 +4,21 @@ public class ConfigObj {
     private long QQ;
     private String Password;
     private int Port;
+    private int Type;
 
     public ConfigObj() {
         QQ = 0;
         Password = "请填写你的密码";
         Port = 23333;
+        Type = 0;
+    }
+
+    public void setType(int type) {
+        Type = type;
+    }
+
+    public int getType() {
+        return Type;
     }
 
     public long getQQ() {
