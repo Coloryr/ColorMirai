@@ -4,7 +4,6 @@ import Color_yr.ColorMirai.BotStart;
 import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.FromPlugin.*;
 import Color_yr.ColorMirai.Pack.PackDo;
-import Color_yr.ColorMirai.Pack.PackStart;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
@@ -47,7 +46,7 @@ public class Plugins {
                                 BotStart.sendGroupPrivateMessage(pack1.getId(), pack1.getFid(), pack1.getMessage());
                                 break;
                             case 54:
-                                SendFriendMessage pack2 = JSON.parseObject(task.getData(), SendFriendMessage.class);
+                                SendFriendMessagePack pack2 = JSON.parseObject(task.getData(), SendFriendMessagePack.class);
                                 BotStart.sendFriendMessage(pack2.getId(), pack2.getMessage());
                                 break;
                             case 55:
@@ -59,7 +58,7 @@ public class Plugins {
                                     close();
                                 break;
                             case 57:
-                                GetGroupMemberInfo pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfo.class);
+                                GetGroupMemberInfoPack pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfoPack.class);
                                 if (!SocketServer.sendPack(PackDo.BuildPack(
                                         BotStart.getMembers(pack3.getId()), 57), Socket))
                                     close();
@@ -75,15 +74,15 @@ public class Plugins {
                                 EventCall.DoEvent(pack5.getEventid(), pack5.getDofun(), pack5.getArg());
                                 break;
                             case 61:
-                                SendImageGroup pack6 = JSON.parseObject(task.getData(), SendImageGroup.class);
+                                SendImageGroupPack pack6 = JSON.parseObject(task.getData(), SendImageGroupPack.class);
                                 BotStart.sendGroupImage(pack6.getId(), pack6.getImg());
                                 break;
                             case 62:
-                                SendImageGroupPrivate pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivate.class);
+                                SendImageGroupPrivatePack pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivatePack.class);
                                 BotStart.sendGroupPrivataImage(pack7.getId(), pack7.getFid(), pack7.getImg());
                                 break;
                             case 63:
-                                SendFriendImage pack8 = JSON.parseObject(task.getData(), SendFriendImage.class);
+                                SendFriendImagePack pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
                                 BotStart.sendFriendImage(pack8.getId(), pack8.getImg());
                                 break;
                         }
@@ -108,7 +107,7 @@ public class Plugins {
             int len = Socket.getInputStream().read(buf);
             if (len > 0) {
                 String temp = new String(buf, StandardCharsets.UTF_8);
-                PackStart pack = JSON.parseObject(temp, PackStart.class);
+                StartPack pack = JSON.parseObject(temp, StartPack.class);
                 if (pack.getName() != null && pack.getReg() != null) {
                     name = pack.getName();
                     Events = pack.getReg();

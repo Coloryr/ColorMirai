@@ -1,5 +1,11 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+19 [机器人]头像被修改（事件）
+id：好友QQ号
+name：好友nick
+url：图片url
+ */
 public class FriendAvatarChangedEventPack {
     private String name;
     private String url;

@@ -1,13 +1,13 @@
-package Color_yr.ColorMirai.Pack;
+package Color_yr.ColorMirai.Pack.FromPlugin;
 
 import java.util.List;
 
 /*
-开始数据包
+0 插件开始连接
 Name：插件名字
 Reg：注册的事件
  */
-public class PackStart {
+public class StartPack {
     private String Name;
     private List<Integer> Reg;
 

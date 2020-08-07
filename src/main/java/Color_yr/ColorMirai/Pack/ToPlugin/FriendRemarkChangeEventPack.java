@@ -1,5 +1,10 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+23 [机器人]好友昵称改变（事件）
+id：好友QQ号
+name：新的昵称
+ */
 public class FriendRemarkChangeEventPack {
     private long id;
     private String name;

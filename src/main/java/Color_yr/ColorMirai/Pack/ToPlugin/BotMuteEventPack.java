@@ -1,5 +1,12 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+9 [机器人]被禁言（事件）
+id：群号
+name：执行人nick
+fid：执行人QQ号
+time：禁言时间
+ */
 public class BotMuteEventPack {
     private long id;
     private String name;

@@ -1,5 +1,9 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+14 [机器人]服务器主动要求更换另一个服务器（事件）
+id：机器人QQ号
+ */
 public class BotOfflineEventCPack {
     private long id;
 

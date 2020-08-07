@@ -1,5 +1,12 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+31 [机器人]群名改变（事件）
+id：群号
+fid：执行人QQ号
+old：旧的状态
+new_：新的状态
+ */
 public class GroupNameChangeEventPack {
     private long id;
     private long fid;

@@ -1,10 +1,15 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
-public class SendImageGroup {
+/*
+61 [插件]发送图片到群
+id：群号
+img：图片的BASE64编码
+ */
+public class SendImageGroupPack {
     private long id;
     private String img;
 
-    public SendImageGroup() {
+    public SendImageGroupPack() {
     }
 
     public long getId() {

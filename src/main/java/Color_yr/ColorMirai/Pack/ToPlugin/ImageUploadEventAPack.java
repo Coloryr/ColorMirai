@@ -1,5 +1,9 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+id：目标id
+name：图片ID
+ */
 public class ImageUploadEventAPack {
     private long id;
     private String name;

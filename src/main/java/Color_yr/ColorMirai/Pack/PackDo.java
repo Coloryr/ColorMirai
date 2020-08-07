@@ -25,7 +25,7 @@ import java.nio.charset.StandardCharsets;
 16 [机器人]主动或被动重新登录（事件）
 17 [机器人]被取消禁言（事件）
 18 [机器人]成功添加了一个新好友（事件）
-19 [机器人]头像被修改（事件）
+19 [机器人]好友头像被修改（事件）
 20 [机器人]好友已被删除（事件）
 21 [机器人]在好友消息发送后广播（事件）
 22 [机器人]在发送好友消息前广播（事件）
@@ -75,12 +75,6 @@ import java.nio.charset.StandardCharsets;
 63 [插件]发送图片到朋友
 */
 public class PackDo {
-    //    public static byte[] BuildPack(String data, byte index) {
-//        byte[] temp = data.getBytes(StandardCharsets.UTF_8);
-//        byte[] temp1 = new byte[temp.length + 1];
-//        temp1[temp.length] = index;
-//        return temp1;
-//    }
     public static byte[] BuildPack(Object data, int index) {
         String str = JSON.toJSONString(data);
         byte[] temp = str.getBytes(StandardCharsets.UTF_8);

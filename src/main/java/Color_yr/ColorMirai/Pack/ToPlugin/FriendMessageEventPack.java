@@ -2,6 +2,13 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import net.mamoe.mirai.message.data.MessageChain;
 
+/*
+51 [机器人]收到朋友消息（事件）
+id：朋友ID
+fname：发送人的群名片
+message：消息
+time：时间
+ */
 public class FriendMessageEventPack {
     private long id;
     private String name;

@@ -1,6 +1,11 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
-public class SendFriendMessage {
+/*
+54 [插件]发送好友消息
+id：好友QQ号
+message：消息
+ */
+public class SendFriendMessagePack {
     private long id;
     private String message;
 

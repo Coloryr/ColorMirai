@@ -1,5 +1,10 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+/*
+18 [机器人]成功添加了一个新好友（事件）
+name：好友nick
+id：好友QQ号
+ */
 public class FriendAddEventPack {
     private String name;
     private long id;

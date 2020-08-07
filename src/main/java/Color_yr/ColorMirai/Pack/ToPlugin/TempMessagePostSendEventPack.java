@@ -2,6 +2,14 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import net.mamoe.mirai.message.data.MessageChain;
 
+/*
+47 [机器人]在群临时会话消息发送后广播（事件）
+id：群号
+fid：发送到的QQ号
+res：是否成功发送
+message：消息
+error：错误信息
+ */
 public class TempMessagePostSendEventPack {
     private long id;
     private long fid;

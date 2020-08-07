@@ -1,6 +1,12 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
-public class SendImageGroupPrivate {
+/*
+62 [插件]发送图片到私聊
+id：群号
+fid：成员QQ号
+img：图片BASE64编码
+ */
+public class SendImageGroupPrivatePack {
     private long id;
     private long fid;
     private String img;
