@@ -6,8 +6,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -15,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SocketServer {
     public static final Map<String, Plugins> PluginList = new ConcurrentHashMap<>();
-    private static final ScheduledExecutorService service= Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
     private static ServerSocket ServerSocket;
     private static Thread ServerThread;
     private static boolean isStart;

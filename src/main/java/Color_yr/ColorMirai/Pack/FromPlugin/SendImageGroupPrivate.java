@@ -9,20 +9,20 @@ public class SendImageGroupPrivate {
         return img;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
     public void setImg(String img) {
         this.img = img;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getFid() {
+        return fid;
     }
 
     public void setFid(long fid) {
