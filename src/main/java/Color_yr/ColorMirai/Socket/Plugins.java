@@ -67,7 +67,7 @@ public class Plugins {
                             case 58:
                                 GetGroupSettingPack pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
                                 if (!SocketServer.sendPack(PackDo.BuildPack(
-                                        BotStart.getGroupInfo(pack4.getId()),58), Socket))
+                                        BotStart.getGroupInfo(pack4.getId()), 58), Socket))
                                     close();
                                 break;
                             case 59:

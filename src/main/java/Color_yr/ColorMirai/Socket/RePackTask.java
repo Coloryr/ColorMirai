@@ -16,12 +16,12 @@ public class RePackTask {
         return index;
     }
 
-    public String getData() {
-        return data;
-    }
-
     public void setIndex(byte index) {
         this.index = index;
+    }
+
+    public String getData() {
+        return data;
     }
 
     public void setData(String data) {

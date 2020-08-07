@@ -6,8 +6,8 @@ import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Pack.ToPlugin.*;
-import Color_yr.ColorMirai.Socket.SendPackTask;
 import Color_yr.ColorMirai.Socket.Plugins;
+import Color_yr.ColorMirai.Socket.SendPackTask;
 import Color_yr.ColorMirai.Socket.SocketServer;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
@@ -39,10 +39,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BotStart {
     private static final List<SendPackTask> Tasks = new CopyOnWriteArrayList<>();
+    private static final Base64.Decoder decoder = Base64.getDecoder();
     private static Bot bot;
     private static Thread EventDo;
     private static boolean isRun;
-    private static final Base64.Decoder decoder = Base64.getDecoder();
 
     public static boolean Start() {
         bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
