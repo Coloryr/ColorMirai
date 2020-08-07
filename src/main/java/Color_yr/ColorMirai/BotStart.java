@@ -6,7 +6,7 @@ import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Pack.ToPlugin.*;
-import Color_yr.ColorMirai.Socket.PackTask;
+import Color_yr.ColorMirai.Socket.SendPackTask;
 import Color_yr.ColorMirai.Socket.Plugins;
 import Color_yr.ColorMirai.Socket.SocketServer;
 import com.alibaba.fastjson.JSON;
@@ -30,22 +30,25 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class BotStart {
-    private static final List<PackTask> Tasks = new CopyOnWriteArrayList<>();
+    private static final List<SendPackTask> Tasks = new CopyOnWriteArrayList<>();
     private static Bot bot;
     private static Thread EventDo;
     private static boolean isRun;
+    private static final Base64.Decoder decoder = Base64.getDecoder();
 
     public static boolean Start() {
         bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
-                setProtocol(MiraiProtocol.ANDROID_WATCH);
+                setProtocol(MiraiProtocol.ANDROID_PHONE);
             }
         });
         try {
@@ -66,7 +69,7 @@ public class BotStart {
                 BeforeImageUploadPack pack = new BeforeImageUploadPack(name, id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(1, data));
+                Tasks.add(new SendPackTask(1, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -79,7 +82,7 @@ public class BotStart {
                 BotAvatarChangedPack pack = new BotAvatarChangedPack(name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(2, data));
+                Tasks.add(new SendPackTask(2, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -93,7 +96,7 @@ public class BotStart {
                 BotGroupPermissionChangePack pack = new BotGroupPermissionChangePack(name, id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(3, data));
+                Tasks.add(new SendPackTask(3, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -110,7 +113,7 @@ public class BotStart {
                         new BotInvitedJoinGroupRequestEventPack(name, id, fid, eventid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(4, data));
+                Tasks.add(new SendPackTask(4, data));
 
                 return ListeningStatus.LISTENING;
             }
@@ -124,7 +127,7 @@ public class BotStart {
                 BotJoinGroupEventAPack pack = new BotJoinGroupEventAPack(id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(5, data));
+                Tasks.add(new SendPackTask(5, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -139,7 +142,7 @@ public class BotStart {
                 BotJoinGroupEventBPack pack = new BotJoinGroupEventBPack(name, id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(6, data));
+                Tasks.add(new SendPackTask(6, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -152,7 +155,7 @@ public class BotStart {
                 BotLeaveEventAPack pack = new BotLeaveEventAPack(id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(7, data));
+                Tasks.add(new SendPackTask(7, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -167,7 +170,7 @@ public class BotStart {
                 BotLeaveEventBPack pack = new BotLeaveEventBPack(name, id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(7, data));
+                Tasks.add(new SendPackTask(7, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -183,7 +186,7 @@ public class BotStart {
                 BotMuteEventPack pack = new BotMuteEventPack(name, id, fid, time);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(9, data));
+                Tasks.add(new SendPackTask(9, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -196,7 +199,7 @@ public class BotStart {
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(10, data));
+                Tasks.add(new SendPackTask(10, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -210,7 +213,7 @@ public class BotStart {
                 BotOfflineEventBPack pack = new BotOfflineEventBPack(message, title);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(11, data));
+                Tasks.add(new SendPackTask(11, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -223,7 +226,7 @@ public class BotStart {
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(12, data));
+                Tasks.add(new SendPackTask(12, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -236,7 +239,7 @@ public class BotStart {
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(13, data));
+                Tasks.add(new SendPackTask(13, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -249,7 +252,7 @@ public class BotStart {
                 BotOfflineEventCPack pack = new BotOfflineEventCPack(id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(14, data));
+                Tasks.add(new SendPackTask(14, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -262,7 +265,7 @@ public class BotStart {
                 BotOnlineEventPack pack = new BotOnlineEventPack(id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(15, data));
+                Tasks.add(new SendPackTask(15, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -275,7 +278,7 @@ public class BotStart {
                 BotReloginEventPack pack = new BotReloginEventPack(message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(16, data));
+                Tasks.add(new SendPackTask(16, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -289,7 +292,7 @@ public class BotStart {
                 BotUnmuteEventPack pack = new BotUnmuteEventPack(id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(17, data));
+                Tasks.add(new SendPackTask(17, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -303,7 +306,7 @@ public class BotStart {
                 FriendAddEventPack pack = new FriendAddEventPack(name, id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(18, data));
+                Tasks.add(new SendPackTask(18, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -318,7 +321,7 @@ public class BotStart {
                 FriendAvatarChangedEventPack pack = new FriendAvatarChangedEventPack(name, id, url);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(19, data));
+                Tasks.add(new SendPackTask(19, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -332,7 +335,7 @@ public class BotStart {
                 FriendDeleteEventPack pack = new FriendDeleteEventPack(name, id);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(20, data));
+                Tasks.add(new SendPackTask(20, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -352,7 +355,7 @@ public class BotStart {
                 FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(message, id, name, res, error);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(21, data));
+                Tasks.add(new SendPackTask(21, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -367,7 +370,7 @@ public class BotStart {
                 FriendMessagePreSendEventPack pack = new FriendMessagePreSendEventPack(message, id, name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(22, data));
+                Tasks.add(new SendPackTask(22, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -381,7 +384,7 @@ public class BotStart {
                 FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(id, name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(23, data));
+                Tasks.add(new SendPackTask(23, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -400,7 +403,7 @@ public class BotStart {
                 GroupAllowAnonymousChatEventPack pack = new GroupAllowAnonymousChatEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(24, data));
+                Tasks.add(new SendPackTask(24, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -416,7 +419,7 @@ public class BotStart {
                 GroupAllowConfessTalkEventPack pack = new GroupAllowConfessTalkEventPack(id, old, new_, bot);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(25, data));
+                Tasks.add(new SendPackTask(25, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -435,7 +438,7 @@ public class BotStart {
                 GroupAllowMemberInviteEventPack pack = new GroupAllowMemberInviteEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(26, data));
+                Tasks.add(new SendPackTask(26, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -455,7 +458,7 @@ public class BotStart {
                         new GroupEntranceAnnouncementChangeEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(27, data));
+                Tasks.add(new SendPackTask(27, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -474,7 +477,7 @@ public class BotStart {
                 GroupMessagePostSendEventPack pack = new GroupMessagePostSendEventPack(id, res, message, error);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(28, data));
+                Tasks.add(new SendPackTask(28, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -488,7 +491,7 @@ public class BotStart {
                 GroupMessagePreSendEventPack pack = new GroupMessagePreSendEventPack(id, message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(29, data));
+                Tasks.add(new SendPackTask(29, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -507,7 +510,7 @@ public class BotStart {
                 GroupMuteAllEventPack pack = new GroupMuteAllEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(30, data));
+                Tasks.add(new SendPackTask(30, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -526,7 +529,7 @@ public class BotStart {
                 GroupNameChangeEventPack pack = new GroupNameChangeEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(31, data));
+                Tasks.add(new SendPackTask(31, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -540,7 +543,7 @@ public class BotStart {
                 ImageUploadEventAPack pack = new ImageUploadEventAPack(id, name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(32, data));
+                Tasks.add(new SendPackTask(32, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -556,7 +559,7 @@ public class BotStart {
                 ImageUploadEventBPack pack = new ImageUploadEventBPack(id, name, error, index);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(33, data));
+                Tasks.add(new SendPackTask(33, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -572,7 +575,7 @@ public class BotStart {
                 MemberCardChangeEventPack pack = new MemberCardChangeEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(34, data));
+                Tasks.add(new SendPackTask(34, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -586,7 +589,7 @@ public class BotStart {
                 MemberJoinEventAPack pack = new MemberJoinEventAPack(id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(35, data));
+                Tasks.add(new SendPackTask(35, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -600,7 +603,7 @@ public class BotStart {
                 MemberJoinEventAPack pack = new MemberJoinEventAPack(id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(36, data));
+                Tasks.add(new SendPackTask(36, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -616,7 +619,7 @@ public class BotStart {
                 MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(id, fid, message, eventid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(37, data));
+                Tasks.add(new SendPackTask(37, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -634,7 +637,7 @@ public class BotStart {
                 MemberLeaveEventAPack pack = new MemberLeaveEventAPack(id, fid, eid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(38, data));
+                Tasks.add(new SendPackTask(38, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -648,7 +651,7 @@ public class BotStart {
                 MemberLeaveEventBPack pack = new MemberLeaveEventBPack(id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(39, data));
+                Tasks.add(new SendPackTask(39, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -666,7 +669,7 @@ public class BotStart {
                 MemberMuteEventPack pack = new MemberMuteEventPack(id, fid, eid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(40, data));
+                Tasks.add(new SendPackTask(40, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -682,7 +685,7 @@ public class BotStart {
                 MemberPermissionChangeEventPack pack = new MemberPermissionChangeEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(41, data));
+                Tasks.add(new SendPackTask(41, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -698,7 +701,7 @@ public class BotStart {
                 MemberSpecialTitleChangeEventPack pack = new MemberSpecialTitleChangeEventPack(id, fid, old, new_);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(42, data));
+                Tasks.add(new SendPackTask(42, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -712,7 +715,7 @@ public class BotStart {
                 MemberUnmuteEventPack pack = new MemberUnmuteEventPack(id, fid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(43, data));
+                Tasks.add(new SendPackTask(43, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -727,7 +730,7 @@ public class BotStart {
                 MessageRecallEventAPack pack = new MessageRecallEventAPack(id, mid, time);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(44, data));
+                Tasks.add(new SendPackTask(44, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -743,7 +746,7 @@ public class BotStart {
                 MessageRecallEventBPack pack = new MessageRecallEventBPack(id, fid, mid, time);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(45, data));
+                Tasks.add(new SendPackTask(45, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -760,7 +763,7 @@ public class BotStart {
                 NewFriendRequestEventPack pack = new NewFriendRequestEventPack(id, fid, name, message, eventid);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(46, data));
+                Tasks.add(new SendPackTask(46, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -780,7 +783,7 @@ public class BotStart {
                 TempMessagePostSendEventPack pack = new TempMessagePostSendEventPack(id, fid, res, message, error);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(47, data));
+                Tasks.add(new SendPackTask(47, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -795,7 +798,7 @@ public class BotStart {
                 TempMessagePreSendEventPack pack = new TempMessagePreSendEventPack(id, fid, message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(48, data));
+                Tasks.add(new SendPackTask(48, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -811,7 +814,7 @@ public class BotStart {
                 GroupMessageEventPack pack = new GroupMessageEventPack(id, fid, name, message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(49, data));
+                Tasks.add(new SendPackTask(49, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -828,7 +831,7 @@ public class BotStart {
                 TempMessageEventPack pack = new TempMessageEventPack(id, fid, name, message, time);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(50, data));
+                Tasks.add(new SendPackTask(50, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -844,7 +847,7 @@ public class BotStart {
                 FriendMessageEventPack pack = new FriendMessageEventPack(id, name, message, time);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
-                Tasks.add(new PackTask(51, data));
+                Tasks.add(new SendPackTask(51, data));
                 return ListeningStatus.LISTENING;
             }
 
@@ -860,7 +863,7 @@ public class BotStart {
             while (isRun) {
                 try {
                     if (!Tasks.isEmpty()) {
-                        PackTask Task = Tasks.remove(0);
+                        SendPackTask Task = Tasks.remove(0);
                         eventCallToPlugin((byte) Task.index, Task.data);
                     }
                     Thread.sleep(50);
@@ -958,5 +961,32 @@ public class BotStart {
             return item.getSettings();
         } else
             return null;
+    }
+
+    public static void sendGroupImage(long id, String img) {
+        try {
+            Group group = bot.getGroup(id);
+            group.sendMessage(group.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
+    }
+
+    public static void sendGroupPrivataImage(long id, long fid, String img) {
+        try {
+            Member member = bot.getGroup(id).get(fid);
+            member.sendMessage(member.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
+    }
+
+    public static void sendFriendImage(long id, String img) {
+        try {
+            Friend friend = bot.getFriend(id);
+            friend.sendMessage(friend.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
     }
 }

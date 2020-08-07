@@ -3,10 +3,12 @@ package Color_yr.ColorMirai.Socket;
 import Color_yr.ColorMirai.BotStart;
 import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.FromPlugin.*;
+import Color_yr.ColorMirai.Pack.PackDo;
 import Color_yr.ColorMirai.Pack.PackStart;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
+import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -14,7 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Plugins {
     private final Socket Socket;
-    private final List<byte[]> Tasks = new CopyOnWriteArrayList<>();
+    private final List<RePackTask> Tasks = new CopyOnWriteArrayList<>();
     private final Thread read;
     private final Thread doRead;
     private String name;
@@ -32,61 +34,57 @@ public class Plugins {
         while (isRun) {
             try {
                 if (!Tasks.isEmpty()) {
-                    byte[] buf = Tasks.remove(0);
-                    byte type = buf[buf.length - 1];
-                    buf[buf.length - 1] = 0;
-                    String a = new String(buf, StandardCharsets.UTF_8);
-                    if (!a.isEmpty()) {
-                        switch (type) {
+                    RePackTask task = Tasks.remove(0);
+                    if (!task.getData().isEmpty()) {
+                        switch (task.getIndex()) {
                             case 52:
-                                SendGroupMessagePack pack = JSON.parseObject(a, SendGroupMessagePack.class);
+                                SendGroupMessagePack pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
                                 BotStart.sendGroupMessage(pack.getId(), pack.getMessage());
                                 break;
                             case 53:
-                                SendGroupPrivateMessagePack pack1 = JSON.parseObject(a, SendGroupPrivateMessagePack.class);
+                                SendGroupPrivateMessagePack pack1 = JSON.parseObject(
+                                        task.getData(), SendGroupPrivateMessagePack.class);
                                 BotStart.sendGroupPrivateMessage(pack1.getId(), pack1.getFid(), pack1.getMessage());
                                 break;
                             case 54:
-                                SendFriendMessage pack2 = JSON.parseObject(a, SendFriendMessage.class);
+                                SendFriendMessage pack2 = JSON.parseObject(task.getData(), SendFriendMessage.class);
                                 BotStart.sendFriendMessage(pack2.getId(), pack2.getMessage());
                                 break;
                             case 55:
-                                String groups = JSON.toJSONString(BotStart.getGroups());
-                                byte[] temp = groups.getBytes(StandardCharsets.UTF_8);
-                                byte[] temp1 = new byte[temp.length + 1];
-                                temp1[temp.length] = 52;
-                                if (!SocketServer.sendPack(temp1, Socket))
+                                if (!SocketServer.sendPack(PackDo.BuildPack(BotStart.getGroups(), 55), Socket))
                                     close();
                                 break;
                             case 56:
-                                String friends = JSON.toJSONString(BotStart.getFriends());
-                                byte[] temp2 = friends.getBytes(StandardCharsets.UTF_8);
-                                byte[] temp3 = new byte[temp2.length + 1];
-                                temp3[temp2.length] = 53;
-                                if (!SocketServer.sendPack(temp3, Socket))
+                                if (!SocketServer.sendPack(PackDo.BuildPack(BotStart.getFriends(), 56), Socket))
                                     close();
                                 break;
                             case 57:
-                                GetGroupMemberInfo pack3 = JSON.parseObject(a, GetGroupMemberInfo.class);
-                                String members = JSON.toJSONString(BotStart.getMembers(pack3.getId()));
-                                byte[] temp4 = members.getBytes(StandardCharsets.UTF_8);
-                                byte[] temp5 = new byte[temp4.length + 1];
-                                temp5[temp4.length] = 54;
-                                if (!SocketServer.sendPack(temp5, Socket))
+                                GetGroupMemberInfo pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfo.class);
+                                if (!SocketServer.sendPack(PackDo.BuildPack(
+                                        BotStart.getMembers(pack3.getId()), 57), Socket))
                                     close();
                                 break;
                             case 58:
-                                GetGroupSettingPack pack4 = JSON.parseObject(a, GetGroupSettingPack.class);
-                                String groupinfo = JSON.toJSONString(BotStart.getGroupInfo(pack4.getId()));
-                                byte[] temp6 = groupinfo.getBytes(StandardCharsets.UTF_8);
-                                byte[] temp7 = new byte[temp6.length + 1];
-                                temp7[temp6.length] = 55;
-                                if (!SocketServer.sendPack(temp7, Socket))
+                                GetGroupSettingPack pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
+                                if (!SocketServer.sendPack(PackDo.BuildPack(
+                                        BotStart.getGroupInfo(pack4.getId()),58), Socket))
                                     close();
                                 break;
                             case 59:
-                                EventCallPack pack5 = JSON.parseObject(a, EventCallPack.class);
+                                EventCallPack pack5 = JSON.parseObject(task.getData(), EventCallPack.class);
                                 EventCall.DoEvent(pack5.getEventid(), pack5.getDofun(), pack5.getArg());
+                                break;
+                            case 61:
+                                SendImageGroup pack6 = JSON.parseObject(task.getData(), SendImageGroup.class);
+                                BotStart.sendGroupImage(pack6.getId(), pack6.getImg());
+                                break;
+                            case 62:
+                                SendImageGroupPrivate pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivate.class);
+                                BotStart.sendGroupPrivataImage(pack7.getId(), pack7.getFid(), pack7.getImg());
+                                break;
+                            case 63:
+                                SendFriendImage pack8 = JSON.parseObject(task.getData(), SendFriendImage.class);
+                                BotStart.sendFriendImage(pack8.getId(), pack8.getImg());
                                 break;
                         }
                     }
@@ -132,15 +130,22 @@ public class Plugins {
         while (isRun) {
             try {
                 if (Socket.getInputStream().available() > 0) {
-                    byte[] buf = new byte[Socket.getInputStream().available()];
-                    int len1 = Socket.getInputStream().read(buf);
-                    if (len1 > 0) {
-                        Tasks.add(buf);
-                    } else if (len1 == -1) {
-                        Start.logger.error("连接发生异常");
-                        close();
-                        break;
+                    InputStream inputStream = Socket.getInputStream();
+                    byte[] bytes = new byte[1024];
+                    int len;
+                    byte index = 0;
+                    StringBuilder sb = new StringBuilder();
+                    while ((len = inputStream.read(bytes)) != -1) {
+                        if (len == 1024)
+                            sb.append(new String(bytes, 0, len, StandardCharsets.UTF_8));
+                        else {
+                            index = bytes[len - 1];
+                            bytes[len - 1] = 0;
+                            sb.append(new String(bytes, 0, len - 1, StandardCharsets.UTF_8));
+                            break;
+                        }
                     }
+                    Tasks.add(new RePackTask(index, sb.toString()));
                 } else if (Socket.getInputStream().available() < 0) {
                     Start.logger.warn("插件连接断开");
                     close();

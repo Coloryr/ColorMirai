@@ -9,11 +9,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SocketServer {
     public static final Map<String, Plugins> PluginList = new ConcurrentHashMap<>();
-    private static final Object Lock = new Object();
-    private static final Timer timer = new Timer();
+    private static final ScheduledExecutorService service= Executors.newSingleThreadScheduledExecutor();
     private static ServerSocket ServerSocket;
     private static Thread ServerThread;
     private static boolean isStart;
@@ -36,14 +38,11 @@ public class SocketServer {
             isStart = true;
             ServerThread = new Thread(accept);
             ServerThread.start();
-            timer.schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    for (Plugins plugin : PluginList.values()) {
-                        plugin.pack();
-                    }
+            service.scheduleAtFixedRate(() -> {
+                for (Plugins plugin : PluginList.values()) {
+                    plugin.pack();
                 }
-            }, 30 * 1000);
+            }, 0, 30, TimeUnit.SECONDS);
             return true;
         } catch (Exception e) {
             Start.logger.error("Socket启动失败", e);
@@ -56,22 +55,18 @@ public class SocketServer {
     }
 
     public static void addPlugin(String name, Plugins plugin) {
-        synchronized (Lock) {
-            if (PluginList.containsKey(name)) {
-                Plugins temp = PluginList.get(name);
-                temp.close();
-                PluginList.put(name, plugin);
-            } else
-                PluginList.put(name, plugin);
-            Start.logger.info("插件[" + name + "]已连接");
-        }
+        if (PluginList.containsKey(name)) {
+            Plugins temp = PluginList.get(name);
+            temp.close();
+            PluginList.put(name, plugin);
+        } else
+            PluginList.put(name, plugin);
+        Start.logger.info("插件[" + name + "]已连接");
     }
 
     public static void removePlugin(String name) {
-        synchronized (Lock) {
-            PluginList.remove(name);
-            Start.logger.info("插件[" + name + "]已断开");
-        }
+        PluginList.remove(name);
+        Start.logger.info("插件[" + name + "]已断开");
     }
 
     public static boolean sendPack(byte[] data, Socket socket) {

@@ -1,5 +1,10 @@
 package Color_yr.ColorMirai.Pack;
 
+import Color_yr.ColorMirai.BotStart;
+import com.alibaba.fastjson.JSON;
+
+import java.nio.charset.StandardCharsets;
+
 /*
 类型说明
 0 插件开始连接
@@ -65,7 +70,23 @@ package Color_yr.ColorMirai.Pack;
 59 [插件]回应事件
 
 60 心跳包
+
+61 [插件]发送图片到群
+62 [插件]发送图片到私聊
+63 [插件]发送图片到朋友
 */
 public class PackDo {
-
+//    public static byte[] BuildPack(String data, byte index) {
+//        byte[] temp = data.getBytes(StandardCharsets.UTF_8);
+//        byte[] temp1 = new byte[temp.length + 1];
+//        temp1[temp.length] = index;
+//        return temp1;
+//    }
+    public static byte[] BuildPack(Object data, int index) {
+        String str = JSON.toJSONString(data);
+        byte[] temp = str.getBytes(StandardCharsets.UTF_8);
+        byte[] temp1 = new byte[temp.length + 1];
+        temp1[temp.length] = (byte) index;
+        return temp1;
+    }
 }
