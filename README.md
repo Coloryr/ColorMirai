@@ -1,7 +1,8 @@
 # ColorMirai
 一个基于[Mirai](https://github.com/mamoe/mirai) 的机器人框架  
-不提供二进制文件自行构建  
-需要JAVA14环境
+不提供二进制文件，请自行构建  
+需要JAVA11/14环境  
+运行环境看你的构建环境
 ## 构建说明
 ```
 git clone https://github.com/Coloryr/ColorMirai.git
@@ -24,14 +25,20 @@ gradle shadowJar
 > {
 >   "Password":"密码", 
 >   "Port":23333,
->   "QQ":0
+>   "QQ":0,
+>   "Type":0
 > }
 > ```
 > - `Password`：QQ号密码
 > - `Port`：启动的端口
 > - `QQ`：登录的QQ号
+> - `Type`：登录的方式 0：安卓 1：手表
 
 设置完后再次启动，出现`[INFO]Socket已启动:23333`说明已启动
+
+### 无法登录临时解决
+将Type改成1即可登录，下次登录改回0就行了
+
 ## Socket数据包
 ```
 以字符串的方式看
