@@ -9,9 +9,6 @@ public class RePackTask {
         this.data = data;
     }
 
-    public RePackTask() {
-    }
-
     public byte getIndex() {
         return index;
     }

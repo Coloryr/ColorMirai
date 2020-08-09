@@ -8,30 +8,11 @@ id：群号
 message：消息
  */
 public class GroupMessagePreSendEventPack {
-    private long id;
-    private String message;
+    public long id;
+    public String message;
 
     public GroupMessagePreSendEventPack(long id, Message message) {
         this.id = id;
         this.message = message.contentToString();
-    }
-
-    public GroupMessagePreSendEventPack() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

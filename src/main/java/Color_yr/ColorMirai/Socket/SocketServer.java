@@ -20,8 +20,8 @@ public class SocketServer {
 
     public static boolean start() {
         try {
-            ServerSocket = new ServerSocket(Start.Config.getPort());
-            Start.logger.info("Socket已启动:" + Start.Config.getPort());
+            ServerSocket = new ServerSocket(Start.Config.Port);
+            Start.logger.info("Socket已启动:" + Start.Config.Port);
             isStart = true;
             ServerThread = new Thread(() ->
             {
@@ -56,9 +56,8 @@ public class SocketServer {
         if (PluginList.containsKey(name)) {
             var temp = PluginList.get(name);
             temp.close();
-            PluginList.put(name, plugin);
-        } else
-            PluginList.put(name, plugin);
+        }
+        PluginList.put(name, plugin);
         Start.logger.info("插件[" + name + "]已连接");
     }
 

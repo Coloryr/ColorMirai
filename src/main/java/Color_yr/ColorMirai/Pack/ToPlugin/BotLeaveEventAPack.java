@@ -5,20 +5,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 id；群号
  */
 public class BotLeaveEventAPack {
-    private long id;
+    public long id;
 
     public BotLeaveEventAPack(long id) {
-        this.id = id;
-    }
-
-    public BotLeaveEventAPack() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
         this.id = id;
     }
 }

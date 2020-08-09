@@ -9,31 +9,12 @@ fid：群员QQ号
 fname：群员群名片
  */
 public class MessageRecallEventBPack extends MessageRecallEventAPack {
-    private long fid;
-    private String fname;
+    public long fid;
+    public String fname;
 
     public MessageRecallEventBPack(long id, long fid, int mid, int time, String fname) {
         super(id, mid, time);
         this.fid = fid;
         this.fname = fname;
-    }
-
-    public MessageRecallEventBPack() {
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
     }
 }

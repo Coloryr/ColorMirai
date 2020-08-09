@@ -7,7 +7,6 @@ import Color_yr.ColorMirai.Pack.PackDo;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
-import java.io.InputStream;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -37,15 +36,15 @@ public class Plugins {
                     switch (task.getIndex()) {
                         case 52:
                             var pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
-                            BotStart.sendGroupMessage(pack.getId(), pack.getMessage());
+                            BotStart.sendGroupMessage(pack.id, pack.message);
                             break;
                         case 53:
                             var pack1 = JSON.parseObject(task.getData(), SendGroupPrivateMessagePack.class);
-                            BotStart.sendGroupPrivateMessage(pack1.getId(), pack1.getFid(), pack1.getMessage());
+                            BotStart.sendGroupPrivateMessage(pack1.id, pack1.fid, pack1.message);
                             break;
                         case 54:
                             var pack2 = JSON.parseObject(task.getData(), SendFriendMessagePack.class);
-                            BotStart.sendFriendMessage(pack2.getId(), pack2.getMessage());
+                            BotStart.sendFriendMessage(pack2.id, pack2.message);
                             break;
                         case 55:
                             if (SocketServer.sendPack(PackDo.BuildPack(BotStart.getGroups(), 55), Socket))
@@ -58,58 +57,58 @@ public class Plugins {
                         case 57:
                             var pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfoPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
-                                    BotStart.getMembers(pack3.getId()), 57), Socket))
+                                    BotStart.getMembers(pack3.id), 57), Socket))
                                 close();
                             break;
                         case 58:
                             var pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
-                                    BotStart.getGroupInfo(pack4.getId()), 58), Socket))
+                                    BotStart.getGroupInfo(pack4.id), 58), Socket))
                                 close();
                             break;
                         case 59:
                             var pack5 = JSON.parseObject(task.getData(), EventCallPack.class);
-                            EventCall.DoEvent(pack5.getEventid(), pack5.getDofun(), pack5.getArg());
+                            EventCall.DoEvent(pack5.eventid, pack5.dofun, pack5.arg);
                             break;
                         case 61:
-                            var pack6 = JSON.parseObject(task.getData(), SendImageGroupPack.class);
-                            BotStart.sendGroupImage(pack6.getId(), pack6.getImg());
+                            var pack6 = JSON.parseObject(task.getData(), SendGroupImagePack.class);
+                            BotStart.sendGroupImage(pack6.id, pack6.img);
                             break;
                         case 62:
-                            var pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivatePack.class);
-                            BotStart.sendGroupPrivataImage(pack7.getId(), pack7.getFid(), pack7.getImg());
+                            var pack7 = JSON.parseObject(task.getData(), SendGroupPrivateImagePack.class);
+                            BotStart.sendGroupPrivataImage(pack7.id, pack7.fid, pack7.img);
                             break;
                         case 63:
                             var pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
-                            BotStart.sendFriendImage(pack8.getId(), pack8.getImg());
+                            BotStart.sendFriendImage(pack8.id, pack8.img);
                             break;
                         case 64:
                             var pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
-                            BotStart.DeleteGroupMember(pack9.getId(), pack9.getFid());
+                            BotStart.DeleteGroupMember(pack9.id, pack9.fid);
                             break;
                         case 65:
                             var pack10 = JSON.parseObject(task.getData(), MuteGroupMember.class);
-                            BotStart.MuteGroupMember(pack10.getId(), pack10.getFid(), pack10.getTime());
+                            BotStart.MuteGroupMember(pack10.id, pack10.fid, pack10.time);
                             break;
                         case 66:
                             var pack11 = JSON.parseObject(task.getData(), UnmuteGroupMember.class);
-                            BotStart.UnmuteGroupMember(pack11.getId(), pack11.getFid());
+                            BotStart.UnmuteGroupMember(pack11.id, pack11.fid);
                             break;
                         case 67:
                             var pack12 = JSON.parseObject(task.getData(), GroupMuteAll.class);
-                            BotStart.GroupMuteAll(pack12.getId());
+                            BotStart.GroupMuteAll(pack12.id);
                             break;
                         case 68:
                             var pack13 = JSON.parseObject(task.getData(), GroupUnmuteAll.class);
-                            BotStart.GroupUnmuteAll(pack13.getId());
+                            BotStart.GroupUnmuteAll(pack13.id);
                             break;
                         case 69:
                             var pack14 = JSON.parseObject(task.getData(), SetGroupMemberCard.class);
-                            BotStart.SetGroupMemberCard(pack14.getId(), pack14.getFid(), pack14.getCard());
+                            BotStart.SetGroupMemberCard(pack14.id, pack14.fid, pack14.card);
                             break;
                         case 70:
                             var pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
-                            BotStart.SetGroupName(pack15.getId(), pack15.getName());
+                            BotStart.SetGroupName(pack15.id, pack15.name);
                             break;
                     }
                 }
@@ -133,9 +132,9 @@ public class Plugins {
             if (len > 0) {
                 String temp = new String(buf, StandardCharsets.UTF_8);
                 StartPack pack = JSON.parseObject(temp, StartPack.class);
-                if (pack.getName() != null && pack.getReg() != null) {
-                    name = pack.getName();
-                    Events = pack.getReg();
+                if (pack.Name != null && pack.Reg != null) {
+                    name = pack.Name;
+                    Events = pack.Reg;
                     SocketServer.addPlugin(name, this);
                 } else {
                     Start.logger.warn("插件连接初始化失败");

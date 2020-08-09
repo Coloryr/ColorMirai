@@ -7,31 +7,12 @@ fid：邀请人QQ
 name：邀请人nick
  */
 public class BotJoinGroupEventBPack extends BotJoinGroupEventAPack {
-    private String name;
-    private long fid;
+    public String name;
+    public long fid;
 
     public BotJoinGroupEventBPack(String name, long id, long fid) {
         super(id);
         this.fid = fid;
-        this.name = name;
-    }
-
-    public BotJoinGroupEventBPack() {
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
     }
 }

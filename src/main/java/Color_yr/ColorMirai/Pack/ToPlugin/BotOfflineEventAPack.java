@@ -7,20 +7,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 message：离线原因
  */
 public class BotOfflineEventAPack {
-    private String message;
+    public String message;
 
     public BotOfflineEventAPack(String message) {
-        this.message = message;
-    }
-
-    public BotOfflineEventAPack() {
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
         this.message = message;
     }
 }

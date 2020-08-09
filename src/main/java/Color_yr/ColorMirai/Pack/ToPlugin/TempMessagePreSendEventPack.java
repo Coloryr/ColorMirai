@@ -10,50 +10,15 @@ fname：发送人的群名片
 message：消息
  */
 public class TempMessagePreSendEventPack {
-    private long id;
-    private long fid;
-    private String fname;
-    private String message;
+    public long id;
+    public long fid;
+    public String fname;
+    public String message;
 
     public TempMessagePreSendEventPack(long id, long fid, Message message, String fname) {
         this.fid = fid;
         this.id = id;
         this.fname = fname;
         this.message = message.contentToString();
-    }
-
-    public TempMessagePreSendEventPack() {
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 }

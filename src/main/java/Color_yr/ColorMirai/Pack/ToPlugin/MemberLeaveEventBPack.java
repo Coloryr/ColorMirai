@@ -7,39 +7,12 @@ fid：离开人QQ号
 name：离开人群名片
  */
 public class MemberLeaveEventBPack {
-    private long id;
-    private long fid;
-    private String name;
+    public long id;
+    public long fid;
+    public String name;
 
     public MemberLeaveEventBPack(long id, long fid, String name) {
         this.id = id;
         this.fid = fid;
-    }
-
-    public MemberLeaveEventBPack() {
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

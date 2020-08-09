@@ -71,6 +71,25 @@ namespace netcore
         public long id { get; set; }
         public string img { get; set; }
     }
+    class GroupMuteAll
+    {
+        public long id { get; set; }
+    }
+    class GroupUnmuteAll
+    {
+        public long id { get; set; }
+    }
+    class SetGroupMemberCard
+    {
+        public long id { get; set; }
+        public long fid { get; set; }
+        public string card { get; set; }
+    }
+    class SetGroupName
+    {
+        public long id { get; set; }
+        public string name { get; set; }
+    }
     class BuildPack
     {
         public static byte[] Build(object obj, byte index)
@@ -227,6 +246,10 @@ namespace netcore
         {
             while (true)
             {
+                while (!IsConnect)
+                {
+                    Thread.Sleep(500);
+                }
                 SendGroupMessage(571239090, Console.ReadLine());
             }
         }

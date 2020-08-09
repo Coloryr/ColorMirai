@@ -86,4 +86,9 @@ git clone https://github.com/Coloryr/ColorMirai.git
 
 注意：所有包必须带ID，否则无法识别
 
+## 目前的示例代码
+[C#](demo/C%23demo.cs)  
+[JAVA](demo/JAVAdemo.java)  
+示例代码不包含Main函数，可以作为库用
+
 懒得写了（jiushi）

@@ -16,7 +16,6 @@ public class ConfigRead {
                 ConfigFile.createNewFile();
                 Start.Config = new ConfigObj();
                 Save();
-                System.out.println("配置文件已生成，请修改");
                 return true;
             } else {
                 var reader = new InputStreamReader(
@@ -29,7 +28,7 @@ public class ConfigRead {
                     data.append(new String(buf, 0, length));
                 }
                 Start.Config = JSON.parseObject(data.toString(), ConfigObj.class);
-                if (Start.Config.getQQ() == 0) {
+                if (Start.Config.QQ == 0) {
                     Start.Config = new ConfigObj();
                     Save();
                 }

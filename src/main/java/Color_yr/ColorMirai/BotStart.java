@@ -16,7 +16,6 @@ import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.GroupSettings;
-import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
@@ -45,15 +44,17 @@ public class BotStart {
     private static boolean isRun;
 
     public static boolean Start() {
-        bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
+        bot = BotFactoryJvm.newBot(Start.Config.QQ, Start.Config.Password, new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
-                if (Start.Config.getType() == 0) {
-                    setProtocol(MiraiProtocol.ANDROID_PHONE);
-                } else if (Start.Config.getType() == 1) {
-                    setProtocol(MiraiProtocol.ANDROID_WATCH);
+                switch (Start.Config.Type) {
+                    case 0:
+                        setProtocol(MiraiProtocol.ANDROID_PHONE);
+                        break;
+                    case 1:
+                        setProtocol(MiraiProtocol.ANDROID_WATCH);
+                        break;
                 }
-
             }
         });
         try {
@@ -936,12 +937,12 @@ public class BotStart {
         var list = new ArrayList<GroupsPack>();
         for (Group item : bot.getGroups()) {
             GroupsPack info = new GroupsPack();
-            info.setId(item.getId());
-            info.setName(item.getName());
-            info.setImg(item.getAvatarUrl());
-            info.setOid(item.getOwner().getId());
-            info.setOname(item.getOwner().getNick());
-            info.setPer(item.getBotPermission().name());
+            info.id = item.getId();
+            info.name = item.getName();
+            info.img = item.getAvatarUrl();
+            info.oid = item.getOwner().getId();
+            info.oname = item.getOwner().getNick();
+            info.per = item.getBotPermission().name();
             list.add(info);
         }
         return list;
@@ -951,9 +952,9 @@ public class BotStart {
         var list = new ArrayList<FriendsPack>();
         for (Friend item : bot.getFriends()) {
             FriendsPack info = new FriendsPack();
-            info.setId(item.getId());
-            info.setName(item.getNick());
-            info.setImg(item.getAvatarUrl());
+            info.id = item.getId();
+            info.name = item.getNick();
+            info.img = item.getAvatarUrl();
             list.add(info);
         }
         return list;
@@ -964,12 +965,12 @@ public class BotStart {
             var list = new ArrayList<MemberInfoPack>();
             for (var item : bot.getGroup(id).getMembers()) {
                 var info = new MemberInfoPack();
-                info.setId(item.getId());
-                info.setName(item.getNick());
-                info.setImg(item.getAvatarUrl());
-                info.setNick(item.getNameCard());
-                info.setPer(item.getPermission().name());
-                info.setMute(item.getMuteTimeRemaining());
+                info.id = item.getId();
+                info.name = item.getNick();
+                info.img = item.getAvatarUrl();
+                info.nick = item.getNameCard();
+                info.per = item.getPermission().name();
+                info.mute = item.getMuteTimeRemaining();
                 list.add(info);
             }
             return list;

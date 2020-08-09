@@ -5,20 +5,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 id：机器人QQ号
  */
 public class BotOfflineEventCPack {
-    private long id;
+    public long id;
 
     public BotOfflineEventCPack(long id) {
-        this.id = id;
-    }
-
-    public BotOfflineEventCPack() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
         this.id = id;
     }
 }

@@ -6,30 +6,11 @@ name：图片ID
 id：发送给的号码
  */
 public class BeforeImageUploadPack {
-    private String name;
-    private long id;
-
-    public BeforeImageUploadPack() {
-    }
+    public String name;
+    public long id;
 
     public BeforeImageUploadPack(String name, long id) {
         this.id = id;
         this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 }

@@ -5,20 +5,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 id：机器人QQ号
  */
 public class BotOnlineEventPack {
-    private long id;
+    public long id;
 
     public BotOnlineEventPack(long id) {
-        this.id = id;
-    }
-
-    public BotOnlineEventPack() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
         this.id = id;
     }
 }

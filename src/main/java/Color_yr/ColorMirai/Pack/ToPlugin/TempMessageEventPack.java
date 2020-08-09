@@ -11,21 +11,10 @@ message：发送的消息
 time：时间
  */
 public class TempMessageEventPack extends GroupMessageEventPack {
-    private int time;
+    public int time;
 
     public TempMessageEventPack(long id, long fid, String name, MessageChain message, int time) {
         super(id, fid, name, message);
-        this.time = time;
-    }
-
-    public TempMessageEventPack() {
-    }
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
         this.time = time;
     }
 

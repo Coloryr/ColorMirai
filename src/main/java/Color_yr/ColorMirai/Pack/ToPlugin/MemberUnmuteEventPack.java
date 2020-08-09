@@ -9,11 +9,11 @@ fname：被执行人群名片
 ename：执行人群名片
  */
 public class MemberUnmuteEventPack {
-    private long id;
-    private long fid;
-    private long eid;
-    private String fname;
-    private String ename;
+    public long id;
+    public long fid;
+    public long eid;
+    public String fname;
+    public String ename;
 
     public MemberUnmuteEventPack(long id, long fid, long eid, String fname, String ename) {
         this.fid = fid;
@@ -21,48 +21,5 @@ public class MemberUnmuteEventPack {
         this.fname = fname;
         this.eid = eid;
         this.ename = ename;
-    }
-
-    public MemberUnmuteEventPack() {
-    }
-
-    public String getEname() {
-        return ename;
-    }
-
-    public void setEname(String ename) {
-        this.ename = ename;
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(String fname) {
-        this.fname = fname;
-    }
-
-    public long getEid() {
-        return eid;
-    }
-
-    public void setEid(long eid) {
-        this.eid = eid;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
     }
 }

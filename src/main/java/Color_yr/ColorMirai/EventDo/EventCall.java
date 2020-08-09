@@ -15,7 +15,7 @@ public class EventCall {
     private static final Random Random = new Random();
 
     public static long AddEvent(EventBase event) {
-        var a = event.getId();
+        var a = event.id;
         while (EventsDo.containsKey(a)) {
             a = Random.nextLong();
         }
@@ -27,9 +27,9 @@ public class EventCall {
         if (EventsDo.containsKey(id)) {
             try {
                 var event = EventsDo.remove(id);
-                switch (event.getType()) {
+                switch (event.type) {
                     case 4:
-                        BotInvitedJoinGroupRequestEvent data = (BotInvitedJoinGroupRequestEvent) event.getEvent();
+                        BotInvitedJoinGroupRequestEvent data = (BotInvitedJoinGroupRequestEvent) event.event;
                         if (dofun == 0) {
                             data.accept();
                         } else if (dofun == 1) {
@@ -37,7 +37,7 @@ public class EventCall {
                         }
                         break;
                     case 37:
-                        MemberJoinRequestEvent data1 = (MemberJoinRequestEvent) event.getEvent();
+                        MemberJoinRequestEvent data1 = (MemberJoinRequestEvent) event.event;
                         if (dofun == 0) {
                             data1.accept();
                         } else if (dofun == 1) {
@@ -46,7 +46,7 @@ public class EventCall {
                             data1.ignore((Boolean) arg.get(0));
                         }
                     case 46:
-                        NewFriendRequestEvent data2 = (NewFriendRequestEvent) event.getEvent();
+                        NewFriendRequestEvent data2 = (NewFriendRequestEvent) event.event;
                         if (dofun == 0) {
                             data2.accept();
                         } else if (dofun == 1) {

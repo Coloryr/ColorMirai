@@ -8,22 +8,6 @@ Name：插件名字
 Reg：注册的事件
  */
 public class StartPack {
-    private String Name;
-    private List<Integer> Reg;
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public List<Integer> getReg() {
-        return Reg;
-    }
-
-    public void setReg(List<Integer> reg) {
-        Reg = reg;
-    }
+    public String Name;
+    public List<Integer> Reg;
 }
