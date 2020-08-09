@@ -48,10 +48,9 @@ public class BotStart {
         bot = BotFactoryJvm.newBot(Start.Config.getQQ(), Start.Config.getPassword(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Start.RunDir + "info.json");
-                if(Start.Config.getType() == 0) {
+                if (Start.Config.getType() == 0) {
                     setProtocol(MiraiProtocol.ANDROID_PHONE);
-                }
-                else  if(Start.Config.getType() == 1) {
+                } else if (Start.Config.getType() == 1) {
                     setProtocol(MiraiProtocol.ANDROID_WATCH);
                 }
 
@@ -1008,6 +1007,69 @@ public class BotStart {
         try {
             Friend friend = bot.getFriend(id);
             friend.sendMessage(friend.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
+    }
+
+    public static void DeleteGroupMember(long id, long fid) {
+        try {
+            Member member = bot.getGroup(id).get(fid);
+            member.kick();
+        } catch (Exception e) {
+            Start.logger.error("踢出成员失败", e);
+        }
+    }
+
+    public static void MuteGroupMember(long id, long fid, int time) {
+        try {
+            Member member = bot.getGroup(id).get(fid);
+            member.mute(time);
+        } catch (Exception e) {
+            Start.logger.error("禁言成员失败", e);
+        }
+    }
+
+    public static void UnmuteGroupMember(long id, long fid) {
+        try {
+            Member member = bot.getGroup(id).get(fid);
+            member.unmute();
+        } catch (Exception e) {
+            Start.logger.error("踢出成员失败", e);
+        }
+    }
+
+    public static void GroupMuteAll(long id) {
+        try {
+            Group group = bot.getGroup(id);
+            group.getSettings().setMuteAll(true);
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
+    }
+
+    public static void GroupUnmuteAll(long id) {
+        try {
+            Group group = bot.getGroup(id);
+            group.getSettings().setMuteAll(false);
+        } catch (Exception e) {
+            Start.logger.error("发送群消息失败", e);
+        }
+    }
+
+    public static void SetGroupMemberCard(long id, long fid, String card) {
+        try {
+            Member member = bot.getGroup(id).get(fid);
+            member.setNameCard(card);
+        } catch (Exception e) {
+            Start.logger.error("踢出成员失败", e);
+        }
+    }
+
+    public static void SetGroupName(long id, String name) {
+        try {
+            Group group = bot.getGroup(id);
+            group.setName(name);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
         }

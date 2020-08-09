@@ -4,9 +4,13 @@
 需要JAVA11/14环境  
 运行环境看你的构建环境
 ## 构建说明
+首先安装JDK11/14并且设置好环境变量  
+安装git  
+右键打开git bash  
+输入下面的指令（期间需要梯子等工具，如果慢的话）
 ```
 git clone https://github.com/Coloryr/ColorMirai.git
-gradle shadowJar
+./gradlew shadowJar
 ```
 你会得到一个jar
 `build/libs/ColorMirai-1.0-SNAPSHOT-all.jar`  

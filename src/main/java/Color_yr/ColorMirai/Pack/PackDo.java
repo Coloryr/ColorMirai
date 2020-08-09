@@ -73,6 +73,15 @@ import java.nio.charset.StandardCharsets;
 61 [插件]发送图片到群
 62 [插件]发送图片到私聊
 63 [插件]发送图片到朋友
+
+64 [插件]删除群员
+65 [插件]禁言群员
+66 [插件]解除禁言
+67 [插件]开启全员禁言
+68 [插件]关闭全员禁言
+69 [插件]设置群名片
+70 [插件]设置群名
+
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

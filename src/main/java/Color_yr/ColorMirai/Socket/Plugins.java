@@ -84,6 +84,34 @@ public class Plugins {
                             SendFriendImagePack pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
                             BotStart.sendFriendImage(pack8.getId(), pack8.getImg());
                             break;
+                        case 64:
+                            DeleteGroupMember pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
+                            BotStart.DeleteGroupMember(pack9.getId(), pack9.getFid());
+                            break;
+                        case 65:
+                            MuteGroupMember pack10 = JSON.parseObject(task.getData(), MuteGroupMember.class);
+                            BotStart.MuteGroupMember(pack10.getId(), pack10.getFid(), pack10.getTime());
+                            break;
+                        case 66:
+                            UnmuteGroupMember pack11 = JSON.parseObject(task.getData(), UnmuteGroupMember.class);
+                            BotStart.UnmuteGroupMember(pack11.getId(), pack11.getFid());
+                            break;
+                        case 67:
+                            GroupMuteAll pack12 = JSON.parseObject(task.getData(), GroupMuteAll.class);
+                            BotStart.GroupMuteAll(pack12.getId());
+                            break;
+                        case 68:
+                            GroupUnmuteAll pack13 = JSON.parseObject(task.getData(), GroupUnmuteAll.class);
+                            BotStart.GroupUnmuteAll(pack13.getId());
+                            break;
+                        case 69:
+                            SetGroupMemberCard pack14 = JSON.parseObject(task.getData(), SetGroupMemberCard.class);
+                            BotStart.SetGroupMemberCard(pack14.getId(), pack14.getFid(), pack14.getCard());
+                            break;
+                        case 70:
+                            SetGroupName pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
+                            BotStart.SetGroupName(pack15.getId(), pack15.getName());
+                            break;
                     }
                 }
                 Thread.sleep(10);
