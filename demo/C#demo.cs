@@ -196,7 +196,7 @@ namespace netcore
                                 data = Encoding.UTF8.GetString(data)
                             });
                         }
-                        else if (Socket.Available < 0)
+                        else if (Socket.Poll(1000, SelectMode.SelectRead))
                         {
                             ServerMain.LogOut("机器人连接中断");
                             IsConnect = false;
