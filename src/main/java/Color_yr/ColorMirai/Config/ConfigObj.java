@@ -13,12 +13,12 @@ public class ConfigObj {
         Type = 0;
     }
 
-    public void setType(int type) {
-        Type = type;
-    }
-
     public int getType() {
         return Type;
+    }
+
+    public void setType(int type) {
+        Type = type;
     }
 
     public long getQQ() {
