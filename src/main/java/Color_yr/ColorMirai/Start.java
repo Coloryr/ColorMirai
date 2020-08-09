@@ -27,7 +27,7 @@ public class Start {
         if (!SocketServer.start())
             return;
 
-        Scanner scanner = new Scanner(System.in);
+        var scanner = new Scanner(System.in);
         while (true) {
             String data = scanner.nextLine();
             switch (data) {
@@ -36,7 +36,6 @@ public class Start {
                     SocketServer.stop();
                     break;
             }
-
         }
     }
 }

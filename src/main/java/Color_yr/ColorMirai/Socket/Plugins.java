@@ -33,19 +33,18 @@ public class Plugins {
         while (isRun) {
             try {
                 if (!Tasks.isEmpty()) {
-                    RePackTask task = Tasks.remove(0);
+                    var task = Tasks.remove(0);
                     switch (task.getIndex()) {
                         case 52:
-                            SendGroupMessagePack pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
+                            var pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
                             BotStart.sendGroupMessage(pack.getId(), pack.getMessage());
                             break;
                         case 53:
-                            SendGroupPrivateMessagePack pack1 = JSON.parseObject(
-                                    task.getData(), SendGroupPrivateMessagePack.class);
+                            var pack1 = JSON.parseObject(task.getData(), SendGroupPrivateMessagePack.class);
                             BotStart.sendGroupPrivateMessage(pack1.getId(), pack1.getFid(), pack1.getMessage());
                             break;
                         case 54:
-                            SendFriendMessagePack pack2 = JSON.parseObject(task.getData(), SendFriendMessagePack.class);
+                            var pack2 = JSON.parseObject(task.getData(), SendFriendMessagePack.class);
                             BotStart.sendFriendMessage(pack2.getId(), pack2.getMessage());
                             break;
                         case 55:
@@ -57,59 +56,59 @@ public class Plugins {
                                 close();
                             break;
                         case 57:
-                            GetGroupMemberInfoPack pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfoPack.class);
+                            var pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfoPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
                                     BotStart.getMembers(pack3.getId()), 57), Socket))
                                 close();
                             break;
                         case 58:
-                            GetGroupSettingPack pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
+                            var pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
                                     BotStart.getGroupInfo(pack4.getId()), 58), Socket))
                                 close();
                             break;
                         case 59:
-                            EventCallPack pack5 = JSON.parseObject(task.getData(), EventCallPack.class);
+                            var pack5 = JSON.parseObject(task.getData(), EventCallPack.class);
                             EventCall.DoEvent(pack5.getEventid(), pack5.getDofun(), pack5.getArg());
                             break;
                         case 61:
-                            SendImageGroupPack pack6 = JSON.parseObject(task.getData(), SendImageGroupPack.class);
+                            var pack6 = JSON.parseObject(task.getData(), SendImageGroupPack.class);
                             BotStart.sendGroupImage(pack6.getId(), pack6.getImg());
                             break;
                         case 62:
-                            SendImageGroupPrivatePack pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivatePack.class);
+                            var pack7 = JSON.parseObject(task.getData(), SendImageGroupPrivatePack.class);
                             BotStart.sendGroupPrivataImage(pack7.getId(), pack7.getFid(), pack7.getImg());
                             break;
                         case 63:
-                            SendFriendImagePack pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
+                            var pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
                             BotStart.sendFriendImage(pack8.getId(), pack8.getImg());
                             break;
                         case 64:
-                            DeleteGroupMember pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
+                            var pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
                             BotStart.DeleteGroupMember(pack9.getId(), pack9.getFid());
                             break;
                         case 65:
-                            MuteGroupMember pack10 = JSON.parseObject(task.getData(), MuteGroupMember.class);
+                            var pack10 = JSON.parseObject(task.getData(), MuteGroupMember.class);
                             BotStart.MuteGroupMember(pack10.getId(), pack10.getFid(), pack10.getTime());
                             break;
                         case 66:
-                            UnmuteGroupMember pack11 = JSON.parseObject(task.getData(), UnmuteGroupMember.class);
+                            var pack11 = JSON.parseObject(task.getData(), UnmuteGroupMember.class);
                             BotStart.UnmuteGroupMember(pack11.getId(), pack11.getFid());
                             break;
                         case 67:
-                            GroupMuteAll pack12 = JSON.parseObject(task.getData(), GroupMuteAll.class);
+                            var pack12 = JSON.parseObject(task.getData(), GroupMuteAll.class);
                             BotStart.GroupMuteAll(pack12.getId());
                             break;
                         case 68:
-                            GroupUnmuteAll pack13 = JSON.parseObject(task.getData(), GroupUnmuteAll.class);
+                            var pack13 = JSON.parseObject(task.getData(), GroupUnmuteAll.class);
                             BotStart.GroupUnmuteAll(pack13.getId());
                             break;
                         case 69:
-                            SetGroupMemberCard pack14 = JSON.parseObject(task.getData(), SetGroupMemberCard.class);
+                            var pack14 = JSON.parseObject(task.getData(), SetGroupMemberCard.class);
                             BotStart.SetGroupMemberCard(pack14.getId(), pack14.getFid(), pack14.getCard());
                             break;
                         case 70:
-                            SetGroupName pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
+                            var pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
                             BotStart.SetGroupName(pack15.getId(), pack15.getName());
                             break;
                     }
@@ -129,8 +128,8 @@ public class Plugins {
             while (Socket.getInputStream().available() == 0) {
                 Thread.sleep(10);
             }
-            byte[] buf = new byte[Socket.getInputStream().available()];
-            int len = Socket.getInputStream().read(buf);
+            var buf = new byte[Socket.getInputStream().available()];
+            var len = Socket.getInputStream().read(buf);
             if (len > 0) {
                 String temp = new String(buf, StandardCharsets.UTF_8);
                 StartPack pack = JSON.parseObject(temp, StartPack.class);
@@ -155,11 +154,11 @@ public class Plugins {
         while (isRun) {
             try {
                 if (Socket.getInputStream().available() > 0) {
-                    InputStream inputStream = Socket.getInputStream();
-                    byte[] bytes = new byte[1024];
+                    var inputStream = Socket.getInputStream();
+                    var bytes = new byte[1024];
                     int len;
                     byte index = 0;
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     while ((len = inputStream.read(bytes)) != -1) {
                         if (len == 1024)
                             sb.append(new String(bytes, 0, len, StandardCharsets.UTF_8));

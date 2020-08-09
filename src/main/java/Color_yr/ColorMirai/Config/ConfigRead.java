@@ -19,17 +19,16 @@ public class ConfigRead {
                 System.out.println("配置文件已生成，请修改");
                 return true;
             } else {
-                InputStreamReader reader = new InputStreamReader(
+                var reader = new InputStreamReader(
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
-                BufferedReader bf = new BufferedReader(reader);
-                char[] buf = new char[1024];
+                var bf = new BufferedReader(reader);
+                var buf = new char[1024];
                 int length;
-                StringBuilder data = new StringBuilder();
+                var data = new StringBuilder();
                 while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
-                String temp = data.toString();
-                Start.Config = JSON.parseObject(temp, ConfigObj.class);
+                Start.Config = JSON.parseObject(data.toString(), ConfigObj.class);
                 if (Start.Config.getQQ() == 0) {
                     Start.Config = new ConfigObj();
                     Save();
@@ -45,8 +44,8 @@ public class ConfigRead {
 
     public static void Save() {
         try {
-            FileOutputStream out = new FileOutputStream(ConfigFile);
-            OutputStreamWriter write = new OutputStreamWriter(
+            var out = new FileOutputStream(ConfigFile);
+            var write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
             write.write(JSON.toJSONString(Start.Config));
             write.close();

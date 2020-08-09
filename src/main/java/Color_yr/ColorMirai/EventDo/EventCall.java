@@ -15,7 +15,7 @@ public class EventCall {
     private static final Random Random = new Random();
 
     public static long AddEvent(EventBase event) {
-        long a = event.getId();
+        var a = event.getId();
         while (EventsDo.containsKey(a)) {
             a = Random.nextLong();
         }
@@ -26,7 +26,7 @@ public class EventCall {
     public static void DoEvent(long id, int dofun, List<Object> arg) {
         if (EventsDo.containsKey(id)) {
             try {
-                EventBase event = EventsDo.remove(id);
+                var event = EventsDo.remove(id);
                 switch (event.getType()) {
                     case 4:
                         BotInvitedJoinGroupRequestEvent data = (BotInvitedJoinGroupRequestEvent) event.getEvent();

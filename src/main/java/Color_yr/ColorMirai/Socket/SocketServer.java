@@ -22,19 +22,19 @@ public class SocketServer {
         try {
             ServerSocket = new ServerSocket(Start.Config.getPort());
             Start.logger.info("Socket已启动:" + Start.Config.getPort());
-            Runnable accept = () -> {
+            isStart = true;
+            ServerThread = new Thread(() ->
+            {
                 while (isStart) {
                     try {
-                        Socket socket = ServerSocket.accept();
+                        var socket = ServerSocket.accept();
                         Start.logger.info("有插件连接");
                         new Plugins(socket);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            };
-            isStart = true;
-            ServerThread = new Thread(accept);
+            });
             ServerThread.start();
             service.scheduleAtFixedRate(() -> {
                 for (Plugins plugin : PluginList.values()) {
@@ -54,7 +54,7 @@ public class SocketServer {
 
     public static void addPlugin(String name, Plugins plugin) {
         if (PluginList.containsKey(name)) {
-            Plugins temp = PluginList.get(name);
+            var temp = PluginList.get(name);
             temp.close();
             PluginList.put(name, plugin);
         } else

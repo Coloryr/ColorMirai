@@ -900,7 +900,7 @@ public class BotStart {
     }
 
     public static void eventCallToPlugin(byte index, byte[] data) {
-        byte[] temp = new byte[data.length + 1];
+        var temp = new byte[data.length + 1];
         System.arraycopy(data, 0, temp, 0, data.length);
         temp[data.length] = index;
         for (Plugins item : SocketServer.PluginList.values()) {
@@ -933,7 +933,7 @@ public class BotStart {
     }
 
     public static List<GroupsPack> getGroups() {
-        List<GroupsPack> list = new ArrayList<>();
+        var list = new ArrayList<GroupsPack>();
         for (Group item : bot.getGroups()) {
             GroupsPack info = new GroupsPack();
             info.setId(item.getId());
@@ -948,7 +948,7 @@ public class BotStart {
     }
 
     public static List<FriendsPack> getFriends() {
-        List<FriendsPack> list = new ArrayList<>();
+        var list = new ArrayList<FriendsPack>();
         for (Friend item : bot.getFriends()) {
             FriendsPack info = new FriendsPack();
             info.setId(item.getId());
@@ -961,9 +961,9 @@ public class BotStart {
 
     public static List<MemberInfoPack> getMembers(long id) {
         if (bot.getGroups().contains(id)) {
-            List<MemberInfoPack> list = new ArrayList<>();
-            for (Member item : bot.getGroup(id).getMembers()) {
-                MemberInfoPack info = new MemberInfoPack();
+            var list = new ArrayList<MemberInfoPack>();
+            for (var item : bot.getGroup(id).getMembers()) {
+                var info = new MemberInfoPack();
                 info.setId(item.getId());
                 info.setName(item.getNick());
                 info.setImg(item.getAvatarUrl());
@@ -979,7 +979,7 @@ public class BotStart {
 
     public static GroupSettings getGroupInfo(long id) {
         if (bot.getGroups().contains(id)) {
-            Group item = bot.getGroup(id);
+            var item = bot.getGroup(id);
             return item.getSettings();
         } else
             return null;
@@ -987,7 +987,7 @@ public class BotStart {
 
     public static void sendGroupImage(long id, String img) {
         try {
-            Group group = bot.getGroup(id);
+            var group = bot.getGroup(id);
             group.sendMessage(group.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -996,7 +996,7 @@ public class BotStart {
 
     public static void sendGroupPrivataImage(long id, long fid, String img) {
         try {
-            Member member = bot.getGroup(id).get(fid);
+            var member = bot.getGroup(id).get(fid);
             member.sendMessage(member.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -1005,7 +1005,7 @@ public class BotStart {
 
     public static void sendFriendImage(long id, String img) {
         try {
-            Friend friend = bot.getFriend(id);
+            var friend = bot.getFriend(id);
             friend.sendMessage(friend.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -1014,7 +1014,7 @@ public class BotStart {
 
     public static void DeleteGroupMember(long id, long fid) {
         try {
-            Member member = bot.getGroup(id).get(fid);
+            var member = bot.getGroup(id).get(fid);
             member.kick();
         } catch (Exception e) {
             Start.logger.error("踢出成员失败", e);
@@ -1023,7 +1023,7 @@ public class BotStart {
 
     public static void MuteGroupMember(long id, long fid, int time) {
         try {
-            Member member = bot.getGroup(id).get(fid);
+            var member = bot.getGroup(id).get(fid);
             member.mute(time);
         } catch (Exception e) {
             Start.logger.error("禁言成员失败", e);
@@ -1032,7 +1032,7 @@ public class BotStart {
 
     public static void UnmuteGroupMember(long id, long fid) {
         try {
-            Member member = bot.getGroup(id).get(fid);
+            var member = bot.getGroup(id).get(fid);
             member.unmute();
         } catch (Exception e) {
             Start.logger.error("踢出成员失败", e);
@@ -1041,7 +1041,7 @@ public class BotStart {
 
     public static void GroupMuteAll(long id) {
         try {
-            Group group = bot.getGroup(id);
+            var group = bot.getGroup(id);
             group.getSettings().setMuteAll(true);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -1050,7 +1050,7 @@ public class BotStart {
 
     public static void GroupUnmuteAll(long id) {
         try {
-            Group group = bot.getGroup(id);
+            var group = bot.getGroup(id);
             group.getSettings().setMuteAll(false);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -1059,7 +1059,7 @@ public class BotStart {
 
     public static void SetGroupMemberCard(long id, long fid, String card) {
         try {
-            Member member = bot.getGroup(id).get(fid);
+            var member = bot.getGroup(id).get(fid);
             member.setNameCard(card);
         } catch (Exception e) {
             Start.logger.error("踢出成员失败", e);
