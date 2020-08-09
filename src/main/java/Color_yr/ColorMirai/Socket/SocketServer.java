@@ -71,10 +71,10 @@ public class SocketServer {
         try {
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
-            return true;
+            return false;
         } catch (IOException e) {
             Start.logger.error("插件通信出现问题", e);
-            return false;
+            return true;
         }
     }
 
