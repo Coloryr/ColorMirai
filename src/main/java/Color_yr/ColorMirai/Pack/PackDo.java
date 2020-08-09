@@ -76,10 +76,9 @@ import java.nio.charset.StandardCharsets;
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {
-        String str = JSON.toJSONString(data);
+        String str = JSON.toJSONString(data) + " ";
         byte[] temp = str.getBytes(StandardCharsets.UTF_8);
-        byte[] temp1 = new byte[temp.length + 1];
-        temp1[temp.length] = (byte) index;
-        return temp1;
+        temp[temp.length - 1] = (byte) index;
+        return temp;
     }
 }
