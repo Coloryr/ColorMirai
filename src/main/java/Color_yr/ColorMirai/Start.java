@@ -23,7 +23,7 @@ public class Start {
     }
 
     public static void main(String[] args) {
-        RunDir = System.getProperty("user.dir") + "\\";
+        RunDir = System.getProperty("user.dir") + "/";
         logger.info("正在启动");
         if (ConfigRead.ReadStart(RunDir)) {
             logger.info("请修改配置文件后重新启动");
