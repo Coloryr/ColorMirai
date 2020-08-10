@@ -2,6 +2,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import net.mamoe.mirai.message.data.MessageChain;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 21 [机器人]在好友消息发送后广播（事件）
 message：消息
@@ -11,7 +14,7 @@ res：是否成功发送
 error：错误消息
  */
 public class FriendMessagePostSendEventPack {
-    public String message;
+    public List<String> message;
     public long id;
     public String name;
     public boolean res;
@@ -20,7 +23,11 @@ public class FriendMessagePostSendEventPack {
     public FriendMessagePostSendEventPack(MessageChain message, long id, String name, boolean res, String error) {
         this.error = error;
         this.id = id;
-        this.message = message.contentToString();
+        this.message = new ArrayList<>();
+        for (var item : message) {
+            this.message.add(item.toString());
+        }
+        this.message.add(message.contentToString());
         this.name = name;
         this.res = res;
     }

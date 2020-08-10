@@ -2,6 +2,9 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import net.mamoe.mirai.message.data.Message;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /*
 48 [机器人]在发送群临时会话消息前广播（事件）
 id：群号
@@ -13,12 +16,14 @@ public class TempMessagePreSendEventPack {
     public long id;
     public long fid;
     public String fname;
-    public String message;
+    public List<String> message;
 
     public TempMessagePreSendEventPack(long id, long fid, Message message, String fname) {
         this.fid = fid;
         this.id = id;
         this.fname = fname;
-        this.message = message.contentToString();
+        this.message = new ArrayList<>();
+        this.message.add(message.toString());
+        this.message.add(message.contentToString());
     }
 }
