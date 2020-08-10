@@ -16,6 +16,7 @@ import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.GroupSettings;
+import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
@@ -24,8 +25,10 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.TempMessageEvent;
+import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -909,25 +912,44 @@ public class BotStart {
         }
     }
 
-    public static void sendGroupMessage(long group, String message) {
+    public static void sendGroupMessage(long group, List<String> message) {
         try {
-            bot.getGroup(group).sendMessage(message);
+            Group group1 = bot.getGroup(group);
+            MessageChain messageChain = MessageUtils.newChain("");
+            for (var item : message) {
+                if (item.startsWith("at:")) {
+                    Member member = group1.get(Long.parseLong(item.replace("at:", "")));
+                    messageChain = messageChain.plus(new At(member));
+                } else {
+                    messageChain = messageChain.plus(item);
+                }
+            }
+            group1.sendMessage(messageChain);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
         }
     }
 
-    public static void sendGroupPrivateMessage(long group, long fid, String message) {
+    public static void sendGroupPrivateMessage(long group, long fid, List<String> message) {
         try {
-            bot.getGroup(group).get(fid).sendMessage(message);
+            Group group1 = bot.getGroup(group);
+            MessageChain messageChain = MessageUtils.newChain("");
+            for (var item : message) {
+                messageChain.plus(item);
+            }
+            group1.get(fid).sendMessage(messageChain);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
         }
     }
 
-    public static void sendFriendMessage(long fid, String message) {
+    public static void sendFriendMessage(long fid, List<String> message) {
         try {
-            bot.getFriend(fid).sendMessage(message);
+            MessageChain messageChain = MessageUtils.newChain("");
+            for(var item : message) {
+                messageChain.plus(item);
+            }
+            bot.getFriend(fid).sendMessage(messageChain);
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
         }

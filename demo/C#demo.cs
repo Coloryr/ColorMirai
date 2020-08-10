@@ -27,18 +27,18 @@ namespace netcore
     class SendGroupMessagePack
     {
         public long id { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
     }
     class SendFriendMessagePack
     {
         public long id { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
     }
     class SendGroupPrivateMessagePack
     {
         public long id { get; set; }
         public long fid { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
     }
     class TempMessageEventPack
     {
@@ -256,13 +256,20 @@ namespace netcore
 
         private static void ReadTest()
         {
+            List<string> list = new List<string>() ;
             while (true)
             {
                 while (!IsConnect)
                 {
                     Thread.Sleep(500);
                 }
-                SendGroupMessage(571239090, Console.ReadLine());
+                list.Clear();
+                Console.WriteLine("输入4行数据后发送");
+                list.Add(Console.ReadLine());
+                list.Add(Console.ReadLine());
+                list.Add(Console.ReadLine());
+                list.Add(Console.ReadLine());
+                SendGroupMessage(571239090, list);
             }
         }
 
@@ -291,17 +298,17 @@ namespace netcore
                 ServerMain.LogError(e);
             }
         }
-        public static void SendGroupMessage(long id, string message)
+        public static void SendGroupMessage(long id, List<string> message)
         {
             var data = BuildPack.Build(new SendGroupMessagePack { id = id, message = message }, 52);
             QueueSend.Add(data);
         }
-        public static void SendGroupPrivateMessage(long id, long fid, string message)
+        public static void SendGroupPrivateMessage(long id, long fid, List<string> message)
         {
             var data = BuildPack.Build(new SendGroupPrivateMessagePack { id = id, fid = fid, message = message }, 53);
             QueueSend.Add(data);
         }
-        public static void SendFriendMessage(long id, string message)
+        public static void SendFriendMessage(long id, List<string> message)
         {
             var data = BuildPack.Build(new SendFriendMessagePack { id = id, message = message }, 54);
             QueueSend.Add(data);

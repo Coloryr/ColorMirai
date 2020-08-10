@@ -20,18 +20,18 @@ class SendFriendImagePack {
 
 class SendFriendMessagePack {
     public long id;
-    public String message;
+    public List<String> message;
 }
 
 class SendGroupMessagePack {
     public long id;
-    public String message;
+    public List<String> message;
 }
 
 class SendGroupPrivateMessagePack {
     public long id;
     public long fid;
-    public String message;
+    public List<String> message;
 }
 
 class SendGroupImagePack {
