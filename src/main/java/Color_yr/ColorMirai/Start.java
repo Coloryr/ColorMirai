@@ -13,15 +13,6 @@ public class Start {
     public static String RunDir;
     public static ConfigObj Config;
 
-    public static String getString(String a, String b, String c) {
-        int x = a.indexOf(b) + b.length();
-        int y = a.indexOf(c);
-        char[] data = a.toCharArray();
-        if (data[y - 1] == '"')
-            y = a.indexOf(c, y + 1);
-        return a.substring(x, y);
-    }
-
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";
         logger.info("正在启动");
@@ -41,14 +32,21 @@ public class Start {
         }
 
         var scanner = new Scanner(System.in);
-        while (true) {
-            String data = scanner.nextLine();
-            switch (data) {
-                case "stop":
-                    logger.info("正在停止");
-                    SocketServer.stop();
-                    break;
+        try {
+            while (true) {
+                String data = scanner.nextLine();
+                switch (data) {
+                    case "stop":
+                        logger.info("正在停止");
+                        SocketServer.stop();
+                        BotStart.stop();
+                        Thread.sleep(500);
+                        System.exit(0);
+                        return;
+                }
             }
+        } catch (Exception e) {
+            logger.error("控制台发生错误", e);
         }
     }
 }

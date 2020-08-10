@@ -23,15 +23,16 @@ public class SocketServer {
             ServerSocket = new ServerSocket(Start.Config.Port);
             Start.logger.info("Socket已启动:" + Start.Config.Port);
             isStart = true;
-            ServerThread = new Thread(() ->
-            {
+            ServerThread = new Thread(() -> {
                 while (isStart) {
                     try {
                         var socket = ServerSocket.accept();
                         Start.logger.info("有插件连接");
                         new Plugins(socket);
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        if (!isStart)
+                            return;
+                        Start.logger.error("Socket发生错误", e);
                     }
                 }
             });

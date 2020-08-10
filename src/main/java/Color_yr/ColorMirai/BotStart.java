@@ -902,6 +902,17 @@ public class BotStart {
         Start.logger.info("机器人已启动");
         return true;
     }
+    public static void stop() {
+        try {
+            isRun = false;
+            if (bot != null)
+                bot.close(new Throwable());
+            if (EventDo != null)
+                EventDo.join();
+        } catch (Exception e) {
+            Start.logger.error("关闭机器人时出现错误", e);
+        }
+    }
 
     public static void eventCallToPlugin(byte index, byte[] data) {
         var temp = new byte[data.length + 1];
