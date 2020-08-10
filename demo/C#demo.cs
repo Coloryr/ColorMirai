@@ -21,7 +21,7 @@ namespace netcore
         public long id { get; set; }
         public long fid { get; set; }
         public string name { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
     }
 
     class SendGroupMessagePack
@@ -45,14 +45,14 @@ namespace netcore
         public long id { get; set; }
         public long fid { get; set; }
         public string name { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
         public int time { get; set; }
     }
     class FriendMessageEventPack
     {
         public long id { get; set; }
         public string name { get; set; }
-        public string message { get; set; }
+        public List<string> message { get; set; }
         public int time { get; set; }
     }
     class SendGroupImagePack
@@ -157,7 +157,11 @@ namespace netcore
                                     Console.WriteLine("id = " + pack.id);
                                     Console.WriteLine("fid = " + pack.fid);
                                     Console.WriteLine("name = " + pack.name);
-                                    Console.WriteLine("message = " + pack.message);
+                                    Console.WriteLine("message = ");
+                                    foreach (var item in pack.message)
+                                    {
+                                        Console.WriteLine(item);
+                                    }
                                     Console.WriteLine();
                                     break;
                                 case 50:
@@ -165,7 +169,11 @@ namespace netcore
                                     Console.WriteLine("id = " + pack1.id);
                                     Console.WriteLine("fid = " + pack1.fid);
                                     Console.WriteLine("name = " + pack1.name);
-                                    Console.WriteLine("message = " + pack1.message);
+                                    Console.WriteLine("message = ");
+                                    foreach (var item in pack1.message)
+                                    {
+                                        Console.WriteLine(item);
+                                    }
                                     Console.WriteLine();
                                     break;
                                 case 51:
@@ -173,7 +181,11 @@ namespace netcore
                                     Console.WriteLine("id = " + pack2.id);
                                     Console.WriteLine("time = " + pack2.time);
                                     Console.WriteLine("name = " + pack2.name);
-                                    Console.WriteLine("message = " + pack2.message);
+                                    Console.WriteLine("message = ");
+                                    foreach (var item in pack2.message)
+                                    {
+                                        Console.WriteLine(item);
+                                    }
                                     Console.WriteLine();
                                     break;
                             }

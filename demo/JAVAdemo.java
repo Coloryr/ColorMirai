@@ -9,259 +9,58 @@ import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 class StartPack {
-    private String Name;
-    private List<Integer> Reg;
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public List<Integer> getReg() {
-        return Reg;
-    }
-
-    public void setReg(List<Integer> reg) {
-        Reg = reg;
-    }
+    public String Name;
+    public List<Integer> Reg;
 }
 
 class SendFriendImagePack {
-    private long id;
-    private String img;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
+    public long id;
+    public String img;
 }
 
 class SendFriendMessagePack {
-    private long id;
-    private String message;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public long id;
+    public String message;
 }
 
 class SendGroupMessagePack {
-    private long id;
-    private String message;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public long id;
+    public String message;
 }
 
 class SendGroupPrivateMessagePack {
-    private long id;
-    private long fid;
-    private String message;
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
+    public long id;
+    public long fid;
+    public String message;
 }
 
 class SendGroupImagePack {
-    private long id;
-    private String img;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
+    public long id;
+    public String img;
 }
 
 class SendGroupPrivateImagePack {
-    private long id;
-    private long fid;
-    private String img;
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
+    public long id;
+    public long fid;
+    public String img;
 }
 
 class GroupMessageEventPack {
-    private long id;
-    private long fid;
-    private String name;
-    private String message;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public long getFid() {
-        return fid;
-    }
-
-    public void setFid(long fid) {
-        this.fid = fid;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public long id;
+    public long fid;
+    public String name;
+    public List<String> message;
 }
 
 class TempMessageEventPack extends GroupMessageEventPack {
-    private int time;
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
+    public int time;
 }
 
 class FriendMessageEventPack {
-    private long id;
-    private String name;
-    private String message;
-    private int time;
-
-    public int getTime() {
-        return time;
-    }
-
-    public void setTime(int time) {
-        this.time = time;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public long id;
+    public String name;
+    public List<String> message;
+    public int time;
 }
 
 class BuildPack {
@@ -274,29 +73,12 @@ class BuildPack {
 }
 
 class RobotTask {
-    private byte index;
-    private String data;
+    public byte index;
+    public String data;
 
-    public RobotTask(byte index, String data)
-    {
-        this.index = index;
-        this.data = data;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public byte getIndex() {
-        return index;
-    }
-
-    public void setIndex(byte index) {
-        this.index = index;
+    public RobotTask(byte type, String s) {
+        index = type;
+        data = s;
     }
 }
 
@@ -327,12 +109,12 @@ public class RobotSocket {
     private static List<RobotTask> QueueRead;
     private static List<byte[]> QueueSend;
     private static final StartPack PackStart = new StartPack() {{
-        setName("ColoryrSDK");
-        setReg(new ArrayList<>() {{
+        Name = "ColoryrSDK";
+        Reg = new ArrayList<>() {{
             add(49);
             add(50);
             add(51);
-        }});
+        }};
     }};
 
     public static void Start() {
@@ -345,29 +127,38 @@ public class RobotSocket {
                 try {
                     if (!QueueRead.isEmpty()) {
                         task = QueueRead.remove(0);
-                        switch (task.getIndex()) {
+                        switch (task.index) {
                             case 49:
-                                var pack = JSON.parseObject(task.getData(), GroupMessageEventPack.class);
-                                System.out.println("id = " + pack.getId());
-                                System.out.println("fid = " + pack.getFid());
-                                System.out.println("name = " + pack.getName());
-                                System.out.println("message = " + pack.getMessage());
+                                var pack = JSON.parseObject(task.data, GroupMessageEventPack.class);
+                                System.out.println("id = " + pack.id);
+                                System.out.println("fid = " + pack.fid);
+                                System.out.println("name = " + pack.name);
+                                System.out.println("message = ");
+                                for(var item : pack.message) {
+                                    System.out.println(item);
+                                }
                                 System.out.println();
                                 break;
                             case 50:
-                                var pack1 = JSON.parseObject(task.getData(), TempMessageEventPack.class);
-                                System.out.println("id = " + pack1.getId());
-                                System.out.println("fid = " + pack1.getFid());
-                                System.out.println("name = " + pack1.getName());
-                                System.out.println("message = " + pack1.getMessage());
+                                var pack1 = JSON.parseObject(task.data, TempMessageEventPack.class);
+                                System.out.println("id = " + pack1.id);
+                                System.out.println("fid = " + pack1.fid);
+                                System.out.println("name = " + pack1.name);
+                                System.out.println("message = ");
+                                for(var item : pack1.message) {
+                                    System.out.println(item);
+                                }
                                 System.out.println();
                                 break;
                             case 51:
-                                var pack2 = JSON.parseObject(task.getData(), FriendMessageEventPack.class);
-                                System.out.println("id = " + pack2.getId());
-                                System.out.println("time = " + pack2.getTime());
-                                System.out.println("name = " + pack2.getName());
-                                System.out.println("message = " + pack2.getMessage());
+                                var pack2 = JSON.parseObject(task.data, FriendMessageEventPack.class);
+                                System.out.println("id = " + pack2.id);
+                                System.out.println("time = " + pack2.time);
+                                System.out.println("name = " + pack2.name);
+                                System.out.println("message = ");
+                                for(var item : pack2.message) {
+                                    System.out.println(item);
+                                }
                                 System.out.println();
                                 break;
                         }
@@ -464,27 +255,27 @@ public class RobotSocket {
         }
     }
 
-    public static void SendGroupMessage(long id, String message) {
+    public static void SendGroupMessage(long id_, String message_) {
         var data = BuildPack.Build(new SendGroupMessagePack() {{
-            setId(id);
-            setMessage(message);
+            id = id_;
+            message = message_;
         }}, 52);
         QueueSend.add(data);
     }
 
-    public static void SendGroupPrivateMessage(long id, long fid, String message) {
+    public static void SendGroupPrivateMessage(long id_, long fid_, String message_) {
         var data = BuildPack.Build(new SendGroupPrivateMessagePack() {{
-            setId(id);
-            setFid(fid);
-            setMessage(message);
+            id = id_;
+            fid = fid_;
+            message = message_;
         }}, 53);
         QueueSend.add(data);
     }
 
-    public static void SendFriendMessage(long id, String message) {
+    public static void SendFriendMessage(long id_, String message_) {
         var data = BuildPack.Build(new SendFriendMessagePack() {{
-            setId(id);
-            setMessage(message);
+           id = id_;
+           message = message_;
         }}, 54);
         QueueSend.add(data);
     }
@@ -495,19 +286,19 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendGroupPrivateImage(long id, long fid, String img) {
+    public static void SendGroupPrivateImage(long id_, long fid_, String img_) {
         var data = BuildPack.Build(new SendGroupPrivateImagePack() {{
-            setFid(fid);
-            setId(id);
-            setImg(img);
+            id = id_;
+            fid = fid_;
+            img = img_;
         }}, 62);
         QueueSend.add(data);
     }
 
-    public static void SendFriendImage(long id, String img) {
+    public static void SendFriendImage(long id_, String img_) {
         var data = BuildPack.Build(new SendFriendImagePack() {{
-            setId(id);
-            setImg(img);
+            id = id_;
+            img = img_;
         }}, 63);
         QueueSend.add(data);
     }
