@@ -3,7 +3,8 @@
 不提供二进制文件，请自行构建  
 需要JAVA11环境  
 运行环境看你的构建环境  
-官方QQ群：[571239090](https://qm.qq.com/cgi-bin/qm/qr?k=85m_MZMJ7BbyZ2vZW4wHVZGGvGnIL2As&jump_from=webapi)
+官方QQ群：[571239090](https://qm.qq.com/cgi-bin/qm/qr?k=85m_MZMJ7BbyZ2vZW4wHVZGGvGnIL2As&jump_from=webapi)  
+构建不了可以去群里找人要
 ## 构建说明
 首先安装JDK11并且设置好环境变量  
 安装git  
