@@ -10,11 +10,13 @@ fname：群员群名片
  */
 public class MessageRecallEventBPack extends MessageRecallEventAPack {
     public long fid;
-    public String fname;
+    public long oid;
+    public String oname;
 
-    public MessageRecallEventBPack(long id, long fid, int mid, int time, String fname) {
+    public MessageRecallEventBPack(long id, long fid, int mid, int time,long oid, String oname) {
         super(id, mid, time);
         this.fid = fid;
-        this.fname = fname;
+        this.oid = oid;
+        this.oname = oname;
     }
 }
