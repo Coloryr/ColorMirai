@@ -946,11 +946,11 @@ public class BotStart {
             Group group1 = bot.getGroup(group);
             MessageChain messageChain = MessageUtils.newChain("");
             for (var item : message) {
-                messageChain.plus(item);
+                messageChain = messageChain.plus(item);
             }
             group1.get(fid).sendMessage(messageChain);
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("发送群私聊消息失败", e);
         }
     }
 
@@ -958,11 +958,11 @@ public class BotStart {
         try {
             MessageChain messageChain = MessageUtils.newChain("");
             for(var item : message) {
-                messageChain.plus(item);
+                messageChain = messageChain.plus(item);
             }
             bot.getFriend(fid).sendMessage(messageChain);
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("发送朋友消息失败", e);
         }
     }
 
@@ -1024,7 +1024,7 @@ public class BotStart {
             var group = bot.getGroup(id);
             group.sendMessage(group.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("发送群图片失败", e);
         }
     }
 
@@ -1033,7 +1033,7 @@ public class BotStart {
             var member = bot.getGroup(id).get(fid);
             member.sendMessage(member.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("发送私聊图片失败", e);
         }
     }
 
@@ -1042,7 +1042,7 @@ public class BotStart {
             var friend = bot.getFriend(id);
             friend.sendMessage(friend.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("发送朋友失败", e);
         }
     }
 
@@ -1069,7 +1069,7 @@ public class BotStart {
             var member = bot.getGroup(id).get(fid);
             member.unmute();
         } catch (Exception e) {
-            Start.logger.error("踢出成员失败", e);
+            Start.logger.error("解禁成员失败", e);
         }
     }
 
@@ -1078,7 +1078,7 @@ public class BotStart {
             var group = bot.getGroup(id);
             group.getSettings().setMuteAll(true);
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("全群禁言失败", e);
         }
     }
 
@@ -1087,7 +1087,7 @@ public class BotStart {
             var group = bot.getGroup(id);
             group.getSettings().setMuteAll(false);
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("全群解禁失败", e);
         }
     }
 
@@ -1096,7 +1096,7 @@ public class BotStart {
             var member = bot.getGroup(id).get(fid);
             member.setNameCard(card);
         } catch (Exception e) {
-            Start.logger.error("踢出成员失败", e);
+            Start.logger.error("修改群员名片失败", e);
         }
     }
 
@@ -1105,7 +1105,7 @@ public class BotStart {
             Group group = bot.getGroup(id);
             group.setName(name);
         } catch (Exception e) {
-            Start.logger.error("发送群消息失败", e);
+            Start.logger.error("设置群名失败", e);
         }
     }
 }
