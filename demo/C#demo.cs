@@ -90,6 +90,20 @@ namespace netcore
         public long id { get; set; }
         public string name { get; set; }
     }
+    class NewFriendRequestEventPack
+    {
+        public long id { get; set; }
+        public long fid { get; set; }
+        public string name { get; set; }
+        public string message { get; set; }
+        public long eventid { get; set; }
+    }
+    class EventCallPack
+    {
+        public long eventid { get; set; }
+        public int dofun { get; set; }
+        public List<object> arg { get; set; }
+    }
     class BuildPack
     {
         public static byte[] Build(object obj, byte index)
@@ -135,7 +149,7 @@ namespace netcore
         {
             Name = "ColoryrSDK",
             Reg = new List<byte>()
-            { 49, 50, 51 }
+            { 46, 49, 50, 51 }
         };
         public static void Start()
         {
@@ -152,6 +166,16 @@ namespace netcore
                         {
                             switch (task.index)
                             {
+                                case 46:
+                                    var pack3 = JsonConvert.DeserializeObject<NewFriendRequestEventPack>(task.data);
+                                    Console.WriteLine("id = " + pack3.id);
+                                    Console.WriteLine("fid = " + pack3.fid);
+                                    Console.WriteLine("name = " + pack3.name);
+                                    Console.WriteLine("message = " + pack3.message);
+                                    Console.WriteLine("eventid = " + pack3.eventid);
+                                    Console.WriteLine();
+                                    CallEvent(pack3.eventid, 0, null);
+                                    break;
                                 case 49:
                                     var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(task.data);
                                     Console.WriteLine("id = " + pack.id);
@@ -175,6 +199,9 @@ namespace netcore
                                         Console.WriteLine(item);
                                     }
                                     Console.WriteLine();
+                                    var list = new List<string>() { pack1.name };
+                                    list.AddRange(pack1.message);
+                                    SendGroupPrivateMessage(pack1.id, pack1.fid, list);
                                     break;
                                 case 51:
                                     var pack2 = JsonConvert.DeserializeObject<FriendMessageEventPack>(task.data);
@@ -187,6 +214,9 @@ namespace netcore
                                         Console.WriteLine(item);
                                     }
                                     Console.WriteLine();
+                                    var list1 = new List<string>() { pack2.name };
+                                    list1.AddRange(pack2.message);
+                                    SendFriendMessage(pack2.id, list1);
                                     break;
                             }
                         }
@@ -297,6 +327,11 @@ namespace netcore
                 ServerMain.LogError("机器人连接失败");
                 ServerMain.LogError(e);
             }
+        }
+        public static void CallEvent(long eventid, int dofun, List<object> arg)
+        {
+            var data = BuildPack.Build(new EventCallPack { eventid = eventid, dofun = dofun, arg = arg }, 59);
+            QueueSend.Add(data);
         }
         public static void SendGroupMessage(long id, List<string> message)
         {
