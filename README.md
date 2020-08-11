@@ -12,6 +12,7 @@
 输入下面的指令（期间需要梯子等工具，如果慢的话）
 ```
 git clone https://github.com/Coloryr/ColorMirai.git
+cd ColorMirai
 ./gradlew shadowJar
 ```
 你会得到一个jar
