@@ -237,6 +237,7 @@ namespace netcore
                 }
                 DoThread.Start();
                 byte[] Send;
+                int time = 0;
                 while (IsRun)
                 {
                     try
@@ -257,12 +258,16 @@ namespace netcore
                                 data = Encoding.UTF8.GetString(data)
                             });
                         }
-                        else if (Socket.Poll(1000, SelectMode.SelectRead))
+                        else if (time >= 20)
                         {
-                            ServerMain.LogOut("机器人连接中断");
-                            IsConnect = false;
+                            time = 0;
+                            if (Socket.Poll(1000, SelectMode.SelectRead))
+                            {
+                                ServerMain.LogOut("机器人连接中断");
+                                IsConnect = false;
+                            }
                         }
-                        else if (QueueSend.TryTake(out Send))
+                        else if ( QueueSend.TryTake(out Send))
                         {
                             Socket.Send(Send);
                         }

@@ -852,7 +852,7 @@ public class BotStart {
             public ListeningStatus TempMessageEvent(TempMessageEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                long id = event.getSubject().getId();
+                long id = event.getGroup().getId();
                 long fid = event.getSender().getId();
                 String name = event.getSenderName();
                 MessageChain message = event.getMessage();

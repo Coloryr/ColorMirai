@@ -18,7 +18,7 @@ cd ColorMirai
 你会得到一个jar
 `build/libs/ColorMirai-1.0-SNAPSHOT-all.jar`  
 ## 启动
-> 1. 使用cmd启动
+> 1. 启动ColorMirai，必须使用JAVA11及以上
 > ```
 > java -jar ColorMirai-1.0-SNAPSHOT-all.jar
 > ```
