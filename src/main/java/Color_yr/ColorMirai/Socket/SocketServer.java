@@ -18,6 +18,10 @@ public class SocketServer {
     private static Thread ServerThread;
     private static boolean isStart;
 
+    public static boolean havePlugin(String name) {
+        return PluginList.containsKey(name);
+    }
+
     public static boolean start() {
         try {
             ServerSocket = new ServerSocket(Start.Config.Port);

@@ -6,6 +6,8 @@ import Color_yr.ColorMirai.Socket.SocketServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.Scanner;
 
 public class Start {
@@ -35,7 +37,32 @@ public class Start {
         try {
             while (true) {
                 String data = scanner.nextLine();
-                switch (data) {
+                var arg = data.split(" ");
+                switch (arg[0]) {
+                    case "help":
+                        logger.info("插件帮助");
+                        logger.info("输入 stop 关闭机器人");
+                        logger.info("输入 list 获取连接的插件列表");
+                        logger.info("输入 close 插件 断开插件连接");
+                        break;
+                    case "list":
+                        logger.info("插件列表");
+                        for (var item : SocketServer.PluginList.values()) {
+                            logger.info(item.getName() + " 注册的包：" + item.getReg());
+                        }
+                        break;
+                    case "close":
+                        if (arg.length < 2) {
+                            logger.warn("错误的指令");
+                            break;
+                        }
+                        if (!SocketServer.havePlugin(arg[1])) {
+                            logger.warn("没有插件：" + arg[1]);
+                            break;
+                        }
+                        SocketServer.removePlugin(arg[1]);
+                        logger.info("正在断开插件" + arg[1]);
+                        break;
                     case "stop":
                         logger.info("正在停止");
                         SocketServer.stop();

@@ -21,6 +21,19 @@ public class Plugins {
     private List<Integer> Events = null;
     private boolean isRun;
 
+    public String getName() {
+        return name;
+    }
+
+    public String getReg() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (var item : Events) {
+            stringBuilder.append(item).append(",");
+        }
+        String data = stringBuilder.toString();
+        return data.substring(0, data.length() - 1);
+    }
+
     public Plugins(Socket Socket) {
         this.Socket = Socket;
         read = new Thread(this::start);
@@ -138,6 +151,7 @@ public class Plugins {
                     SocketServer.addPlugin(name, this);
                 } else {
                     Start.logger.warn("插件连接初始化失败");
+                    Socket.close();
                     return;
                 }
             } else {
