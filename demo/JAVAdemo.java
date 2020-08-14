@@ -229,7 +229,9 @@ public class RobotSocket {
     private static void ReadTest() {
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            SendGroupMessage(571239090, scanner.nextLine());
+            SendGroupMessage(571239090, new ArrayList<>() {{
+                add(scanner.nextLine());
+            }});
         }
     }
 
@@ -255,7 +257,7 @@ public class RobotSocket {
         }
     }
 
-    public static void SendGroupMessage(long id_, String message_) {
+    public static void SendGroupMessage(long id_, List<String> message_) {
         var data = BuildPack.Build(new SendGroupMessagePack() {{
             id = id_;
             message = message_;
@@ -263,7 +265,7 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendGroupPrivateMessage(long id_, long fid_, String message_) {
+    public static void SendGroupPrivateMessage(long id_, long fid_, List<String> message_) {
         var data = BuildPack.Build(new SendGroupPrivateMessagePack() {{
             id = id_;
             fid = fid_;
@@ -272,10 +274,10 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendFriendMessage(long id_, String message_) {
+    public static void SendFriendMessage(long id_, List<String> message_) {
         var data = BuildPack.Build(new SendFriendMessagePack() {{
-           id = id_;
-           message = message_;
+            id = id_;
+            message = message_;
         }}, 54);
         QueueSend.add(data);
     }
