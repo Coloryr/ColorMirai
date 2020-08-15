@@ -2,12 +2,11 @@ package Color_yr.ColorMirai;
 
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
+import Color_yr.ColorMirai.Robot.BotStart;
 import Color_yr.ColorMirai.Socket.SocketServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Scanner;
 
 public class Start {

@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai;
+package Color_yr.ColorMirai.Robot;
 
 import Color_yr.ColorMirai.EventDo.EventBase;
 import Color_yr.ColorMirai.EventDo.EventCall;
@@ -9,6 +9,7 @@ import Color_yr.ColorMirai.Pack.ToPlugin.*;
 import Color_yr.ColorMirai.Socket.Plugins;
 import Color_yr.ColorMirai.Socket.SendPackTask;
 import Color_yr.ColorMirai.Socket.SocketServer;
+import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
@@ -25,10 +26,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.TempMessageEvent;
-import net.mamoe.mirai.message.data.At;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,11 +35,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.*;
 
 public class BotStart {
+
     private static final List<SendPackTask> Tasks = new CopyOnWriteArrayList<>();
     private static final Base64.Decoder decoder = Base64.getDecoder();
+    private static final Map<Long, MessageCall> MessageLsit = new ConcurrentHashMap<>();
+    private static final List<Long> reList = new CopyOnWriteArrayList<>();
+
+    private static ScheduledExecutorService service;
     private static Bot bot;
     private static Thread EventDo;
     private static boolean isRun;
@@ -352,10 +356,10 @@ public class BotStart {
             public ListeningStatus FriendMessagePostSendEvent(FriendMessagePostSendEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                MessageChain message = event.getMessage();
                 long id = event.getTarget().getId();
                 String name = event.getTarget().getNick();
                 boolean res = event.getReceipt() != null;
+                MessageSource message = event.getReceipt().getSource();
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
@@ -476,7 +480,7 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
-                MessageChain message = event.getMessage();
+                MessageSource message = event.getReceipt().getSource();
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
@@ -767,7 +771,7 @@ public class BotStart {
                 int time = event.getMessageTime();
                 long oid = 0;
                 String oanme = "";
-                if(event.getOperator()!=null) {
+                if (event.getOperator() != null) {
                     oid = event.getOperator().getId();
                     oanme = event.getOperator().getNameCard();
                 }
@@ -803,7 +807,7 @@ public class BotStart {
                 long id = event.getGroup().getId();
                 long fid = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
-                MessageChain message = event.getMessage();
+                MessageSource message = event.getReceipt().getSource();
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
@@ -840,6 +844,11 @@ public class BotStart {
                 long fid = event.getSender().getId();
                 String name = event.getSender().getNameCard();
                 MessageChain message = event.getMessage();
+                var call = new MessageCall();
+                call.source = event.getSource();
+                call.time = -1;
+                call.id = call.source.getId();
+                MessageLsit.put(call.id, call);
                 var pack = new GroupMessageEventPack(id, fid, name, message);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
@@ -856,6 +865,11 @@ public class BotStart {
                 long fid = event.getSender().getId();
                 String name = event.getSenderName();
                 MessageChain message = event.getMessage();
+                var call = new MessageCall();
+                call.source = event.getSource();
+                call.time = -1;
+                call.id = call.source.getId();
+                MessageLsit.put(call.id, call);
                 int time = event.getTime();
                 var pack = new TempMessageEventPack(id, fid, name, message, time);
                 String temp = JSON.toJSONString(pack);
@@ -872,6 +886,11 @@ public class BotStart {
                 long id = event.getSender().getId();
                 String name = event.getSenderName();
                 MessageChain message = event.getMessage();
+                var call = new MessageCall();
+                call.source = event.getSource();
+                call.time = -1;
+                call.id = call.source.getId();
+                MessageLsit.put(call.id, call);
                 int time = event.getTime();
                 var pack = new FriendMessageEventPack(id, name, message, time);
                 String temp = JSON.toJSONString(pack);
@@ -902,9 +921,38 @@ public class BotStart {
             }
         });
         EventDo.start();
+        service = Executors.newSingleThreadScheduledExecutor();
+        service.scheduleAtFixedRate(() -> {
+            if (!reList.isEmpty()) {
+                for (var item : reList) {
+                    if (MessageLsit.containsKey(item)) {
+                        var item1 = MessageLsit.remove(item);
+                        if (item1.time > 0 || item1.time == -1)
+                            try {
+                                bot.recall(item1.source);
+                            } catch (Exception e) {
+                                Start.logger.error("消息撤回失败", e);
+                            }
+                    }
+                }
+                reList.clear();
+            }
+            for (var item : MessageLsit.entrySet()) {
+                MessageCall call = item.getValue();
+                if (call.time > 0)
+                    call.time--;
+                if (call.time != 0) {
+                    MessageLsit.put(item.getKey(), call);
+                }
+            }
+            if (MessageLsit.size() >= Start.Config.MaxList) {
+                MessageLsit.clear();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
         Start.logger.info("机器人已启动");
         return true;
     }
+
     public static void stop() {
         try {
             isRun = false;
@@ -934,11 +982,27 @@ public class BotStart {
                 if (item.startsWith("at:")) {
                     Member member = group1.get(Long.parseLong(item.replace("at:", "")));
                     messageChain = messageChain.plus(new At(member));
+                } else if (item.startsWith("quote:")) {
+                    var id = Long.parseLong(item.replace("quote:", ""));
+                    MessageCall call = MessageLsit.get(id);
+                    if (call == null)
+                        continue;
+                    if (call.source == null)
+                        continue;
+                    var quote = new QuoteReply(call.source);
+                    messageChain = messageChain.plus(quote);
                 } else {
                     messageChain = messageChain.plus(item);
                 }
             }
-            group1.sendMessage(messageChain);
+            MessageSource source = group1.sendMessage(messageChain).getSource();
+            if (source.getId() != -1) {
+                var call = new MessageCall();
+                call.source = source;
+                call.time = 120;
+                call.id = source.getId();
+                MessageLsit.put(call.id, call);
+            }
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
         }
@@ -951,7 +1015,14 @@ public class BotStart {
             for (var item : message) {
                 messageChain = messageChain.plus(item);
             }
-            group1.get(fid).sendMessage(messageChain);
+            MessageSource source = group1.get(fid).sendMessage(messageChain).getSource();
+            if (source.getId() != -1) {
+                var call = new MessageCall();
+                call.source = source;
+                call.time = 120;
+                call.id = source.getId();
+                MessageLsit.put(call.id, call);
+            }
         } catch (Exception e) {
             Start.logger.error("发送群私聊消息失败", e);
         }
@@ -960,10 +1031,17 @@ public class BotStart {
     public static void sendFriendMessage(long fid, List<String> message) {
         try {
             MessageChain messageChain = MessageUtils.newChain("");
-            for(var item : message) {
+            for (var item : message) {
                 messageChain = messageChain.plus(item);
             }
-            bot.getFriend(fid).sendMessage(messageChain);
+            MessageSource source = bot.getFriend(fid).sendMessage(messageChain).getSource();
+            if (source.getId() != -1) {
+                var call = new MessageCall();
+                call.source = source;
+                call.time = 120;
+                call.id = source.getId();
+                MessageLsit.put(call.id, call);
+            }
         } catch (Exception e) {
             Start.logger.error("发送朋友消息失败", e);
         }
@@ -977,7 +1055,7 @@ public class BotStart {
             info.name = item.getName();
             info.img = item.getAvatarUrl();
             info.oid = item.getOwner().getId();
-            info.oname = item.getOwner().getNick();
+            info.oname = item.getOwner().getNameCard();
             info.per = item.getBotPermission().name();
             list.add(info);
         }
@@ -1002,9 +1080,9 @@ public class BotStart {
             for (var item : bot.getGroup(id).getMembers()) {
                 var info = new MemberInfoPack();
                 info.id = item.getId();
-                info.name = item.getNick();
+                info.name = item.getNameCard();
                 info.img = item.getAvatarUrl();
-                info.nick = item.getNameCard();
+                info.nick = item.getNick();
                 info.per = item.getPermission().name();
                 info.mute = item.getMuteTimeRemaining();
                 list.add(info);
@@ -1109,6 +1187,14 @@ public class BotStart {
             group.setName(name);
         } catch (Exception e) {
             Start.logger.error("设置群名失败", e);
+        }
+    }
+
+    public static void ReCall(Long id) {
+        try {
+            reList.add(id);
+        } catch (Exception e) {
+            Start.logger.error("消息撤回失败", e);
         }
     }
 }

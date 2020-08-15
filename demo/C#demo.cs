@@ -104,6 +104,10 @@ namespace netcore
         public int dofun { get; set; }
         public List<object> arg { get; set; }
     }
+    class ReCallMessage
+    {
+        public long id { get; set; }
+    }
     class BuildPack
     {
         public static byte[] Build(object obj, byte index)
@@ -112,6 +116,13 @@ namespace netcore
             data[data.Length - 1] = index;
             return data;
         }
+    }
+    class GroupMessagePostSendEventPack
+    {
+        public long id { get; set; }
+        public bool res { get; set; }
+        public List<string> message { get; set; }
+        public string error { get; set; }
     }
     class RobotTask
     {
@@ -149,7 +160,7 @@ namespace netcore
         {
             Name = "ColoryrSDK",
             Reg = new List<byte>()
-            { 46, 49, 50, 51 }
+            { 28, 46, 49, 50, 51 }
         };
         public static void Start()
         {
@@ -166,6 +177,19 @@ namespace netcore
                         {
                             switch (task.index)
                             {
+                                case 28:
+                                    var pack5 = JsonConvert.DeserializeObject<GroupMessagePostSendEventPack>(task.data);
+                                    if (pack5.res && pack5.message[pack5.message.Count - 1] == "3秒后撤回")
+                                    {
+                                        Task.Run(() =>
+                                        {
+                                            Thread.Sleep(2900);
+                                            string id = Utils.GetString(pack5.message[0], "source:", ",");
+                                            var data = BuildPack.Build(new ReCallMessage { id = long.Parse(id) }, 71);
+                                            QueueSend.Add(data);
+                                        });
+                                    }
+                                    break;
                                 case 46:
                                     var pack3 = JsonConvert.DeserializeObject<NewFriendRequestEventPack>(task.data);
                                     Console.WriteLine("id = " + pack3.id);
@@ -187,6 +211,24 @@ namespace netcore
                                         Console.WriteLine(item);
                                     }
                                     Console.WriteLine();
+                                    if (pack.message[pack.message.Count - 1] == "撤回")
+                                    {
+                                        string id = Utils.GetString(pack.message[0], "source:", ",");
+                                        var data = BuildPack.Build(new ReCallMessage { id = long.Parse(id) }, 71);
+                                        QueueSend.Add(data);
+                                    }
+                                    else if (pack.message[pack.message.Count - 1] == "回复")
+                                    {
+                                        string id = Utils.GetString(pack.message[0], "source:", ",");
+                                        var list2 = new List<string>() { "quote:" + id };
+                                        list2.Add("回复消息");
+                                        SendGroupMessage(pack.id, list2);
+                                    }
+                                    else if (pack.message[pack.message.Count - 1] == "撤回自己")
+                                    {
+                                        var list2 = new List<string>() { "3秒后撤回" };
+                                        SendGroupMessage(pack.id, list2);
+                                    }
                                     break;
                                 case 50:
                                     var pack1 = JsonConvert.DeserializeObject<TempMessageEventPack>(task.data);
@@ -271,6 +313,7 @@ namespace netcore
                         {
                             Socket.Send(Send);
                         }
+                        time++;
                         Thread.Sleep(50);
                     }
                     catch (Exception e)

@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
 /*
-67 [插件]开启全员禁言
-id：群号
+71 [插件]撤回消息
+id：消息Id
  */
-public class GroupMuteAll {
+public class ReCallMessagePack {
     public long id;
 }

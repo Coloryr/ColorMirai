@@ -82,6 +82,8 @@ import java.nio.charset.StandardCharsets;
 69 [插件]设置群名片
 70 [插件]设置群名
 
+71 [插件]撤回消息
+
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

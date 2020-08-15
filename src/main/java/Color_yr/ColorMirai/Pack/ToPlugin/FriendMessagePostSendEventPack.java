@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
-import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +20,14 @@ public class FriendMessagePostSendEventPack {
     public boolean res;
     public String error;
 
-    public FriendMessagePostSendEventPack(MessageChain message, long id, String name, boolean res, String error) {
+    public FriendMessagePostSendEventPack(MessageSource message, long id, String name, boolean res, String error) {
         this.error = error;
         this.id = id;
         this.message = new ArrayList<>();
-        for (var item : message) {
+        this.message.add(message.toString());
+        for (var item : message.getOriginalMessage()) {
             this.message.add(item.toString());
         }
-        this.message.add(message.contentToString());
         this.name = name;
         this.res = res;
     }

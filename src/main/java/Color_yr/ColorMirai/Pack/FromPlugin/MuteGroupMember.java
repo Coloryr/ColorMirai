@@ -1,6 +1,7 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
 /*
+65 [插件]禁言群员
 id：群号
 fid：成员QQ号
 time：时间

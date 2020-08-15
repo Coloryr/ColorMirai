@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.Socket;
 
-import Color_yr.ColorMirai.BotStart;
 import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.FromPlugin.*;
 import Color_yr.ColorMirai.Pack.PackDo;
+import Color_yr.ColorMirai.Robot.BotStart;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
@@ -21,6 +21,13 @@ public class Plugins {
     private List<Integer> Events = null;
     private boolean isRun;
 
+    public Plugins(Socket Socket) {
+        this.Socket = Socket;
+        read = new Thread(this::start);
+        doRead = new Thread(this::startRead);
+        read.start();
+    }
+
     public String getName() {
         return name;
     }
@@ -32,13 +39,6 @@ public class Plugins {
         }
         String data = stringBuilder.toString();
         return data.substring(0, data.length() - 1);
-    }
-
-    public Plugins(Socket Socket) {
-        this.Socket = Socket;
-        read = new Thread(this::start);
-        doRead = new Thread(this::startRead);
-        read.start();
     }
 
     private void startRead() {
@@ -122,6 +122,10 @@ public class Plugins {
                         case 70:
                             var pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
                             BotStart.SetGroupName(pack15.id, pack15.name);
+                            break;
+                        case 71:
+                            var pack16 = JSON.parseObject(task.getData(), ReCallMessagePack.class);
+                            BotStart.ReCall(pack16.id);
                             break;
                     }
                 }
