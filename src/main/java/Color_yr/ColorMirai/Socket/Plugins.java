@@ -46,6 +46,7 @@ public class Plugins {
             try {
                 if (!Tasks.isEmpty()) {
                     var task = Tasks.remove(0);
+                    Start.logger.info(task.getData());
                     switch (task.getIndex()) {
                         case 52:
                             var pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
@@ -172,12 +173,12 @@ public class Plugins {
             try {
                 if (Socket.getInputStream().available() > 0) {
                     var inputStream = Socket.getInputStream();
-                    var bytes = new byte[1024];
+                    var bytes = new byte[8192];
                     int len;
                     byte index = 0;
                     var sb = new StringBuilder();
                     while ((len = inputStream.read(bytes)) != -1) {
-                        if (len == 1024)
+                        if (len == 8192)
                             sb.append(new String(bytes, 0, len, StandardCharsets.UTF_8));
                         else {
                             index = bytes[len - 1];
