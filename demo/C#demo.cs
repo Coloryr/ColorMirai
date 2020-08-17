@@ -4,6 +4,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -113,6 +114,23 @@ namespace netcore
         public static byte[] Build(object obj, byte index)
         {
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj) + " ");
+            data[data.Length - 1] = index;
+            return data;
+        }
+
+        public static byte[] BuildImage(long id, long fid, string img, byte index)
+        {
+            string temp = "";
+            if (id != 0)
+            {
+                temp += "id=" + id + "&";
+            }
+            if (fid != 0)
+            {
+                temp += "fid=" + fid + "&";
+            }
+            temp += "img=" + img;
+            byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[data.Length - 1] = index;
             return data;
         }
@@ -309,7 +327,7 @@ namespace netcore
                                 IsConnect = false;
                             }
                         }
-                        else if ( QueueSend.TryTake(out Send))
+                        else if (QueueSend.TryTake(out Send))
                         {
                             Socket.Send(Send);
                         }
@@ -334,7 +352,7 @@ namespace netcore
 
         private static void ReadTest()
         {
-            List<string> list = new List<string>() ;
+            List<string> list = new List<string>();
             while (true)
             {
                 while (!IsConnect)
@@ -342,6 +360,8 @@ namespace netcore
                     Thread.Sleep(500);
                 }
                 list.Clear();
+                HttpClient http = new HttpClient();
+                SendGroupImage(571239090, Convert.ToBase64String(http.GetByteArrayAsync(@"https://yiban.glut.edu.cn/zlk/image/beer/01.png").Result));
                 Console.WriteLine("输入4行数据后发送");
                 list.Add(Console.ReadLine());
                 list.Add(Console.ReadLine());
@@ -398,17 +418,17 @@ namespace netcore
         }
         public static void SendGroupImage(long id, string img)
         {
-            var data = BuildPack.Build(new SendGroupImagePack { id = id, img = img }, 61);
+            var data = BuildPack.BuildImage(id, 0, img, 61);
             QueueSend.Add(data);
         }
         public static void SendGroupPrivateImage(long id, long fid, string img)
         {
-            var data = BuildPack.Build(new SendGroupPrivateImagePack { id = id, fid = fid, img = img }, 62);
+            var data = BuildPack.BuildImage(id, fid, img, 62);
             QueueSend.Add(data);
         }
         public static void SendFriendImage(long id, string img)
         {
-            var data = BuildPack.Build(new SendFriendImagePack { id = id, img = img }, 63);
+            var data = BuildPack.BuildImage(id, 0, img, 63);
             QueueSend.Add(data);
         }
         public static void Stop()

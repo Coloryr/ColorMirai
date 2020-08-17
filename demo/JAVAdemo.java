@@ -70,6 +70,21 @@ class BuildPack {
         temp[temp.length - 1] = (byte) index;
         return temp;
     }
+
+    public static byte[] BuildImage(long id, long fid, String img, int index) {
+        String temp = "";
+        if (id != 0) {
+            temp += "id=" + id + "&";
+        }
+        if (fid != 0) {
+            temp += "fid=" + fid + "&";
+        }
+        temp += "img=" + img;
+        String str = temp + " ";
+        byte[] temp1 = str.getBytes(StandardCharsets.UTF_8);
+        temp1[temp1.length - 1] = (byte) index;
+        return temp1;
+    }
 }
 
 class RobotTask {
@@ -134,7 +149,7 @@ public class RobotSocket {
                                 System.out.println("fid = " + pack.fid);
                                 System.out.println("name = " + pack.name);
                                 System.out.println("message = ");
-                                for(var item : pack.message) {
+                                for (var item : pack.message) {
                                     System.out.println(item);
                                 }
                                 System.out.println();
@@ -145,7 +160,7 @@ public class RobotSocket {
                                 System.out.println("fid = " + pack1.fid);
                                 System.out.println("name = " + pack1.name);
                                 System.out.println("message = ");
-                                for(var item : pack1.message) {
+                                for (var item : pack1.message) {
                                     System.out.println(item);
                                 }
                                 System.out.println();
@@ -156,7 +171,7 @@ public class RobotSocket {
                                 System.out.println("time = " + pack2.time);
                                 System.out.println("name = " + pack2.name);
                                 System.out.println("message = ");
-                                for(var item : pack2.message) {
+                                for (var item : pack2.message) {
                                     System.out.println(item);
                                 }
                                 System.out.println();
@@ -283,25 +298,17 @@ public class RobotSocket {
     }
 
     public static void SendGroupImage(long id, String img) {
-        var data = BuildPack.Build(new SendGroupImagePack() {{
-        }}, 61);
+        var data = BuildPack.BuildImage(id, 0, img, 61);
         QueueSend.add(data);
     }
 
     public static void SendGroupPrivateImage(long id_, long fid_, String img_) {
-        var data = BuildPack.Build(new SendGroupPrivateImagePack() {{
-            id = id_;
-            fid = fid_;
-            img = img_;
-        }}, 62);
+        var data = BuildPack.BuildImage(id_, fid_, img_, 62);
         QueueSend.add(data);
     }
 
     public static void SendFriendImage(long id_, String img_) {
-        var data = BuildPack.Build(new SendFriendImagePack() {{
-            id = id_;
-            img = img_;
-        }}, 63);
+        var data = BuildPack.BuildImage(id_, 0, img_, 63);
         QueueSend.add(data);
     }
 

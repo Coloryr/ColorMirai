@@ -46,7 +46,6 @@ public class Plugins {
             try {
                 if (!Tasks.isEmpty()) {
                     var task = Tasks.remove(0);
-                    Start.logger.info(task.getData());
                     switch (task.getIndex()) {
                         case 52:
                             var pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
@@ -85,16 +84,41 @@ public class Plugins {
                             EventCall.DoEvent(pack5.eventid, pack5.dofun, pack5.arg);
                             break;
                         case 61:
-                            var pack6 = JSON.parseObject(task.getData(), SendGroupImagePack.class);
-                            BotStart.sendGroupImage(pack6.id, pack6.img);
+                            var formdata = DataFrom.parse(task.getData());
+                            if (formdata.containsKey("id") && formdata.containsKey("img")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    BotStart.sendGroupImage(id, formdata.get("img"));
+                                } catch (Exception e) {
+                                    Start.logger.error("解析发生错误", e);
+                                }
+                            }
+                            //var pack6 = JSON.parseObject(task.getData(), SendGroupImagePack.class);
                             break;
                         case 62:
-                            var pack7 = JSON.parseObject(task.getData(), SendGroupPrivateImagePack.class);
-                            BotStart.sendGroupPrivataImage(pack7.id, pack7.fid, pack7.img);
+                            var formdata1 = DataFrom.parse(task.getData());
+                            if (formdata1.containsKey("id") && formdata1.containsKey("fid") && formdata1.containsKey("img")) {
+                                try {
+                                    long id = Long.parseLong(formdata1.get("id"));
+                                    long fid = Long.parseLong(formdata1.get("fid"));
+                                    BotStart.sendGroupPrivataImage(id, fid, formdata1.get("img"));
+                                } catch (Exception e) {
+                                    Start.logger.error("解析发生错误", e);
+                                }
+                            }
+                            //var pack7 = JSON.parseObject(task.getData(), SendGroupPrivateImagePack.class);
                             break;
                         case 63:
-                            var pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
-                            BotStart.sendFriendImage(pack8.id, pack8.img);
+                            var formdata2 = DataFrom.parse(task.getData());
+                            if (formdata2.containsKey("id") && formdata2.containsKey("img")) {
+                                try {
+                                    long id = Long.parseLong(formdata2.get("id"));
+                                    BotStart.sendFriendImage(id, formdata2.get("img"));
+                                } catch (Exception e) {
+                                    Start.logger.error("解析发生错误", e);
+                                }
+                            }
+                            //var pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
                             break;
                         case 64:
                             var pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
