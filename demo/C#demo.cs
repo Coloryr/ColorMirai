@@ -2,6 +2,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -130,6 +132,14 @@ namespace netcore
                 temp += "fid=" + fid + "&";
             }
             temp += "img=" + img;
+            byte[] data = Encoding.UTF8.GetBytes(temp + " ");
+            data[data.Length - 1] = index;
+            return data;
+        }
+
+        public static byte[] BuildSound(long id, string sound, byte index)
+        {
+            string temp = "id=" + id + "&sound=" + sound;
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[data.Length - 1] = index;
             return data;
@@ -361,7 +371,44 @@ namespace netcore
                 }
                 list.Clear();
                 HttpClient http = new HttpClient();
-                SendGroupImage(571239090, Convert.ToBase64String(http.GetByteArrayAsync(@"https://yiban.glut.edu.cn/zlk/image/beer/01.png").Result));
+                //var mp3 = http.GetByteArrayAsync(@"https://tts.baidu.com/text2audio?tex=%E8%BF%99%E6%98%AF%E4%B8%80%E6%AE%B5%E8%AF%AD%E9%9F%B3&cuid=baike&lan=ZH&ctp=1&pdt=301&vol=9&rate=32&per=0").Result;
+                var res = http.GetAsync("https://music.163.com/song/media/outer/url?id=1365679378");
+                var data1 = res.Result.Headers.Location;
+                var mp3 = http.GetByteArrayAsync(data1).Result;
+                //var mp3 = http.GetByteArrayAsync(@"https://pic1.afdiancdn.com/user/a976a704a3b011e88adc52540025c377/common/a43ff57e99670c82733831a8344e8df2_w512_h512_s84.jpg").Result;
+                Guid guid = Guid.NewGuid();
+                string uuid = guid.ToString().Replace("-", "");
+                string inputfile = uuid + ".mp3";
+                string output = uuid + ".amr";
+                File.WriteAllBytes(inputfile, mp3);
+
+                Process process = new Process();
+                process.StartInfo.FileName = @"D:\ffmpeg\bin\ffmpeg.exe";  //这里改成你FFMPEG的路径
+                process.StartInfo.Arguments = " -i \"" + inputfile + "\" -ar 8000 -ab 12.2k -ac 1 \""+ output + '\"';
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardInput = true;
+                process.StartInfo.RedirectStandardError = true;
+
+                process.Start();
+                process.BeginErrorReadLine();   // 开始异步读取
+
+                Console.WriteLine("开始音频转码...");
+
+                process.WaitForExit();    // 等待转码完成
+                //FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"target.amr", FileMode.Open, FileAccess.Read);
+                FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + uuid + @".amr", FileMode.Open, FileAccess.Read);
+                Thread.Sleep(200);
+                var data = new byte[file.Length];
+                file.Read(data, 0, data.Length);
+                file.Close();
+                SendGroupSound(571239090, Convert.ToBase64String(data));
+                //SendGroupImage(571239090, Convert.ToBase64String());
+
+                File.Delete(inputfile);
+                File.Delete(output);
+
                 Console.WriteLine("输入4行数据后发送");
                 list.Add(Console.ReadLine());
                 list.Add(Console.ReadLine());
@@ -429,6 +476,12 @@ namespace netcore
         public static void SendFriendImage(long id, string img)
         {
             var data = BuildPack.BuildImage(id, 0, img, 63);
+            QueueSend.Add(data);
+        }
+
+        public static void SendGroupSound(long id, string sound)
+        {
+            var data = BuildPack.BuildSound(id, sound, 74);
             QueueSend.Add(data);
         }
         public static void Stop()
