@@ -31,6 +31,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
