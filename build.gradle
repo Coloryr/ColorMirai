@@ -19,6 +19,8 @@ dependencies {
 //    compile 'com.google.code.gson:gson:2.8.6'
     compile 'com.alibaba:fastjson:1.2.73'
     compile "net.mamoe:mirai-core-qqandroid:1.2.0"
+
+    implementation("org.jetbrains.kotlinx:kotlinx-io-jvm:0.1.16")
 //    compile fileTree(dir:'lib',include:['*.jar'])
 }
 tasks.withType(JavaCompile) {
