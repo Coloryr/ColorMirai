@@ -152,6 +152,17 @@ public class Plugins {
                             var pack16 = JSON.parseObject(task.getData(), ReCallMessagePack.class);
                             BotStart.ReCall(pack16.id);
                             break;
+                        case 74:
+                            var formdata3 = DataFrom.parse(task.getData());
+                            if (formdata3.containsKey("id") && formdata3.containsKey("sound")) {
+                                try {
+                                    long id = Long.parseLong(formdata3.get("id"));
+                                    BotStart.SendGroupSound(id, formdata3.get("sound"));
+                                } catch (Exception e) {
+                                    Start.logger.error("解析发生错误", e);
+                                }
+                            }
+                            break;
                     }
                 }
                 Thread.sleep(10);

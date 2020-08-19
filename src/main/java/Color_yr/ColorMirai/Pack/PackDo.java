@@ -84,6 +84,11 @@ import java.nio.charset.StandardCharsets;
 
 71 [插件]撤回消息
 
+72 [机器人]友输入状态改变（事件）
+73 [机器人]好友昵称改变（事件）
+
+74 [插件]发送语音到群
+
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

@@ -31,7 +31,6 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -900,6 +899,34 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
+            //72 [机器人]友输入状态改变（事件）
+            public ListeningStatus FriendInputStatusChangedEvent(FriendInputStatusChangedEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String name = event.getFriend().getNick();
+                boolean input = event.getInputting();
+                var pack = new FriendInputStatusChangedEventPack(id, name, input);
+                String temp = JSON.toJSONString(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new SendPackTask(72, data));
+                return ListeningStatus.LISTENING;
+            }
+
+            //73 [机器人]好友昵称改变（事件）
+            public ListeningStatus FriendNickChangedEvent(FriendNickChangedEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFriend().getId();
+                String old = event.getFrom();
+                String new_ = event.getTo();
+                var pack = new FriendNickChangedEventPack(id, old, new_);
+                String temp = JSON.toJSONString(pack);
+                byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+                Tasks.add(new SendPackTask(73, data));
+                return ListeningStatus.LISTENING;
+            }
+
             //处理在处理事件中发生的未捕获异常
             @Override
             public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
@@ -1196,6 +1223,15 @@ public class BotStart {
             reList.add(id);
         } catch (Exception e) {
             Start.logger.error("消息撤回失败", e);
+        }
+    }
+
+    public static void SendGroupSound(long id, String sound) {
+        try {
+            Group group = bot.getGroup(id);
+            group.sendMessage(group.uploadVoice(new ByteArrayInputStream(decoder.decode(sound))));
+        } catch (Exception e) {
+            Start.logger.error("发送群语音失败", e);
         }
     }
 }
