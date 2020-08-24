@@ -597,7 +597,8 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
-                var pack = new MemberJoinEventAPack(id, fid);
+                String name = event.getMember().getNameCard();
+                var pack = new MemberJoinEventAPack(id, fid, name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
                 Tasks.add(new SendPackTask(35, data));
@@ -611,7 +612,8 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
-                var pack = new MemberJoinEventAPack(id, fid);
+                String name = event.getMember().getNameCard();
+                var pack = new MemberJoinEventAPack(id, fid, name);
                 String temp = JSON.toJSONString(pack);
                 byte[] data = temp.getBytes(StandardCharsets.UTF_8);
                 Tasks.add(new SendPackTask(36, data));

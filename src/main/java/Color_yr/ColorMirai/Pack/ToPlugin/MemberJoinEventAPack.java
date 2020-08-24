@@ -9,9 +9,11 @@ fid：进群人QQ号
 public class MemberJoinEventAPack {
     public long id;
     public long fid;
+    public String name;
 
-    public MemberJoinEventAPack(long id, long fid) {
+    public MemberJoinEventAPack(long id, long fid, String name) {
         this.fid = fid;
         this.id = id;
+        this.name = name;
     }
 }
