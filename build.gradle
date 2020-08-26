@@ -18,7 +18,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
 //    compile 'com.google.code.gson:gson:2.8.6'
     compile 'com.alibaba:fastjson:1.2.73'
-    compile "net.mamoe:mirai-core-qqandroid:1.2.2"
+    compile "net.mamoe:mirai-core-qqandroid:1.2.1"
 
     implementation("net.mamoe:kotlin-jvm-blocking-bridge:1.0.2")
 
