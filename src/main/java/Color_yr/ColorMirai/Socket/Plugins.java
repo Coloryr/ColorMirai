@@ -93,7 +93,6 @@ public class Plugins {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
-                            //var pack6 = JSON.parseObject(task.getData(), SendGroupImagePack.class);
                             break;
                         case 62:
                             var formdata1 = DataFrom.parse(task.getData());
@@ -106,7 +105,6 @@ public class Plugins {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
-                            //var pack7 = JSON.parseObject(task.getData(), SendGroupPrivateImagePack.class);
                             break;
                         case 63:
                             var formdata2 = DataFrom.parse(task.getData());
@@ -238,17 +236,8 @@ public class Plugins {
         }
     }
 
-    public void pack() {
-        byte[] data = new byte[3];
-        data[0] = '{';
-        data[1] = '}';
-        data[2] = 60;
-        if (SocketServer.sendPack(data, Socket))
-            close();
-    }
-
     public void callEvent(int index, byte[] data) {
-        if (Events.contains(index)) {
+        if (Events.contains(index) || index == 60) {
             if (SocketServer.sendPack(data, Socket))
                 close();
         }

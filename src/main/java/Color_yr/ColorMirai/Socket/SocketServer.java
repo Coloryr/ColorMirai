@@ -1,5 +1,6 @@
 package Color_yr.ColorMirai.Socket;
 
+import Color_yr.ColorMirai.Robot.BotStart;
 import Color_yr.ColorMirai.Start;
 
 import java.io.IOException;
@@ -42,9 +43,7 @@ public class SocketServer {
             });
             ServerThread.start();
             service.scheduleAtFixedRate(() -> {
-                for (Plugins plugin : PluginList.values()) {
-                    plugin.pack();
-                }
+                BotStart.addTask(new SendPackTask(60, "{}"));
             }, 0, 30, TimeUnit.SECONDS);
             return true;
         } catch (Exception e) {
@@ -71,12 +70,12 @@ public class SocketServer {
         Start.logger.info("插件[" + name + "]已断开");
     }
 
-    public static boolean sendPack(byte[] data, Socket socket) {
+    public static synchronized boolean sendPack(byte[] data, Socket socket) {
         try {
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
             return false;
-        } catch (IOException e) {
+        } catch (Exception e) {
             Start.logger.error("插件通信出现问题", e);
             return true;
         }

@@ -835,7 +835,13 @@ public class BotStart {
             while (isRun) {
                 try {
                     if (!Tasks.isEmpty()) {
-                        eventCallToPlugin(Tasks.remove(0));
+                        var task = Tasks.remove(0);
+                        task.data += " ";
+                        var temp = task.data.getBytes(StandardCharsets.UTF_8);
+                        temp[temp.length - 1] = task.index;
+                        for (Plugins item : SocketServer.PluginList.values()) {
+                            item.callEvent(task.index, temp);
+                        }
                     }
                     Thread.sleep(50);
                 } catch (Exception e) {
@@ -875,6 +881,9 @@ public class BotStart {
         Start.logger.info("机器人已启动");
         return true;
     }
+    public static void addTask(SendPackTask task) {
+        Tasks.add(task);
+    }
 
     public static void stop() {
         try {
@@ -885,15 +894,6 @@ public class BotStart {
                 EventDo.join();
         } catch (Exception e) {
             Start.logger.error("关闭机器人时出现错误", e);
-        }
-    }
-
-    public static void eventCallToPlugin(SendPackTask task) {
-        task.data += " ";
-        var temp = task.data.getBytes(StandardCharsets.UTF_8);
-        temp[temp.length - 1] = task.index;
-        for (Plugins item : SocketServer.PluginList.values()) {
-            item.callEvent(task.index, temp);
         }
     }
 
