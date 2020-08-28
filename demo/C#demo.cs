@@ -14,12 +14,16 @@ using System.Threading.Tasks;
 
 namespace netcore
 {
-    class PackStart
+    class PackBase
+    {
+        public long qq { get; set; }
+    }
+    class PackStart: PackBase
     {
         public string Name { get; set; }
         public List<byte> Reg { get; set; }
     }
-    class GroupMessageEventPack
+    class GroupMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -27,23 +31,23 @@ namespace netcore
         public List<string> message { get; set; }
     }
 
-    class SendGroupMessagePack
+    class SendGroupMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
     }
-    class SendFriendMessagePack
+    class SendFriendMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
     }
-    class SendGroupPrivateMessagePack
+    class SendGroupPrivateMessagePack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
         public List<string> message { get; set; }
     }
-    class TempMessageEventPack
+    class TempMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -51,49 +55,49 @@ namespace netcore
         public List<string> message { get; set; }
         public int time { get; set; }
     }
-    class FriendMessageEventPack
+    class FriendMessageEventPack : PackBase
     {
         public long id { get; set; }
         public string name { get; set; }
         public List<string> message { get; set; }
         public int time { get; set; }
     }
-    class SendGroupImagePack
+    class SendGroupImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
     }
-    class SendGroupPrivateImagePack
+    class SendGroupPrivateImagePack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
         public string img { get; set; }
     }
-    class SendFriendImagePack
+    class SendFriendImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
     }
-    class GroupMuteAll
+    class GroupMuteAll : PackBase
     {
         public long id { get; set; }
     }
-    class GroupUnmuteAll
+    class GroupUnmuteAll : PackBase
     {
         public long id { get; set; }
     }
-    class SetGroupMemberCard
+    class SetGroupMemberCard : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
         public string card { get; set; }
     }
-    class SetGroupName
+    class SetGroupName : PackBase
     {
         public long id { get; set; }
         public string name { get; set; }
     }
-    class NewFriendRequestEventPack
+    class NewFriendRequestEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -101,15 +105,27 @@ namespace netcore
         public string message { get; set; }
         public long eventid { get; set; }
     }
-    class EventCallPack
+    class EventCallPack : PackBase
     {
         public long eventid { get; set; }
         public int dofun { get; set; }
         public List<object> arg { get; set; }
     }
-    class ReCallMessage
+    class ReCallMessage : PackBase
     {
         public long id { get; set; }
+    }
+    class LoadFileSendToGroupImagePack : PackBase
+    {
+        public long id { get; set; }
+        public string file { get; set; }
+    }
+    class GroupMessagePostSendEventPack : PackBase
+    {
+        public long id { get; set; }
+        public bool res { get; set; }
+        public List<string> message { get; set; }
+        public string error { get; set; }
     }
     class BuildPack
     {
@@ -120,7 +136,7 @@ namespace netcore
             return data;
         }
 
-        public static byte[] BuildImage(long id, long fid, string img, byte index)
+        public static byte[] BuildImage(long qq, long id, long fid, string img, byte index)
         {
             string temp = "";
             if (id != 0)
@@ -131,26 +147,20 @@ namespace netcore
             {
                 temp += "fid=" + fid + "&";
             }
+            temp += "qq=" + qq + "&";
             temp += "img=" + img;
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[data.Length - 1] = index;
             return data;
         }
 
-        public static byte[] BuildSound(long id, string sound, byte index)
+        public static byte[] BuildSound(long qq, long id, string sound, byte index)
         {
-            string temp = "id=" + id + "&sound=" + sound;
+            string temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[data.Length - 1] = index;
             return data;
         }
-    }
-    class GroupMessagePostSendEventPack
-    {
-        public long id { get; set; }
-        public bool res { get; set; }
-        public List<string> message { get; set; }
-        public string error { get; set; }
     }
     class RobotTask
     {
@@ -220,6 +230,7 @@ namespace netcore
                                     break;
                                 case 46:
                                     var pack3 = JsonConvert.DeserializeObject<NewFriendRequestEventPack>(task.data);
+                                    Console.WriteLine("qq = " + pack3.qq);
                                     Console.WriteLine("id = " + pack3.id);
                                     Console.WriteLine("fid = " + pack3.fid);
                                     Console.WriteLine("name = " + pack3.name);
@@ -230,6 +241,7 @@ namespace netcore
                                     break;
                                 case 49:
                                     var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(task.data);
+                                    Console.WriteLine("qq = " + pack.qq);
                                     Console.WriteLine("id = " + pack.id);
                                     Console.WriteLine("fid = " + pack.fid);
                                     Console.WriteLine("name = " + pack.name);
@@ -242,7 +254,7 @@ namespace netcore
                                     if (pack.message[pack.message.Count - 1] == "撤回")
                                     {
                                         string id = Utils.GetString(pack.message[0], "source:", ",");
-                                        var data = BuildPack.Build(new ReCallMessage { id = long.Parse(id) }, 71);
+                                        var data = BuildPack.Build(new ReCallMessage { qq = pack.qq, id = long.Parse(id) }, 71);
                                         QueueSend.Add(data);
                                     }
                                     else if (pack.message[pack.message.Count - 1] == "回复")
@@ -250,16 +262,17 @@ namespace netcore
                                         string id = Utils.GetString(pack.message[0], "source:", ",");
                                         var list2 = new List<string>() { "quote:" + id };
                                         list2.Add("回复消息");
-                                        SendGroupMessage(pack.id, list2);
+                                        SendGroupMessage(pack.qq, pack.id, list2);
                                     }
                                     else if (pack.message[pack.message.Count - 1] == "撤回自己")
                                     {
                                         var list2 = new List<string>() { "3秒后撤回" };
-                                        SendGroupMessage(pack.id, list2);
+                                        SendGroupMessage(pack.qq, pack.id, list2);
                                     }
                                     break;
                                 case 50:
                                     var pack1 = JsonConvert.DeserializeObject<TempMessageEventPack>(task.data);
+                                    Console.WriteLine("qq = " + pack1.qq);
                                     Console.WriteLine("id = " + pack1.id);
                                     Console.WriteLine("fid = " + pack1.fid);
                                     Console.WriteLine("name = " + pack1.name);
@@ -271,7 +284,7 @@ namespace netcore
                                     Console.WriteLine();
                                     var list = new List<string>() { pack1.name };
                                     list.AddRange(pack1.message);
-                                    SendGroupPrivateMessage(pack1.id, pack1.fid, list);
+                                    SendGroupPrivateMessage(pack1.qq, pack1.id, pack1.fid, list);
                                     break;
                                 case 51:
                                     var pack2 = JsonConvert.DeserializeObject<FriendMessageEventPack>(task.data);
@@ -286,7 +299,7 @@ namespace netcore
                                     Console.WriteLine();
                                     var list1 = new List<string>() { pack2.name };
                                     list1.AddRange(pack2.message);
-                                    SendFriendMessage(pack2.id, list1);
+                                    SendFriendMessage(pack2.qq, pack2.id, list1);
                                     break;
                             }
                         }
@@ -370,51 +383,52 @@ namespace netcore
                     Thread.Sleep(500);
                 }
                 list.Clear();
-                HttpClient http = new HttpClient();
-                //var mp3 = http.GetByteArrayAsync(@"https://tts.baidu.com/text2audio?tex=%E8%BF%99%E6%98%AF%E4%B8%80%E6%AE%B5%E8%AF%AD%E9%9F%B3&cuid=baike&lan=ZH&ctp=1&pdt=301&vol=9&rate=32&per=0").Result;
-                var res = http.GetAsync("https://music.163.com/song/media/outer/url?id=1365679378");
-                var data1 = res.Result.Headers.Location;
-                var mp3 = http.GetByteArrayAsync(data1).Result;
-                //var mp3 = http.GetByteArrayAsync(@"https://pic1.afdiancdn.com/user/a976a704a3b011e88adc52540025c377/common/a43ff57e99670c82733831a8344e8df2_w512_h512_s84.jpg").Result;
-                Guid guid = Guid.NewGuid();
-                string uuid = guid.ToString().Replace("-", "");
-                string inputfile = uuid + ".mp3";
-                string output = uuid + ".amr";
-                File.WriteAllBytes(inputfile, mp3);
+                //HttpClient http = new HttpClient();
+                ////var mp3 = http.GetByteArrayAsync(@"https://tts.baidu.com/text2audio?tex=%E8%BF%99%E6%98%AF%E4%B8%80%E6%AE%B5%E8%AF%AD%E9%9F%B3&cuid=baike&lan=ZH&ctp=1&pdt=301&vol=9&rate=32&per=0").Result;
+                //var res = http.GetAsync("https://music.163.com/song/media/outer/url?id=1365679378");
+                //var data1 = res.Result.Headers.Location;
+                //var mp3 = http.GetByteArrayAsync(data1).Result;
+                ////var mp3 = http.GetByteArrayAsync(@"https://pic1.afdiancdn.com/user/a976a704a3b011e88adc52540025c377/common/a43ff57e99670c82733831a8344e8df2_w512_h512_s84.jpg").Result;
+                //Guid guid = Guid.NewGuid();
+                //string uuid = guid.ToString().Replace("-", "");
+                //string inputfile = uuid + ".mp3";
+                //string output = uuid + ".amr";
+                //File.WriteAllBytes(inputfile, mp3);
 
-                Process process = new Process();
-                process.StartInfo.FileName = @"D:\ffmpeg\bin\ffmpeg.exe";  //这里改成你FFMPEG的路径
-                process.StartInfo.Arguments = " -i \"" + inputfile + "\" -ar 8000 -ab 12.2k -ac 1 \""+ output + '\"';
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardInput = true;
-                process.StartInfo.RedirectStandardError = true;
+                //Process process = new Process();
+                //process.StartInfo.FileName = @"D:\ffmpeg\bin\ffmpeg.exe";  //这里改成你FFMPEG的路径
+                //process.StartInfo.Arguments = " -i \"" + inputfile + "\" -ar 8000 -ab 12.2k -ac 1 \""+ output + '\"';
+                //process.StartInfo.UseShellExecute = false;
+                //process.StartInfo.CreateNoWindow = true;
+                //process.StartInfo.RedirectStandardOutput = true;
+                //process.StartInfo.RedirectStandardInput = true;
+                //process.StartInfo.RedirectStandardError = true;
 
-                process.Start();
-                process.BeginErrorReadLine();   // 开始异步读取
+                //process.Start();
+                //process.BeginErrorReadLine();   // 开始异步读取
 
-                Console.WriteLine("开始音频转码...");
+                //Console.WriteLine("开始音频转码...");
 
-                process.WaitForExit();    // 等待转码完成
-                //FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"target.amr", FileMode.Open, FileAccess.Read);
-                FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + uuid + @".amr", FileMode.Open, FileAccess.Read);
-                Thread.Sleep(200);
-                var data = new byte[file.Length];
-                file.Read(data, 0, data.Length);
-                file.Close();
-                SendGroupSound(571239090, Convert.ToBase64String(data));
-                //SendGroupImage(571239090, Convert.ToBase64String());
+                //process.WaitForExit();    // 等待转码完成
+                ////FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"target.amr", FileMode.Open, FileAccess.Read);
+                //FileStream file = new FileStream(AppDomain.CurrentDomain.BaseDirectory + uuid + @".amr", FileMode.Open, FileAccess.Read);
+                //Thread.Sleep(200);
+                //var data = new byte[file.Length];
+                //file.Read(data, 0, data.Length);
+                //file.Close();
+                //SendGroupSound(571239090, Convert.ToBase64String(data));
+                ////SendGroupImage(571239090, Convert.ToBase64String());
 
-                File.Delete(inputfile);
-                File.Delete(output);
+                //File.Delete(inputfile);
+                //File.Delete(output);
 
+                SendGroupImageFile(1092415357, 571239090, @"G:\横的90.jpg");
                 Console.WriteLine("输入4行数据后发送");
                 list.Add(Console.ReadLine());
                 list.Add(Console.ReadLine());
                 list.Add(Console.ReadLine());
                 list.Add(Console.ReadLine());
-                SendGroupMessage(571239090, list);
+                SendGroupMessage(1092415357, 571239090, list);
             }
         }
 
@@ -448,40 +462,45 @@ namespace netcore
             var data = BuildPack.Build(new EventCallPack { eventid = eventid, dofun = dofun, arg = arg }, 59);
             QueueSend.Add(data);
         }
-        public static void SendGroupMessage(long id, List<string> message)
+        public static void SendGroupMessage(long qq, long id, List<string> message)
         {
-            var data = BuildPack.Build(new SendGroupMessagePack { id = id, message = message }, 52);
+            var data = BuildPack.Build(new SendGroupMessagePack {qq=qq, id = id, message = message }, 52);
             QueueSend.Add(data);
         }
-        public static void SendGroupPrivateMessage(long id, long fid, List<string> message)
+        public static void SendGroupPrivateMessage(long qq, long id, long fid, List<string> message)
         {
-            var data = BuildPack.Build(new SendGroupPrivateMessagePack { id = id, fid = fid, message = message }, 53);
+            var data = BuildPack.Build(new SendGroupPrivateMessagePack { qq=qq,id = id, fid = fid, message = message }, 53);
             QueueSend.Add(data);
         }
-        public static void SendFriendMessage(long id, List<string> message)
+        public static void SendFriendMessage(long qq, long id, List<string> message)
         {
-            var data = BuildPack.Build(new SendFriendMessagePack { id = id, message = message }, 54);
+            var data = BuildPack.Build(new SendFriendMessagePack { qq=qq,id = id, message = message }, 54);
             QueueSend.Add(data);
         }
-        public static void SendGroupImage(long id, string img)
+        public static void SendGroupImage(long qq, long id, string img)
         {
-            var data = BuildPack.BuildImage(id, 0, img, 61);
+            var data = BuildPack.BuildImage(qq, id, 0, img, 61);
             QueueSend.Add(data);
         }
-        public static void SendGroupPrivateImage(long id, long fid, string img)
+        public static void SendGroupPrivateImage(long qq, long id, long fid, string img)
         {
-            var data = BuildPack.BuildImage(id, fid, img, 62);
+            var data = BuildPack.BuildImage(qq, id, fid, img, 62);
             QueueSend.Add(data);
         }
-        public static void SendFriendImage(long id, string img)
+        public static void SendFriendImage(long qq, long id, string img)
         {
-            var data = BuildPack.BuildImage(id, 0, img, 63);
+            var data = BuildPack.BuildImage(qq, id, 0, img, 63);
             QueueSend.Add(data);
         }
 
-        public static void SendGroupSound(long id, string sound)
+        public static void SendGroupSound(long qq, long id, string sound)
         {
-            var data = BuildPack.BuildSound(id, sound, 74);
+            var data = BuildPack.BuildSound(qq, id, sound, 74);
+            QueueSend.Add(data);
+        }
+        public static void SendGroupImageFile(long qq, long id, string file)
+        {
+            var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file, }, 75);
             QueueSend.Add(data);
         }
         public static void Stop()

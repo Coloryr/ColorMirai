@@ -10,8 +10,8 @@ public class BotJoinGroupEventBPack extends BotJoinGroupEventAPack {
     public String name;
     public long fid;
 
-    public BotJoinGroupEventBPack(String name, long id, long fid) {
-        super(id);
+    public BotJoinGroupEventBPack(long qq, String name, long id, long fid) {
+        super(qq, id);
         this.fid = fid;
         this.name = name;
     }

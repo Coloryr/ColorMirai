@@ -13,8 +13,8 @@ public class MessageRecallEventBPack extends MessageRecallEventAPack {
     public long oid;
     public String oname;
 
-    public MessageRecallEventBPack(long id, long fid, int mid, int time, long oid, String oname) {
-        super(id, mid, time);
+    public MessageRecallEventBPack(long qq, long id, long fid, int mid, int time, long oid, String oname) {
+        super(qq, id, mid, time);
         this.fid = fid;
         this.oid = oid;
         this.oname = oname;

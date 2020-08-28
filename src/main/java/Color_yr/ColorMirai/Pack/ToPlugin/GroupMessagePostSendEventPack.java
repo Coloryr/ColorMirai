@@ -1,5 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
 import net.mamoe.mirai.message.data.MessageSource;
 
 import java.util.ArrayList;
@@ -12,15 +13,16 @@ res：是否发送成功
 message：发送的消息
 error：错误消息
  */
-public class GroupMessagePostSendEventPack {
+public class GroupMessagePostSendEventPack extends PackBase {
     public long id;
     public boolean res;
     public List<String> message;
     public String error;
 
-    public GroupMessagePostSendEventPack(long id, boolean res, MessageSource message, String error) {
+    public GroupMessagePostSendEventPack(long qq, long id, boolean res, MessageSource message, String error) {
         this.error = error;
         this.id = id;
+        this.qq = qq;
         this.message = new ArrayList<>();
         this.message.add(message.toString());
         for (var item : message.getOriginalMessage()) {

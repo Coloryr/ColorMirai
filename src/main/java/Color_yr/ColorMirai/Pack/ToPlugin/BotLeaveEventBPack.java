@@ -10,8 +10,8 @@ public class BotLeaveEventBPack extends BotLeaveEventAPack {
     public String name;
     public long fid;
 
-    public BotLeaveEventBPack(String name, long id, long fid) {
-        super(id);
+    public BotLeaveEventBPack(long qq, String name, long id, long fid) {
+        super(qq, id);
         this.fid = fid;
         this.name = name;
     }

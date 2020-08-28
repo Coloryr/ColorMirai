@@ -13,8 +13,8 @@ time：时间
 public class TempMessageEventPack extends GroupMessageEventPack {
     public int time;
 
-    public TempMessageEventPack(long id, long fid, String name, MessageChain message, int time) {
-        super(id, fid, name, message);
+    public TempMessageEventPack(long qq, long id, long fid, String name, MessageChain message, int time) {
+        super(qq, id, fid, name, message);
         this.time = time;
     }
 

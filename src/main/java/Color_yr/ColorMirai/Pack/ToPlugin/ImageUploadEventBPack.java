@@ -9,8 +9,8 @@ public class ImageUploadEventBPack extends ImageUploadEventAPack {
     public String error;
     public int index;
 
-    public ImageUploadEventBPack(long id, String name, String error, int index) {
-        super(id, name);
+    public ImageUploadEventBPack(long qq, long id, String name, String error, int index) {
+        super(qq, id, name);
         this.error = error;
         this.index = index;
     }

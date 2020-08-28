@@ -1,5 +1,7 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
+
 import java.util.List;
 
 /*
@@ -7,7 +9,7 @@ import java.util.List;
 id：群号
 message：消息
  */
-public class SendGroupMessagePack {
+public class SendGroupMessagePack extends PackBase {
     public long id;
     public List<String> message;
 }

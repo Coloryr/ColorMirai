@@ -28,7 +28,7 @@ public class ConfigRead {
                     data.append(new String(buf, 0, length));
                 }
                 Start.Config = JSON.parseObject(data.toString(), ConfigObj.class);
-                if (Start.Config.QQ == 0) {
+                if (Start.Config.QQs == null) {
                     Start.Config = new ConfigObj();
                     Save();
                 }

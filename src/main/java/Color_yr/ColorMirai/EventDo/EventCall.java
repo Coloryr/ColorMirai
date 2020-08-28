@@ -23,10 +23,12 @@ public class EventCall {
         return a;
     }
 
-    public static void DoEvent(long id, int dofun, List<Object> arg) {
+    public static void DoEvent(long qq, long id, int dofun, List<Object> arg) {
         if (EventsDo.containsKey(id)) {
             try {
                 var event = EventsDo.remove(id);
+                if (event.qq != qq)
+                    return;
                 switch (event.type) {
                     case 4:
                         BotInvitedJoinGroupRequestEvent data = (BotInvitedJoinGroupRequestEvent) event.event;

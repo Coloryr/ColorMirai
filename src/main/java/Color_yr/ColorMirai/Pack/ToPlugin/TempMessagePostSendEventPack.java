@@ -1,5 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
 import net.mamoe.mirai.message.data.MessageSource;
 
 import java.util.ArrayList;
@@ -13,15 +14,16 @@ res：是否成功发送
 message：消息
 error：错误信息
  */
-public class TempMessagePostSendEventPack {
+public class TempMessagePostSendEventPack extends PackBase {
     public long id;
     public long fid;
     public boolean res;
     public List<String> message;
     public String error;
 
-    public TempMessagePostSendEventPack(long id, long fid, boolean res, MessageSource message, String error) {
+    public TempMessagePostSendEventPack(long qq, long id, long fid, boolean res, MessageSource message, String error) {
         this.error = error;
+        this.qq = qq;
         this.id = id;
         this.fid = fid;
         this.message = new ArrayList<>();

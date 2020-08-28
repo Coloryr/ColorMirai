@@ -46,120 +46,141 @@ public class Plugins {
             try {
                 if (!Tasks.isEmpty()) {
                     var task = Tasks.remove(0);
-                    switch (task.getIndex()) {
+                    switch (task.index) {
                         case 52:
-                            var pack = JSON.parseObject(task.getData(), SendGroupMessagePack.class);
-                            BotStart.sendGroupMessage(pack.id, pack.message);
+                            var pack = JSON.parseObject(task.data, SendGroupMessagePack.class);
+                            BotStart.sendGroupMessage(pack.qq, pack.id, pack.message);
                             break;
                         case 53:
-                            var pack1 = JSON.parseObject(task.getData(), SendGroupPrivateMessagePack.class);
-                            BotStart.sendGroupPrivateMessage(pack1.id, pack1.fid, pack1.message);
+                            var pack1 = JSON.parseObject(task.data, SendGroupPrivateMessagePack.class);
+                            BotStart.sendGroupPrivateMessage(pack1.qq, pack1.id, pack1.fid, pack1.message);
                             break;
                         case 54:
-                            var pack2 = JSON.parseObject(task.getData(), SendFriendMessagePack.class);
-                            BotStart.sendFriendMessage(pack2.id, pack2.message);
+                            var pack2 = JSON.parseObject(task.data, SendFriendMessagePack.class);
+                            BotStart.sendFriendMessage(pack2.qq, pack2.id, pack2.message);
                             break;
                         case 55:
-                            if (SocketServer.sendPack(PackDo.BuildPack(BotStart.getGroups(), 55), Socket))
+                            var pack17 = JSON.parseObject(task.data, GetPack.class);
+                            if (SocketServer.sendPack(PackDo.BuildPack(BotStart.getGroups(pack17.qq), 55), Socket))
                                 close();
                             break;
                         case 56:
-                            if (SocketServer.sendPack(PackDo.BuildPack(BotStart.getFriends(), 56), Socket))
+                            var pack18 = JSON.parseObject(task.data, GetPack.class);
+                            if (SocketServer.sendPack(PackDo.BuildPack(BotStart.getFriends(pack18.qq), 56), Socket))
                                 close();
                             break;
                         case 57:
-                            var pack3 = JSON.parseObject(task.getData(), GetGroupMemberInfoPack.class);
+                            var pack3 = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
-                                    BotStart.getMembers(pack3.id), 57), Socket))
+                                    BotStart.getMembers(pack3.qq, pack3.id), 57), Socket))
                                 close();
                             break;
                         case 58:
-                            var pack4 = JSON.parseObject(task.getData(), GetGroupSettingPack.class);
+                            var pack4 = JSON.parseObject(task.data, GetGroupSettingPack.class);
                             if (SocketServer.sendPack(PackDo.BuildPack(
-                                    BotStart.getGroupInfo(pack4.id), 58), Socket))
+                                    BotStart.getGroupInfo(pack4.qq, pack4.id), 58), Socket))
                                 close();
                             break;
                         case 59:
-                            var pack5 = JSON.parseObject(task.getData(), EventCallPack.class);
-                            EventCall.DoEvent(pack5.eventid, pack5.dofun, pack5.arg);
+                            var pack5 = JSON.parseObject(task.data, EventCallPack.class);
+                            EventCall.DoEvent(pack5.qq, pack5.eventid, pack5.dofun, pack5.arg);
                             break;
                         case 61:
-                            var formdata = DataFrom.parse(task.getData());
-                            if (formdata.containsKey("id") && formdata.containsKey("img")) {
+                            var formdata = DataFrom.parse(task.data);
+                            if (formdata.containsKey("id") && formdata.containsKey("img") && formdata.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
-                                    BotStart.sendGroupImage(id, formdata.get("img"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    BotStart.sendGroupImage(qq, id, formdata.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
                         case 62:
-                            var formdata1 = DataFrom.parse(task.getData());
-                            if (formdata1.containsKey("id") && formdata1.containsKey("fid") && formdata1.containsKey("img")) {
+                            var formdata1 = DataFrom.parse(task.data);
+                            if (formdata1.containsKey("id") && formdata1.containsKey("fid") && formdata1.containsKey("img") && formdata1.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata1.get("id"));
                                     long fid = Long.parseLong(formdata1.get("fid"));
-                                    BotStart.sendGroupPrivataImage(id, fid, formdata1.get("img"));
+                                    long qq = Long.parseLong(formdata1.get("qq"));
+                                    BotStart.sendGroupPrivataImage(qq, id, fid, formdata1.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
                         case 63:
-                            var formdata2 = DataFrom.parse(task.getData());
+                            var formdata2 = DataFrom.parse(task.data);
                             if (formdata2.containsKey("id") && formdata2.containsKey("img")) {
                                 try {
                                     long id = Long.parseLong(formdata2.get("id"));
-                                    BotStart.sendFriendImage(id, formdata2.get("img"));
+                                    long qq = Long.parseLong(formdata2.get("qq"));
+                                    BotStart.sendFriendImage(qq, id, formdata2.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
-                            //var pack8 = JSON.parseObject(task.getData(), SendFriendImagePack.class);
                             break;
                         case 64:
-                            var pack9 = JSON.parseObject(task.getData(), DeleteGroupMember.class);
-                            BotStart.DeleteGroupMember(pack9.id, pack9.fid);
+                            var pack9 = JSON.parseObject(task.data, DeleteGroupMember.class);
+                            BotStart.DeleteGroupMember(pack9.qq, pack9.id, pack9.fid);
                             break;
                         case 65:
-                            var pack10 = JSON.parseObject(task.getData(), MuteGroupMember.class);
-                            BotStart.MuteGroupMember(pack10.id, pack10.fid, pack10.time);
+                            var pack10 = JSON.parseObject(task.data, MuteGroupMember.class);
+                            BotStart.MuteGroupMember(pack10.qq, pack10.id, pack10.fid, pack10.time);
                             break;
                         case 66:
-                            var pack11 = JSON.parseObject(task.getData(), UnmuteGroupMember.class);
-                            BotStart.UnmuteGroupMember(pack11.id, pack11.fid);
+                            var pack11 = JSON.parseObject(task.data, UnmuteGroupMember.class);
+                            BotStart.UnmuteGroupMember(pack11.qq, pack11.id, pack11.fid);
                             break;
                         case 67:
-                            var pack12 = JSON.parseObject(task.getData(), GroupMuteAll.class);
-                            BotStart.GroupMuteAll(pack12.id);
+                            var pack12 = JSON.parseObject(task.data, GroupMuteAll.class);
+                            BotStart.GroupMuteAll(pack12.qq, pack12.id);
                             break;
                         case 68:
-                            var pack13 = JSON.parseObject(task.getData(), GroupUnmuteAll.class);
-                            BotStart.GroupUnmuteAll(pack13.id);
+                            var pack13 = JSON.parseObject(task.data, GroupUnmuteAll.class);
+                            BotStart.GroupUnmuteAll(pack13.qq, pack13.id);
                             break;
                         case 69:
-                            var pack14 = JSON.parseObject(task.getData(), SetGroupMemberCard.class);
-                            BotStart.SetGroupMemberCard(pack14.id, pack14.fid, pack14.card);
+                            var pack14 = JSON.parseObject(task.data, SetGroupMemberCard.class);
+                            BotStart.SetGroupMemberCard(pack14.qq, pack14.id, pack14.fid, pack14.card);
                             break;
                         case 70:
-                            var pack15 = JSON.parseObject(task.getData(), SetGroupName.class);
-                            BotStart.SetGroupName(pack15.id, pack15.name);
+                            var pack15 = JSON.parseObject(task.data, SetGroupName.class);
+                            BotStart.SetGroupName(pack15.qq, pack15.id, pack15.name);
                             break;
                         case 71:
-                            var pack16 = JSON.parseObject(task.getData(), ReCallMessagePack.class);
+                            var pack16 = JSON.parseObject(task.data, ReCallMessagePack.class);
                             BotStart.ReCall(pack16.id);
                             break;
                         case 74:
-                            var formdata3 = DataFrom.parse(task.getData());
-                            if (formdata3.containsKey("id") && formdata3.containsKey("sound")) {
+                            var formdata3 = DataFrom.parse(task.data);
+                            if (formdata3.containsKey("id") && formdata3.containsKey("sound") && formdata3.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata3.get("id"));
-                                    BotStart.SendGroupSound(id, formdata3.get("sound"));
+                                    long qq = Long.parseLong(formdata3.get("qq"));
+                                    BotStart.SendGroupSound(qq, id, formdata3.get("sound"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
+                            break;
+                        case 75:
+                            var pack19 = JSON.parseObject(task.data, LoadFileSendToGroupImagePack.class);
+                            BotStart.sendGroupImageFile(pack19.qq, pack19.id, pack19.file);
+                            break;
+                        case 76:
+                            var pack20 = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
+                            BotStart.sendGroupPrivateImageFile(pack20.qq, pack20.id, pack20.fid, pack20.file);
+                            break;
+                        case 77:
+                            var pack21 = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
+                            BotStart.sendFriendImageFile(pack21.qq, pack21.id, pack21.file);
+                            break;
+                        case 78:
+                            var pack22 = JSON.parseObject(task.data, LoadFileSendToGroupSoundPack.class);
+                            BotStart.SendGroupSoundFile(pack22.qq, pack22.id, pack22.file);
                             break;
                     }
                 }

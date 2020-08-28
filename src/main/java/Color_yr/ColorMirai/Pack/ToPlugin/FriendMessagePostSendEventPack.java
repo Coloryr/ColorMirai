@@ -1,5 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
 import net.mamoe.mirai.message.data.MessageSource;
 
 import java.util.ArrayList;
@@ -13,14 +14,15 @@ name：好友nick
 res：是否成功发送
 error：错误消息
  */
-public class FriendMessagePostSendEventPack {
+public class FriendMessagePostSendEventPack extends PackBase {
     public List<String> message;
     public long id;
     public String name;
     public boolean res;
     public String error;
 
-    public FriendMessagePostSendEventPack(MessageSource message, long id, String name, boolean res, String error) {
+    public FriendMessagePostSendEventPack(long qq, MessageSource message, long id, String name, boolean res, String error) {
+        this.qq = qq;
         this.error = error;
         this.id = id;
         this.message = new ArrayList<>();

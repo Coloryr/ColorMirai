@@ -1,5 +1,7 @@
 package Color_yr.ColorMirai.Pack.FromPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
+
 import java.util.List;
 
 /*
@@ -8,7 +10,7 @@ eventid：事件ID
 dofun：方法
 arg：附带参数
  */
-public class EventCallPack {
+public class EventCallPack extends PackBase {
     public long eventid;
     public int dofun;
     public List<Object> arg;

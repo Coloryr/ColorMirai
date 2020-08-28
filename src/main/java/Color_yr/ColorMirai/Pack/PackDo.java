@@ -89,6 +89,10 @@ import java.nio.charset.StandardCharsets;
 
 74 [插件]发送语音到群
 
+75 [插件]从本地文件加载图片发送到群
+76 [插件]从本地文件加载图片发送到群私聊
+77 [插件]从本地文件加载图片发送到朋友
+78 [插件]从本地文件加载语音发送到群
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

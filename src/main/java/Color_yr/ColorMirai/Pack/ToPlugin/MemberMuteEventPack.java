@@ -1,5 +1,7 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
+
 /*
 40 [机器人]群成员被禁言（事件）
 id：群号
@@ -9,7 +11,7 @@ fname：被禁言的群名片
 ename：执行禁言的群名片
 time：时间
  */
-public class MemberMuteEventPack {
+public class MemberMuteEventPack extends PackBase {
     public long id;
     public long fid;
     public long eid;
@@ -17,8 +19,9 @@ public class MemberMuteEventPack {
     public String ename;
     public int time;
 
-    public MemberMuteEventPack(long id, long fid, long eid, String fname, String ename, int time) {
+    public MemberMuteEventPack(long qq, long id, long fid, long eid, String fname, String ename, int time) {
         this.eid = eid;
+        this.qq = qq;
         this.fid = fid;
         this.id = id;
         this.ename = ename;

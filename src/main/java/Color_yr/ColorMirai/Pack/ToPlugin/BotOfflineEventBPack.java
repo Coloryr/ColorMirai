@@ -8,8 +8,8 @@ message：离线原因
 public class BotOfflineEventBPack extends BotOfflineEventAPack {
     public String title;
 
-    public BotOfflineEventBPack(String message, String title) {
-        super(message);
+    public BotOfflineEventBPack(long qq, String message, String title) {
+        super(qq, message);
         this.title = title;
     }
 }
