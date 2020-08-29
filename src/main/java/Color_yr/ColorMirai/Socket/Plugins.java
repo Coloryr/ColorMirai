@@ -177,7 +177,7 @@ public class Plugins {
                             BotStart.sendGroupPrivateImageFile(pack20.qq, pack20.id, pack20.fid, pack20.file);
                             break;
                         case 77:
-                            var pack21 = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
+                            var pack21 = JSON.parseObject(task.data, LoadFileSendToFriendImagePack.class);
                             BotStart.sendFriendImageFile(pack21.qq, pack21.id, pack21.file);
                             break;
                         case 78:
