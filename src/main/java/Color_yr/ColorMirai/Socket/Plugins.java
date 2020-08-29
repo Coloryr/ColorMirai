@@ -7,8 +7,10 @@ import Color_yr.ColorMirai.Robot.BotStart;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -208,6 +210,8 @@ public class Plugins {
                     name = pack.Name;
                     Events = pack.Reg;
                     SocketServer.addPlugin(name, this);
+                    String data = JSON.toJSONString(BotStart.getBots());
+                    SocketServer.sendPack(data.getBytes(StandardCharsets.UTF_8), this.Socket);
                 } else {
                     Start.logger.warn("插件连接初始化失败");
                     Socket.close();

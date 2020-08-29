@@ -1329,4 +1329,8 @@ public class BotStart {
             Start.logger.error("发送群语音失败", e);
         }
     }
+
+    public static List<Long> getBots() {
+        return new ArrayList<>(bots.keySet());
+    }
 }

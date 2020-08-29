@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -192,6 +193,7 @@ namespace netcore
         private static Thread DoThread;
         private static bool IsRun;
         private static bool IsConnect;
+        private static List<long> QQs;
         private static ConcurrentBag<RobotTask> QueueRead;
         private static ConcurrentBag<byte[]> QueueSend;
         private static PackStart PackStart = new PackStart
@@ -445,6 +447,15 @@ namespace netcore
                 data[data.Length - 1] = 0;
 
                 Socket.Send(data);
+
+                while (Socket.Available == 0)
+                {
+                    Thread.Sleep(10);
+                }
+
+                data = new byte[Socket.Available];
+                Socket.Receive(data);
+                QQs = JArray.Parse(Encoding.UTF8.GetString(data)).ToObject<List<long>>();
 
                 QueueRead.Clear();
                 QueueSend.Clear();
