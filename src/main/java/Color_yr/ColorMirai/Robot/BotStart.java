@@ -892,6 +892,7 @@ public class BotStart {
         };
         for (var item : bots.values()) {
             Events.registerEvents(item, host);
+            break;
         }
 
         isRun = true;
