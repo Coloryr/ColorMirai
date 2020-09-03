@@ -47,6 +47,7 @@ public class EventCall {
                         } else if (dofun == 2) {
                             data1.ignore((Boolean) arg.get(0));
                         }
+                        break;
                     case 46:
                         NewFriendRequestEvent data2 = (NewFriendRequestEvent) event.event;
                         if (dofun == 0) {
