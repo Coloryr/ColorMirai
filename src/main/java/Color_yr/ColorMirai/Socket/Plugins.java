@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSON;
 
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,11 @@ public class Plugins {
 
     public Plugins(Socket Socket) {
         this.Socket = Socket;
+        try {
+            this.Socket.setTcpNoDelay(true);
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
         read = new Thread(this::start);
         doRead = new Thread(this::startRead);
         read.start();

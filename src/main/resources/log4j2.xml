@@ -7,7 +7,7 @@
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
         </Console>
         <RollingRandomAccessFile name="File"
-                                 fileName="logs/logs.log"
+                                 fileName="PluginLog/logs.log"
                                  filePattern="logs/logs-%d{yyyy-MM-dd HH-mm}-%i.log"
                                  target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>

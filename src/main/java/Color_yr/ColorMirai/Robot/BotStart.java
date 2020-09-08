@@ -31,6 +31,7 @@ import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -65,6 +66,8 @@ public class BotStart {
             });
             try {
                 bot.login();
+                bot.getConfiguration().redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
+                bot.getConfiguration().redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
                 bots.put(item.QQ, bot);
                 Start.logger.info("QQ:" + item.QQ + "已登录");
             } catch (Exception e) {
@@ -800,6 +803,8 @@ public class BotStart {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getSubject().getId();
+                if(bots.containsKey(id))
+                    return ListeningStatus.LISTENING;
                 long fid = event.getSender().getId();
                 String name = event.getSender().getNameCard();
                 MessageChain message = event.getMessage();
@@ -908,7 +913,7 @@ public class BotStart {
                             item.callEvent(task.index, temp);
                         }
                     }
-                    Thread.sleep(50);
+                    Thread.sleep(100);
                 } catch (Exception e) {
                     Start.logger.error("插件处理事件出现问题", e);
                 }
