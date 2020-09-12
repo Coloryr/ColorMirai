@@ -16,11 +16,11 @@ cd ColorMirai
 ./gradlew shadowJar
 ```
 你会得到一个jar
-`build/libs/ColorMirai-1.0-SNAPSHOT-all.jar`  
+`build/libs/ColorMirai-2.0-SNAPSHOT-all.jar`  
 ## 启动
 > 1. 启动ColorMirai，必须使用JAVA11及以上
 > ```
-> java -jar ColorMirai-1.0-SNAPSHOT-all.jar
+> java -jar ColorMirai-2.0-SNAPSHOT-all.jar
 > ```
 > 启动后会生成`info.json`和`MainConfig.json`  
 > `info.json`是设备名称，不需要特别设置  
@@ -30,16 +30,22 @@ cd ColorMirai
 > `MainConfig.json`里面有下面内容
 > ```Json
 > {
->   "Password":"密码", 
->   "Port":23333,
->   "QQ":0,
->   "Type":0
+>     "MaxList": 100000,
+>     "Port": 23333,
+>     "QQs": [
+>         {
+>             "Password": "qwe13431388889",
+>             "QQ": 1092415357
+>         }
+>     ],
+>     "Type": 0
 > }
 > ```
 > - `Password`：QQ号密码
 > - `Port`：启动的端口
 > - `QQ`：登录的QQ号
 > - `Type`：登录的方式 0：安卓 1：手表
+> 机器人可以添加多个
 
 设置完后再次启动，出现`[INFO]Socket已启动:23333`说明已启动
 
@@ -47,6 +53,12 @@ cd ColorMirai
 将Type改成1即可登录，下次登录改回0就行了
 
 ## Socket数据包
+
+大部分数据包是一串JSON字符串+数据包ID构成  
+但是发送图片和发送语音用的是FormData格式
+
+注：经测试Server 2008存在数据包断包和丢包的现象，请换Server 2019使用
+
 ```
 以字符串的方式看
 {...}[ID]
@@ -54,6 +66,7 @@ cd ColorMirai
 123,...,125,[ID]
 ```
 `[ID]`对应数据包的ID  
+
 目前重要的ID：
 ```
 0 插件开始连接
