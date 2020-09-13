@@ -802,10 +802,10 @@ public class BotStart {
             public ListeningStatus GroupMessageEvent(GroupMessageEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                long id = event.getSender().getId();
-                if(Start.Config.escapeSelf && bots.containsKey(id))
-                    return ListeningStatus.LISTENING;
+                long id = event.getSubject().getId();
                 long fid = event.getSender().getId();
+                if(Start.Config.escapeSelf && bots.containsKey(fid))
+                    return ListeningStatus.LISTENING;
                 String name = event.getSender().getNameCard();
                 MessageChain message = event.getMessage();
                 var call = new MessageCall();
