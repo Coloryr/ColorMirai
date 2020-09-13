@@ -802,8 +802,8 @@ public class BotStart {
             public ListeningStatus GroupMessageEvent(GroupMessageEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                long id = event.getSubject().getId();
-                if(bots.containsKey(id))
+                long id = event.getSender().getId();
+                if(Start.Config.escapeSelf && bots.containsKey(id))
                     return ListeningStatus.LISTENING;
                 long fid = event.getSender().getId();
                 String name = event.getSender().getNameCard();
