@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ConfigObj {
     public List<QQsObj> QQs;
+    public boolean Pack;
     public int Port;
     public int Type;
     public boolean escapeSelf;
@@ -14,6 +15,7 @@ public class ConfigObj {
         QQs = new ArrayList<>() {{
             add(new QQsObj());
         }};
+        Pack = true;
         escapeSelf = true;
         Port = 23333;
         Type = 0;

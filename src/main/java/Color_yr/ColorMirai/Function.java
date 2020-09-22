@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.Utils;
+package Color_yr.ColorMirai;
 
 public class Function {
     public static String getString(String a, String b, String c) {

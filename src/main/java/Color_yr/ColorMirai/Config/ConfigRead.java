@@ -35,6 +35,9 @@ public class ConfigRead {
                 bf.close();
                 reader.close();
             }
+            for (var item : Start.Config.QQs) {
+                Start.logger.info("QQ号：" + item.QQ);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

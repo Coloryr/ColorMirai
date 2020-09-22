@@ -42,9 +42,11 @@ public class SocketServer {
                 }
             });
             ServerThread.start();
-            service.scheduleAtFixedRate(() -> {
-                BotStart.addTask(new SendPackTask(60, "{}"));
-            }, 0, 30, TimeUnit.SECONDS);
+            if (Start.Config.Pack) {
+                service.scheduleAtFixedRate(() -> {
+                    BotStart.addTask(new SendPackTask(60, "{}"));
+                }, 0, 30, TimeUnit.SECONDS);
+            }
             return true;
         } catch (Exception e) {
             Start.logger.error("Socket启动失败", e);

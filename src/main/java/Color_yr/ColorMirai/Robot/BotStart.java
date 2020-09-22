@@ -18,6 +18,7 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.GroupSettings;
 import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.data.GroupHonorType;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
@@ -26,6 +27,7 @@ import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.FriendMessageEvent;
 import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.TempMessageEvent;
+import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.BotConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -804,7 +806,7 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getSubject().getId();
                 long fid = event.getSender().getId();
-                if(Start.Config.escapeSelf && bots.containsKey(fid))
+                if (Start.Config.escapeSelf && bots.containsKey(fid))
                     return ListeningStatus.LISTENING;
                 String name = event.getSender().getNameCard();
                 MessageChain message = event.getMessage();
@@ -876,16 +878,56 @@ public class BotStart {
                 return ListeningStatus.LISTENING;
             }
 
-            //73 [机器人]好友昵称改变（事件）
-            public ListeningStatus FriendNickChangedEvent(FriendNickChangedEvent event) {
+            //79 [插件]成员群恢复（事件）
+            public ListeningStatus MemberJoinRetrieveEvent(MemberJoinEvent.Retrieve event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                long id = event.getFriend().getId();
-                String old = event.getFrom();
-                String new_ = event.getTo();
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
                 long qq = event.getBot().getId();
-                var pack = new FriendNickChangedEventPack(qq, id, old, new_);
-                Tasks.add(new SendPackTask(73, JSON.toJSONString(pack)));
+                String name = event.getMember().getNameCard();
+                var pack = new MemberJoinRetrieveEventPack(qq, id, fid, name);
+                Tasks.add(new SendPackTask(79, JSON.toJSONString(pack)));
+                return ListeningStatus.LISTENING;
+            }
+
+            //80 [插件]机器人群恢复（事件）
+            public ListeningStatus BotJoinGroupEventRetrieveEvent(BotJoinGroupEvent.Retrieve event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long qq = event.getBot().getId();
+                var pack = new BotJoinGroupEventRetrieveEventPack(qq, id);
+                Tasks.add(new SendPackTask(80, JSON.toJSONString(pack)));
+                return ListeningStatus.LISTENING;
+            }
+
+            //81 [插件]群成员戳一戳（事件）
+            public ListeningStatus MemberNudgedEvent(MemberNudgedEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getGroup().getId();
+                long fid = event.getMember().getId();
+                String name = event.getMember().getNameCard();
+                String action = event.getAction();
+                String suffix = event.getSuffix();
+                long qq = event.getBot().getId();
+                var pack = new MemberNudgedEventPack(qq, id, fid, name, action, suffix);
+                Tasks.add(new SendPackTask(81, JSON.toJSONString(pack)));
+                return ListeningStatus.LISTENING;
+            }
+
+            //82 [插件]机器人戳一戳（事件）
+            public ListeningStatus BotNudgedEvent(BotNudgedEvent event) {
+                if (SocketServer.havePlugin())
+                    return ListeningStatus.LISTENING;
+                long id = event.getFrom().getId();
+                String name = event.getFrom().getNick();
+                String action = event.getAction();
+                String suffix = event.getSuffix();
+                long qq = event.getBot().getId();
+                var pack = new BotNudgedEventPack(qq, id, name, action, suffix);
+                Tasks.add(new SendPackTask(82, JSON.toJSONString(pack)));
                 return ListeningStatus.LISTENING;
             }
 
@@ -975,6 +1017,7 @@ public class BotStart {
         try {
             if (!bots.containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
+                return;
             }
             Group group1 = bots.get(qq).getGroup(group);
             MessageChain messageChain = MessageUtils.newChain("");
@@ -1013,6 +1056,7 @@ public class BotStart {
         try {
             if (!bots.containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
+                return;
             }
             Group group1 = bots.get(qq).getGroup(group);
             MessageChain messageChain = MessageUtils.newChain("");
@@ -1036,6 +1080,7 @@ public class BotStart {
         try {
             if (!bots.containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
+                return;
             }
             var bot = bots.get(qq);
             MessageChain messageChain = MessageUtils.newChain("");
@@ -1056,81 +1101,110 @@ public class BotStart {
     }
 
     public static List<GroupsPack> getGroups(long qq) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
-        var list = new ArrayList<GroupsPack>();
-        for (Group item : bot.getGroups()) {
-            GroupsPack info = new GroupsPack();
-            info.qq = qq;
-            info.id = item.getId();
-            info.name = item.getName();
-            info.img = item.getAvatarUrl();
-            info.oid = item.getOwner().getId();
-            info.oname = item.getOwner().getNameCard();
-            info.per = item.getBotPermission().name();
-            list.add(info);
-        }
-        return list;
-    }
-
-    public static List<FriendsPack> getFriends(long qq) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
-        var list = new ArrayList<FriendsPack>();
-        for (Friend item : bot.getFriends()) {
-            FriendsPack info = new FriendsPack();
-            info.id = item.getId();
-            info.name = item.getNick();
-            info.img = item.getAvatarUrl();
-            list.add(info);
-        }
-        return list;
-    }
-
-    public static List<MemberInfoPack> getMembers(long qq, long id) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
-        if (bot.getGroups().contains(id)) {
-            var list = new ArrayList<MemberInfoPack>();
-            for (var item : bot.getGroup(id).getMembers()) {
-                var info = new MemberInfoPack();
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            var bot = bots.get(qq);
+            var list = new ArrayList<GroupsPack>();
+            for (Group item : bot.getGroups()) {
+                GroupsPack info = new GroupsPack();
+                info.qq = qq;
                 info.id = item.getId();
-                info.name = item.getNameCard();
+                info.name = item.getName();
                 info.img = item.getAvatarUrl();
-                info.nick = item.getNick();
-                info.per = item.getPermission().name();
-                info.mute = item.getMuteTimeRemaining();
+                info.oid = item.getOwner().getId();
+                info.oname = item.getOwner().getNameCard();
+                info.per = item.getBotPermission().name();
                 list.add(info);
             }
             return list;
-        } else
+        } catch (Exception e) {
+            Start.logger.error("获取群数据失败", e);
             return null;
+        }
+    }
+
+    public static List<FriendsPack> getFriends(long qq) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            var bot = bots.get(qq);
+            var list = new ArrayList<FriendsPack>();
+            for (Friend item : bot.getFriends()) {
+                FriendsPack info = new FriendsPack();
+                info.id = item.getId();
+                info.name = item.getNick();
+                info.img = item.getAvatarUrl();
+                list.add(info);
+            }
+            return list;
+        } catch (Exception e) {
+            Start.logger.error("获取朋友数据失败", e);
+            return null;
+        }
+    }
+
+    public static List<MemberInfoPack> getMembers(long qq, long id) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            var bot = bots.get(qq);
+            if (bot.getGroups().contains(id)) {
+                var list = new ArrayList<MemberInfoPack>();
+                for (var item : bot.getGroup(id).getMembers()) {
+                    var info = new MemberInfoPack();
+                    info.id = item.getId();
+                    info.name = item.getNameCard();
+                    info.img = item.getAvatarUrl();
+                    info.nick = item.getNick();
+                    info.per = item.getPermission().name();
+                    info.mute = item.getMuteTimeRemaining();
+                    list.add(info);
+                }
+                return list;
+            } else {
+                Start.logger.warn("不存在群:" + id);
+                return null;
+            }
+        } catch (Exception e) {
+            Start.logger.error("获取群成员数据失败", e);
+            return null;
+        }
     }
 
     public static GroupSettings getGroupInfo(long qq, long id) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
-        if (bot.getGroups().contains(id)) {
-            var item = bot.getGroup(id);
-            return item.getSettings();
-        } else
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            var bot = bots.get(qq);
+            if (bot.getGroups().contains(id)) {
+                var item = bot.getGroup(id);
+                return item.getSettings();
+            } else {
+                Start.logger.warn("不存在群:" + id);
+                return null;
+            }
+        } catch (Exception e) {
+            Start.logger.error("获取群成员数据失败", e);
             return null;
+        }
     }
 
     public static void sendGroupImage(long qq, long id, String img) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var group = bot.getGroup(id);
             group.sendMessage(group.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
@@ -1139,11 +1213,12 @@ public class BotStart {
     }
 
     public static void sendGroupImageFile(long qq, long id, String file) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var group = bot.getGroup(id);
             FileInputStream stream = new FileInputStream(file);
             group.sendMessage(group.uploadImage(stream));
@@ -1154,11 +1229,12 @@ public class BotStart {
     }
 
     public static void sendGroupPrivataImage(long qq, long id, long fid, String img) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             member.sendMessage(member.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
         } catch (Exception e) {
@@ -1167,11 +1243,12 @@ public class BotStart {
     }
 
     public static void sendGroupPrivateImageFile(long qq, long id, long fid, String file) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             FileInputStream stream = new FileInputStream(file);
             member.sendMessage(member.uploadImage(stream));
@@ -1184,6 +1261,7 @@ public class BotStart {
     public static void sendFriendImage(long qq, long id, String img) {
         if (!bots.containsKey(qq)) {
             Start.logger.warn("不存在QQ号:" + qq);
+            return;
         }
         var bot = bots.get(qq);
         try {
@@ -1195,11 +1273,12 @@ public class BotStart {
     }
 
     public static void sendFriendImageFile(long qq, long id, String file) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var friend = bot.getFriend(id);
             FileInputStream stream = new FileInputStream(file);
             friend.sendMessage(friend.uploadImage(stream));
@@ -1210,11 +1289,12 @@ public class BotStart {
     }
 
     public static void DeleteGroupMember(long qq, long id, long fid) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             member.kick();
         } catch (Exception e) {
@@ -1223,11 +1303,12 @@ public class BotStart {
     }
 
     public static void MuteGroupMember(long qq, long id, long fid, int time) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             member.mute(time);
         } catch (Exception e) {
@@ -1236,11 +1317,12 @@ public class BotStart {
     }
 
     public static void UnmuteGroupMember(long qq, long id, long fid) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             member.unmute();
         } catch (Exception e) {
@@ -1249,11 +1331,12 @@ public class BotStart {
     }
 
     public static void GroupMuteAll(long qq, long id) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var group = bot.getGroup(id);
             group.getSettings().setMuteAll(true);
         } catch (Exception e) {
@@ -1262,11 +1345,12 @@ public class BotStart {
     }
 
     public static void GroupUnmuteAll(long qq, long id) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var group = bot.getGroup(id);
             group.getSettings().setMuteAll(false);
         } catch (Exception e) {
@@ -1275,11 +1359,12 @@ public class BotStart {
     }
 
     public static void SetGroupMemberCard(long qq, long id, long fid, String card) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             var member = bot.getGroup(id).get(fid);
             member.setNameCard(card);
         } catch (Exception e) {
@@ -1288,11 +1373,12 @@ public class BotStart {
     }
 
     public static void SetGroupName(long qq, long id, String name) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             Group group = bot.getGroup(id);
             group.setName(name);
         } catch (Exception e) {
@@ -1309,11 +1395,12 @@ public class BotStart {
     }
 
     public static void SendGroupSound(long qq, long id, String sound) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             Group group = bot.getGroup(id);
             group.sendMessage(group.uploadVoice(new ByteArrayInputStream(decoder.decode(sound))));
         } catch (Exception e) {
@@ -1322,11 +1409,12 @@ public class BotStart {
     }
 
     public static void SendGroupSoundFile(long qq, long id, String file) {
-        if (!bots.containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
-        }
-        var bot = bots.get(qq);
         try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
             Group group = bot.getGroup(id);
             FileInputStream stream = new FileInputStream(file);
             group.sendMessage(group.uploadVoice(stream));
@@ -1338,5 +1426,48 @@ public class BotStart {
 
     public static List<Long> getBots() {
         return new ArrayList<>(bots.keySet());
+    }
+
+    public static void SendNudge(long qq, long id) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
+            Friend friend = bot.getFriend(id);
+            Nudge.Companion.sendNudge(friend, friend.nudge());
+        } catch (Exception e) {
+            Start.logger.error("发送好友戳一戳失败", e);
+        }
+    }
+
+    public static void SendNudge(long qq, long id, long fid) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            var bot = bots.get(qq);
+            Group group = bot.getGroup(id);
+            Member member = group.get(fid);
+            Nudge.Companion.sendNudge(member, member.nudge());
+        } catch (Exception e) {
+            Start.logger.error("发送群成员戳一戳失败", e);
+        }
+    }
+
+    //ToDo: 等人家完成
+    public static void GetGroupHonorListData(long qq, long id) {
+//        try {
+//            if (!bots.containsKey(qq)) {
+//                Start.logger.warn("不存在QQ号:" + qq);
+//            }
+//            var bot = bots.get(qq);
+//           Group group = bot.getGroup(id);
+//           bot._lowLevelGetGroupHonorListData(group, GroupHonorType.ACTIVE);
+//        } catch (Exception e) {
+//            Start.logger.error("发送朋友消息失败", e);
+//        }
     }
 }

@@ -93,6 +93,16 @@ import java.nio.charset.StandardCharsets;
 76 [插件]从本地文件加载图片发送到群私聊
 77 [插件]从本地文件加载图片发送到朋友
 78 [插件]从本地文件加载语音发送到群
+
+79 [机器人]成员群恢复（事件）
+80 [机器人]机器人群恢复（事件）
+81 [机器人]群成员戳一戳（事件）
+82 [机器人]机器人戳一戳（事件）
+
+83 [插件]发送朋友戳一戳
+84 [插件]发送群成员戳一戳
+
+85 [机器人]群荣耀获取
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

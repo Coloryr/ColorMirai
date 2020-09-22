@@ -3,11 +3,11 @@ package Color_yr.ColorMirai.Pack.FromPlugin;
 import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
-66 [插件]解除禁言
+70 [插件]设置群名
 id：群号
-fid：成员QQ号
+name：新的群名
  */
-public class UnmuteGroupMember extends PackBase {
+public class SetGroupNamePack extends PackBase {
     public long id;
-    public long fid;
+    public String name;
 }
