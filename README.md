@@ -13,7 +13,7 @@
 - [**插件连接**](#插件连接)
     - [Socket数据包](#数据包)
 - [示例](#目前的示例代码)
-
+- [使用ColorMirai的插件](#使用ColorMirai的插件)
 
 
 ## 构建说明
@@ -142,6 +142,10 @@ cd ColorMirai
 [C#](demo/C%23demo.cs)  
 [JAVA](demo/JAVAdemo.java)  
 示例代码不包含Main函数，可以作为库用
+
+## 使用ColorMirai的插件
+[Minecraft_QQ_Gui/Cmd](https://github.com/HeartAge/Minecraft_QQ-C-Server-)  
+[GitHubPush](https://github.com/Coloryr/GitHubPush)
 
 <!--有人帮你写2333-->
 懒得写了（jiushi）
