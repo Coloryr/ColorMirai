@@ -1,6 +1,5 @@
-name: Gradle CI
-
-on: [push]
+name: Gradle构建
+#on: [push]
 
 jobs:
   build:
@@ -18,7 +17,7 @@ jobs:
     - name: 用Gradle构建
       run: ./gradlew shadowJar
     - name: 更新Jar
-      uses: actions/upload-artifact@v1.0.0
+      uses: actions/upload-artifact@v2
       with:
         name: "ColorMirai"
         path: build/libs

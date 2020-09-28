@@ -19,12 +19,9 @@
 ## 构建说明
 *需要JAVA11环境*
 
-*不提供二进制文件，请自行构建*
-
 *运行环境看你的构建环境*
 
 *构建不了可以去群里找人要*
-
 
 请根据自己的系统先安装JDK11并且设置好环境变量  
 - 安装git  
@@ -39,6 +36,7 @@ cd ColorMirai
 
 `build/libs/ColorMirai-2.0-SNAPSHOT-all.jar`
 
+[如果你有能力可以在这里下载](https://github.com/Coloryr/ColorMirai/actions)
 
 ## 启动
 > 1. 启动ColorMirai，必须使用JAVA11及以上
