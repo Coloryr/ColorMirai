@@ -18,7 +18,6 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.GroupSettings;
 import net.mamoe.mirai.contact.Member;
-import net.mamoe.mirai.data.GroupHonorType;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;

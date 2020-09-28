@@ -39,6 +39,8 @@ public class Plugins {
     }
 
     public String getReg() {
+        if (Events.size() == 0)
+            return "无";
         StringBuilder stringBuilder = new StringBuilder();
         for (var item : Events) {
             stringBuilder.append(item).append(",");

@@ -74,6 +74,8 @@ public class SocketServer {
 
     public static synchronized boolean sendPack(byte[] data, Socket socket) {
         try {
+            if (!socket.isConnected() || socket.isOutputShutdown())
+                return false;
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
             return false;
