@@ -1,5 +1,5 @@
 name: Gradle构建
-#on: [push]
+on: [push]
 
 jobs:
   build:
