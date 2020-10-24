@@ -20,7 +20,7 @@
 ## 构建说明
 ![Gradle构建](https://github.com/Coloryr/ColorMirai/workflows/Gradle%E6%9E%84%E5%BB%BA/badge.svg)
 
-*需要JAVA11环境*
+*需要JAVA8环境*
 
 *运行环境看你的构建环境*
 
@@ -37,10 +37,10 @@ cd ColorMirai
 ```
 在`BUILD SUCCESSFUL`之后, 你会在以下路径找到一个jar文件
 
-`build/libs/ColorMirai-2.0-SNAPSHOT-all.jar`
+`build/libs/ColorMirai-2.3.0-SNAPSHOT-all.jar`
 
 ## 启动
-> 1. 启动ColorMirai，必须使用JAVA11及以上
+> 1. 启动ColorMirai，必须使用JAVA8及以上，推荐使用JAVA14启动
 > ```
 > java -jar ColorMirai-2.X-SNAPSHOT-all.jar
 > ```
