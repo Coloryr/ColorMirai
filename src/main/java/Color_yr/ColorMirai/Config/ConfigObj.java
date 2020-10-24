@@ -12,7 +12,7 @@ public class ConfigObj {
     public long MaxList;
 
     public ConfigObj() {
-        QQs = new ArrayList<>() {{
+        QQs = new ArrayList<QQsObj>() {{
             add(new QQsObj());
         }};
         Pack = true;

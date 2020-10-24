@@ -1,7 +1,9 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import Color_yr.ColorMirai.Pack.PackBase;
+import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.message.data.SingleMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +29,7 @@ public class FriendMessagePostSendEventPack extends PackBase {
         this.id = id;
         this.message = new ArrayList<>();
         this.message.add(message.toString());
-        for (var item : message.getOriginalMessage()) {
+        for (SingleMessage item : message.getOriginalMessage()) {
             this.message.add(item.toString());
         }
         this.name = name;

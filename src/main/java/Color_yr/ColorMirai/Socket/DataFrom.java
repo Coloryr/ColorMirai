@@ -1,14 +1,15 @@
 package Color_yr.ColorMirai.Socket;
 
+import java.lang.reflect.Member;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DataFrom {
     public static Map<String, String> parse(String data) {
-        var map = new HashMap<String, String>();
-        var temp = data.split("&");
-        for (var item : temp) {
-            var temp1 = item.split("=");
+        Map<String, String> map = new HashMap<>();
+        String[] temp = data.split("&");
+        for (String item : temp) {
+            String[] temp1 = item.split("=");
             if (temp1.length != 2)
                 continue;
             map.put(temp1[0], temp1[1]);

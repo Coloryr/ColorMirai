@@ -15,7 +15,7 @@ public class EventCall {
     private static final Random Random = new Random();
 
     public static long AddEvent(EventBase event) {
-        var a = event.id;
+        long a = event.id;
         while (EventsDo.containsKey(a)) {
             a = Random.nextLong();
         }
@@ -26,7 +26,7 @@ public class EventCall {
     public static void DoEvent(long qq, long id, int dofun, List<Object> arg) {
         if (EventsDo.containsKey(id)) {
             try {
-                var event = EventsDo.remove(id);
+                EventBase event = EventsDo.remove(id);
                 if (event.qq != qq)
                     return;
                 switch (event.type) {

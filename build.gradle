@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '2.2.2-SNAPSHOT'
+version '2.3.0-SNAPSHOT'
 
 repositories {
     mavenCentral()

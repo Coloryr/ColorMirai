@@ -3,6 +3,7 @@ package Color_yr.ColorMirai;
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
 import Color_yr.ColorMirai.Robot.BotStart;
+import Color_yr.ColorMirai.Socket.Plugins;
 import Color_yr.ColorMirai.Socket.SocketServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,11 +33,11 @@ public class Start {
             return;
         }
 
-        var scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
                 String data = scanner.nextLine();
-                var arg = data.split(" ");
+                String[] arg = data.split(" ");
                 switch (arg[0]) {
                     case "help":
                         logger.info("插件帮助");
@@ -46,7 +47,7 @@ public class Start {
                         break;
                     case "list":
                         logger.info("插件列表");
-                        for (var item : SocketServer.PluginList.values()) {
+                        for (Plugins item : SocketServer.PluginList.values()) {
                             logger.info(item.getName() + " 注册的包：" + item.getReg());
                         }
                         break;

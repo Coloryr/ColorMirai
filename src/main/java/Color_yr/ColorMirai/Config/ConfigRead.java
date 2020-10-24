@@ -18,12 +18,12 @@ public class ConfigRead {
                 Save();
                 return true;
             } else {
-                var reader = new InputStreamReader(
+                InputStreamReader reader = new InputStreamReader(
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
-                var bf = new BufferedReader(reader);
-                var buf = new char[1024];
+                BufferedReader bf = new BufferedReader(reader);
+                char[] buf = new char[1024];
                 int length;
-                var data = new StringBuilder();
+                StringBuilder data = new StringBuilder();
                 while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
@@ -35,7 +35,7 @@ public class ConfigRead {
                 bf.close();
                 reader.close();
             }
-            for (var item : Start.Config.QQs) {
+            for (QQsObj item : Start.Config.QQs) {
                 Start.logger.info("QQ号：" + item.QQ);
             }
         } catch (IOException e) {
@@ -46,8 +46,8 @@ public class ConfigRead {
 
     public static void Save() {
         try {
-            var out = new FileOutputStream(ConfigFile);
-            var write = new OutputStreamWriter(
+            FileOutputStream out = new FileOutputStream(ConfigFile);
+            OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
             write.write(JSON.toJSONString(Start.Config));
             write.close();

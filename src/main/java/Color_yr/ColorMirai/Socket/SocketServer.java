@@ -31,7 +31,7 @@ public class SocketServer {
             ServerThread = new Thread(() -> {
                 while (isStart) {
                     try {
-                        var socket = ServerSocket.accept();
+                        Socket socket = ServerSocket.accept();
                         Start.logger.info("有插件连接");
                         new Plugins(socket);
                     } catch (IOException e) {
@@ -60,7 +60,7 @@ public class SocketServer {
 
     public static void addPlugin(String name, Plugins plugin) {
         if (PluginList.containsKey(name)) {
-            var temp = PluginList.get(name);
+            Plugins temp = PluginList.get(name);
             temp.close();
         }
         PluginList.put(name, plugin);
