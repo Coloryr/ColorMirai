@@ -1,7 +1,6 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import Color_yr.ColorMirai.Pack.PackBase;
-import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
 import net.mamoe.mirai.message.data.SingleMessage;
 

@@ -22,9 +22,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Plugins {
     private final Socket Socket;
     private final List<RePackTask> Tasks = new CopyOnWriteArrayList<>();
+    private final List<Long> Groups = new CopyOnWriteArrayList<>();
+    private final List<Long> QQs = new CopyOnWriteArrayList<>();
     private final Thread read;
     private final Thread doRead;
     private String name;
+    private long runQQ;
     private List<Integer> Events = null;
     private boolean isRun;
 
@@ -63,19 +66,19 @@ public class Plugins {
                     switch (task.index) {
                         case 52:
                             SendGroupMessagePack pack = JSON.parseObject(task.data, SendGroupMessagePack.class);
-                            BotStart.sendGroupMessage(pack.qq, pack.id, pack.message);
+                            BotStart.sendGroupMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
                             break;
                         case 53:
                             SendGroupPrivateMessagePack pack1 = JSON.parseObject(task.data, SendGroupPrivateMessagePack.class);
-                            BotStart.sendGroupPrivateMessage(pack1.qq, pack1.id, pack1.fid, pack1.message);
+                            BotStart.sendGroupPrivateMessage(runQQ == 0 ? pack1.qq : runQQ, pack1.id, pack1.fid, pack1.message);
                             break;
                         case 54:
                             SendFriendMessagePack pack2 = JSON.parseObject(task.data, SendFriendMessagePack.class);
-                            BotStart.sendFriendMessage(pack2.qq, pack2.id, pack2.message);
+                            BotStart.sendFriendMessage(runQQ == 0 ? pack2.qq : runQQ, pack2.id, pack2.message);
                             break;
                         case 55:
                             GetPack pack17 = JSON.parseObject(task.data, GetPack.class);
-                            List<GroupsPack> data = BotStart.getGroups(pack17.qq);
+                            List<GroupsPack> data = BotStart.getGroups(runQQ == 0 ? pack17.qq : runQQ);
                             if (data == null)
                                 break;
                             if (SocketServer.sendPack(PackDo.BuildPack(data, 55), Socket))
@@ -83,7 +86,7 @@ public class Plugins {
                             break;
                         case 56:
                             GetPack pack18 = JSON.parseObject(task.data, GetPack.class);
-                            List<FriendsPack> data1 = BotStart.getFriends(pack18.qq);
+                            List<FriendsPack> data1 = BotStart.getFriends(runQQ == 0 ? pack18.qq : runQQ);
                             if (data1 == null)
                                 break;
                             if (SocketServer.sendPack(PackDo.BuildPack(data1, 56), Socket))
@@ -91,7 +94,7 @@ public class Plugins {
                             break;
                         case 57:
                             GetGroupMemberInfoPack pack3 = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
-                            List<MemberInfoPack> data2 = BotStart.getMembers(pack3.qq, pack3.id);
+                            List<MemberInfoPack> data2 = BotStart.getMembers(runQQ == 0 ? pack3.qq : runQQ, pack3.id);
                             if (data2 == null)
                                 break;
                             if (SocketServer.sendPack(PackDo.BuildPack(data2, 57), Socket))
@@ -99,7 +102,7 @@ public class Plugins {
                             break;
                         case 58:
                             GetGroupSettingPack pack4 = JSON.parseObject(task.data, GetGroupSettingPack.class);
-                            GroupSettings data3 = BotStart.getGroupInfo(pack4.qq, pack4.id);
+                            GroupSettings data3 = BotStart.getGroupInfo(runQQ == 0 ? pack4.qq : runQQ, pack4.id);
                             if (data3 == null)
                                 break;
                             if (SocketServer.sendPack(PackDo.BuildPack(data3, 58), Socket))
@@ -107,7 +110,7 @@ public class Plugins {
                             break;
                         case 59:
                             EventCallPack pack5 = JSON.parseObject(task.data, EventCallPack.class);
-                            EventCall.DoEvent(pack5.qq, pack5.eventid, pack5.dofun, pack5.arg);
+                            EventCall.DoEvent(runQQ == 0 ? pack5.qq : runQQ, pack5.eventid, pack5.dofun, pack5.arg);
                             break;
                         case 61:
                             Map<String, String> formdata = DataFrom.parse(task.data);
@@ -115,7 +118,7 @@ public class Plugins {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
-                                    BotStart.sendGroupImage(qq, id, formdata.get("img"));
+                                    BotStart.sendGroupImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
@@ -128,7 +131,7 @@ public class Plugins {
                                     long id = Long.parseLong(formdata1.get("id"));
                                     long fid = Long.parseLong(formdata1.get("fid"));
                                     long qq = Long.parseLong(formdata1.get("qq"));
-                                    BotStart.sendGroupPrivataImage(qq, id, fid, formdata1.get("img"));
+                                    BotStart.sendGroupPrivataImage(runQQ == 0 ? qq : runQQ, id, fid, formdata1.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
@@ -140,7 +143,7 @@ public class Plugins {
                                 try {
                                     long id = Long.parseLong(formdata2.get("id"));
                                     long qq = Long.parseLong(formdata2.get("qq"));
-                                    BotStart.sendFriendImage(qq, id, formdata2.get("img"));
+                                    BotStart.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata2.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
@@ -148,31 +151,31 @@ public class Plugins {
                             break;
                         case 64:
                             DeleteGroupMemberPack pack9 = JSON.parseObject(task.data, DeleteGroupMemberPack.class);
-                            BotStart.DeleteGroupMember(pack9.qq, pack9.id, pack9.fid);
+                            BotStart.DeleteGroupMember(runQQ == 0 ? pack9.qq : runQQ, pack9.id, pack9.fid);
                             break;
                         case 65:
                             MuteGroupMemberPack pack10 = JSON.parseObject(task.data, MuteGroupMemberPack.class);
-                            BotStart.MuteGroupMember(pack10.qq, pack10.id, pack10.fid, pack10.time);
+                            BotStart.MuteGroupMember(runQQ == 0 ? pack10.qq : runQQ, pack10.id, pack10.fid, pack10.time);
                             break;
                         case 66:
                             UnmuteGroupMemberPack pack11 = JSON.parseObject(task.data, UnmuteGroupMemberPack.class);
-                            BotStart.UnmuteGroupMember(pack11.qq, pack11.id, pack11.fid);
+                            BotStart.UnmuteGroupMember(runQQ == 0 ? pack11.qq : runQQ, pack11.id, pack11.fid);
                             break;
                         case 67:
                             GroupMuteAllPack pack12 = JSON.parseObject(task.data, GroupMuteAllPack.class);
-                            BotStart.GroupMuteAll(pack12.qq, pack12.id);
+                            BotStart.GroupMuteAll(runQQ == 0 ? pack12.qq : runQQ, pack12.id);
                             break;
                         case 68:
                             GroupUnmuteAllPack pack13 = JSON.parseObject(task.data, GroupUnmuteAllPack.class);
-                            BotStart.GroupUnmuteAll(pack13.qq, pack13.id);
+                            BotStart.GroupUnmuteAll(runQQ == 0 ? pack13.qq : runQQ, pack13.id);
                             break;
                         case 69:
                             SetGroupMemberCard pack14 = JSON.parseObject(task.data, SetGroupMemberCard.class);
-                            BotStart.SetGroupMemberCard(pack14.qq, pack14.id, pack14.fid, pack14.card);
+                            BotStart.SetGroupMemberCard(runQQ == 0 ? pack14.qq : runQQ, pack14.id, pack14.fid, pack14.card);
                             break;
                         case 70:
                             SetGroupNamePack pack15 = JSON.parseObject(task.data, SetGroupNamePack.class);
-                            BotStart.SetGroupName(pack15.qq, pack15.id, pack15.name);
+                            BotStart.SetGroupName(runQQ == 0 ? pack15.qq : runQQ, pack15.id, pack15.name);
                             break;
                         case 71:
                             ReCallMessagePack pack16 = JSON.parseObject(task.data, ReCallMessagePack.class);
@@ -184,7 +187,7 @@ public class Plugins {
                                 try {
                                     long id = Long.parseLong(formdata3.get("id"));
                                     long qq = Long.parseLong(formdata3.get("qq"));
-                                    BotStart.SendGroupSound(qq, id, formdata3.get("sound"));
+                                    BotStart.SendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata3.get("sound"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
@@ -192,31 +195,31 @@ public class Plugins {
                             break;
                         case 75:
                             LoadFileSendToGroupImagePack pack19 = JSON.parseObject(task.data, LoadFileSendToGroupImagePack.class);
-                            BotStart.sendGroupImageFile(pack19.qq, pack19.id, pack19.file);
+                            BotStart.sendGroupImageFile(runQQ == 0 ? pack19.qq : runQQ, pack19.id, pack19.file);
                             break;
                         case 76:
                             LoadFileSendToGroupPrivateImagePack pack20 = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
-                            BotStart.sendGroupPrivateImageFile(pack20.qq, pack20.id, pack20.fid, pack20.file);
+                            BotStart.sendGroupPrivateImageFile(runQQ == 0 ? pack20.qq : runQQ, pack20.id, pack20.fid, pack20.file);
                             break;
                         case 77:
                             LoadFileSendToFriendImagePack pack21 = JSON.parseObject(task.data, LoadFileSendToFriendImagePack.class);
-                            BotStart.sendFriendImageFile(pack21.qq, pack21.id, pack21.file);
+                            BotStart.sendFriendImageFile(runQQ == 0 ? pack21.qq : runQQ, pack21.id, pack21.file);
                             break;
                         case 78:
                             LoadFileSendToGroupSoundPack pack22 = JSON.parseObject(task.data, LoadFileSendToGroupSoundPack.class);
-                            BotStart.SendGroupSoundFile(pack22.qq, pack22.id, pack22.file);
+                            BotStart.SendGroupSoundFile(runQQ == 0 ? pack22.qq : runQQ, pack22.id, pack22.file);
                             break;
                         case 83:
                             FriendNudgePack pack23 = JSON.parseObject(task.data, FriendNudgePack.class);
-                            BotStart.SendNudge(pack23.qq, pack23.id);
+                            BotStart.SendNudge(runQQ == 0 ? pack23.qq : runQQ, pack23.id);
                             break;
                         case 84:
                             MemberNudgePack pack24 = JSON.parseObject(task.data, MemberNudgePack.class);
-                            BotStart.SendNudge(pack24.qq, pack24.id, pack24.fid);
+                            BotStart.SendNudge(runQQ == 0 ? pack24.qq : runQQ, pack24.id, pack24.fid);
                             break;
                         case 85:
                             GetGroupHonorListDataPack pack25 = JSON.parseObject(task.data, GetGroupHonorListDataPack.class);
-                            BotStart.GetGroupHonorListData(pack25.qq, pack25.id);
+                            BotStart.GetGroupHonorListData(runQQ == 0 ? pack25.qq : runQQ, pack25.id);
                             break;
                     }
                 }
@@ -243,6 +246,18 @@ public class Plugins {
                 if (pack.Name != null && pack.Reg != null) {
                     name = pack.Name;
                     Events = pack.Reg;
+                    if (pack.Groups != null) {
+                        Groups.addAll(pack.Groups);
+                    }
+                    if (pack.QQs != null) {
+                        QQs.addAll(pack.QQs);
+                    }
+                    if (pack.RunQQ != 0 && !BotStart.getBots().contains(pack.RunQQ)) {
+                        Start.logger.warn("插件连接失败，没有运行的QQ：" + pack.RunQQ);
+                        Socket.close();
+                        return;
+                    }
+                    runQQ = pack.RunQQ;
                     SocketServer.addPlugin(name, this);
                     String data = JSON.toJSONString(BotStart.getBots());
                     SocketServer.sendPack(data.getBytes(StandardCharsets.UTF_8), this.Socket);
@@ -295,8 +310,14 @@ public class Plugins {
         }
     }
 
-    public void callEvent(int index, byte[] data) {
-        if (Events.contains(index) || index == 60) {
+    public void callEvent(SendPackTask task, byte[] data) {
+        if (runQQ != 0 && task.runqq != runQQ)
+            return;
+        if (Groups.size() != 0 && task.group != 0 && !Groups.contains(task.group))
+            return;
+        if (QQs.size() != 0 && task.qq != 0 && !QQs.contains(task.qq))
+            return;
+        if (Events.contains((int) task.index) || task.index == 60) {
             if (SocketServer.sendPack(data, Socket))
                 close();
         }

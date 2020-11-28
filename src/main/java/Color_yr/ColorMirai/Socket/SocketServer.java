@@ -43,9 +43,9 @@ public class SocketServer {
             });
             ServerThread.start();
             if (Start.Config.Pack) {
-                service.scheduleAtFixedRate(() -> {
-                    BotStart.addTask(new SendPackTask(60, "{}"));
-                }, 0, 30, TimeUnit.SECONDS);
+                service.scheduleAtFixedRate(() ->
+                                BotStart.addTask(new SendPackTask(60, "{}", 0, 0, 0)),
+                        0, 30, TimeUnit.SECONDS);
             }
             return true;
         } catch (Exception e) {

@@ -7,10 +7,8 @@ import Color_yr.ColorMirai.Pack.PackBase;
 id：机器人QQ号
  */
 public class BotOnlineEventPack extends PackBase {
-    public long id;
 
-    public BotOnlineEventPack(long qq, long id) {
-        this.id = id;
+    public BotOnlineEventPack(long qq) {
         this.qq = qq;
     }
 }
