@@ -11,7 +11,7 @@ jobs:
     - name: 设置JDK8
       uses: actions/setup-java@v1
       with:
-        java-version: adoptopenjdk-8
+        java-version: 8
     - name: 设置权限
       run: chmod +x gradlew
     - name: 用Gradle构建
