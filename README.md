@@ -20,13 +20,13 @@
 ## 构建说明
 ![Gradle构建](https://github.com/Coloryr/ColorMirai/workflows/Gradle%E6%9E%84%E5%BB%BA/badge.svg)
 
-*需要JAVA8环境*
+*需要openjdk8环境*
 
 *运行环境看你的构建环境*
 
 *构建不了可以去群里找人要*
 
-请根据自己的系统先安装JDK11并且设置好环境变量  
+请根据自己的系统先安装openjdk8并且设置好环境变量  
 - 安装git  
 - 右键打开git bash  
 输入下面的指令（如果慢的话, 可能需要梯子等工具辅助下载）
@@ -37,12 +37,12 @@ cd ColorMirai
 ```
 在`BUILD SUCCESSFUL`之后, 你会在以下路径找到一个jar文件
 
-`build/libs/ColorMirai-2.4.0-SNAPSHOT-all.jar`
+`build/libs/ColorMirai-3.0.0-SNAPSHOT-all.jar`
 
 ## 启动
 > 1. 启动ColorMirai，必须使用JAVA8及以上，推荐使用JAVA14启动
 > ```
-> java -jar ColorMirai-2.X-SNAPSHOT-all.jar
+> java -jar ColorMirai-3.X-SNAPSHOT-all.jar
 > ```
 > 首次启动后, 会生成`info.json`和`MainConfig.json`文件  
 > `info.json`是设备名称，不需要特别设置  
@@ -52,18 +52,20 @@ cd ColorMirai
 
 > `MainConfig.json`
 > ```Json
-> {
->     "MaxList": 100000,
->     "Pack": true,
->     "Port": 23333,
->     "QQs": [
->         {
->             "QQ": 1234567890,
->             "Password": "qwe123456789"
->         }
->     ],
->     "Type": 0,
->     "escapeSelf": true
+>{
+>    "MaxList": 100000,
+>    "Pack": true,
+>    "Port": 23333,
+>    "QQs": [
+>        {
+>            "Password": "请填写你的密码",
+>            "QQ": 0
+>        }
+>    ],
+>    "ReadEncoding": "UTF-8",
+>    "SendEncoding": "UTF-8",
+>    "Type": 0,
+>    "escapeSelf": true
 > }
 > ```
 > - `MaxList`：最大消息列表
@@ -76,7 +78,10 @@ cd ColorMirai
 > - 目前支持两种协议: 
 >     - 安卓 [0]
 >     - 手表 [1]
+>     - 平板 [2]
 > - `escapeSelf`：是否跳过自己机器人的信息
+> - `ReadEncoding`：读数据包编码
+> - `SendEncoding`：发送数据包编码
 
 设置完成后再次启动ColorMirai，出现`[INFO] Socket已启动: 23333` 说明机器人已成功启动
 

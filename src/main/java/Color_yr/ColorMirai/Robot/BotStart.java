@@ -24,6 +24,7 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
@@ -70,6 +71,8 @@ public class BotStart {
                 bot.login();
                 bots.put(item.QQ, bot);
                 Start.logger.info("QQ:" + item.QQ + "已登录");
+            } catch (WrongPasswordException e) {
+                Start.logger.error("机器人密码错误");
             } catch (Exception e) {
                 Start.logger.error("机器人错误", e);
                 return false;
