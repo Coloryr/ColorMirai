@@ -947,7 +947,7 @@ public class BotStart {
                     if (!Tasks.isEmpty()) {
                         SendPackTask task = Tasks.remove(0);
                         task.data += " ";
-                        byte[] temp = task.data.getBytes(StandardCharsets.UTF_8);
+                        byte[] temp = task.data.getBytes(Start.SendCharset);
                         temp[temp.length - 1] = task.index;
                         for (Plugins item : SocketServer.PluginList.values()) {
                             item.callEvent(task, temp);

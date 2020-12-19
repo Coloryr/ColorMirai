@@ -1,5 +1,6 @@
 package Color_yr.ColorMirai.Pack;
 
+import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
 import java.nio.charset.StandardCharsets;
@@ -107,7 +108,7 @@ import java.nio.charset.StandardCharsets;
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {
         String str = JSON.toJSONString(data) + " ";
-        byte[] temp = str.getBytes(StandardCharsets.UTF_8);
+        byte[] temp = str.getBytes(Start.SendCharset);
         temp[temp.length - 1] = (byte) index;
         return temp;
     }

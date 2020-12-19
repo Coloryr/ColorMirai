@@ -241,7 +241,7 @@ public class Plugins {
             byte[] buf = new byte[Socket.getInputStream().available()];
             int len = Socket.getInputStream().read(buf);
             if (len > 0) {
-                String temp = new String(buf, StandardCharsets.UTF_8);
+                String temp = new String(buf, Start.ReadCharset);
                 StartPack pack = JSON.parseObject(temp, StartPack.class);
                 if (pack.Name != null && pack.Reg != null) {
                     name = pack.Name;
@@ -260,7 +260,7 @@ public class Plugins {
                     runQQ = pack.RunQQ;
                     SocketServer.addPlugin(name, this);
                     String data = JSON.toJSONString(BotStart.getBots());
-                    SocketServer.sendPack(data.getBytes(StandardCharsets.UTF_8), this.Socket);
+                    SocketServer.sendPack(data.getBytes(Start.SendCharset), this.Socket);
                 } else {
                     Start.logger.warn("插件连接初始化失败");
                     Socket.close();
@@ -286,11 +286,11 @@ public class Plugins {
                     StringBuilder sb = new StringBuilder();
                     while ((len = inputStream.read(bytes)) != -1) {
                         if (len == 8192)
-                            sb.append(new String(bytes, 0, len, StandardCharsets.UTF_8));
+                            sb.append(new String(bytes, 0, len, Start.ReadCharset));
                         else {
                             index = bytes[len - 1];
                             bytes[len - 1] = 0;
-                            sb.append(new String(bytes, 0, len - 1, StandardCharsets.UTF_8));
+                            sb.append(new String(bytes, 0, len - 1, Start.ReadCharset));
                             break;
                         }
                     }

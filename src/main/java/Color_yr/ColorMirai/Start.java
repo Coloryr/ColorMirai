@@ -8,12 +8,15 @@ import Color_yr.ColorMirai.Socket.SocketServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
 public class Start {
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static String RunDir;
     public static ConfigObj Config;
+    public static Charset SendCharset;
+    public static Charset ReadCharset;
 
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";

@@ -10,6 +10,8 @@ public class ConfigObj {
     public int Type;
     public boolean escapeSelf;
     public long MaxList;
+    public String SendEncoding;
+    public String ReadEncoding;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -20,5 +22,7 @@ public class ConfigObj {
         Port = 23333;
         Type = 0;
         MaxList = 100000;
+        SendEncoding = "UTF-8";
+        ReadEncoding = "UTF-8";
     }
 }

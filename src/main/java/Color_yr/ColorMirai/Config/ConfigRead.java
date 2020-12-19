@@ -4,6 +4,7 @@ import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
 import java.io.*;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ConfigRead {
@@ -38,6 +39,27 @@ public class ConfigRead {
             for (QQsObj item : Start.Config.QQs) {
                 Start.logger.info("QQ号：" + item.QQ);
             }
+
+            if (Start.Config.ReadEncoding == null || Start.Config.ReadEncoding.isEmpty()) {
+                Start.ReadCharset = StandardCharsets.UTF_8;
+            } else {
+                try {
+                    Start.ReadCharset = Charset.forName(Start.Config.ReadEncoding);
+                } catch (Exception e) {
+                    Start.ReadCharset = StandardCharsets.UTF_8;
+                }
+            }
+
+            if (Start.Config.SendEncoding == null || Start.Config.SendEncoding.isEmpty()) {
+                Start.SendCharset = StandardCharsets.UTF_8;
+            } else {
+                try {
+                    Start.SendCharset = Charset.forName(Start.Config.SendEncoding);
+                } catch (Exception e) {
+                    Start.SendCharset = StandardCharsets.UTF_8;
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
