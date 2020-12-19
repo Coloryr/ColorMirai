@@ -3,8 +3,6 @@ package Color_yr.ColorMirai.Pack;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
-import java.nio.charset.StandardCharsets;
-
 /*
 类型说明
 0 插件开始连接

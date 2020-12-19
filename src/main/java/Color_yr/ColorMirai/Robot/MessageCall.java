@@ -5,6 +5,6 @@ import net.mamoe.mirai.message.data.MessageSource;
 public class MessageCall {
     public MessageSource source;
     public long sourceQQ;
-    public long id;
+    public int id;
     public int time;
 }

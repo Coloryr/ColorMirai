@@ -14,7 +14,6 @@ import net.mamoe.mirai.contact.GroupSettings;
 import java.io.InputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;

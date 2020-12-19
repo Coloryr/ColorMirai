@@ -14,28 +14,24 @@ import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.BotFactoryJvm;
-import net.mamoe.mirai.contact.Friend;
-import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.GroupSettings;
-import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.BotFactory;
+import net.mamoe.mirai.Mirai;
+import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.event.ListeningStatus;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
-import net.mamoe.mirai.message.TempMessageEvent;
 import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.BotConfiguration;
+import net.mamoe.mirai.utils.ExternalImage;
+import net.mamoe.mirai.utils.ExternalImageJvmKt;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -43,17 +39,16 @@ public class BotStart {
 
     private static final List<SendPackTask> Tasks = new CopyOnWriteArrayList<>();
     private static final Base64.Decoder decoder = Base64.getDecoder();
-    private static final Map<Long, MessageCall> MessageLsit = new ConcurrentHashMap<>();
+    private static final Map<Integer, MessageCall> MessageLsit = new ConcurrentHashMap<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
     private static final List<Long> reList = new CopyOnWriteArrayList<>();
 
-    private static ScheduledExecutorService service;
     private static Thread EventDo;
     private static boolean isRun;
 
     public static boolean Start() {
         for (QQsObj item : Start.Config.QQs) {
-            Bot bot = BotFactoryJvm.newBot(item.QQ, item.Password, new BotConfiguration() {
+            Bot bot = BotFactory.INSTANCE.newBot(item.QQ, item.Password, new BotConfiguration() {
                 {
                     fileBasedDeviceInfo(Start.RunDir + "info.json");
                     switch (Start.Config.Type) {
@@ -63,13 +58,16 @@ public class BotStart {
                         case 1:
                             setProtocol(MiraiProtocol.ANDROID_WATCH);
                             break;
+                        case 2:
+                            setProtocol(MiraiProtocol.ANDROID_PAD);
+                            break;
                     }
+                    redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
+                    redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
                 }
             });
             try {
                 bot.login();
-                bot.getConfiguration().redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
-                bot.getConfiguration().redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
                 bots.put(item.QQ, bot);
                 Start.logger.info("QQ:" + item.QQ + "已登录");
             } catch (Exception e) {
@@ -378,9 +376,10 @@ public class BotStart {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
-                String name = event.getNewName();
+                String old = event.getOldRemark();
+                String name = event.getNewRemark();
                 long qq = event.getBot().getId();
-                FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(qq, id, name);
+                FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(qq, id, old, name);
                 Tasks.add(new SendPackTask(23, JSON.toJSONString(pack), id, 0, qq));
                 return ListeningStatus.LISTENING;
             }
@@ -718,7 +717,7 @@ public class BotStart {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getAuthorId();
-                int mid = event.getMessageId();
+                int[] mid = event.getMessageIds();
                 long qq = event.getBot().getId();
                 int time = event.getMessageTime();
                 MessageRecallEventAPack pack = new MessageRecallEventAPack(qq, id, mid, time);
@@ -733,7 +732,7 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getAuthorId();
-                int mid = event.getMessageId();
+                int[] mid = event.getMessageIds();
                 int time = event.getMessageTime();
                 long oid = 0;
                 String oanme = "";
@@ -812,7 +811,7 @@ public class BotStart {
                 call.sourceQQ = event.getBot().getId();
                 call.source = event.getSource();
                 call.time = -1;
-                call.id = call.source.getId();
+                call.id = call.source.getIds()[0];
                 MessageLsit.put(call.id, call);
                 long qq = event.getBot().getId();
                 GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, name, message);
@@ -833,7 +832,7 @@ public class BotStart {
                 call.sourceQQ = event.getBot().getId();
                 call.source = event.getSource();
                 call.time = -1;
-                call.id = call.source.getId();
+                call.id = call.source.getIds()[0];
                 MessageLsit.put(call.id, call);
                 int time = event.getTime();
                 long qq = event.getBot().getId();
@@ -854,7 +853,7 @@ public class BotStart {
                 call.sourceQQ = event.getBot().getId();
                 call.source = event.getSource();
                 call.time = -1;
-                call.id = call.source.getId();
+                call.id = call.source.getIds()[0];
                 MessageLsit.put(call.id, call);
                 int time = event.getTime();
                 long qq = event.getBot().getId();
@@ -920,11 +919,10 @@ public class BotStart {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFrom().getId();
-                String name = event.getFrom().getNick();
                 String action = event.getAction();
                 String suffix = event.getSuffix();
                 long qq = event.getBot().getId();
-                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, name, action, suffix);
+                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, action, suffix);
                 Tasks.add(new SendPackTask(82, JSON.toJSONString(pack), id, 0, qq));
                 return ListeningStatus.LISTENING;
             }
@@ -960,7 +958,7 @@ public class BotStart {
             }
         });
         EventDo.start();
-        service = Executors.newSingleThreadScheduledExecutor();
+        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
             if (!reList.isEmpty()) {
                 for (long item : reList) {
@@ -968,7 +966,7 @@ public class BotStart {
                         MessageCall item1 = MessageLsit.remove(item);
                         if (item1.time > 0 || item1.time == -1)
                             try {
-                                bots.get(item1.sourceQQ).recall(item1.source);
+                                Mirai.getInstance().recallMessage(bots.get(item1.sourceQQ), item1.source);
                             } catch (Exception e) {
                                 Start.logger.error("消息撤回失败", e);
                             }
@@ -976,7 +974,7 @@ public class BotStart {
                 }
                 reList.clear();
             }
-            for (Map.Entry<Long, MessageCall> item : MessageLsit.entrySet()) {
+            for (Map.Entry<Integer, MessageCall> item : MessageLsit.entrySet()) {
                 MessageCall call = item.getValue();
                 if (call.time > 0)
                     call.time--;
@@ -1018,13 +1016,15 @@ public class BotStart {
                 return;
             }
             Group group1 = bots.get(qq).getGroup(group);
-            MessageChain messageChain = MessageUtils.newChain("");
+            MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 if (item.startsWith("at:")) {
                     Member member = group1.get(Long.parseLong(item.replace("at:", "")));
-                    messageChain = messageChain.plus(new At(member));
+                    if (member == null)
+                        continue;
+                    messageChain = messageChain.plus(new At(member.getId()));
                 } else if (item.startsWith("quote:")) {
-                    long id = Long.parseLong(item.replace("quote:", ""));
+                    int id = Integer.parseInt(item.replace("quote:", ""));
                     MessageCall call = MessageLsit.get(id);
                     if (call == null)
                         continue;
@@ -1037,12 +1037,13 @@ public class BotStart {
                 }
             }
             MessageSource source = group1.sendMessage(messageChain).getSource();
-            if (source.getId() != -1) {
+            int[] temp = source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
                 MessageCall call = new MessageCall();
                 call.sourceQQ = qq;
                 call.source = source;
                 call.time = 120;
-                call.id = source.getId();
+                call.id = source.getIds()[0];
                 MessageLsit.put(call.id, call);
             }
         } catch (Exception e) {
@@ -1057,16 +1058,17 @@ public class BotStart {
                 return;
             }
             Group group1 = bots.get(qq).getGroup(group);
-            MessageChain messageChain = MessageUtils.newChain("");
+            MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);
             }
             MessageSource source = group1.get(fid).sendMessage(messageChain).getSource();
-            if (source.getId() != -1) {
+            int[] temp = source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
                 MessageCall call = new MessageCall();
                 call.source = source;
                 call.time = 120;
-                call.id = source.getId();
+                call.id = temp[0];
                 MessageLsit.put(call.id, call);
             }
         } catch (Exception e) {
@@ -1081,16 +1083,17 @@ public class BotStart {
                 return;
             }
             Bot bot = bots.get(qq);
-            MessageChain messageChain = MessageUtils.newChain("");
+            MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);
             }
             MessageSource source = bot.getFriend(fid).sendMessage(messageChain).getSource();
-            if (source.getId() != -1) {
+            int[] temp = source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
                 MessageCall call = new MessageCall();
                 call.source = source;
                 call.time = 120;
-                call.id = source.getId();
+                call.id = temp[0];
                 MessageLsit.put(call.id, call);
             }
         } catch (Exception e) {
@@ -1205,7 +1208,8 @@ public class BotStart {
 
             Bot bot = bots.get(qq);
             Group group = bot.getGroup(id);
-            group.sendMessage(group.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(new ByteArrayInputStream(decoder.decode(img)));
+            group.sendMessage(group.uploadImage(image));
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
         }
@@ -1220,7 +1224,8 @@ public class BotStart {
             Bot bot = bots.get(qq);
             Group group = bot.getGroup(id);
             FileInputStream stream = new FileInputStream(file);
-            group.sendMessage(group.uploadImage(stream));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(stream);
+            group.sendMessage(group.uploadImage(image));
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
@@ -1235,7 +1240,8 @@ public class BotStart {
             }
             Bot bot = bots.get(qq);
             Member member = bot.getGroup(id).get(fid);
-            member.sendMessage(member.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(new ByteArrayInputStream(decoder.decode(img)));
+            member.sendMessage(member.uploadImage(image));
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
         }
@@ -1250,7 +1256,8 @@ public class BotStart {
             Bot bot = bots.get(qq);
             Member member = bot.getGroup(id).get(fid);
             FileInputStream stream = new FileInputStream(file);
-            member.sendMessage(member.uploadImage(stream));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(stream);
+            member.sendMessage(member.uploadImage(image));
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
@@ -1265,7 +1272,8 @@ public class BotStart {
         Bot bot = bots.get(qq);
         try {
             Friend friend = bot.getFriend(id);
-            friend.sendMessage(friend.uploadImage(new ByteArrayInputStream(decoder.decode(img))));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(new ByteArrayInputStream(decoder.decode(img)));
+            friend.sendMessage(friend.uploadImage(image));
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);
         }
@@ -1280,7 +1288,8 @@ public class BotStart {
             Bot bot = bots.get(qq);
             Friend friend = bot.getFriend(id);
             FileInputStream stream = new FileInputStream(file);
-            friend.sendMessage(friend.uploadImage(stream));
+            ExternalImage image = ExternalImageJvmKt.toExternalImage(stream);
+            friend.sendMessage(friend.uploadImage(image));
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);
@@ -1294,8 +1303,8 @@ public class BotStart {
                 return;
             }
             Bot bot = bots.get(qq);
-            Member member = bot.getGroup(id).get(fid);
-            member.kick();
+            NormalMember member = bot.getGroup(id).get(fid);
+            member.kick("");
         } catch (Exception e) {
             Start.logger.error("踢出成员失败", e);
         }
@@ -1308,7 +1317,7 @@ public class BotStart {
                 return;
             }
             Bot bot = bots.get(qq);
-            Member member = bot.getGroup(id).get(fid);
+            NormalMember member = bot.getGroup(id).get(fid);
             member.mute(time);
         } catch (Exception e) {
             Start.logger.error("禁言成员失败", e);
@@ -1322,7 +1331,7 @@ public class BotStart {
                 return;
             }
             Bot bot = bots.get(qq);
-            Member member = bot.getGroup(id).get(fid);
+            NormalMember member = bot.getGroup(id).get(fid);
             member.unmute();
         } catch (Exception e) {
             Start.logger.error("解禁成员失败", e);
@@ -1364,7 +1373,7 @@ public class BotStart {
                 return;
             }
             Bot bot = bots.get(qq);
-            Member member = bot.getGroup(id).get(fid);
+            NormalMember member = bot.getGroup(id).get(fid);
             member.setNameCard(card);
         } catch (Exception e) {
             Start.logger.error("修改群员名片失败", e);

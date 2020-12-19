@@ -10,10 +10,10 @@ time：时间
  */
 public class MessageRecallEventAPack extends PackBase {
     public long id;
-    public int mid;
+    public int[] mid;
     public int time;
 
-    public MessageRecallEventAPack(long qq, long id, int mid, int time) {
+    public MessageRecallEventAPack(long qq, long id, int[] mid, int time) {
         this.id = id;
         this.qq = qq;
         this.mid = mid;
