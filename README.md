@@ -121,53 +121,83 @@ Socket数据包的接受和封装在Demo已经写完了，只需要引用一下�
 注意：所有包必须带ID，否则无法识别，只有标注`（事件）`的包才会被监听，数据包ID的代表含义请看[数据包](#数据包)
 
 2.C# Demo说明  
-使用C#的类需要先实例化`RobotConfig`类
+需要先创建一个机器人配置
 ```C#
 public class RobotConfig
 {
     /// <summary>
     /// 机器人IP
     /// </summary>
-    public string ip { get; init; }
+    public string IP { get; init; }
     /// <summary>
     /// 机器人端口
     /// </summary>
-    public int port { get; init; }
+    public int Port { get; init; }
     /// <summary>
     /// 监听的包
     /// </summary>
-    public List<byte> pack { get; init; }
+    public List<byte> Pack { get; init; }
     /// <summary>
     /// 插件名字
     /// </summary>
-    public string name { get; init; }
+    public string Name { get; init; }
     /// <summary>
     /// 监听的群，可以为null
     /// </summary>
-    public List<long> groups { get; init; }
+    public List<long> Groups { get; init; }
     /// <summary>
     /// 监听的qq号，可以为null
     /// </summary>
-    public List<long> qqs { get; init; }
+    public List<long> QQs { get; init; }
     /// <summary>
     /// 运行的qq，可以不设置
     /// </summary>
-    public long runqq { get; init; }
+    public long RunQQ { get; init; }
     /// <summary>
     /// 重连时间
     /// </summary>
-    public int time { get; init; }
+    public int Time { get; init; }
     /// <summary>
     /// 检测是否断开
     /// </summary>
-    public bool check { get; init; }
+    public bool Check { get; init; }
     /// <summary>
     /// 机器人事件回调函数
     /// </summary>
-    public Action<byte, string> action { get; init; }
+    public Action<byte, string> CallAction { get; init; }
+    /// <summary>
+    /// 机器人日志回调函数
+    /// </summary>
+    public Action<LogType, string> LogAction { get; init; }
+    /// <summary>
+    /// 机器人状态回调函数
+    /// </summary>
+    public Action<StateType> StateAction { get; init; }
 }
 ```
-机器人回调，回调函数需要有byte, string两个参数  
+实例化`RobotConfig`类
+```C#
+var Config = new RobotConfig
+{
+    Name = "Demo",
+    Groups = null,
+    QQs = null,
+    RunQQ = 0,
+    Pack = new() { 49, 50, 51 },
+    IP = "127.0.0.1",
+    Port = 23333,
+    Time = 10000,
+    Check = true,
+    CallAction = Call,
+    LogAction = LogCall,
+        StateAction = StateCall
+};
+```
+定义一个全局变量
+```C#
+static Robot Robot = new Robot();
+```
+设置机器人回调，回调函数需要有byte, string两个参数  
 一个示例回调方法
 ```C#
 private static void Call(byte packid, string data)
@@ -187,26 +217,70 @@ private static void Call(byte packid, string data)
     }
 }
 ```
-根据需求填好参数后，实例化一个`Robot`类
+根据需求填好参数后，实例化一个`Robot`类，并给机器人设置配置
 ```C#
-var config = new RobotConfig
-{
-    name = "Demo",
-    groups = null,
-    qqs = null,
-    runqq = 0,
-    pack = new() { 49, 50, 51 },
-    ip = "127.0.0.1",
-    port = 23333,
-    time = 10000,
-    check = true,
-    action = Call
-};
-Robot = new Robot(config);
+Robot.Set(Config);
 ```
 启动机器人
 ```C#
 Robot.Start();
+```
+完整启动代码：
+```C#
+using System;
+using Newtonsoft.Json;
+
+namespace ColoryrSDK
+{
+    class Name
+    {
+        static readonly Robot Robot = new();
+        private static void Call(byte packid, string data)
+        {
+            Console.WriteLine($"收到消息{data}");
+            switch (packid)
+            {
+                case 49:
+                    var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
+                    Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
+                    { $"{pack.fid} {pack.name} 你发送了消息：{pack.message[1]}" });
+                    break;
+                case 50:
+                    break;
+                case 51:
+                    break;
+            }
+        }
+        private static void LogCall(LogType type , string data)
+        {
+            Console.WriteLine($"机器人日志:{type} {data}");
+        }
+        private static void StateCall(StateType type)
+        {
+            Console.WriteLine($"机器人状态:{type}");
+        }
+        public static void Main()
+        {
+            var Config = new RobotConfig
+            {
+                Name = "Demo",
+                Groups = null,
+                QQs = null,
+                RunQQ = 0,
+                Pack = new() { 49, 50, 51 },
+                IP = "127.0.0.1",
+                Port = 23333,
+                Time = 10000,
+                Check = true,
+                CallAction = Call,
+                LogAction = LogCall,
+                 StateAction = StateCall
+            };
+            Robot.Set(Config);
+            Robot.Start();
+        }
+    }
+}
 ```
 
 ### 数据包

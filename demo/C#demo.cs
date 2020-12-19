@@ -1,13 +1,13 @@
+using Newtonsoft.Json;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
-using Newtonsoft.Json;
 using System.Threading;
 //请用net5运行
 //并安装Newtonsoft.Json
-namespace netcore
+namespace ColoryrSDK
 {
     /// <summary>
     /// 基础包
@@ -199,10 +199,11 @@ namespace netcore
         public List<string> message { get; set; }
         public string error { get; set; }
     }
+    //更多pack请看文档说明
     class BuildPack
     {
         /// <summary>
-        /// 构架一个包
+        /// 构建一个包
         /// </summary>
         /// <param name="obj">对象</param>
         /// <param name="index">包ID</param>
@@ -210,7 +211,7 @@ namespace netcore
         public static byte[] Build(object obj, byte index)
         {
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj) + " ");
-            data[data.Length - 1] = index;
+            data[^1] = index;
             return data;
         }
         /// <summary>
@@ -236,7 +237,7 @@ namespace netcore
             temp += "qq=" + qq + "&";
             temp += "img=" + img;
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
-            data[data.Length - 1] = index;
+            data[^1] = index;
             return data;
         }
         /// <summary>
@@ -251,7 +252,7 @@ namespace netcore
         {
             string temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
-            data[data.Length - 1] = index;
+            data[^1] = index;
             return data;
         }
     }
@@ -260,66 +261,64 @@ namespace netcore
         public byte index { get; set; }
         public string data { get; set; }
     }
-    class ServerMain
-    {
-        public static void LogError(Exception e)
-        {
-            string a = "[错误]" + e.ToString();
-            Console.WriteLine(a);
-        }
-        public static void LogError(string a)
-        {
-            a = "[错误]" + a;
-            Console.WriteLine(a);
-        }
-        public static void LogOut(string a)
-        {
-            a = "[信息]" + a;
-            Console.WriteLine(a);
-        }
-    }
     public class RobotConfig
     {
         /// <summary>
         /// 机器人IP
         /// </summary>
-        public string ip { get; init; }
+        public string IP { get; init; }
         /// <summary>
         /// 机器人端口
         /// </summary>
-        public int port { get; init; }
+        public int Port { get; init; }
         /// <summary>
         /// 监听的包
         /// </summary>
-        public List<byte> pack { get; init; }
+        public List<byte> Pack { get; init; }
         /// <summary>
         /// 插件名字
         /// </summary>
-        public string name { get; init; }
+        public string Name { get; init; }
         /// <summary>
         /// 监听的群，可以为null
         /// </summary>
-        public List<long> groups { get; init; }
+        public List<long> Groups { get; init; }
         /// <summary>
         /// 监听的qq号，可以为null
         /// </summary>
-        public List<long> qqs { get; init; }
+        public List<long> QQs { get; init; }
         /// <summary>
         /// 运行的qq，可以不设置
         /// </summary>
-        public long runqq { get; init; }
+        public long RunQQ { get; init; }
         /// <summary>
         /// 重连时间
         /// </summary>
-        public int time { get; init; }
+        public int Time { get; init; }
         /// <summary>
         /// 检测是否断开
         /// </summary>
-        public bool check { get; init; }
+        public bool Check { get; init; }
         /// <summary>
         /// 机器人事件回调函数
         /// </summary>
-        public Action<byte, string> action { get; init; }
+        public Action<byte, string> CallAction { get; init; }
+        /// <summary>
+        /// 机器人日志回调函数
+        /// </summary>
+        public Action<LogType, string> LogAction { get; init; }
+        /// <summary>
+        /// 机器人状态回调函数
+        /// </summary>
+        public Action<StateType> StateAction { get; init; }
+    }
+    public enum LogType
+    {
+        Log, Error
+    }
+    public enum StateType
+    {
+        Disconnect, Connecting, Connect
     }
     public class Robot
     {
@@ -336,33 +335,54 @@ namespace netcore
         /// </summary>
         public bool IsConnect { get; private set; }
 
+        private delegate void RobotCall(byte packid, string data);
+        private delegate void RobotLog(LogType type, string data);
+        private delegate void RobotState(StateType type);
+        private RobotCall RobotCallEvent;
+        private RobotLog RobotLogEvent;
+        private RobotState RobotStateEvent;
+
         private Socket Socket;
         private Thread ReadThread;
         private Thread DoThread;
         private ConcurrentBag<RobotTask> QueueRead;
         private ConcurrentBag<byte[]> QueueSend;
         private PackStart PackStart;
-        private delegate void RobotCall(byte packid, string data);
-        private RobotCall RobotCallEvent;
         private RobotConfig Config;
-        public Robot(RobotConfig config)
+
+        private bool IsFirst = true;
+        private int Times = 0;
+        /// <summary>
+        /// 设置配置
+        /// </summary>
+        /// <param name="Config">机器人配置</param>
+        public void Set(RobotConfig Config)
         {
-            Config = config;
-            RobotCallEvent = new RobotCall(config.action);
-            PackStart = new PackStart
+            this.Config = Config;
+
+            RobotCallEvent = new(Config.CallAction);
+            RobotLogEvent = new(Config.LogAction);
+            RobotStateEvent = new(Config.StateAction);
+
+            PackStart = new()
             {
-                Name = config.name,
-                Reg = config.pack,
-                Groups = config.groups,
-                QQs = config.qqs,
-                RunQQ = config.runqq
+                Name = Config.Name,
+                Reg = Config.Pack,
+                Groups = Config.Groups,
+                QQs = Config.QQs,
+                RunQQ = Config.RunQQ
             };
         }
+        /// <summary>
+        /// 启动机器人
+        /// </summary>
         public void Start()
         {
-            QueueRead = new ConcurrentBag<RobotTask>();
-            QueueSend = new ConcurrentBag<byte[]>();
-            DoThread = new Thread(() =>
+            if (ReadThread?.IsAlive == true)
+                return;
+            QueueRead = new();
+            QueueSend = new();
+            DoThread = new(() =>
             {
                 while (IsRun)
                 {
@@ -376,12 +396,12 @@ namespace netcore
                     }
                     catch (Exception e)
                     {
-                        ServerMain.LogError(e);
+                        LogError(e);
                     }
                 }
             });
 
-            ReadThread = new Thread(() =>
+            ReadThread = new(() =>
             {
                 while (!IsRun)
                 {
@@ -396,6 +416,9 @@ namespace netcore
                         if (!IsConnect)
                         {
                             ReConnect();
+                            IsFirst = false;
+                            Times = 0;
+                            RobotStateEvent.Invoke(StateType.Connect);
                         }
                         else if (Socket.Available > 0)
                         {
@@ -409,13 +432,14 @@ namespace netcore
                                 data = Encoding.UTF8.GetString(data)
                             });
                         }
-                        else if (Config.check && time >= 20)
+                        else if (Config.Check && time >= 20)
                         {
                             time = 0;
                             if (Socket.Poll(1000, SelectMode.SelectRead))
                             {
-                                ServerMain.LogOut("机器人连接中断");
+                                LogOut("机器人连接中断");
                                 IsConnect = false;
+                                RobotStateEvent.Invoke(StateType.Disconnect);
                             }
                         }
                         else if (QueueSend.TryTake(out byte[] Send))
@@ -427,12 +451,26 @@ namespace netcore
                     }
                     catch (Exception e)
                     {
-                        ServerMain.LogError("机器人连接失败");
-                        ServerMain.LogError(e);
-                        IsConnect = false;
-                        ServerMain.LogError($"机器人{Config.time}毫秒后重连");
-                        Thread.Sleep(Config.time);
-                        ServerMain.LogError("机器人重连中");
+                        if (IsFirst)
+                        {
+                            IsRun = false;
+                            LogError("机器人连接失败");
+                        }
+                        else
+                        {
+                            Times++;
+                            if (Times == 10)
+                            {
+                                IsRun = false;
+                                LogError("重连失败次数过多");
+                            }
+                            LogError("机器人连接失败");
+                            LogError(e);
+                            IsConnect = false;
+                            LogError($"机器人{Config.Time}毫秒后重连");
+                            Thread.Sleep(Config.Time);
+                            LogError("机器人重连中");
+                        }
                     }
                 }
             });
@@ -443,35 +481,30 @@ namespace netcore
         {
             if (Socket != null)
                 Socket.Close();
-            try
+
+            RobotStateEvent.Invoke(StateType.Connecting);
+
+            Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+            Socket.Connect(Config.IP, Config.Port);
+
+            var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(PackStart) + " ");
+            data[^1] = 0;
+
+            Socket.Send(data);
+
+            while (Socket.Available == 0)
             {
-                Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
-                Socket.Connect(Config.ip, Config.port);
-
-                var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(PackStart) + " ");
-                data[^1] = 0;
-
-                Socket.Send(data);
-
-                while (Socket.Available == 0)
-                {
-                    Thread.Sleep(10);
-                }
-
-                data = new byte[Socket.Available];
-                Socket.Receive(data);
-                QQs = JsonConvert.DeserializeObject<List<long>>(Encoding.UTF8.GetString(data));
-
-                QueueRead.Clear();
-                QueueSend.Clear();
-                ServerMain.LogOut("机器人已连接");
-                IsConnect = true;
+                Thread.Sleep(10);
             }
-            catch (Exception e)
-            {
-                ServerMain.LogError("机器人连接失败");
-                ServerMain.LogError(e);
-            }
+
+            data = new byte[Socket.Available];
+            Socket.Receive(data);
+            QQs = JsonConvert.DeserializeObject<List<long>>(Encoding.UTF8.GetString(data));
+
+            QueueRead.Clear();
+            QueueSend.Clear();
+            LogOut("机器人已连接");
+            IsConnect = true;
         }
         public void CallEvent(long eventid, int dofun, List<object> arg)
         {
@@ -521,62 +554,23 @@ namespace netcore
         }
         public void Stop()
         {
-            ServerMain.LogOut("机器人正在断开");
+            LogOut("机器人正在断开");
             IsRun = false;
             if (Socket != null)
                 Socket.Close();
-            ServerMain.LogOut("机器人已断开");
+            LogOut("机器人已断开");
         }
-    }
-    class Runtest
-    {
-        private static Robot Robot;
-        private static void Call(byte packid, string data)
+        private void LogError(Exception e)
         {
-            Console.WriteLine($"收到消息{data}");
-            switch (packid)
-            {
-                case 49:
-                    var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
-                    Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
-                    { $"{pack.fid} {pack.name} 你发送了消息：{pack.message[1]}" });
-                    break;
-                case 50:
-                    break;
-                case 51:
-                    break;
-            }
+            RobotLogEvent.Invoke(LogType.Error, "机器人错误\n" + e.ToString());
         }
-        public static void Main()
+        private void LogError(string a)
         {
-            //var config = new RobotConfig
-            //{
-            //    name = "Demo",
-            //    groups = new() { 571239090 },
-            //    qqs = new() { 402067010 },
-            //    runqq = 0,
-            //    pack = new() { 49, 50, 51 },
-            //    ip = "127.0.0.1",
-            //    port = 23333,
-            //    time = 10000,
-            //    check = true,
-            //    action = Call
-            //};
-            var config = new RobotConfig
-            {
-                name = "Demo",
-                groups = null,
-                qqs = null,
-                runqq = 0,
-                pack = new() { 49, 50, 51 },
-                ip = "127.0.0.1",
-                port = 23333,
-                time = 10000,
-                check = true,
-                action = Call
-            };
-            Robot = new Robot(config);
-            Robot.Start();
+            RobotLogEvent.Invoke(LogType.Error, "机器人错误:" + a);
+        }
+        private void LogOut(string a)
+        {
+            RobotLogEvent.Invoke(LogType.Log, a);
         }
     }
 }
