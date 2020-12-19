@@ -27,9 +27,11 @@ public class FriendMessagePostSendEventPack extends PackBase {
         this.error = error;
         this.id = id;
         this.message = new ArrayList<>();
-        this.message.add(message.toString());
-        for (SingleMessage item : message.getOriginalMessage()) {
-            this.message.add(item.toString());
+        if (message != null) {
+            this.message.add(message.toString());
+            for (SingleMessage item : message.getOriginalMessage()) {
+                this.message.add(item.toString());
+            }
         }
         this.name = name;
         this.res = res;

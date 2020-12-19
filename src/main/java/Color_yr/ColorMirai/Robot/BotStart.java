@@ -127,7 +127,10 @@ public class BotStart {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroupId();
-                String name = event.getInvitor().getNick();
+                String name = "";
+                if (event.getInvitor() != null) {
+                    name = event.getInvitor().getNick();
+                }
                 long qq = event.getBot().getId();
                 long fid = event.getInvitorId();
                 long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), (byte) 4, event));
@@ -209,7 +212,10 @@ public class BotStart {
             public ListeningStatus BotOfflineEventA(BotOfflineEvent.Active event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                String message = event.getCause().getMessage();
+                String message = "";
+                if (event.getCause() != null) {
+                    message = event.getCause().getLocalizedMessage();
+                }
                 long qq = event.getBot().getId();
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(qq, message);
                 Tasks.add(new SendPackTask(10, JSON.toJSONString(pack), 0, 0, qq));
@@ -234,7 +240,10 @@ public class BotStart {
             public ListeningStatus BotOfflineEventC(BotOfflineEvent.MsfOffline event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                String message = event.getCause().getMessage();
+                String message = "";
+                if (event.getCause() != null) {
+                    message = event.getCause().getLocalizedMessage();
+                }
                 long qq = event.getBot().getId();
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(qq, message);
                 Tasks.add(new SendPackTask(12, JSON.toJSONString(pack), 0, 0, qq));
@@ -246,7 +255,10 @@ public class BotStart {
             public ListeningStatus BotOfflineEventD(BotOfflineEvent.Dropped event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                String message = event.getCause().getMessage();
+                String message = "";
+                if (event.getCause() != null) {
+                    message = event.getCause().getLocalizedMessage();
+                }
                 long qq = event.getBot().getId();
                 BotOfflineEventAPack pack = new BotOfflineEventAPack(qq, message);
                 Tasks.add(new SendPackTask(13, JSON.toJSONString(pack), 0, 0, qq));
@@ -280,7 +292,10 @@ public class BotStart {
             public ListeningStatus BotReloginEvent(BotReloginEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                String message = event.getCause().getMessage();
+                String message = "";
+                if (event.getCause() != null) {
+                    message = event.getCause().getMessage();
+                }
                 long qq = event.getBot().getId();
                 BotReloginEventPack pack = new BotReloginEventPack(qq, message);
                 Tasks.add(new SendPackTask(16, JSON.toJSONString(pack), 0, 0, qq));
@@ -348,7 +363,10 @@ public class BotStart {
                 long id = event.getTarget().getId();
                 String name = event.getTarget().getNick();
                 boolean res = event.getReceipt() != null;
-                MessageSource message = event.getReceipt().getSource();
+                MessageSource message = null;
+                if (res) {
+                    message = event.getReceipt().getSource();
+                }
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
@@ -463,7 +481,10 @@ public class BotStart {
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
-                MessageSource message = event.getReceipt().getSource();
+                MessageSource message = null;
+                if(res) {
+                    message = event.getReceipt().getSource();
+                }
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
@@ -599,7 +620,10 @@ public class BotStart {
             public ListeningStatus MemberJoinRequestEvent(MemberJoinRequestEvent event) {
                 if (SocketServer.havePlugin())
                     return ListeningStatus.LISTENING;
-                long id = event.getGroup().getId();
+                long id = 0;
+                if (event.getGroup() != null) {
+                    id = event.getGroup().getId();
+                }
                 long fid = event.getFromId();
                 String message = event.getMessage();
                 long qq = event.getBot().getId();
@@ -773,7 +797,10 @@ public class BotStart {
                 long id = event.getGroup().getId();
                 long fid = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
-                MessageSource message = event.getReceipt().getSource();
+                MessageSource message = null;
+                if (res) {
+                    message = event.getReceipt().getSource();
+                }
                 String error = "";
                 if (event.getException() != null) {
                     error = event.getException().getMessage();
