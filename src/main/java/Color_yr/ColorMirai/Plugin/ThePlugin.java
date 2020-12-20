@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.Socket;
+package Color_yr.ColorMirai.Plugin;
 
 import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.FromPlugin.*;
@@ -6,21 +6,23 @@ import Color_yr.ColorMirai.Pack.PackDo;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
+import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
+import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
+import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.BotStart;
+import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.contact.GroupSettings;
 
 import java.io.InputStream;
-import java.net.Socket;
-import java.net.SocketException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Plugins {
-    private final Socket Socket;
-    private final List<RePackTask> Tasks = new CopyOnWriteArrayList<>();
+public class ThePlugin {
+    private final SocketObj Socket;
+    private final List<RePackObj> Tasks = new CopyOnWriteArrayList<>();
     private final List<Long> Groups = new CopyOnWriteArrayList<>();
     private final List<Long> QQs = new CopyOnWriteArrayList<>();
     private final Thread read;
@@ -30,13 +32,8 @@ public class Plugins {
     private List<Integer> Events = null;
     private boolean isRun;
 
-    public Plugins(Socket Socket) {
+    public ThePlugin(SocketObj Socket) {
         this.Socket = Socket;
-        try {
-            this.Socket.setTcpNoDelay(true);
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
         read = new Thread(this::start);
         doRead = new Thread(this::startRead);
         read.start();
@@ -61,7 +58,7 @@ public class Plugins {
         while (isRun) {
             try {
                 if (!Tasks.isEmpty()) {
-                    RePackTask task = Tasks.remove(0);
+                    RePackObj task = Tasks.remove(0);
                     switch (task.index) {
                         case 52:
                             SendGroupMessagePack pack = JSON.parseObject(task.data, SendGroupMessagePack.class);
@@ -80,7 +77,7 @@ public class Plugins {
                             List<GroupsPack> data = BotStart.getGroups(runQQ == 0 ? pack17.qq : runQQ);
                             if (data == null)
                                 break;
-                            if (SocketServer.sendPack(PackDo.BuildPack(data, 55), Socket))
+                            if (Socket.send(PackDo.BuildPack(data, 55)))
                                 close();
                             break;
                         case 56:
@@ -88,7 +85,7 @@ public class Plugins {
                             List<FriendsPack> data1 = BotStart.getFriends(runQQ == 0 ? pack18.qq : runQQ);
                             if (data1 == null)
                                 break;
-                            if (SocketServer.sendPack(PackDo.BuildPack(data1, 56), Socket))
+                            if (Socket.send(PackDo.BuildPack(data1, 56)))
                                 close();
                             break;
                         case 57:
@@ -96,7 +93,7 @@ public class Plugins {
                             List<MemberInfoPack> data2 = BotStart.getMembers(runQQ == 0 ? pack3.qq : runQQ, pack3.id);
                             if (data2 == null)
                                 break;
-                            if (SocketServer.sendPack(PackDo.BuildPack(data2, 57), Socket))
+                            if (Socket.send(PackDo.BuildPack(data2, 57)))
                                 close();
                             break;
                         case 58:
@@ -104,7 +101,7 @@ public class Plugins {
                             GroupSettings data3 = BotStart.getGroupInfo(runQQ == 0 ? pack4.qq : runQQ, pack4.id);
                             if (data3 == null)
                                 break;
-                            if (SocketServer.sendPack(PackDo.BuildPack(data3, 58), Socket))
+                            if (Socket.send(PackDo.BuildPack(data3, 58)))
                                 close();
                             break;
                         case 59:
@@ -112,7 +109,7 @@ public class Plugins {
                             EventCall.DoEvent(runQQ == 0 ? pack5.qq : runQQ, pack5.eventid, pack5.dofun, pack5.arg);
                             break;
                         case 61:
-                            Map<String, String> formdata = DataFrom.parse(task.data);
+                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
                             if (formdata.containsKey("id") && formdata.containsKey("img") && formdata.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
@@ -124,7 +121,7 @@ public class Plugins {
                             }
                             break;
                         case 62:
-                            Map<String, String> formdata1 = DataFrom.parse(task.data);
+                            Map<String, String> formdata1 = PackDo.parseDataFromPack(task.data);
                             if (formdata1.containsKey("id") && formdata1.containsKey("fid") && formdata1.containsKey("img") && formdata1.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata1.get("id"));
@@ -137,7 +134,7 @@ public class Plugins {
                             }
                             break;
                         case 63:
-                            Map<String, String> formdata2 = DataFrom.parse(task.data);
+                            Map<String, String> formdata2 = PackDo.parseDataFromPack(task.data);
                             if (formdata2.containsKey("id") && formdata2.containsKey("img")) {
                                 try {
                                     long id = Long.parseLong(formdata2.get("id"));
@@ -181,7 +178,7 @@ public class Plugins {
                             BotStart.ReCall(pack16.id);
                             break;
                         case 74:
-                            Map<String, String> formdata3 = DataFrom.parse(task.data);
+                            Map<String, String> formdata3 = PackDo.parseDataFromPack(task.data);
                             if (formdata3.containsKey("id") && formdata3.containsKey("sound") && formdata3.containsKey("qq")) {
                                 try {
                                     long id = Long.parseLong(formdata3.get("id"));
@@ -234,11 +231,11 @@ public class Plugins {
 
     private void start() {
         try {
-            while (Socket.getInputStream().available() == 0) {
+            while (Socket.Read() == null) {
                 Thread.sleep(10);
             }
-            byte[] buf = new byte[Socket.getInputStream().available()];
-            int len = Socket.getInputStream().read(buf);
+            byte[] buf = Socket.Read();
+            int len = buf.length;
             if (len > 0) {
                 String temp = new String(buf, Start.ReadCharset);
                 StartPack pack = JSON.parseObject(temp, StartPack.class);
@@ -257,9 +254,9 @@ public class Plugins {
                         return;
                     }
                     runQQ = pack.RunQQ;
-                    SocketServer.addPlugin(name, this);
+                    PluginUtils.addPlugin(name, this);
                     String data = JSON.toJSONString(BotStart.getBots());
-                    SocketServer.sendPack(data.getBytes(Start.SendCharset), this.Socket);
+                    Socket.send(data.getBytes(Start.SendCharset));
                 } else {
                     Start.logger.warn("插件连接初始化失败");
                     Socket.close();
@@ -293,7 +290,7 @@ public class Plugins {
                             break;
                         }
                     }
-                    Tasks.add(new RePackTask(index, sb.toString()));
+                    Tasks.add(new RePackObj(index, sb.toString()));
                 } else if (Socket.getInputStream().available() < 0) {
                     Start.logger.warn("插件连接断开");
                     close();
@@ -309,7 +306,7 @@ public class Plugins {
         }
     }
 
-    public void callEvent(SendPackTask task, byte[] data) {
+    public void callEvent(SendPackObj task, byte[] data) {
         if (runQQ != 0 && task.runqq != runQQ)
             return;
         if (Groups.size() != 0 && task.group != 0 && !Groups.contains(task.group))
@@ -317,7 +314,7 @@ public class Plugins {
         if (QQs.size() != 0 && task.qq != 0 && !QQs.contains(task.qq))
             return;
         if (Events.contains((int) task.index) || task.index == 60) {
-            if (SocketServer.sendPack(data, Socket))
+            if (MySocketServer.sendPack(data, Socket))
                 close();
         }
     }
@@ -326,7 +323,7 @@ public class Plugins {
         try {
             isRun = false;
             Socket.close();
-            SocketServer.removePlugin(name);
+            MySocketServer.removePlugin(name);
         } catch (Exception e) {
             Start.logger.error("插件断开失败", e);
         }

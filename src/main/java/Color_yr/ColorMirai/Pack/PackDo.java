@@ -3,6 +3,9 @@ package Color_yr.ColorMirai.Pack;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /*
 类型说明
 0 插件开始连接
@@ -109,5 +112,17 @@ public class PackDo {
         byte[] temp = str.getBytes(Start.SendCharset);
         temp[temp.length - 1] = (byte) index;
         return temp;
+    }
+
+    public static Map<String, String> parseDataFromPack(String data) {
+        Map<String, String> map = new HashMap<>();
+        String[] temp = data.split("&");
+        for (String item : temp) {
+            String[] temp1 = item.split("=");
+            if (temp1.length != 2)
+                continue;
+            map.put(temp1[0], temp1[1]);
+        }
+        return map;
     }
 }

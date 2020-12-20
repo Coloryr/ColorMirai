@@ -1,13 +1,13 @@
-package Color_yr.ColorMirai.Socket;
+package Color_yr.ColorMirai.Plugin.Objs;
 
-public class SendPackTask {
+public class SendPackObj {
     public byte index;
     public String data;
     public long group;
     public long qq;
     public long runqq;
 
-    public SendPackTask(int index, String data, long qq, long group, long runqq) {
+    public SendPackObj(int index, String data, long qq, long group, long runqq) {
         this.index = (byte) index;
         this.data = data;
         this.qq = qq;

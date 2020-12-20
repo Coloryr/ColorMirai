@@ -19,8 +19,9 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
 //    compile 'com.google.code.gson:gson:2.8.6'
     compile 'com.alibaba:fastjson:1.2.73'
+    compile "org.java-websocket:Java-WebSocket:1.5.1"
 
-    compile 'net.mamoe:mirai-core-jvm:2.0-M1'
+    compile 'net.mamoe:mirai-core-jvm:2.0-M1-1'
 
 }
 tasks.withType(JavaCompile) {

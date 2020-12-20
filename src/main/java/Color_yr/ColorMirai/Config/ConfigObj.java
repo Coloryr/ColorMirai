@@ -12,6 +12,7 @@ public class ConfigObj {
     public long MaxList;
     public String SendEncoding;
     public String ReadEncoding;
+    public int SocketType;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -24,5 +25,6 @@ public class ConfigObj {
         MaxList = 100000;
         SendEncoding = "UTF-8";
         ReadEncoding = "UTF-8";
+        SocketType = 0;
     }
 }
