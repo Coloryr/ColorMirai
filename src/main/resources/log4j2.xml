@@ -12,8 +12,8 @@
                                  target="SYSTEM_OUT">
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
             <Policies>
-                <TimeBasedTriggeringPolicy interval="1"/>
-                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
             </Policies>
         </RollingRandomAccessFile>
     </appenders>

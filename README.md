@@ -64,8 +64,9 @@ cd ColorMirai
 >    ],
 >    "ReadEncoding": "UTF-8",
 >    "SendEncoding": "UTF-8",
->    "Type": 0,
->    "escapeSelf": true
+>    "LoginType": 0,
+>    "escapeSelf": true,
+>    "SocketType": 0
 > }
 > ```
 > - `MaxList`：最大消息列表
@@ -82,13 +83,15 @@ cd ColorMirai
 > - `escapeSelf`：是否跳过自己机器人的信息
 > - `ReadEncoding`：读数据包编码
 > - `SendEncoding`：发送数据包编码
+> - `SocketType`：插件连接方式
+>     - 普通的Socket [0]
+>     - WebSocket [1]
 
 设置完成后再次启动ColorMirai，出现`[INFO] Socket已启动: 23333` 说明机器人已成功启动
 
 ### 无法登录临时解决
 1. 将协议切换成`手表 [1]`
 2. 登录成功后, 下次登录可以选择`安卓 [0]`
-
 
 ## 插件教程
 
@@ -175,24 +178,6 @@ public class RobotConfig
     public Action<StateType> StateAction { get; init; }
 }
 ```
-实例化`RobotConfig`类
-```C#
-var Config = new RobotConfig
-{
-    Name = "Demo",
-    Groups = null,
-    QQs = null,
-    RunQQ = 0,
-    Pack = new() { 49, 50, 51 },
-    IP = "127.0.0.1",
-    Port = 23333,
-    Time = 10000,
-    Check = true,
-    CallAction = Call,
-    LogAction = LogCall,
-        StateAction = StateCall
-};
-```
 定义一个全局变量
 ```C#
 static Robot Robot = new Robot();
@@ -208,7 +193,7 @@ private static void Call(byte packid, string data)
         case 49:
             var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
             Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
-            { $"{pack.fid} {pack.name} 你发送了消息：{pack.message[1]}" });
+            { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[1]}" });
             break;
         case 50:
             break;
@@ -216,6 +201,32 @@ private static void Call(byte packid, string data)
             break;
     }
 }
+private static void LogCall(LogType type , string data)
+{
+    Console.WriteLine($"机器人日志:{type} {data}");
+}
+private static void StateCall(StateType type)
+{
+    Console.WriteLine($"机器人状态:{type}");
+}
+```
+实例化`RobotConfig`类
+```C#
+var Config = new RobotConfig
+{
+    Name = "Demo",
+    Groups = null,
+    QQs = null,
+    RunQQ = 0,
+    Pack = new() { 49, 50, 51 },
+    IP = "127.0.0.1",
+    Port = 23333,
+    Time = 10000,
+    Check = true,
+    CallAction = Call,
+    LogAction = LogCall,
+    StateAction = StateCall
+};
 ```
 根据需求填好参数后，实例化一个`Robot`类，并给机器人设置配置
 ```C#
@@ -243,7 +254,7 @@ namespace ColoryrSDK
                 case 49:
                     var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
                     Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
-                    { $"{pack.fid} {pack.name} 你发送了消息：{pack.message[1]}" });
+                    { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[1]}" });
                     break;
                 case 50:
                     break;
@@ -274,10 +285,20 @@ namespace ColoryrSDK
                 Check = true,
                 CallAction = Call,
                 LogAction = LogCall,
-                 StateAction = StateCall
+                StateAction = StateCall
             };
             Robot.Set(Config);
+            Robot.IsFirst = false;
             Robot.Start();
+            while (true)
+            {
+                string data = Console.ReadLine();
+                if (data == "stop")
+                {
+                    Robot.Stop();
+                    return;
+                }
+            }
         }
     }
 }
@@ -313,6 +334,8 @@ namespace ColoryrSDK
 61 [插件]发送图片到群
 62 [插件]发送图片到私聊
 63 [插件]发送图片到朋友
+
+127 [插件]断开连接
 ```
 只有正确的发包，才能处理  
 更多包请看[PackDo.java](src/main/java/Color_yr/ColorMirai/Pack/PackDo.java)  
