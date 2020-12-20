@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.Plugin.SocketSend;
 
-import org.java_websocket.WebSocket;
 import Color_yr.ColorMirai.Start;
+import org.java_websocket.WebSocket;
 
 public class WebSocketSend {
     public static boolean send(byte[] data, WebSocket socket) {

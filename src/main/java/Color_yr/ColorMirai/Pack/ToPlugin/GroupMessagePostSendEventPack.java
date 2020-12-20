@@ -25,7 +25,7 @@ public class GroupMessagePostSendEventPack extends PackBase {
         this.id = id;
         this.qq = qq;
         this.message = new ArrayList<>();
-        if(message!=null) {
+        if (message != null) {
             this.message.add(message.toString());
             for (SingleMessage item : message.getOriginalMessage()) {
                 this.message.add(item.toString());

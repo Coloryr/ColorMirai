@@ -7,10 +7,9 @@ import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Pack.ToPlugin.*;
+import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Plugin.ThePlugin;
-import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
-import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
@@ -483,7 +482,7 @@ public class BotStart {
                 long id = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
                 MessageSource message = null;
-                if(res) {
+                if (res) {
                     message = event.getReceipt().getSource();
                 }
                 String error = "";

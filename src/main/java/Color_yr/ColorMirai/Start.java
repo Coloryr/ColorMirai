@@ -3,11 +3,11 @@ package Color_yr.ColorMirai;
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
 import Color_yr.ColorMirai.Plugin.PluginSocket.IPluginSocket;
+import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Plugin.ThePlugin;
 import Color_yr.ColorMirai.Robot.BotStart;
-import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -37,10 +37,9 @@ public class Start {
             return;
         }
 
-        if(Config.SocketType == 1) {
+        if (Config.SocketType == 1) {
             PluginSocket = new MyWebSocket();
-        }
-        else {
+        } else {
             PluginSocket = new MySocketServer();
         }
 

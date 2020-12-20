@@ -1,6 +1,5 @@
 package Color_yr.ColorMirai.Plugin.PluginSocket;
 
-import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Start;
 
