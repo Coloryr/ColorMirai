@@ -105,6 +105,8 @@ import java.util.Map;
 84 [插件]发送群成员戳一戳
 
 85 [机器人]群荣耀获取
+
+127 [插件]断开连接
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {

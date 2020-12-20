@@ -10,12 +10,10 @@ import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.BotStart;
-import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.contact.GroupSettings;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,8 +23,10 @@ public class ThePlugin {
     private final List<RePackObj> Tasks = new CopyOnWriteArrayList<>();
     private final List<Long> Groups = new CopyOnWriteArrayList<>();
     private final List<Long> QQs = new CopyOnWriteArrayList<>();
+
     private final Thread read;
     private final Thread doRead;
+
     private String name;
     private long runQQ;
     private List<Integer> Events = null;
@@ -217,6 +217,9 @@ public class ThePlugin {
                             GetGroupHonorListDataPack pack25 = JSON.parseObject(task.data, GetGroupHonorListDataPack.class);
                             BotStart.GetGroupHonorListData(runQQ == 0 ? pack25.qq : runQQ, pack25.id);
                             break;
+                        case 127:
+                            close();
+                            break;
                     }
                 }
                 Thread.sleep(10);
@@ -230,40 +233,33 @@ public class ThePlugin {
     }
 
     private void start() {
+        RePackObj pack;
         try {
-            while (Socket.Read() == null) {
+            while ((pack = Socket.Read()) == null) {
                 Thread.sleep(10);
             }
-            byte[] buf = Socket.Read();
-            int len = buf.length;
-            if (len > 0) {
-                String temp = new String(buf, Start.ReadCharset);
-                StartPack pack = JSON.parseObject(temp, StartPack.class);
-                if (pack.Name != null && pack.Reg != null) {
-                    name = pack.Name;
-                    Events = pack.Reg;
-                    if (pack.Groups != null) {
-                        Groups.addAll(pack.Groups);
-                    }
-                    if (pack.QQs != null) {
-                        QQs.addAll(pack.QQs);
-                    }
-                    if (pack.RunQQ != 0 && !BotStart.getBots().contains(pack.RunQQ)) {
-                        Start.logger.warn("插件连接失败，没有运行的QQ：" + pack.RunQQ);
-                        Socket.close();
-                        return;
-                    }
-                    runQQ = pack.RunQQ;
-                    PluginUtils.addPlugin(name, this);
-                    String data = JSON.toJSONString(BotStart.getBots());
-                    Socket.send(data.getBytes(Start.SendCharset));
-                } else {
-                    Start.logger.warn("插件连接初始化失败");
+            StartPack StartPack = JSON.parseObject(pack.data, StartPack.class);
+            if (StartPack.Name != null && StartPack.Reg != null) {
+                name = StartPack.Name;
+                Events = StartPack.Reg;
+                if (StartPack.Groups != null) {
+                    Groups.addAll(StartPack.Groups);
+                }
+                if (StartPack.QQs != null) {
+                    QQs.addAll(StartPack.QQs);
+                }
+                if (StartPack.RunQQ != 0 && !BotStart.getBots().contains(StartPack.RunQQ)) {
+                    Start.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
                     Socket.close();
                     return;
                 }
+                runQQ = StartPack.RunQQ;
+                PluginUtils.addPlugin(name, this);
+                String data = JSON.toJSONString(BotStart.getBots());
+                Socket.send(data.getBytes(Start.SendCharset));
             } else {
                 Start.logger.warn("插件连接初始化失败");
+                Socket.close();
                 return;
             }
         } catch (Exception e) {
@@ -274,27 +270,9 @@ public class ThePlugin {
         doRead.start();
         while (isRun) {
             try {
-                if (Socket.getInputStream().available() > 0) {
-                    InputStream inputStream = Socket.getInputStream();
-                    byte[] bytes = new byte[8192];
-                    int len;
-                    byte index = 0;
-                    StringBuilder sb = new StringBuilder();
-                    while ((len = inputStream.read(bytes)) != -1) {
-                        if (len == 8192)
-                            sb.append(new String(bytes, 0, len, Start.ReadCharset));
-                        else {
-                            index = bytes[len - 1];
-                            bytes[len - 1] = 0;
-                            sb.append(new String(bytes, 0, len - 1, Start.ReadCharset));
-                            break;
-                        }
-                    }
-                    Tasks.add(new RePackObj(index, sb.toString()));
-                } else if (Socket.getInputStream().available() < 0) {
-                    Start.logger.warn("插件连接断开");
-                    close();
-                    return;
+                pack = Socket.Read();
+                if (pack != null) {
+                    Tasks.add(pack);
                 }
                 Thread.sleep(10);
             } catch (Exception e) {
@@ -314,7 +292,7 @@ public class ThePlugin {
         if (QQs.size() != 0 && task.qq != 0 && !QQs.contains(task.qq))
             return;
         if (Events.contains((int) task.index) || task.index == 60) {
-            if (MySocketServer.sendPack(data, Socket))
+            if (Socket.send(data))
                 close();
         }
     }
@@ -323,7 +301,7 @@ public class ThePlugin {
         try {
             isRun = false;
             Socket.close();
-            MySocketServer.removePlugin(name);
+            PluginUtils.removePlugin(name);
         } catch (Exception e) {
             Start.logger.error("插件断开失败", e);
         }

@@ -8,13 +8,14 @@ import Color_yr.ColorMirai.Plugin.SocketSend.SocketSend;
 import Color_yr.ColorMirai.Plugin.SocketSend.WebSocketSend;
 import org.java_websocket.WebSocket;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 
 public class SocketObj {
     public Socket Socket;
     public WebSocket WebSocket;
-    public int available;
+
     private final ISend Send;
     private final IRead Read;
 
@@ -39,7 +40,20 @@ public class SocketObj {
         return Send.send(data);
     }
 
-    public byte[] Read() {
+    public RePackObj Read() {
         return Read.read();
+    }
+
+    public void close() {
+        if (this.Socket != null) {
+            try {
+                Socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (this.WebSocket != null) {
+            this.WebSocket.close();
+        }
     }
 }

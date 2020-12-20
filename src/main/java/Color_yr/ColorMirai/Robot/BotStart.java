@@ -7,6 +7,7 @@ import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Pack.ToPlugin.*;
+import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Plugin.ThePlugin;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
@@ -86,7 +87,7 @@ public class BotStart {
             //1 [机器人]图片上传前. 可以阻止上传（事件）
             @EventHandler
             public ListeningStatus BeforeImageUploadEvent(BeforeImageUploadEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String name = event.getSource().toString();
                 long id = event.getTarget().getId();
@@ -99,7 +100,7 @@ public class BotStart {
             //2 [机器人]头像被修改（通过其他客户端修改了头像）（事件）
             @EventHandler
             public ListeningStatus BotAvatarChangedEvent(BotAvatarChangedEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String name = event.getBot().getNick();
                 long qq = event.getBot().getId();
@@ -111,7 +112,7 @@ public class BotStart {
             //3 [机器人]在群里的权限被改变. 操作人一定是群主（事件）
             @EventHandler
             public ListeningStatus BotGroupPermissionChangeEvent(BotGroupPermissionChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long qq = event.getBot().getId();
@@ -124,7 +125,7 @@ public class BotStart {
             //4 [机器人]被邀请加入一个群（事件）
             @EventHandler
             public ListeningStatus BotInvitedJoinGroupRequestEvent(BotInvitedJoinGroupRequestEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroupId();
                 String name = "";
@@ -143,7 +144,7 @@ public class BotStart {
             //5 [机器人]成功加入了一个新群（不确定. 可能是主动加入）（事件）
             @EventHandler
             public ListeningStatus BotJoinGroupEventA(BotJoinGroupEvent.Active event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long qq = event.getBot().getId();
@@ -155,7 +156,7 @@ public class BotStart {
             //6 [机器人]成功加入了一个新群（机器人被一个群内的成员直接邀请加入了群）（事件）
             @EventHandler
             public ListeningStatus BotJoinGroupEventB(BotJoinGroupEvent.Invite event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getInvitor().getId();
@@ -169,7 +170,7 @@ public class BotStart {
             //7 [机器人]主动退出一个群（事件）
             @EventHandler
             public ListeningStatus BotLeaveEventA(BotLeaveEvent.Active event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long qq = event.getBot().getId();
@@ -181,7 +182,7 @@ public class BotStart {
             //8 [机器人]被管理员或群主踢出群（事件）
             @EventHandler
             public ListeningStatus BotLeaveEventB(BotLeaveEvent.Kick event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 String name = event.getOperator().getNick();
@@ -195,7 +196,7 @@ public class BotStart {
             //9 [机器人]被禁言（事件）
             @EventHandler
             public ListeningStatus BotMuteEvent(BotMuteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 int time = event.getDurationSeconds();
@@ -210,7 +211,7 @@ public class BotStart {
             //10 [机器人]主动离线（事件）
             @EventHandler
             public ListeningStatus BotOfflineEventA(BotOfflineEvent.Active event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String message = "";
                 if (event.getCause() != null) {
@@ -225,7 +226,7 @@ public class BotStart {
             //11 [机器人]被挤下线（事件）
             @EventHandler
             public ListeningStatus BotOfflineEventB(BotOfflineEvent.Force event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String title = event.getTitle();
                 String message = event.getMessage();
@@ -238,7 +239,7 @@ public class BotStart {
             //12 [机器人]被服务器断开（事件）
             @EventHandler
             public ListeningStatus BotOfflineEventC(BotOfflineEvent.MsfOffline event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String message = "";
                 if (event.getCause() != null) {
@@ -253,7 +254,7 @@ public class BotStart {
             //13 [机器人]因网络问题而掉线（事件）
             @EventHandler
             public ListeningStatus BotOfflineEventD(BotOfflineEvent.Dropped event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String message = "";
                 if (event.getCause() != null) {
@@ -268,7 +269,7 @@ public class BotStart {
             //14 [机器人]服务器主动要求更换另一个服务器（事件）
             @EventHandler
             public ListeningStatus BotOfflineEventE(BotOfflineEvent.RequireReconnect event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long qq = event.getBot().getId();
                 BotOfflineEventCPack pack = new BotOfflineEventCPack(qq);
@@ -279,7 +280,7 @@ public class BotStart {
             //15 [机器人]登录完成, 好友列表, 群组列表初始化完成（事件）
             @EventHandler
             public ListeningStatus BotOnlineEvent(BotOnlineEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long qq = event.getBot().getId();
                 BotOnlineEventPack pack = new BotOnlineEventPack(qq);
@@ -290,7 +291,7 @@ public class BotStart {
             //16 [机器人]主动或被动重新登录（事件）
             @EventHandler
             public ListeningStatus BotReloginEvent(BotReloginEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 String message = "";
                 if (event.getCause() != null) {
@@ -305,7 +306,7 @@ public class BotStart {
             //17 [机器人]被取消禁言（事件）
             @EventHandler
             public ListeningStatus BotUnmuteEvent(BotUnmuteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getOperator().getId();
@@ -318,7 +319,7 @@ public class BotStart {
             //18 [机器人]成功添加了一个新好友（事件）
             @EventHandler
             public ListeningStatus FriendAddEvent(FriendAddEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
                 String name = event.getFriend().getNick();
@@ -331,7 +332,7 @@ public class BotStart {
             //19 [机器人]好友头像被修改（事件）
             @EventHandler
             public ListeningStatus FriendAvatarChangedEvent(FriendAvatarChangedEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
                 String name = event.getFriend().getNick();
@@ -345,7 +346,7 @@ public class BotStart {
             //20 [机器人]好友已被删除（事件）
             @EventHandler
             public ListeningStatus FriendDeleteEvent(FriendDeleteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
                 long qq = event.getBot().getId();
@@ -358,7 +359,7 @@ public class BotStart {
             //21 [机器人]在好友消息发送后广播（事件）
             @EventHandler
             public ListeningStatus FriendMessagePostSendEvent(FriendMessagePostSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 String name = event.getTarget().getNick();
@@ -380,7 +381,7 @@ public class BotStart {
             //22 [机器人]在发送好友消息前广播（事件）
             @EventHandler
             public ListeningStatus FriendMessagePreSendEvent(FriendMessagePreSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 Message message = event.getMessage();
                 long id = event.getTarget().getId();
@@ -394,7 +395,7 @@ public class BotStart {
             //23 [机器人]好友昵称改变（事件）
             @EventHandler
             public ListeningStatus FriendRemarkChangeEvent(FriendRemarkChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
                 String old = event.getOldRemark();
@@ -408,7 +409,7 @@ public class BotStart {
             //24 [机器人]群 "匿名聊天" 功能状态改变（事件）
             @EventHandler
             public ListeningStatus GroupAllowAnonymousChatEvent(GroupAllowAnonymousChatEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = 0;
@@ -426,7 +427,7 @@ public class BotStart {
             //25 [机器人]群 "坦白说" 功能状态改变（事件）
             @EventHandler
             public ListeningStatus GroupAllowConfessTalkEvent(GroupAllowConfessTalkEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 boolean old = event.getOrigin();
@@ -441,7 +442,7 @@ public class BotStart {
             //26 [机器人]群 "允许群员邀请好友加群" 功能状态改变（事件）
             @EventHandler
             public ListeningStatus GroupAllowMemberInviteEvent(GroupAllowMemberInviteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = 0;
@@ -459,7 +460,7 @@ public class BotStart {
             //27 [机器人]入群公告改变（事件）
             @EventHandler
             public ListeningStatus GroupEntranceAnnouncementChangeEvent(GroupEntranceAnnouncementChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = 0;
@@ -477,7 +478,7 @@ public class BotStart {
             //28 [机器人]在群消息发送后广播（事件）
             @EventHandler
             public ListeningStatus GroupMessagePostSendEvent(GroupMessagePostSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 boolean res = event.getReceipt() != null;
@@ -498,7 +499,7 @@ public class BotStart {
             //29 [机器人]在发送群消息前广播（事件）
             @EventHandler
             public ListeningStatus GroupMessagePreSendEvent(GroupMessagePreSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 Message message = event.getMessage();
@@ -511,7 +512,7 @@ public class BotStart {
             //30 [机器人]群 "全员禁言" 功能状态改变（事件）
             @EventHandler
             public ListeningStatus GroupMuteAllEvent(GroupMuteAllEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = 0;
@@ -529,7 +530,7 @@ public class BotStart {
             //31 [机器人]群名改变（事件）
             @EventHandler
             public ListeningStatus GroupNameChangeEvent(GroupNameChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = 0;
@@ -547,7 +548,7 @@ public class BotStart {
             //32 [机器人]图片上传成功（事件）
             @EventHandler
             public ListeningStatus ImageUploadEventA(ImageUploadEvent.Succeed event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 String name = event.getImage().getImageId();
@@ -560,7 +561,7 @@ public class BotStart {
             //33 [机器人]图片上传失败（事件）
             @EventHandler
             public ListeningStatus ImageUploadEventB(ImageUploadEvent.Failed event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getTarget().getId();
                 String name = event.getSource().toString();
@@ -575,7 +576,7 @@ public class BotStart {
             //34 [机器人]成员群名片改动（事件）
             @EventHandler
             public ListeningStatus MemberCardChangeEvent(MemberCardChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -590,7 +591,7 @@ public class BotStart {
             //35 [机器人]成成员被邀请加入群（事件）
             @EventHandler
             public ListeningStatus MemberJoinEventA(MemberJoinEvent.Invite event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -604,7 +605,7 @@ public class BotStart {
             //36 [机器人]成员主动加入群（事件）
             @EventHandler
             public ListeningStatus MemberJoinEventB(MemberJoinEvent.Active event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -618,7 +619,7 @@ public class BotStart {
             //37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）
             @EventHandler
             public ListeningStatus MemberJoinRequestEvent(MemberJoinRequestEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = 0;
                 if (event.getGroup() != null) {
@@ -636,7 +637,7 @@ public class BotStart {
             //38 [机器人]成员被踢出群（事件）
             @EventHandler
             public ListeningStatus MemberLeaveEventA(MemberLeaveEvent.Kick event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -656,7 +657,7 @@ public class BotStart {
             //39 [机器人]成员主动离开（事件）
             @EventHandler
             public ListeningStatus MemberLeaveEventB(MemberLeaveEvent.Quit event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -670,7 +671,7 @@ public class BotStart {
             //40 [机器人]群成员被禁言（事件）
             @EventHandler
             public ListeningStatus MemberMuteEvent(MemberMuteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -691,7 +692,7 @@ public class BotStart {
             //41 [机器人]成员权限改变（事件）
             @EventHandler
             public ListeningStatus MemberPermissionChangeEvent(MemberPermissionChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -706,7 +707,7 @@ public class BotStart {
             //42 [机器人]成员群头衔改动（事件）
             @EventHandler
             public ListeningStatus MemberSpecialTitleChangeEvent(MemberSpecialTitleChangeEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -721,7 +722,7 @@ public class BotStart {
             //43 [机器人]群成员被取消禁言（事件）
             @EventHandler
             public ListeningStatus MemberUnmuteEvent(MemberUnmuteEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -741,7 +742,7 @@ public class BotStart {
             //44 [机器人]好友消息撤回（事件）
             @EventHandler
             public ListeningStatus MessageRecallEventA(MessageRecallEvent.FriendRecall event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getAuthorId();
                 int[] mid = event.getMessageIds();
@@ -755,7 +756,7 @@ public class BotStart {
             //45 [机器人]群消息撤回事件（事件）
             @EventHandler
             public ListeningStatus MessageRecallEventB(MessageRecallEvent.GroupRecall event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getAuthorId();
@@ -776,7 +777,7 @@ public class BotStart {
             //46 [机器人]一个账号请求添加机器人为好友（事件）
             @EventHandler
             public ListeningStatus NewFriendRequestEvent(NewFriendRequestEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFromGroupId();
                 long fid = event.getFromId();
@@ -792,7 +793,7 @@ public class BotStart {
             //47 [机器人]在群临时会话消息发送后广播（事件）
             @EventHandler
             public ListeningStatus TempMessagePostSendEvent(TempMessagePostSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getTarget().getId();
@@ -814,7 +815,7 @@ public class BotStart {
             //48 [机器人]在发送群临时会话消息前广播（事件）
             @EventHandler
             public ListeningStatus TempMessagePreSendEvent(TempMessagePreSendEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getTarget().getId();
@@ -829,7 +830,7 @@ public class BotStart {
             //49 [机器人]收到群消息（事件）
             @EventHandler
             public ListeningStatus GroupMessageEvent(GroupMessageEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getSubject().getId();
                 long fid = event.getSender().getId();
@@ -852,7 +853,7 @@ public class BotStart {
             //50 [机器人]收到群临时会话消息（事件）
             @EventHandler
             public ListeningStatus TempMessageEvent(TempMessageEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getSender().getId();
@@ -874,7 +875,7 @@ public class BotStart {
             //51 [机器人]收到朋友消息（事件）
             @EventHandler
             public ListeningStatus FriendMessageEvent(FriendMessageEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getSender().getId();
                 String name = event.getSenderName();
@@ -894,7 +895,7 @@ public class BotStart {
 
             //72 [机器人]友输入状态改变（事件）
             public ListeningStatus FriendInputStatusChangedEvent(FriendInputStatusChangedEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFriend().getId();
                 String name = event.getFriend().getNick();
@@ -907,7 +908,7 @@ public class BotStart {
 
             //79 [插件]成员群恢复（事件）
             public ListeningStatus MemberJoinRetrieveEvent(MemberJoinEvent.Retrieve event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -920,7 +921,7 @@ public class BotStart {
 
             //80 [插件]机器人群恢复（事件）
             public ListeningStatus BotJoinGroupEventRetrieveEvent(BotJoinGroupEvent.Retrieve event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long qq = event.getBot().getId();
@@ -931,7 +932,7 @@ public class BotStart {
 
             //81 [插件]群成员戳一戳（事件）
             public ListeningStatus MemberNudgedEvent(MemberNudgedEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getGroup().getId();
                 long fid = event.getMember().getId();
@@ -946,7 +947,7 @@ public class BotStart {
 
             //82 [插件]机器人戳一戳（事件）
             public ListeningStatus BotNudgedEvent(BotNudgedEvent event) {
-                if (MySocketServer.havePlugin())
+                if (PluginUtils.havePlugin())
                     return ListeningStatus.LISTENING;
                 long id = event.getFrom().getId();
                 String action = event.getAction();
@@ -977,7 +978,7 @@ public class BotStart {
                         task.data += " ";
                         byte[] temp = task.data.getBytes(Start.SendCharset);
                         temp[temp.length - 1] = task.index;
-                        for (ThePlugin item : MySocketServer.PluginList.values()) {
+                        for (ThePlugin item : PluginUtils.getAll()) {
                             item.callEvent(task, temp);
                         }
                     }

@@ -4,11 +4,11 @@ import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.BotStart;
 import Color_yr.ColorMirai.Start;
+import org.java_websocket.WebSocket;
 
 import java.net.Socket;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -18,8 +18,7 @@ public class PluginUtils {
     private static final Map<String, ThePlugin> PluginList = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
-    public static Collection<ThePlugin> getAll()
-    {
+    public static Collection<ThePlugin> getAll() {
         return PluginList.values();
     }
 
@@ -31,10 +30,14 @@ public class PluginUtils {
         return PluginList.isEmpty();
     }
 
-    public static void addPlugin(Socket socket)
-    {
+    public static void addPlugin(Socket socket) {
         new ThePlugin(new SocketObj(socket));
     }
+
+    public static void addPlugin(WebSocket socket) {
+        new ThePlugin(new SocketObj(socket));
+    }
+
     public static void addPlugin(String name, ThePlugin plugin) {
         if (PluginList.containsKey(name)) {
             ThePlugin temp = PluginList.get(name);
@@ -51,14 +54,12 @@ public class PluginUtils {
 
     public static void init() {
         if (Start.Config.Pack) {
-            service.scheduleAtFixedRate(() ->
-                            BotStart.addTask(new SendPackObj(60, "{}", 0, 0, 0)),
+            service.scheduleAtFixedRate(() -> BotStart.addTask(new SendPackObj(60, "{}", 0, 0, 0)),
                     0, 30, TimeUnit.SECONDS);
         }
     }
 
-    public static void Stop()
-    {
+    public static void Stop() {
         for (Map.Entry<String, ThePlugin> item : PluginList.entrySet()) {
             item.getValue().close();
         }
