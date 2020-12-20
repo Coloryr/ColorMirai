@@ -7,7 +7,7 @@ public class ConfigObj {
     public List<QQsObj> QQs;
     public boolean Pack;
     public int Port;
-    public int Type;
+    public int LoginType;
     public boolean escapeSelf;
     public long MaxList;
     public String SendEncoding;
@@ -21,7 +21,7 @@ public class ConfigObj {
         Pack = true;
         escapeSelf = true;
         Port = 23333;
-        Type = 0;
+        LoginType = 0;
         MaxList = 100000;
         SendEncoding = "UTF-8";
         ReadEncoding = "UTF-8";

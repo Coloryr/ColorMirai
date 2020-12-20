@@ -7,8 +7,8 @@ public class WebSocketSend {
     public static boolean send(byte[] data, WebSocket socket) {
         try {
             if (!socket.isOpen())
-                return false;
-            socket.send(data);
+                return true;
+            socket.send(new String(data, Start.SendCharset));
             return false;
         } catch (Exception e) {
             Start.logger.error("插件通信出现问题", e);

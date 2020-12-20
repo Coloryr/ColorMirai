@@ -52,7 +52,7 @@ public class BotStart {
             Bot bot = BotFactory.INSTANCE.newBot(item.QQ, item.Password, new BotConfiguration() {
                 {
                     fileBasedDeviceInfo(Start.RunDir + "info.json");
-                    switch (Start.Config.Type) {
+                    switch (Start.Config.LoginType) {
                         case 0:
                             setProtocol(MiraiProtocol.ANDROID_PHONE);
                             break;
