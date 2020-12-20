@@ -350,7 +350,11 @@ namespace ColoryrSDK
         private PackStart PackStart;
         private RobotConfig Config;
 
-        private bool IsFirst = true;
+        /// <summary>
+        /// 第一次连接检查
+        /// </summary>
+        public bool IsFirst = true;
+
         private int Times = 0;
         /// <summary>
         /// 设置配置
@@ -552,10 +556,16 @@ namespace ColoryrSDK
             var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file, }, 75);
             QueueSend.Add(data);
         }
+        public void SendStop()
+        {
+            var data = BuildPack.Build(new object(), 127);
+            Socket.Send(data);
+        }
         public void Stop()
         {
             LogOut("机器人正在断开");
             IsRun = false;
+            SendStop();
             if (Socket != null)
                 Socket.Close();
             LogOut("机器人已断开");
