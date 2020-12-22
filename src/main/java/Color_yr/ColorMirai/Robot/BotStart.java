@@ -42,7 +42,7 @@ public class BotStart {
     private static final Base64.Decoder decoder = Base64.getDecoder();
     private static final Map<Integer, MessageSaveObj> MessageLsit = new ConcurrentHashMap<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
-    private static final List<Long> reList = new CopyOnWriteArrayList<>();
+    private static final List<Integer> reList = new CopyOnWriteArrayList<>();
 
     private static Thread EventDo;
     private static boolean isRun;
@@ -991,7 +991,7 @@ public class BotStart {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
             if (!reList.isEmpty()) {
-                for (long item : reList) {
+                for (int item : reList) {
                     if (MessageLsit.containsKey(item)) {
                         MessageSaveObj item1 = MessageLsit.remove(item);
                         if (item1.time > 0 || item1.time == -1)
@@ -1424,7 +1424,7 @@ public class BotStart {
         }
     }
 
-    public static void ReCall(Long id) {
+    public static void ReCall(Integer id) {
         try {
             reList.add(id);
         } catch (Exception e) {
