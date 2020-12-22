@@ -193,7 +193,10 @@ private static void Call(byte packid, string data)
         case 49:
             var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
             Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
-            { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[1]}" });
+            { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[^1]}" });
+            string temp = GetString(pack.message[0], "[mirai:source:[", "]");
+            long.TryParse(temp, out long test);
+            Robot.ReCall(Robot.QQs[0], test);
             break;
         case 50:
             break;
@@ -254,13 +257,35 @@ namespace ColoryrSDK
                 case 49:
                     var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
                     Robot.SendGroupMessage(Robot.QQs[0], pack.id, new()
-                    { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[1]}" });
+                    { $"{pack.fid} {pack.name} 你发送了消息 {pack.message[^1]}" });
+                    string temp = GetString(pack.message[0], "[mirai:source:[", "]");
+                    long.TryParse(temp, out long test);
+                    Robot.ReCall(Robot.QQs[0], test);
                     break;
                 case 50:
                     break;
                 case 51:
                     break;
             }
+        }
+        private static string GetString(string a, string b, string c = null)
+        {
+            int x = a.IndexOf(b) + b.Length;
+            int y;
+            if (c != null)
+            {
+                y = a.IndexOf(c, x);
+                if (a[y - 1] == '"')
+                {
+                    y = a.IndexOf(c, y + 1);
+                }
+                if (y - x <= 0)
+                    return a;
+                else
+                    return a.Substring(x, y - x);
+            }
+            else
+                return a.Substring(x);
         }
         private static void LogCall(LogType type , string data)
         {

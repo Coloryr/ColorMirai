@@ -510,9 +510,14 @@ namespace ColoryrSDK
             LogOut("机器人已连接");
             IsConnect = true;
         }
-        public void CallEvent(long eventid, int dofun, List<object> arg)
+        public void ReCall(long qq, long id)
         {
-            var data = BuildPack.Build(new EventCallPack { eventid = eventid, dofun = dofun, arg = arg }, 59);
+            var data = BuildPack.Build(new ReCallMessage { qq = qq, id = id }, 71);
+            QueueSend.Add(data);
+        }
+        public void CallEvent(long qq, long eventid, int dofun, List<object> arg)
+        {
+            var data = BuildPack.Build(new EventCallPack { qq= qq, eventid = eventid, dofun = dofun, arg = arg }, 59);
             QueueSend.Add(data);
         }
         public void SendGroupMessage(long qq, long id, List<string> message)
