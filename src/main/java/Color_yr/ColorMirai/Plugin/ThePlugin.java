@@ -213,10 +213,6 @@ public class ThePlugin {
                             MemberNudgePack pack24 = JSON.parseObject(task.data, MemberNudgePack.class);
                             BotStart.SendNudge(runQQ == 0 ? pack24.qq : runQQ, pack24.id, pack24.fid);
                             break;
-                        case 85:
-                            GetGroupHonorListDataPack pack25 = JSON.parseObject(task.data, GetGroupHonorListDataPack.class);
-                            BotStart.GetGroupHonorListData(runQQ == 0 ? pack25.qq : runQQ, pack25.id);
-                            break;
                         case 127:
                             close();
                             break;
