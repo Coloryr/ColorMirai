@@ -12,14 +12,14 @@ namespace ColoryrSDK
     /// <summary>
     /// 基础包
     /// </summary>
-    abstract class PackBase
+    abstract record PackBase
     {
         public long qq { get; set; }
     }
     /// <summary>
     /// 开始包
     /// </summary>
-    class PackStart
+    record PackStart
     {
         /// <summary>
         /// 插件名字
@@ -45,7 +45,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 群消息事件包
     /// </summary>
-    class GroupMessageEventPack : PackBase
+    record GroupMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -55,7 +55,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群消息包
     /// </summary>
-    class SendGroupMessagePack : PackBase
+    record SendGroupMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
@@ -63,7 +63,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送朋友消息包
     /// </summary>
-    class SendFriendMessagePack : PackBase
+    record SendFriendMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
@@ -71,7 +71,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群私聊消息包
     /// </summary>
-    class SendGroupPrivateMessagePack : PackBase
+    record SendGroupPrivateMessagePack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -80,7 +80,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 临时消息事件包
     /// </summary>
-    class TempMessageEventPack : PackBase
+    record TempMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -91,7 +91,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 朋友消息事件包
     /// </summary>
-    class FriendMessageEventPack : PackBase
+    record FriendMessageEventPack : PackBase
     {
         public long id { get; set; }
         public string name { get; set; }
@@ -101,7 +101,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群图片包
     /// </summary>
-    class SendGroupImagePack : PackBase
+    record SendGroupImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
@@ -109,7 +109,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群私聊图片包
     /// </summary>
-    class SendGroupPrivateImagePack : PackBase
+    record SendGroupPrivateImagePack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -118,7 +118,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送朋友图片包
     /// </summary>
-    class SendFriendImagePack : PackBase
+    record SendFriendImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
@@ -126,21 +126,21 @@ namespace ColoryrSDK
     /// <summary>
     /// 群全部禁言包
     /// </summary>
-    class GroupMuteAll : PackBase
+    record GroupMuteAll : PackBase
     {
         public long id { get; set; }
     }
     /// <summary>
     /// 群全部解禁包
     /// </summary>
-    class GroupUnmuteAll : PackBase
+    record GroupUnmuteAll : PackBase
     {
         public long id { get; set; }
     }
     /// <summary>
     /// 设置群员名字包
     /// </summary>
-    class SetGroupMemberCard : PackBase
+    record SetGroupMemberCard : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -149,7 +149,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 设置群名包
     /// </summary>
-    class SetGroupName : PackBase
+    record SetGroupName : PackBase
     {
         public long id { get; set; }
         public string name { get; set; }
@@ -157,7 +157,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 加好友请求事件包
     /// </summary>
-    class NewFriendRequestEventPack : PackBase
+    record NewFriendRequestEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -168,7 +168,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 事件处理包
     /// </summary>
-    class EventCallPack : PackBase
+    record EventCallPack : PackBase
     {
         public long eventid { get; set; }
         public int dofun { get; set; }
@@ -177,14 +177,14 @@ namespace ColoryrSDK
     /// <summary>
     /// 撤回消息包
     /// </summary>
-    class ReCallMessage : PackBase
+    record ReCallMessage : PackBase
     {
         public long id { get; set; }
     }
     /// <summary>
     /// 加载本地图片发送到群包
     /// </summary>
-    class LoadFileSendToGroupImagePack : PackBase
+    record LoadFileSendToGroupImagePack : PackBase
     {
         public long id { get; set; }
         public string file { get; set; }
@@ -192,7 +192,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群消息之后的事件包
     /// </summary>
-    class GroupMessagePostSendEventPack : PackBase
+    record GroupMessagePostSendEventPack : PackBase
     {
         public long id { get; set; }
         public bool res { get; set; }
@@ -256,12 +256,12 @@ namespace ColoryrSDK
             return data;
         }
     }
-    class RobotTask
+    record RobotTask
     {
         public byte index { get; set; }
         public string data { get; set; }
     }
-    public class RobotConfig
+    public record RobotConfig
     {
         /// <summary>
         /// 机器人IP
