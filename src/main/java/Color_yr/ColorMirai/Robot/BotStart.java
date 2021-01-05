@@ -69,7 +69,7 @@ public class BotStart {
                 bots.put(item.QQ, bot);
                 Start.logger.info("QQ:" + item.QQ + "已登录");
             } catch (WrongPasswordException e) {
-                Start.logger.error("机器人密码错误");
+                Start.logger.error("机器人密码错误", e);
             } catch (Exception e) {
                 Start.logger.error("机器人错误", e);
                 return false;
