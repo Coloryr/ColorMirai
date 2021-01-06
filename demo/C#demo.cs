@@ -561,7 +561,7 @@ namespace ColoryrSDK
             var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file, }, 75);
             QueueSend.Add(data);
         }
-        public void SendStop()
+        private void SendStop()
         {
             var data = BuildPack.Build(new object(), 127);
             Socket.Send(data);

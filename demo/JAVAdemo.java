@@ -3,54 +3,32 @@ import com.alibaba.fastjson.JSON;
 import java.io.IOException;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-abstract class PackBase
-{
-    public long qq;
-}
+//需要使用JAVA8环境
+//需要安装fastjson库
 
 class StartPack {
     public String Name;
-    public List<Integer> Reg;
+    public List<Byte> Reg;
+    public List<Long> Groups;
+    public List<Long> QQs;
+    public long RunQQ;
 }
 
-class SendFriendImagePack extends PackBase{
-    public long id;
-    public String img;
+abstract class PackBase {
+    public long qq;
 }
 
-class SendFriendMessagePack extends PackBase{
+class FriendMessageEventPack extends PackBase {
     public long id;
+    public String name;
     public List<String> message;
+    public int time;
 }
 
-class SendGroupMessagePack extends PackBase{
-    public long id;
-    public List<String> message;
-}
-
-class SendGroupPrivateMessagePack extends PackBase{
-    public long id;
-    public long fid;
-    public List<String> message;
-}
-
-class SendGroupImagePack extends PackBase{
-    public long id;
-    public String img;
-}
-
-class SendGroupPrivateImagePack extends PackBase{
-    public long id;
-    public long fid;
-    public String img;
-}
-
-class GroupMessageEventPack extends PackBase{
+class GroupMessageEventPack extends PackBase {
     public long id;
     public long fid;
     public String name;
@@ -61,11 +39,26 @@ class TempMessageEventPack extends GroupMessageEventPack {
     public int time;
 }
 
-class FriendMessageEventPack extends PackBase{
+class EventCallPack extends PackBase {
+    public long eventid;
+    public int dofun;
+    public List<Object> arg;
+}
+
+class SendFriendMessagePack extends PackBase {
     public long id;
-    public String name;
     public List<String> message;
-    public int time;
+}
+
+class SendGroupMessagePack extends PackBase {
+    public long id;
+    public List<String> message;
+}
+
+class SendGroupPrivateMessagePack extends PackBase {
+    public long id;
+    public long fid;
+    public List<String> message;
 }
 
 class BuildPack {
@@ -91,6 +84,13 @@ class BuildPack {
         temp1[temp1.length - 1] = (byte) index;
         return temp1;
     }
+
+    public static byte[] BuildSound(long qq, long id, String sound, byte index) {
+        String temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
+        byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+        data[data.length - 1] = index;
+        return data;
+    }
 }
 
 class RobotTask {
@@ -103,42 +103,82 @@ class RobotTask {
     }
 }
 
-class ServerMain {
-    public static void LogError(Exception e) {
-        String a = "[错误]";
-        System.out.println(a);
-        e.printStackTrace();
-    }
-
-    public static void LogError(String a) {
-        a = "[错误]" + a;
-        System.out.println(a);
-    }
-
-    public static void LogOut(String a) {
-        a = "[信息]" + a;
-        System.out.println(a);
-    }
+enum LogType {
+    Log, Error
 }
 
-public class RobotSocket {
-    private static Socket Socket;
-    private static Thread ReadThread;
-    private static Thread DoThread;
-    private static boolean IsRun;
-    private static boolean IsConnect;
-    private static List<RobotTask> QueueRead;
-    private static List<byte[]> QueueSend;
-    private static final StartPack PackStart = new StartPack() {{
-        Name = "ColoryrSDK";
-        Reg = new ArrayList<>() {{
-            add(49);
-            add(50);
-            add(51);
-        }};
-    }};
+enum StateType {
+    Disconnect, Connecting, Connect
+}
 
-    public static void Start() {
+interface ICall {
+    void CallAction(byte type, String data);
+}
+
+interface ILog {
+    void LogAction(LogType type, String data);
+}
+
+interface IState {
+    void StateAction(StateType type);
+}
+
+class RobotConfig {
+    public String IP;
+    public int Port;
+    public List<Byte> Pack;
+    public String Name;
+    public List<Long> Groups;
+    public List<Long> QQs;
+    public long RunQQ;
+    public int Time;
+    public boolean Check;
+    public ICall CallAction;
+    public ILog LogAction;
+    public IState StateAction;
+}
+
+public class Robot {
+
+    public List<Long> QQs;
+    public boolean IsRun;
+    public boolean IsConnect;
+
+    private ICall RobotCallEvent;
+    private ILog RobotLogEvent;
+    private IState RobotStateEvent;
+
+    private Socket Socket;
+    private Thread ReadThread;
+    private Thread DoThread;
+    private List<RobotTask> QueueRead;
+    private List<byte[]> QueueSend;
+    private StartPack PackStart;
+    private RobotConfig Config;
+
+    public boolean IsFirst = true;
+
+    private int Times = 0;
+
+    public void Set(RobotConfig Config) {
+        this.Config = Config;
+
+        RobotCallEvent = Config.CallAction;
+        RobotLogEvent = Config.LogAction;
+        RobotStateEvent = Config.StateAction;
+
+        PackStart = new StartPack() {{
+            Name = Config.Name;
+            Reg = Config.Pack;
+            Groups = Config.Groups;
+            QQs = Config.QQs;
+            RunQQ = Config.RunQQ;
+        }};
+    }
+
+    public void Start() {
+        if (ReadThread != null && ReadThread.isAlive())
+            return;
         QueueRead = new CopyOnWriteArrayList<>();
         QueueSend = new CopyOnWriteArrayList<>();
 
@@ -148,48 +188,11 @@ public class RobotSocket {
                 try {
                     if (!QueueRead.isEmpty()) {
                         task = QueueRead.remove(0);
-                        switch (task.index) {
-                            case 49:
-                                var pack = JSON.parseObject(task.data, GroupMessageEventPack.class);
-                                System.out.println("qq = " + pack.qq);
-                                System.out.println("id = " + pack.id);
-                                System.out.println("fid = " + pack.fid);
-                                System.out.println("name = " + pack.name);
-                                System.out.println("message = ");
-                                for (var item : pack.message) {
-                                    System.out.println(item);
-                                }
-                                System.out.println();
-                                break;
-                            case 50:
-                                var pack1 = JSON.parseObject(task.data, TempMessageEventPack.class);
-                                System.out.println("qq = " + pack1.qq);
-                                System.out.println("id = " + pack1.id);
-                                System.out.println("fid = " + pack1.fid);
-                                System.out.println("name = " + pack1.name);
-                                System.out.println("message = ");
-                                for (var item : pack1.message) {
-                                    System.out.println(item);
-                                }
-                                System.out.println();
-                                break;
-                            case 51:
-                                var pack2 = JSON.parseObject(task.data, FriendMessageEventPack.class);
-                                System.out.println("qq = " + pack2.qq);
-                                System.out.println("id = " + pack2.id);
-                                System.out.println("time = " + pack2.time);
-                                System.out.println("name = " + pack2.name);
-                                System.out.println("message = ");
-                                for (var item : pack2.message) {
-                                    System.out.println(item);
-                                }
-                                System.out.println();
-                                break;
-                        }
+                        RobotCallEvent.CallAction(task.index, task.data);
                     }
                     Thread.sleep(10);
                 } catch (Exception e) {
-                    ServerMain.LogError(e);
+                    LogError(e);
                 }
             }
         });
@@ -199,7 +202,7 @@ public class RobotSocket {
                     Thread.sleep(100);
                 }
             } catch (Exception e) {
-                ServerMain.LogError(e);
+                LogError(e);
             }
             DoThread.start();
             byte[] data;
@@ -207,14 +210,18 @@ public class RobotSocket {
                 try {
                     if (!IsConnect) {
                         ReConnect();
+                        IsFirst = false;
+                        Times = 0;
+                        RobotStateEvent.StateAction(StateType.Connect);
                     } else if (Socket.getInputStream().available() > 0) {
                         data = new byte[Socket.getInputStream().available()];
                         Socket.getInputStream().read(data);
-                        var type = data[data.length - 1];
+                        byte type = data[data.length - 1];
                         data[data.length - 1] = 0;
                         QueueRead.add(new RobotTask(type, new String(data)));
                     } else if (Socket.getInputStream().available() < 0) {
-                        ServerMain.LogOut("机器人连接中断");
+                        LogOut("机器人连接中断");
+                        RobotStateEvent.StateAction(StateType.Disconnect);
                         IsConnect = false;
                     } else if (!QueueSend.isEmpty()) {
                         data = QueueSend.remove(0);
@@ -223,66 +230,69 @@ public class RobotSocket {
                     }
                     Thread.sleep(50);
                 } catch (Exception e) {
-                    ServerMain.LogError("机器人连接失败");
-                    ServerMain.LogError(e);
-                    IsConnect = false;
-                    ServerMain.LogError("机器人20秒后重连");
-                    try {
-                        Thread.sleep(20000);
-                    } catch (InterruptedException interruptedException) {
-                        interruptedException.printStackTrace();
+                    if (IsFirst) {
+                        IsRun = false;
+                        LogError("机器人连接失败");
+                        LogError(e);
+                    } else {
+                        Times++;
+                        if (Times == 10) {
+                            IsRun = false;
+                            LogError("重连失败次数过多");
+                        }
+                        LogError("机器人连接失败");
+                        LogError(e);
+                        IsConnect = false;
+                        LogError("机器人" + Config.Time + "毫秒后重连");
+                        try {
+                            Thread.sleep(Config.Time);
+                        } catch (InterruptedException interruptedException) {
+                            interruptedException.printStackTrace();
+                        }
+                        LogError("机器人重连中");
                     }
-                    ServerMain.LogError("机器人重连中");
                 }
             }
         });
         ReadThread.start();
         IsRun = true;
-        ReadTest();
     }
 
-    private static boolean is() {
-        try {
-            Socket.sendUrgentData(60);
-            return false;
-        } catch (Exception ex) {
-            return true;
-        }
-    }
-
-    private static void ReadTest() {
-        Scanner scanner = new Scanner(System.in);
-        while (true) {
-            SendGroupMessage(1092415357, 571239090, new ArrayList<>() {{
-                add(scanner.nextLine());
-            }});
-        }
-    }
-
-    private static void ReConnect() {
+    private void ReConnect() {
         try {
             if (Socket != null)
                 Socket.close();
-            Socket = new Socket("127.0.0.1", 23333);
 
-            var data = (JSON.toJSON(PackStart) + " ").getBytes(StandardCharsets.UTF_8);
+            RobotStateEvent.StateAction(StateType.Connecting);
+
+            Socket = new Socket(Config.IP, Config.Port);
+
+            byte[] data = (JSON.toJSON(PackStart) + " ").getBytes(StandardCharsets.UTF_8);
             data[data.length - 1] = 0;
 
             Socket.getOutputStream().write(data);
             Socket.getOutputStream().flush();
 
+            while (Socket.getInputStream().available() == 0) {
+                Thread.sleep(10);
+            }
+
+            data = new byte[Socket.getInputStream().available()];
+            Socket.getInputStream().read(data);
+            QQs = JSON.parseArray(new String(data, StandardCharsets.UTF_8), Long.class);
+
             QueueRead.clear();
             QueueSend.clear();
-            ServerMain.LogOut("机器人已连接");
+            LogOut("机器人已连接");
             IsConnect = true;
         } catch (Exception e) {
-            ServerMain.LogError("机器人连接失败");
-            ServerMain.LogError(e);
+            LogError("机器人连接失败");
+            LogError(e);
         }
     }
 
-    public static void SendGroupMessage(long qq_, long id_, List<String> message_) {
-        var data = BuildPack.Build(new SendGroupMessagePack() {{
+    public void SendGroupMessage(long qq_, long id_, List<String> message_) {
+        byte[] data = BuildPack.Build(new SendGroupMessagePack() {{
             qq = qq_;
             id = id_;
             message = message_;
@@ -290,8 +300,8 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendGroupPrivateMessage(long qq_, long id_, long fid_, List<String> message_) {
-        var data = BuildPack.Build(new SendGroupPrivateMessagePack() {{
+    public void SendGroupPrivateMessage(long qq_, long id_, long fid_, List<String> message_) {
+        byte[] data = BuildPack.Build(new SendGroupPrivateMessagePack() {{
             qq = qq_;
             id = id_;
             fid = fid_;
@@ -300,8 +310,8 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendFriendMessage(long qq_, long id_, List<String> message_) {
-        var data = BuildPack.Build(new SendFriendMessagePack() {{
+    public void SendFriendMessage(long qq_, long id_, List<String> message_) {
+        byte[] data = BuildPack.Build(new SendFriendMessagePack() {{
             qq = qq_;
             id = id_;
             message = message_;
@@ -309,24 +319,35 @@ public class RobotSocket {
         QueueSend.add(data);
     }
 
-    public static void SendGroupImage(long qq, long id, String img) {
-        var data = BuildPack.BuildImage(qq, id, 0, img, 61);
+    public void SendGroupImage(long qq, long id, String img) {
+        byte[] data = BuildPack.BuildImage(qq, id, 0, img, 61);
         QueueSend.add(data);
     }
 
-    public static void SendGroupPrivateImage(long qq, long id, long fid, String img) {
-        var data = BuildPack.BuildImage(qq, id, fid, img, 62);
+    public void SendGroupPrivateImage(long qq, long id, long fid, String img) {
+        byte[] data = BuildPack.BuildImage(qq, id, fid, img, 62);
         QueueSend.add(data);
     }
 
-    public static void SendFriendImage(long qq, long id, String img) {
-        var data = BuildPack.BuildImage(qq, id, 0, img, 63);
+    public void SendFriendImage(long qq, long id, String img) {
+        byte[] data = BuildPack.BuildImage(qq, id, 0, img, 63);
         QueueSend.add(data);
     }
 
-    public static void Stop() {
-        ServerMain.LogOut("机器人正在断开");
+    private void SendStop() {
+        try {
+            byte[] data = BuildPack.Build(new Object(), 127);
+            Socket.getOutputStream().write(data);
+        } catch (Exception e) {
+            LogOut("机器人断开错误");
+            e.printStackTrace();
+        }
+    }
+
+    public void Stop() {
+        LogOut("机器人正在断开");
         IsRun = false;
+        SendStop();
         if (Socket != null) {
             try {
                 Socket.close();
@@ -334,6 +355,18 @@ public class RobotSocket {
                 e.printStackTrace();
             }
         }
-        ServerMain.LogOut("机器人已断开");
+        LogOut("机器人已断开");
+    }
+
+    private void LogError(Exception e) {
+        RobotLogEvent.LogAction(LogType.Error, "机器人错误\n" + e.toString());
+    }
+
+    private void LogError(String a) {
+        RobotLogEvent.LogAction(LogType.Error, "机器人错误:" + a);
+    }
+
+    private void LogOut(String a) {
+        RobotLogEvent.LogAction(LogType.Log, a);
     }
 }
