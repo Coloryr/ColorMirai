@@ -522,14 +522,14 @@ public class ColoryrSDK {
 }
 ```
 
-4. Python代码
-Python可以直接调用C#的DLL反射执行
-   [Ironpython](https://ironpython.net/)  
-   [pythonnet](https://pypi.org/project/pythonnet/)
+4. Python  
+Python可以直接调用C#的DLL反射执行  
+[Ironpython](https://ironpython.net/)  
+[pythonnet](https://pypi.org/project/pythonnet/)
    
-   Dll自行构建
+Dll自行构建
 5. 其他语言  
-  待补充
+待补充
 
 ### 数据包
 大部分数据包是一串JSON字符串+数据包ID构成  
