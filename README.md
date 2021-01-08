@@ -38,7 +38,28 @@ cd ColorMirai
 `build/libs/ColorMirai-3.1.1-SNAPSHOT-all.jar`
 
 ## 启动
-1. 启动ColorMirai，必须使用JAVA8及以上，推荐使用JAVA14启动
+1. 启动ColorMirai，必须使用JAVA8及以上，推荐使用JAVA14启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动  
+请务必用openjdk启动
 ```
 java -jar ColorMirai-3.X-SNAPSHOT-all.jar
 ```
