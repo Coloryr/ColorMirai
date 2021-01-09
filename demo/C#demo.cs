@@ -199,6 +199,36 @@ namespace ColoryrSDK
         public List<string> message { get; set; }
         public string error { get; set; }
     }
+    /// <summary>
+    /// 发送群员戳一戳
+    /// </summary>
+    record MemberNudgePack : PackBase
+    {
+        public long id { get; set; }
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 发送朋友戳一戳
+    /// </summary>
+    record FriendNudgePack : PackBase
+    {
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 获取图片Url
+    /// </summary>
+    record GetImageUrlPack : PackBase
+    {
+        public string uuid { get; set; }
+    }
+    /// <summary>
+    /// 返回Url
+    /// </summary>
+    record ReImagePack : PackBase
+    {
+        public string uuid { get; set; }
+        public string url { get; set; }
+    }
     //更多pack请看文档说明
     class BuildPack
     {
@@ -558,7 +588,22 @@ namespace ColoryrSDK
         }
         public void SendGroupImageFile(long qq, long id, string file)
         {
-            var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file, }, 75);
+            var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file }, 75);
+            QueueSend.Add(data);
+        }
+        public void SendMemberNudge(long qq, long id, long fid)
+        {
+            var data = BuildPack.Build(new MemberNudgePack { qq = qq, id = id, fid = fid }, 84);
+            QueueSend.Add(data);
+        }
+        public void SendFriendNudge(long qq, long id)
+        {
+            var data = BuildPack.Build(new FriendNudgePack { qq = qq, id = id }, 83);
+            QueueSend.Add(data);
+        }
+        public void GetImageUrl(long qq, string uuid)
+        {
+            var data = BuildPack.Build(new GetImageUrlPack { qq = qq, uuid = uuid }, 90);
             QueueSend.Add(data);
         }
         private void SendStop()

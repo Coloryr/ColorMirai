@@ -6,6 +6,7 @@ import Color_yr.ColorMirai.Pack.PackDo;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
+import Color_yr.ColorMirai.Pack.ReturnPlugin.ReImagePack;
 import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
@@ -212,6 +213,18 @@ public class ThePlugin {
                         case 84:
                             MemberNudgePack pack24 = JSON.parseObject(task.data, MemberNudgePack.class);
                             BotStart.SendNudge(runQQ == 0 ? pack24.qq : runQQ, pack24.id, pack24.fid);
+                            break;
+                        case 90:
+                            GetImageUrlPack pack25 = JSON.parseObject(task.data, GetImageUrlPack.class);
+                            String data4 = BotStart.GetImg(pack25.qq, pack25.uuid);
+                            if (data4 == null)
+                                break;
+                            ReImagePack obj = new ReImagePack();
+                            obj.uuid = pack25.uuid;
+                            obj.url = data4;
+                            obj.qq = pack25.qq;
+                            if (Socket.send(PackDo.BuildPack(obj, 90)))
+                                close();
                             break;
                         case 127:
                             close();

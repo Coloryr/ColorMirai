@@ -970,7 +970,7 @@ public class BotStart {
             public void OtherClientOfflineEvent(OtherClientOfflineEvent event) {
                 if (PluginUtils.havePlugin())
                     return;
-           int appId = event.getClient().getInfo().getAppId();
+                int appId = event.getClient().getInfo().getAppId();
                 String platform = event.getClient().getInfo().getPlatform().toString();
                 String deviceName = event.getClient().getInfo().getDeviceName();
                 String deviceKind = event.getClient().getInfo().getDeviceKind();
@@ -1098,7 +1098,7 @@ public class BotStart {
                 return;
             }
             Group group1 = bots.get(qq).getGroup(group);
-            if(group1 == null) {
+            if (group1 == null) {
                 Start.logger.warn("机器人" + qq + "不存在群:" + group);
                 return;
             }
@@ -1183,7 +1183,7 @@ public class BotStart {
                 messageChain = messageChain.plus(item);
             }
             Friend friend = bot.getFriend(fid);
-            if(friend == null) {
+            if (friend == null) {
                 Start.logger.warn("机器人" + qq + "不存在朋友:" + fid);
                 return;
             }
@@ -1258,8 +1258,8 @@ public class BotStart {
             Bot bot = bots.get(qq);
             if (bot.getGroups().contains(id)) {
                 List<MemberInfoPack> list = new ArrayList<>();
-                Group group1  = bot.getGroup(id);
-                if(group1 == null) {
+                Group group1 = bot.getGroup(id);
+                if (group1 == null) {
                     Start.logger.warn("机器人:" + qq + "不存在群:" + id);
                     return null;
                 }
@@ -1321,7 +1321,7 @@ public class BotStart {
                 return;
             }
             ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
-            MessageReceipt message =  group.sendMessage(group.uploadImage(image));
+            MessageReceipt message = group.sendMessage(group.uploadImage(image));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -1438,7 +1438,7 @@ public class BotStart {
         Bot bot = bots.get(qq);
         try {
             Friend friend = bot.getFriend(id);
-            if(friend == null) {
+            if (friend == null) {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
@@ -1465,7 +1465,7 @@ public class BotStart {
             }
             Bot bot = bots.get(qq);
             Friend friend = bot.getFriend(id);
-            if(friend == null) {
+            if (friend == null) {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
@@ -1708,7 +1708,7 @@ public class BotStart {
             }
             Bot bot = bots.get(qq);
             Friend friend = bot.getFriend(id);
-            if(friend == null) {
+            if (friend == null) {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
@@ -1739,5 +1739,15 @@ public class BotStart {
         } catch (Exception e) {
             Start.logger.error("发送群成员戳一戳失败", e);
         }
+    }
+
+    public static String GetImg(long qq, String uuid) {
+        if (!bots.containsKey(qq)) {
+            Start.logger.warn("不存在QQ号:" + qq);
+            return null;
+        }
+        Bot bot = bots.get(qq);
+        Image image = Mirai.getInstance().createImage(uuid);
+        return Mirai.getInstance().queryImageUrl(bot, image);
     }
 }

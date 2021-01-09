@@ -591,6 +591,9 @@ Dll自行构建
 标注为`[机器人]`是框架发给插件的  
 标注为`[插件]`是插件发送给框架的
 
+### 补充说明
+1. 获取图片Url `uuid`是`{xxx-xxx-xxx-xx}.png`，获取的链接可以直接打开
+
 ## 依赖ColorMirai的插件
 [Minecraft_QQ_Gui/Cmd](https://github.com/HeartAge/Minecraft_QQ-C-Server-)  
 [GitHubPush](https://github.com/Coloryr/GitHubPush)

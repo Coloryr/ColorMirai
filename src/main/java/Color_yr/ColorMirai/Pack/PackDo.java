@@ -109,6 +109,8 @@ import java.util.Map;
 88 [机器人]其他客户端发送消息给 Bot（事件）
 89 [机器人]他客户端发送群消息（事件）
 
+90 [插件]获取图片Url
+
 127 [插件]断开连接
 */
 public class PackDo {
