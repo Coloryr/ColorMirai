@@ -20,6 +20,9 @@ import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.action.FriendNudge;
+import net.mamoe.mirai.message.action.MemberNudge;
 import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.network.WrongPasswordException;
@@ -1318,7 +1321,15 @@ public class BotStart {
                 return;
             }
             ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
-            group.sendMessage(group.uploadImage(image));
+            MessageReceipt message =  group.sendMessage(group.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
         }
@@ -1338,7 +1349,15 @@ public class BotStart {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource image = ExternalResource.create(stream);
-            group.sendMessage(group.uploadImage(image));
+            MessageReceipt message = group.sendMessage(group.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
@@ -1363,7 +1382,15 @@ public class BotStart {
                 return;
             }
             ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
-            member.sendMessage(member.uploadImage(image));
+            MessageReceipt message = member.sendMessage(member.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
         }
@@ -1388,7 +1415,15 @@ public class BotStart {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource image = ExternalResource.create(stream);
-            member.sendMessage(member.uploadImage(image));
+            MessageReceipt message = member.sendMessage(member.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
@@ -1408,7 +1443,15 @@ public class BotStart {
                 return;
             }
             ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
-            friend.sendMessage(friend.uploadImage(image));
+            MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);
         }
@@ -1428,7 +1471,15 @@ public class BotStart {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource image = ExternalResource.create(stream);
-            friend.sendMessage(friend.uploadImage(image));
+            MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);
@@ -1602,7 +1653,15 @@ public class BotStart {
                 Start.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            group.sendMessage(group.uploadVoice(voice));
+            MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送群语音失败", e);
         }
@@ -1622,7 +1681,15 @@ public class BotStart {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource voice = ExternalResource.create(stream);
-            group.sendMessage(group.uploadVoice(voice));
+            MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = qq;
+            int[] temp = obj.source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                obj.id = temp[0];
+            }
+            MessageLsit.put(obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送群语音失败", e);
@@ -1645,7 +1712,7 @@ public class BotStart {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
-            Nudge.Companion.sendNudge(friend, friend.nudge());
+            FriendNudge.sendNudge(friend, friend.nudge());
         } catch (Exception e) {
             Start.logger.error("发送好友戳一戳失败", e);
         }
@@ -1663,12 +1730,12 @@ public class BotStart {
                 Start.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            Member member = group.get(fid);
+            NormalMember member = group.get(fid);
             if (member == null) {
                 Start.logger.warn("群:" + id + "不存在群成员:" + fid);
                 return;
             }
-            Nudge.Companion.sendNudge(member, member.nudge());
+            member.nudge().sendTo(group);
         } catch (Exception e) {
             Start.logger.error("发送群成员戳一戳失败", e);
         }
