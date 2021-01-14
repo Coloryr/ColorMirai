@@ -22,6 +22,7 @@ import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.action.FriendNudge;
+import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
@@ -918,73 +919,37 @@ public class BotStart {
             }
 
             //81 [机器人]群成员戳一戳（事件）
-            @EventHandler
-            public void MemberNudgedEvent(MemberNudgedEvent event) {
-                if (PluginUtils.havePlugin())
-                    return;
-                long id = event.getGroup().getId();
-                long aid = event.getFrom().getId();
-                long fid = event.getMember().getId();
-                String name = event.getMember().getNameCard();
-                String aname = event.getFrom().getNameCard();
-                String action = event.getAction();
-                String suffix = event.getSuffix();
-                long qq = event.getBot().getId();
-                MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid,  aid, name, aname, action, suffix);
-                Tasks.add(new SendPackObj(81, JSON.toJSONString(pack), fid, id, qq));
-            }
-
             //82 [机器人]机器人被戳一戳（事件）
             @EventHandler
-            public void BotNudgedEvent(BotNudgedEvent.InGroup.ByMember event) {
+            public void MemberNudgedEvent(NudgeEvent event) {
                 if (PluginUtils.havePlugin())
                     return;
-                long id = event.getGroup().getId();
-                long fid = event.getFrom().getId();
+                long aid = event.getFrom().getId();
+                long fid = event.getTarget().getId();
+                long qq = event.getBot().getId();
                 String action = event.getAction();
                 String suffix = event.getSuffix();
-                long qq = event.getBot().getId();
-                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, fid, action, suffix);
-                Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), id, 0, qq));
-            }
-
-            @EventHandler
-            public void BotNudgedEvent(BotNudgedEvent.InGroup.ByBot event) {
-                if (PluginUtils.havePlugin())
-                    return;
-                long id = event.getGroup().getId();
-                long fid = event.getFrom().getId();
-                String action = event.getAction();
-                String suffix = event.getSuffix();
-                long qq = event.getBot().getId();
-                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, fid, action, suffix);
-                Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), id, 0, qq));
-            }
-
-            @EventHandler
-            public void BotNudgedEvent(BotNudgedEvent.InPrivateSession.ByFriend event) {
-                if (PluginUtils.havePlugin())
-                    return;
-                long id = 0;
-                long fid = event.getFrom().getId();
-                String action = event.getAction();
-                String suffix = event.getSuffix();
-                long qq = event.getBot().getId();
-                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, fid, action, suffix);
-                Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), id, 0, qq));
-            }
-
-            @EventHandler
-            public void BotNudgedEvent(BotNudgedEvent.InPrivateSession.ByBot event) {
-                if (PluginUtils.havePlugin())
-                    return;
-                long id = 0;
-                long fid = event.getFrom().getId();
-                String action = event.getAction();
-                String suffix = event.getSuffix();
-                long qq = event.getBot().getId();
-                BotNudgedEventPack pack = new BotNudgedEventPack(qq, id, fid, action, suffix);
-                Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), id, 0, qq));
+                if (event.getSubject() instanceof Group) {
+                    Group group = (Group) event.getSubject();
+                    long id = group.getId();
+                    MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+                    Tasks.add(new SendPackObj(81, JSON.toJSONString(pack), fid, id, qq));
+                } else if (event.getSubject() instanceof Stranger) {
+                    Stranger group = (Stranger) event.getSubject();
+                    long id = group.getId();
+                    MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+                    Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
+                } else if (event.getSubject() instanceof Friend) {
+                    Friend group = (Friend) event.getSubject();
+                    long id = group.getId();
+                    MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+                    Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
+                } else if (event.getSubject() instanceof Member) {
+                    Member group = (Member) event.getSubject();
+                    long id = group.getId();
+                    MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+                    Tasks.add(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
+                }
             }
 
             //86 [机器人]其他客户端上线（事件）
@@ -1752,7 +1717,7 @@ public class BotStart {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
-            FriendNudge.sendNudge(friend, friend.nudge());
+            friend.nudge().sendTo(friend);
         } catch (Exception e) {
             Start.logger.error("发送好友戳一戳失败", e);
         }
