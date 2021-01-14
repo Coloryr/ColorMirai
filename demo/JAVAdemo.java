@@ -346,8 +346,9 @@ public class Robot {
 
     public void Stop() {
         LogOut("机器人正在断开");
+        if (IsConnect)
+            SendStop();
         IsRun = false;
-        SendStop();
         if (Socket != null) {
             try {
                 Socket.close();
