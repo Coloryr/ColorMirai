@@ -1,6 +1,7 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import Color_yr.ColorMirai.Pack.PackBase;
+
 /*
 appId:：设备Id
 kind：设备类型1
