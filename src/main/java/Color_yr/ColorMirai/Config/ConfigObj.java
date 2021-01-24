@@ -13,6 +13,7 @@ public class ConfigObj {
     public String SendEncoding;
     public String ReadEncoding;
     public int SocketType;
+    public boolean AutoReconnect;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -26,5 +27,6 @@ public class ConfigObj {
         SendEncoding = "UTF-8";
         ReadEncoding = "UTF-8";
         SocketType = 0;
+        AutoReconnect = true;
     }
 }

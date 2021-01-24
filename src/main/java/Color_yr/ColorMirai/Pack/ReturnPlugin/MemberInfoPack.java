@@ -14,4 +14,10 @@ public class MemberInfoPack {
     public String name;
     public String img;
     public String per;
+    public String nameCard;
+    public String specialTitle;
+    public String avatarUrl;
+    public int muteTimeRemaining;
+    public int joinTimestamp;
+    public int lastSpeakTimestamp;
 }

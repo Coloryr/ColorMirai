@@ -226,6 +226,34 @@ public class ThePlugin {
                             if (Socket.send(PackDo.BuildPack(obj, 90)))
                                 close();
                             break;
+                        case 91:
+                            GetMemberInfo pack26 = JSON.parseObject(task.data, GetMemberInfo.class);
+                            MemberInfoPack obj1 = BotStart.getMemberInfo(pack26.qq, pack26.id, pack26.fid);
+                            if (obj1 == null)
+                                break;
+                            if (Socket.send(PackDo.BuildPack(obj1, 91)))
+                                close();
+                            break;
+                        case 92:
+                            GetMemberInfo pack27 = JSON.parseObject(task.data, GetMemberInfo.class);
+                            FriendsPack obj2 = BotStart.getFriend(pack27.qq, pack27.id);
+                            if (obj2 == null)
+                                break;
+                            if (Socket.send(PackDo.BuildPack(obj2, 92)))
+                                close();
+                            break;
+                        case 93:
+                            MusicSharePack pack28 = JSON.parseObject(task.data, MusicSharePack.class);
+                            BotStart.SendMusicShare(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            break;
+                        case 94:
+                            pack28 = JSON.parseObject(task.data, MusicSharePack.class);
+                            BotStart.SendMusicShareGroup(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            break;
+                        case 95:
+                            pack28 = JSON.parseObject(task.data, MusicSharePack.class);
+                            BotStart.SendMusicShareMember(pack28.qq, pack28.id, pack28.fid, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            break;
                         case 127:
                             close();
                             break;

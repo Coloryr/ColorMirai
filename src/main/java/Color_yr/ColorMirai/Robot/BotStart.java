@@ -21,8 +21,6 @@ import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
 import net.mamoe.mirai.message.MessageReceipt;
-import net.mamoe.mirai.message.action.FriendNudge;
-import net.mamoe.mirai.message.action.Nudge;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
@@ -64,6 +62,7 @@ public class BotStart {
                     }
                     redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
                     redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
+                    setAutoReconnectOnForceOffline(Start.Config.AutoReconnect);
                 }
             });
             try {
@@ -626,8 +625,9 @@ public class BotStart {
                 long fid = event.getFromId();
                 String message = event.getMessage();
                 long qq = event.getBot().getId();
+                long qif = event.getInvitor().getId();
                 long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 37, event));
-                MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(qq, id, fid, message, eventid);
+                MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(qq, id, fid, message, eventid, qif);
                 Tasks.add(new SendPackObj(37, JSON.toJSONString(pack), fid, id, qq));
 
             }
@@ -1232,6 +1232,31 @@ public class BotStart {
         }
     }
 
+    public static FriendsPack getFriend(long qq, long id) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            Bot bot = bots.get(qq);
+            Friend item = bot.getFriend(id);
+            if (item == null) {
+                Start.logger.warn("QQ号:" + qq + "不存在朋友:" + id);
+                return null;
+            }
+            FriendsPack info = new FriendsPack();
+            info.id = item.getId();
+            info.name = item.getNick();
+            info.img = item.getAvatarUrl();
+            info.remark = item.getRemark();
+            info.userProfile = item.queryProfile();
+            return info;
+        } catch (Exception e) {
+            Start.logger.error("获取朋友数据失败", e);
+            return null;
+        }
+    }
+
     public static List<FriendsPack> getFriends(long qq) {
         try {
             if (!bots.containsKey(qq)) {
@@ -1245,6 +1270,7 @@ public class BotStart {
                 info.id = item.getId();
                 info.name = item.getNick();
                 info.img = item.getAvatarUrl();
+                info.remark = item.getRemark();
                 list.add(info);
             }
             return list;
@@ -1268,16 +1294,63 @@ public class BotStart {
                     Start.logger.warn("机器人:" + qq + "不存在群:" + id);
                     return null;
                 }
-                for (Member item : group1.getMembers()) {
+                for (NormalMember item : group1.getMembers()) {
                     MemberInfoPack info = new MemberInfoPack();
                     info.id = item.getId();
                     info.name = item.getNameCard();
                     info.img = item.getAvatarUrl();
                     info.nick = item.getNick();
                     info.per = item.getPermission().name();
+                    info.nameCard = item.getNameCard();
+                    info.specialTitle = item.getSpecialTitle();
+                    info.avatarUrl = item.getAvatarUrl();
+                    info.muteTimeRemaining = item.getMuteTimeRemaining();
+                    info.joinTimestamp = item.getJoinTimestamp();
+                    info.lastSpeakTimestamp = item.getLastSpeakTimestamp();
                     list.add(info);
                 }
                 return list;
+            } else {
+                Start.logger.warn("不存在群:" + id);
+                return null;
+            }
+        } catch (Exception e) {
+            Start.logger.error("获取群成员数据失败", e);
+            return null;
+        }
+    }
+
+    public static MemberInfoPack getMemberInfo(long qq, long id, long fid) {
+        try {
+            if (!bots.containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return null;
+            }
+            Bot bot = bots.get(qq);
+            if (bot.getGroups().contains(id)) {
+                Group group1 = bot.getGroup(id);
+                if (group1 == null) {
+                    Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                    return null;
+                }
+                NormalMember item = group1.get(fid);
+                if (item == null) {
+                    Start.logger.warn("机器人:" + qq + "群:" + id + "不存在成员：" + fid);
+                    return null;
+                }
+                MemberInfoPack info = new MemberInfoPack();
+                info.id = item.getId();
+                info.name = item.getNameCard();
+                info.img = item.getAvatarUrl();
+                info.nick = item.getNick();
+                info.per = item.getPermission().name();
+                info.nameCard = item.getNameCard();
+                info.specialTitle = item.getSpecialTitle();
+                info.avatarUrl = item.getAvatarUrl();
+                info.muteTimeRemaining = item.getMuteTimeRemaining();
+                info.joinTimestamp = item.getJoinTimestamp();
+                info.lastSpeakTimestamp = item.getLastSpeakTimestamp();
+                return info;
             } else {
                 Start.logger.warn("不存在群:" + id);
                 return null;
@@ -1754,5 +1827,88 @@ public class BotStart {
         Bot bot = bots.get(qq);
         Image image = Mirai.getInstance().createImage(uuid);
         return Mirai.getInstance().queryImageUrl(bot, image);
+    }
+
+    public static void SendMusicShare(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+        MusicKind kind;
+        if (type == 1) {
+            kind = MusicKind.NeteaseCloudMusic;
+        } else if (type == 2) {
+            kind = MusicKind.QQMusic;
+        } else if (type == 3) {
+            kind = MusicKind.MiguMusic;
+        } else {
+            Start.logger.warn("不存在音乐类型:" + type);
+            return;
+        }
+        MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);
+        if (!bots.containsKey(qq)) {
+            Start.logger.warn("不存在QQ号:" + qq);
+            return;
+        }
+        Bot bot = bots.get(qq);
+        Friend friend = bot.getFriend(id);
+        if (friend == null) {
+            Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
+            return;
+        }
+        friend.sendMessage(music);
+    }
+
+    public static void SendMusicShareGroup(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+        MusicKind kind;
+        if (type == 1) {
+            kind = MusicKind.NeteaseCloudMusic;
+        } else if (type == 2) {
+            kind = MusicKind.QQMusic;
+        } else if (type == 3) {
+            kind = MusicKind.MiguMusic;
+        } else {
+            Start.logger.warn("不存在音乐类型:" + type);
+            return;
+        }
+        if (!bots.containsKey(qq)) {
+            Start.logger.warn("不存在QQ号:" + qq);
+            return;
+        }
+        Bot bot = bots.get(qq);
+        Group group = bot.getGroup(id);
+        if (group == null) {
+            Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+            return;
+        }
+        MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);
+        group.sendMessage(music);
+    }
+
+    public static void SendMusicShareMember(long qq, long id, long fid, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+        MusicKind kind;
+        if (type == 1) {
+            kind = MusicKind.NeteaseCloudMusic;
+        } else if (type == 2) {
+            kind = MusicKind.QQMusic;
+        } else if (type == 3) {
+            kind = MusicKind.MiguMusic;
+        } else {
+            Start.logger.warn("不存在音乐类型:" + type);
+            return;
+        }
+        if (!bots.containsKey(qq)) {
+            Start.logger.warn("不存在QQ号:" + qq);
+            return;
+        }
+        Bot bot = bots.get(qq);
+        Group group = bot.getGroup(id);
+        if (group == null) {
+            Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+            return;
+        }
+        NormalMember member = group.get(fid);
+        if (member == null) {
+            Start.logger.warn("群:" + id + "不存在群成员:" + fid);
+            return;
+        }
+        MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);
+        member.sendMessage(music);
     }
 }
