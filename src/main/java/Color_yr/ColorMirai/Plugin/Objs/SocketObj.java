@@ -13,11 +13,10 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class SocketObj {
-    public Socket Socket;
-    public WebSocket WebSocket;
-
     private final ISend Send;
     private final IRead Read;
+    public Socket Socket;
+    public WebSocket WebSocket;
 
     public SocketObj(Socket socket) {
         this.Socket = socket;

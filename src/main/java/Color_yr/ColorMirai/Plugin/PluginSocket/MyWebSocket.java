@@ -15,8 +15,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MyWebSocket implements IPluginSocket {
 
-    private WebSocketServer SocketServer;
     public static Map<WebSocket, List<String>> WebSocketData = new ConcurrentHashMap<>();
+    private WebSocketServer SocketServer;
 
     @Override
     public boolean pluginServerStart() {

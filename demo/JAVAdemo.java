@@ -9,6 +9,26 @@ import java.util.concurrent.CopyOnWriteArrayList;
 //需要使用JAVA8环境
 //需要安装fastjson库
 
+enum LogType {
+    Log, Error
+}
+
+enum StateType {
+    Disconnect, Connecting, Connect
+}
+
+interface ICall {
+    void CallAction(byte type, String data);
+}
+
+interface ILog {
+    void LogAction(LogType type, String data);
+}
+
+interface IState {
+    void StateAction(StateType type);
+}
+
 class StartPack {
     public String Name;
     public List<Byte> Reg;
@@ -103,26 +123,6 @@ class RobotTask {
     }
 }
 
-enum LogType {
-    Log, Error
-}
-
-enum StateType {
-    Disconnect, Connecting, Connect
-}
-
-interface ICall {
-    void CallAction(byte type, String data);
-}
-
-interface ILog {
-    void LogAction(LogType type, String data);
-}
-
-interface IState {
-    void StateAction(StateType type);
-}
-
 class RobotConfig {
     public String IP;
     public int Port;
@@ -143,11 +143,10 @@ public class Robot {
     public List<Long> QQs;
     public boolean IsRun;
     public boolean IsConnect;
-
+    public boolean IsFirst = true;
     private ICall RobotCallEvent;
     private ILog RobotLogEvent;
     private IState RobotStateEvent;
-
     private Socket Socket;
     private Thread ReadThread;
     private Thread DoThread;
@@ -155,9 +154,6 @@ public class Robot {
     private List<byte[]> QueueSend;
     private StartPack PackStart;
     private RobotConfig Config;
-
-    public boolean IsFirst = true;
-
     private int Times = 0;
 
     public void Set(RobotConfig Config) {
