@@ -8,10 +8,7 @@ import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
-import net.mamoe.mirai.contact.Friend;
-import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.Member;
-import net.mamoe.mirai.contact.Stranger;
+import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
@@ -529,9 +526,15 @@ public class BotEvent extends SimpleListenerHost {
         long fid = event.getFromId();
         String message = event.getMessage();
         long qq = event.getBot().getId();
-        long qif = event.getInvitor().getId();
+        NormalMember temp = event.getInvitor();
+        long qid;
+        if (temp == null) {
+            qid = 0;
+        } else {
+            qid = temp.getId();
+        }
         long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 37, event));
-        MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(qq, id, fid, message, eventid, qif);
+        MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(qq, id, fid, message, eventid, qid);
         BotStart.addTask(new SendPackObj(37, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -684,7 +687,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //47 [机器人]在群临时会话消息发送后广播（事件）
     @EventHandler
-    public void onTempMessagePostSendEvent(TempMessagePostSendEvent event) {
+    public void onTempMessagePostSendEvent(GroupTempMessagePostSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroup().getId();
@@ -705,7 +708,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //48 [机器人]在发送群临时会话消息前广播（事件）
     @EventHandler
-    public void onTempMessagePreSendEvent(TempMessagePreSendEvent event) {
+    public void onTempMessagePreSendEvent(GroupTempMessagePreSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroup().getId();
@@ -861,7 +864,13 @@ public class BotEvent extends SimpleListenerHost {
         if (event.getKind() != null) {
             kind = event.getKind().name();
         }
-        String platform = event.getClient().getInfo().getPlatform().toString();
+        String platform;
+        Platform temp = event.getClient().getInfo().getPlatform();
+        if (temp == null) {
+            platform = "";
+        } else {
+            platform = temp.toString();
+        }
         String deviceName = event.getClient().getInfo().getDeviceName();
         String deviceKind = event.getClient().getInfo().getDeviceKind();
         long qq = event.getBot().getId();
@@ -875,7 +884,13 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         int appId = event.getClient().getInfo().getAppId();
-        String platform = event.getClient().getInfo().getPlatform().toString();
+        Platform temp = event.getClient().getInfo().getPlatform();
+        String platform;
+        if (temp == null) {
+            platform = "";
+        } else {
+            platform = temp.toString();
+        }
         String deviceName = event.getClient().getInfo().getDeviceName();
         String deviceKind = event.getClient().getInfo().getDeviceKind();
         long qq = event.getBot().getId();
@@ -889,7 +904,13 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         int appId = event.getClient().getInfo().getAppId();
-        String platform = event.getClient().getInfo().getPlatform().toString();
+        Platform temp = event.getClient().getInfo().getPlatform();
+        String platform;
+        if (temp == null) {
+            platform = "";
+        } else {
+            platform = temp.toString();
+        }
         String deviceName = event.getClient().getInfo().getDeviceName();
         String deviceKind = event.getClient().getInfo().getDeviceKind();
         String senderName = event.getSenderName();
