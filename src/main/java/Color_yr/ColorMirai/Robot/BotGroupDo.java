@@ -151,4 +151,24 @@ public class BotGroupDo {
             Start.logger.error("设置群名失败", e);
         }
     }
+
+    public static void setEssenceMessage(long qq, long id, int mid) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            MessageSaveObj obj = BotStart.getMessage(qq, mid);
+            if (obj != null)
+                group.setEssenceMessage(obj.source);
+        } catch (Exception e) {
+            Start.logger.error("设置群精华消息失败", e);
+        }
+    }
 }

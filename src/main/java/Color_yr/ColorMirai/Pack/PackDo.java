@@ -117,6 +117,8 @@ import java.util.Map;
 94 [插件]发送群音乐分享
 95 [插件]发送群成员音乐分享
 
+96 [插件]设置群精华消息
+
 127 [插件]断开连接
 */
 public class PackDo {

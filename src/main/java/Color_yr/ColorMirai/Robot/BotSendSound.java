@@ -34,7 +34,7 @@ public class BotSendSound {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送群语音失败", e);
         }
@@ -62,7 +62,7 @@ public class BotSendSound {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送群语音失败", e);

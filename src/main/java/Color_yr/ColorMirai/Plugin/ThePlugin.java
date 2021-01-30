@@ -176,7 +176,7 @@ public class ThePlugin {
                             break;
                         case 71:
                             ReCallMessagePack pack16 = JSON.parseObject(task.data, ReCallMessagePack.class);
-                            BotStart.ReCall(pack16.id);
+                            BotStart.ReCall(pack16.qq, pack16.id);
                             break;
                         case 74:
                             Map<String, String> formdata3 = PackDo.parseDataFromPack(task.data);
@@ -253,6 +253,10 @@ public class ThePlugin {
                         case 95:
                             pack28 = JSON.parseObject(task.data, MusicSharePack.class);
                             BotSendMusicShare.SendMusicShareMember(pack28.qq, pack28.id, pack28.fid, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            break;
+                        case 96:
+                            EssenceMessagePack pack29 = JSON.parseObject(task.data, EssenceMessagePack.class);
+                            BotGroupDo.setEssenceMessage(pack29.qq, pack29.id, pack29.mid);
                             break;
                         case 127:
                             close();

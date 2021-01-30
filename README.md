@@ -94,7 +94,9 @@ java -jar ColorMirai-3.X-SNAPSHOT-all.jar
     "SendEncoding": "UTF-8",
     "LoginType": 0,
     "escapeSelf": true,
-    "SocketType": 0
+    "SocketType": 0,
+    "AutoReconnect": true,
+    "HighwayUpload": 10
 }
 ```
 
@@ -115,6 +117,8 @@ java -jar ColorMirai-3.X-SNAPSHOT-all.jar
 - `SocketType`：插件连接方式
     - 普通的Socket [0]
     - WebSocket [1]
+- `AutoReconnect`：自动重连
+- `HighwayUpload`：上传通道数
 
 设置完成后再次启动ColorMirai，出现
 
@@ -131,15 +135,15 @@ java -jar ColorMirai-3.X-SNAPSHOT-all.jar
 
 ## 目前的SDK代码
 
-[C#](demo/C%23demo.cs)  
-[JAVA](demo/JAVAdemo.java)  
+[C#](SDKs/C%23_SDK.cs)  
+[JAVA](SDKs/JAVA_SDK.java)  
 示例代码不包含Main函数，可以作为库用  
 使用方法看下面的[插件教程](#插件教程)所示
 
 ## 插件教程
 
 ColorMirai使用socket/WebSocket方式让机器人和插件互相链接  
-Socket数据包的接受和封装在Demo已经写完了，只需要引用一下就好了
+Socket数据包的接受和封装在SDK已经写完了，只需要引用一下就好了
 
 ### 使用说明
 
@@ -167,7 +171,7 @@ Socket数据包的接受和封装在Demo已经写完了，只需要引用一下�
 ### C#
 
 1. 准备工作  
-   首先下载[Demo代码](/demo/C%23demo.cs)  并且导入到你的IDE  
+   首先下载[SDK代码](/SDKs/C%23_SDK.cs)  并且导入到你的IDE  
    下载[net5](https://dotnet.microsoft.com/download/dotnet/5.0) 安装SDK  
    下载[Visual Studio](https://visualstudio.microsoft.com/zh-hans/vs/)  
    新建`.net core`项目，并选择`net5`  
@@ -395,7 +399,7 @@ namespace ColoryrSDK
 ### JAVA
 
 1. 准备工作  
-   首先下载[Demo代码](/demo/JAVAdemo.java)并且导入到你的IDE  
+   首先下载[SDK代码](/SDKs/JAVA_SDK.java)并且导入到你的IDE  
    导入[fastjson](https://github.com/alibaba/fastjson/) 库
 
 2. 开始编写代码  

@@ -37,7 +37,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
         }
@@ -65,7 +65,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送群图片失败", e);
@@ -98,7 +98,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
         }
@@ -131,7 +131,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送私聊图片失败", e);
@@ -159,7 +159,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);
         }
@@ -187,7 +187,7 @@ public class BotSendImage {
             if (temp.length != 0 && temp[0] != -1) {
                 obj.id = temp[0];
             }
-            BotStart.addMessage(obj.id, obj);
+            BotStart.addMessage(qq, obj.id, obj);
             stream.close();
         } catch (Exception e) {
             Start.logger.error("发送朋友失败", e);

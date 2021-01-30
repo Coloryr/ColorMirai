@@ -14,6 +14,7 @@ public class ConfigObj {
     public String ReadEncoding;
     public int SocketType;
     public boolean AutoReconnect;
+    public int HighwayUpload;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -28,5 +29,6 @@ public class ConfigObj {
         ReadEncoding = "UTF-8";
         SocketType = 0;
         AutoReconnect = true;
+        HighwayUpload = 10;
     }
 }

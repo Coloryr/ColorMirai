@@ -733,8 +733,8 @@ public class BotEvent extends SimpleListenerHost {
         call.source = event.getSource();
         call.time = -1;
         call.id = call.source.getIds()[0];
-        BotStart.addMessage(call.id, call);
         long qq = event.getBot().getId();
+        BotStart.addMessage(qq, call.id, call);
         GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, name, message);
         BotStart.addTask(new SendPackObj(49, JSON.toJSONString(pack), fid, id, qq));
     }
@@ -753,9 +753,9 @@ public class BotEvent extends SimpleListenerHost {
         call.source = event.getSource();
         call.time = -1;
         call.id = call.source.getIds()[0];
-        BotStart.addMessage(call.id, call);
         int time = event.getTime();
         long qq = event.getBot().getId();
+        BotStart.addMessage(qq, call.id, call);
         TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, name, message, time);
         BotStart.addTask(new SendPackObj(50, JSON.toJSONString(pack), fid, id, qq));
     }
@@ -773,9 +773,9 @@ public class BotEvent extends SimpleListenerHost {
         call.source = event.getSource();
         call.time = -1;
         call.id = call.source.getIds()[0];
-        BotStart.addMessage(call.id, call);
         int time = event.getTime();
         long qq = event.getBot().getId();
+        BotStart.addMessage(qq, call.id, call);
         FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, name, message, time);
         BotStart.addTask(new SendPackObj(51, JSON.toJSONString(pack), id, 0, qq));
     }

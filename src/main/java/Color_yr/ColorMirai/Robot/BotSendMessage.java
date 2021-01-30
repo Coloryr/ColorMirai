@@ -32,7 +32,7 @@ public class BotSendMessage {
                     messageChain = messageChain.plus(new At(member.getId()));
                 } else if (item.startsWith("quote:")) {
                     int id = Integer.parseInt(item.replace("quote:", ""));
-                    MessageSaveObj call = BotStart.getMessage(id);
+                    MessageSaveObj call = BotStart.getMessage(qq, id);
                     if (call == null)
                         continue;
                     if (call.source == null)
@@ -51,7 +51,7 @@ public class BotSendMessage {
                 call.source = source;
                 call.time = 120;
                 call.id = source.getIds()[0];
-                BotStart.addMessage(call.id, call);
+                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             Start.logger.error("发送群消息失败", e);
@@ -85,7 +85,7 @@ public class BotSendMessage {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(call.id, call);
+                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             Start.logger.error("发送群私聊消息失败", e);
@@ -115,7 +115,7 @@ public class BotSendMessage {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(call.id, call);
+                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             Start.logger.error("发送朋友消息失败", e);

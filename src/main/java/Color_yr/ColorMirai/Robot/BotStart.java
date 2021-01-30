@@ -12,18 +12,15 @@ import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class BotStart {
 
     private static final List<SendPackObj> Tasks = new CopyOnWriteArrayList<>();
-    private static final Map<Integer, MessageSaveObj> MessageList = new ConcurrentHashMap<>();
+    private static final Map<Long, Map<Integer, MessageSaveObj>> MessageList = new ConcurrentHashMap<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
-    private static final List<Integer> reList = new CopyOnWriteArrayList<>();
+    private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
 
     private static Thread EventDo;
     private static boolean isRun;
@@ -44,6 +41,7 @@ public class BotStart {
                             setProtocol(MiraiProtocol.ANDROID_PAD);
                             break;
                     }
+                    setHighwayUploadCoroutineCount(Start.Config.HighwayUpload);
                     redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
                     redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
                     setAutoReconnectOnForceOffline(Start.Config.AutoReconnect);
@@ -69,6 +67,7 @@ public class BotStart {
 
         for (Bot item : bots.values()) {
             item.getEventChannel().registerListenerHost(host);
+            MessageList.put(item.getId(), new ConcurrentHashMap<>());
             break;
         }
 
@@ -95,12 +94,19 @@ public class BotStart {
         ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
             if (!reList.isEmpty()) {
-                for (int item : reList) {
-                    if (MessageList.containsKey(item)) {
-                        MessageSaveObj item1 = MessageList.remove(item);
-                        if (item1.time > 0 || item1.time == -1)
+                for (ReCallObj item : reList) {
+                    if (MessageList.containsKey(item.bot)) {
+                        Map<Integer, MessageSaveObj> list = MessageList.get(item.bot);
+                        MessageSaveObj obj = list.get(item.mid);
+                        if (obj == null) {
+                            Start.logger.warn("不存在消息:" + item.mid);
+                            continue;
+                        }
+                        if (obj.time > 0 || obj.time == -1)
                             try {
-                                Mirai.getInstance().recallMessage(bots.get(item1.sourceQQ), item1.source);
+                                Mirai.getInstance().recallMessage(bots.get(item.bot), obj.source);
+                                list.remove(item.mid);
+                                MessageList.put(item.bot, list);
                             } catch (Exception e) {
                                 Start.logger.error("消息撤回失败", e);
                             }
@@ -108,16 +114,17 @@ public class BotStart {
                 }
                 reList.clear();
             }
-            for (Map.Entry<Integer, MessageSaveObj> item : MessageList.entrySet()) {
-                MessageSaveObj call = item.getValue();
-                if (call.time > 0)
-                    call.time--;
-                if (call.time != 0) {
-                    MessageList.put(item.getKey(), call);
+            for (Map<Integer, MessageSaveObj> item : MessageList.values()) {
+                for (Map.Entry<Integer, MessageSaveObj> item1 : item.entrySet()) {
+                    item1.getValue().time -= 1;
                 }
-            }
-            if (MessageList.size() >= Start.Config.MaxList) {
-                MessageList.clear();
+                if (item.size() >= Start.Config.MaxList) {
+                    Iterator<Integer> iterator = item.keySet().iterator();
+                    if (iterator.hasNext()) {
+                        iterator.next();
+                        iterator.remove();
+                    }
+                }
             }
         }, 0, 1, TimeUnit.SECONDS);
         Start.logger.info("机器人已启动");
@@ -143,13 +150,21 @@ public class BotStart {
         }
     }
 
-    public static MessageSaveObj getMessage(int index) {
-        return MessageList.get(index);
+    public static MessageSaveObj getMessage(long qq, int index) {
+        Map<Integer, MessageSaveObj> list = MessageList.get(qq);
+        if (list == null) {
+            Start.logger.warn("不存在QQ:" + qq);
+            return null;
+        }
+        return list.get(index);
     }
 
-    public static void ReCall(Integer id) {
+    public static void ReCall(long qq, int id) {
         try {
-            reList.add(id);
+            ReCallObj obj = new ReCallObj();
+            obj.mid = id;
+            obj.bot = qq;
+            reList.add(obj);
         } catch (Exception e) {
             Start.logger.error("消息撤回失败", e);
         }
@@ -159,12 +174,17 @@ public class BotStart {
         return bots;
     }
 
-    public static void addMessage(int data, MessageSaveObj obj) {
-        MessageList.put(data, obj);
+    public static void addMessage(long qq, int data, MessageSaveObj obj) {
+        Map<Integer, MessageSaveObj> list = MessageList.get(qq);
+        if (list == null) {
+            Start.logger.warn("不存在QQ:" + qq);
+        } else {
+            list.put(data, obj);
+            MessageList.put(qq, list);
+        }
     }
 
     public static List<Long> getBotsKey() {
         return new ArrayList<>(bots.keySet());
     }
-
 }
