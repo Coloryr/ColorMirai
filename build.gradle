@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.1.7-SNAPSHOT'
+version '3.1.8-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -21,7 +21,7 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.73'
     compile "org.java-websocket:Java-WebSocket:1.5.1"
 
-    compile 'net.mamoe:mirai-core-all:2.2.0'
+    compile 'net.mamoe:mirai-core-jvm:2.2.2'
 
 }
 tasks.withType(JavaCompile) {
