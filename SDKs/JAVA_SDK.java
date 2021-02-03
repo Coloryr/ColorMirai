@@ -214,7 +214,7 @@ public class Robot {
                         Socket.getInputStream().read(data);
                         byte type = data[data.length - 1];
                         data[data.length - 1] = 0;
-                        QueueRead.add(new RobotTask(type, new String(data)));
+                        QueueRead.add(new RobotTask(type, new String(data, StandardCharsets.UTF_8)));
                     } else if (Socket.getInputStream().available() < 0) {
                         LogOut("机器人连接中断");
                         RobotStateEvent.StateAction(StateType.Disconnect);
