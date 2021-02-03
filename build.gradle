@@ -10,6 +10,7 @@ version '3.1.10-SNAPSHOT'
 repositories {
     mavenCentral()
     jcenter()
+    maven { url = uri("https://dl.bintray.com/karlatemp/misc") }
 }
 
 dependencies {

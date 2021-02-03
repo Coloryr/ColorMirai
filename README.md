@@ -122,6 +122,8 @@ pause
 1. 将协议切换成`手表 [1]`
 2. 登录成功后, 下次登录可以选择`安卓 [0]`
 
+还是无解可以尝试[这个](https://github.com/project-mirai/mirai-login-solver-selenium/#%E6%89%8B%E5%8A%A8%E5%AE%8C%E6%88%90%E6%BB%91%E5%8A%A8%E9%AA%8C%E8%AF%81)
+
 ## 目前的SDK代码
 
 [C#](SDKs/C%23_SDK.cs)  
