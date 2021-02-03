@@ -19,17 +19,16 @@
 
 ![Gradle构建](https://github.com/Coloryr/ColorMirai/workflows/Gradle%E6%9E%84%E5%BB%BA/badge.svg)
 
-*需要openjdk8环境*
-
-*运行环境看你的构建环境*
-
-*构建不了可以去群里找人要*
+需要openjdk8环境  
+运行环境看你的构建环境  
+构建不了可以去群里找人要，也可以[从这里下载](https://github.com/Coloryr/ColorMirai/actions)  
+(`workflow runs`里面选择最新的构建，点进去，在`Artifacts`里面选择`ColorMirai`)
 
 请根据自己的系统先安装openjdk8并且设置好环境变量
 
-- 安装git
-- 右键打开git bash  
-  输入下面的指令（如果慢的话, 可能需要梯子等工具辅助下载）
+1. 安装git
+2. 右键打开git bash  
+3. 输入下面的指令（如果慢的话, 可能需要梯子等工具辅助下载）
 
 ```bash
 git clone https://github.com/Coloryr/ColorMirai.git
@@ -39,38 +38,30 @@ cd ColorMirai
 
 在`BUILD SUCCESSFUL`之后, 你会在以下路径找到一个jar文件
 
-`build/libs/ColorMirai-3.1.1-SNAPSHOT-all.jar`
+`build/libs/ColorMirai-3.x.x-SNAPSHOT-all.jar`
 
 ## 启动
 
-1. 启动ColorMirai，必须使用JAVA8及以上，推荐使用JAVA14启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
-   请务必用openjdk启动  
+1. 启动ColorMirai，必须使用openjdk8及以上，推荐使用openjdk15启动  
    请务必用openjdk启动  
    请务必用openjdk启动  
    请务必用openjdk启动
 
+如果没有openjdk，群文件有openjdk15，下载安装之后新建一个`.cmd`，在里面输入
+```Cmd
+"C:\Program Files\AdoptOpenJDK\jdk-15.0.2.7-hotspot\bin\java.exe" -Xmx1024M -jar ColorMirai-3.x.x-SNAPSHOT-all.jar
+pause
 ```
-java -jar ColorMirai-3.X-SNAPSHOT-all.jar
+- `jdk-15.0.2.7-hotspot`要根据你安装的版本修改  
+`ColorMirai-3.x.x-SNAPSHOT-all`也根据你运行的版本修改
+
+如果你的系统环境变量默认是openjdk，则cmd内容是下面
+```
+java -Xmx1024M -jar ColorMirai-3.X-SNAPSHOT-all.jar
+pause
 ```
 
-首次启动后, 会生成`info.json`和`MainConfig.json`文件
+首次启动后, 会生成四个日志文件夹和`info.json`、`MainConfig.json`两个配置文件
 
 - `info.json`是设备名称，不需要特别设置
 - `MainConfig.json`是配置文件
@@ -121,11 +112,9 @@ java -jar ColorMirai-3.X-SNAPSHOT-all.jar
 - `HighwayUpload`：上传通道数
 
 设置完成后再次启动ColorMirai，出现
-
 ```
 [INFO] Socket已启动: 23333
 ``` 
-
 说明机器人已成功启动
 
 ### 无法登录临时解决
