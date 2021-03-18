@@ -12,10 +12,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.Scanner;
 
 public class Start {
     public static final Logger logger = LogManager.getLogger("ColorMirai");
+    public static final Base64.Decoder decoder = Base64.getDecoder();
     public static String RunDir;
     public static ConfigObj Config;
     public static Charset SendCharset;
@@ -56,9 +58,9 @@ public class Start {
                 switch (arg[0]) {
                     case "help":
                         logger.info("插件帮助");
-                        logger.info("输入 stop 关闭机器人");
-                        logger.info("输入 list 获取连接的插件列表");
-                        logger.info("输入 close 插件 断开插件连接");
+                        logger.info("stop 关闭机器人");
+                        logger.info("list 获取连接的插件列表");
+                        logger.info("close [插件] 断开插件连接");
                         break;
                     case "list":
                         logger.info("插件列表");
@@ -82,7 +84,6 @@ public class Start {
                         logger.info("正在停止");
                         PluginSocket.pluginServerStop();
                         BotStart.stop();
-                        Thread.sleep(500);
                         System.exit(0);
                         return;
                 }

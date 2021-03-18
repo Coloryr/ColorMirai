@@ -21,33 +21,22 @@ public class BotStart {
     private static final Map<Long, Map<Integer, MessageSaveObj>> MessageList = new ConcurrentHashMap<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
     private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
-
-    private static Thread EventDo;
-    private static boolean isRun;
+    private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
+    private static final ScheduledExecutorService service1 = Executors.newSingleThreadScheduledExecutor();
 
     public static boolean Start() {
         for (QQsObj item : Start.Config.QQs) {
-            Bot bot = BotFactory.INSTANCE.newBot(item.QQ, item.Password, new BotConfiguration() {
-                {
-                    fileBasedDeviceInfo(Start.RunDir + "info.json");
-                    switch (Start.Config.LoginType) {
-                        case 0:
-                            setProtocol(MiraiProtocol.ANDROID_PHONE);
-                            break;
-                        case 1:
-                            setProtocol(MiraiProtocol.ANDROID_WATCH);
-                            break;
-                        case 2:
-                            setProtocol(MiraiProtocol.ANDROID_PAD);
-                            break;
-                    }
-                    setHighwayUploadCoroutineCount(Start.Config.HighwayUpload);
-                    redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
-                    redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
-                    setAutoReconnectOnForceOffline(Start.Config.AutoReconnect);
-                }
-            });
+            Bot bot = BotFactory.INSTANCE.newBot(item.QQ, item.Password, new BotConfiguration() {{
+                fileBasedDeviceInfo(Start.RunDir + item.Info);
+                setProtocol(item.LoginType);
+                setHighwayUploadCoroutineCount(Start.Config.HighwayUpload);
+                redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
+                redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
+                setAutoReconnectOnForceOffline(Start.Config.AutoReconnect);
+            }});
             try {
+                Start.logger.info("正在登录QQ:" + item.QQ);
+                Start.logger.info("如果登录卡住，去看看BotLog文件夹里面的日志有没有验证码");
                 bot.login();
                 bots.put(item.QQ, bot);
                 Start.logger.info("QQ:" + item.QQ + "已登录");
@@ -70,28 +59,6 @@ public class BotStart {
             MessageList.put(item.getId(), new ConcurrentHashMap<>());
             break;
         }
-
-        isRun = true;
-        EventDo = new Thread(() -> {
-            while (isRun) {
-                try {
-                    if (!Tasks.isEmpty()) {
-                        SendPackObj task = Tasks.remove(0);
-                        task.data += " ";
-                        byte[] temp = task.data.getBytes(Start.SendCharset);
-                        temp[temp.length - 1] = task.index;
-                        for (ThePlugin item : PluginUtils.getAll()) {
-                            item.callEvent(task, temp);
-                        }
-                    }
-                    Thread.sleep(100);
-                } catch (Exception e) {
-                    Start.logger.error("插件处理事件出现问题", e);
-                }
-            }
-        });
-        EventDo.start();
-        ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
         service.scheduleAtFixedRate(() -> {
             if (!reList.isEmpty()) {
                 for (ReCallObj item : reList) {
@@ -127,6 +94,17 @@ public class BotStart {
                 }
             }
         }, 0, 1, TimeUnit.SECONDS);
+        service1.scheduleAtFixedRate(()-> {
+            if (!Tasks.isEmpty()) {
+                SendPackObj task = Tasks.remove(0);
+                task.data += " ";
+                byte[] temp = task.data.getBytes(Start.SendCharset);
+                temp[temp.length - 1] = task.index;
+                for (ThePlugin item : PluginUtils.getAll()) {
+                    item.callEvent(task, temp);
+                }
+            }
+        }, 0, 100, TimeUnit.MICROSECONDS);
         Start.logger.info("机器人已启动");
         return true;
     }
@@ -137,14 +115,13 @@ public class BotStart {
 
     public static void stop() {
         try {
-            isRun = false;
+            service.shutdown();
+            service1.shutdown();
             if (bots.size() != 0)
                 for (Bot item : bots.values()) {
-                    item.close(new Throwable());
+                    item.closeAndJoin(null);
                 }
             bots.clear();
-            if (EventDo != null)
-                EventDo.join();
         } catch (Exception e) {
             Start.logger.error("关闭机器人时出现错误", e);
         }

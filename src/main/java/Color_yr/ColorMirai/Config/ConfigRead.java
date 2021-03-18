@@ -22,7 +22,7 @@ public class ConfigRead {
                 InputStreamReader reader = new InputStreamReader(
                         new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
-                char[] buf = new char[1024];
+                char[] buf = new char[4096];
                 int length;
                 StringBuilder data = new StringBuilder();
                 while ((length = bf.read(buf)) != -1) {
@@ -35,9 +35,6 @@ public class ConfigRead {
                 }
                 bf.close();
                 reader.close();
-            }
-            for (QQsObj item : Start.Config.QQs) {
-                Start.logger.info("QQ号：" + item.QQ);
             }
 
             if (Start.Config.ReadEncoding == null || Start.Config.ReadEncoding.isEmpty()) {

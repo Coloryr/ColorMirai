@@ -11,8 +11,6 @@ import java.io.FileInputStream;
 import java.util.Base64;
 
 public class BotSendSound {
-    private static final Base64.Decoder decoder = Base64.getDecoder();
-
     public static void SendGroupSound(long qq, long id, String sound) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
@@ -20,7 +18,7 @@ public class BotSendSound {
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            ExternalResource voice = ExternalResource.create(new ByteArrayInputStream(decoder.decode(sound)));
+            ExternalResource voice = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(sound)));
             Group group = bot.getGroup(id);
             if (group == null) {
                 Start.logger.warn("机器人:" + qq + "不存在群:" + id);

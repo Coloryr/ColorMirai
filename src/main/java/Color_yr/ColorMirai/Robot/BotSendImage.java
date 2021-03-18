@@ -13,7 +13,6 @@ import java.io.FileInputStream;
 import java.util.Base64;
 
 public class BotSendImage {
-    private static final Base64.Decoder decoder = Base64.getDecoder();
 
     public static void sendGroupImage(long qq, long id, String img) {
         try {
@@ -28,7 +27,7 @@ public class BotSendImage {
                 Start.logger.error("没有群：" + id);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
+            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(img)));
             MessageReceipt message = group.sendMessage(group.uploadImage(image));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
@@ -89,7 +88,7 @@ public class BotSendImage {
                 Start.logger.warn("群:" + id + "不存在群成员:" + fid);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
+            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(img)));
             MessageReceipt message = member.sendMessage(member.uploadImage(image));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
@@ -150,7 +149,7 @@ public class BotSendImage {
                 Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(decoder.decode(img)));
+            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(img)));
             MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();

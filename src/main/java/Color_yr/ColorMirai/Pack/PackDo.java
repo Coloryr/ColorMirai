@@ -119,6 +119,8 @@ import java.util.Map;
 
 96 [插件]设置群精华消息
 
+97 [插件]消息队列
+
 127 [插件]断开连接
 */
 public class PackDo {

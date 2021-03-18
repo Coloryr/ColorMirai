@@ -7,16 +7,29 @@ import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.ReImagePack;
+import Color_yr.ColorMirai.Plugin.Objs.BuffObj;
 import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.*;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
-import net.mamoe.mirai.contact.GroupSettings;
+import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.contact.*;
+import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.At;
+import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.QuoteReply;
+import net.mamoe.mirai.utils.ExternalResource;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThePlugin {
@@ -24,8 +37,8 @@ public class ThePlugin {
     private final List<RePackObj> Tasks = new CopyOnWriteArrayList<>();
     private final List<Long> Groups = new CopyOnWriteArrayList<>();
     private final List<Long> QQs = new CopyOnWriteArrayList<>();
+    private final Map<String, BuffObj> MessageBuff = new ConcurrentHashMap<>();
 
-    private final Thread read;
     private final Thread doRead;
 
     private String name;
@@ -35,9 +48,8 @@ public class ThePlugin {
 
     public ThePlugin(SocketObj Socket) {
         this.Socket = Socket;
-        read = new Thread(this::start);
         doRead = new Thread(this::startRead);
-        read.start();
+        new Thread(this::start).start();
     }
 
     public String getName() {
@@ -258,6 +270,9 @@ public class ThePlugin {
                             EssenceMessagePack pack29 = JSON.parseObject(task.data, EssenceMessagePack.class);
                             BotGroupDo.setEssenceMessage(pack29.qq, pack29.id, pack29.mid);
                             break;
+                        case 97:
+                            addBuff(task.data);
+                            break;
                         case 127:
                             close();
                             break;
@@ -321,6 +336,165 @@ public class ThePlugin {
                     break;
                 Start.logger.error("连接发生异常", e);
                 close();
+            }
+        }
+    }
+
+    public void addBuff(String pack) {
+        MessageBuffPack temp;
+        if (pack.startsWith("{")) {
+            temp = JSON.parseObject(pack, MessageBuffPack.class);
+        } else {
+            Map<String, String> fromPack = PackDo.parseDataFromPack(pack);
+            temp = new MessageBuffPack();
+            if (!fromPack.containsKey("qq")) {
+                return;
+            }
+            if (!fromPack.containsKey("type")) {
+                return;
+            }
+            temp.qq = Long.parseLong(fromPack.get("qq"));
+            temp.type = Integer.parseInt(fromPack.get("type"));
+            if (fromPack.containsKey("id"))
+                temp.id = Long.parseLong(fromPack.get("id"));
+            if (fromPack.containsKey("fid"))
+                temp.id = Long.parseLong(fromPack.get("fid"));
+            temp.text = new ArrayList<>();
+            if (fromPack.containsKey("img")) {
+                temp.img = fromPack.get("img");
+            }
+            if (fromPack.containsKey("send")) {
+                String data = fromPack.get("send");
+                if (data.equalsIgnoreCase("true"))
+                    temp.send = true;
+            }
+        }
+        if(temp == null)
+            return;
+        Bot bot = BotStart.getBots().get(temp.qq);
+        if (bot == null) {
+            Start.logger.warn("不存在QQ:" + temp.qq);
+            return;
+        }
+        BuffObj item = null;
+        if (temp.type == 0) {
+            if (temp.id == 0) {
+                return;
+            }
+            item = MessageBuff.get("F:" + temp.id);
+            if (item == null) {
+                item = new BuffObj();
+                Friend contact = bot.getFriend(temp.id);
+                if (contact == null) {
+                    Start.logger.warn("QQ:" + temp.qq + " 不存在朋友:" + temp.id);
+                    return;
+                }
+                item.contact = contact;
+                item.message = MessageUtils.newChain();
+            }
+        }
+        if (temp.type == 1) {
+            if (temp.id == 0) {
+                return;
+            }
+            item = MessageBuff.get("G:" + temp.id);
+            if (item == null) {
+                item = new BuffObj();
+                Group contact = bot.getGroup(temp.id);
+                if (contact == null) {
+                    Start.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
+                    return;
+                }
+                item.contact = contact;
+                item.message = MessageUtils.newChain();
+            }
+        }
+        if (temp.type == 2) {
+            if (temp.id == 0 || temp.fid == 0) {
+                return;
+            }
+            item = MessageBuff.get("G:" + temp.id + "F:" + temp.id);
+            if (item == null) {
+                item = new BuffObj();
+                Group group = bot.getGroup(temp.id);
+                if (group == null) {
+                    Start.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
+                    return;
+                }
+                NormalMember contact = group.get(temp.fid);
+                if (contact == null) {
+                    Start.logger.warn("QQ:" + temp.qq + " 群:" + temp.id + " 不存在成员:" + temp.fid);
+                    return;
+                }
+                item.contact = contact;
+                item.message = MessageUtils.newChain();
+            }
+        }
+        if (item == null) {
+            return;
+        }
+        for (String item1 : temp.text) {
+            if (item1.startsWith("at:")) {
+                if (temp.type == 1) {
+                    Group group1 = bot.getGroup(temp.id);
+                    if (group1 == null)
+                        continue;
+                    NormalMember member = group1.get(Long.parseLong(item1.replace("at:", "")));
+                    if (member == null)
+                        continue;
+                    item.message = item.message.plus(new At(member.getId()));
+                } else {
+                    item1 = item1.replace("at:", "");
+                    item.message = item.message.plus(item1);
+                }
+            } else if (item1.startsWith("quote:")) {
+                int id = Integer.parseInt(item1.replace("quote:", ""));
+                MessageSaveObj call = BotStart.getMessage(temp.qq, id);
+                if (call == null || call.source == null)
+                    continue;
+                QuoteReply quote = new QuoteReply(call.source);
+                item.message = item.message.plus(quote);
+            } else {
+                item.message = item.message.plus(item1);
+            }
+        }
+        if (temp.img != null && !temp.img.isEmpty()) {
+            try {
+                ExternalResource image = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(temp.img)));
+                item.message = item.message.plus(item.contact.uploadImage(image));
+            } catch (IOException e) {
+                Start.logger.error("消息队列添加图片失败", e);
+                e.printStackTrace();
+            }
+        }
+        if (temp.imgurl != null && !temp.imgurl.isEmpty()) {
+            try {
+                FileInputStream stream = new FileInputStream(temp.imgurl);
+                ExternalResource image = ExternalResource.create(stream);
+                item.message = item.message.plus(item.contact.uploadImage(image));
+                stream.close();
+            } catch (IOException e) {
+                Start.logger.error("消息队列添加图片失败", e);
+                e.printStackTrace();
+            }
+        }
+        if (temp.send) {
+            MessageReceipt message = item.contact.sendMessage(item.message);
+            MessageSaveObj obj = new MessageSaveObj();
+            obj.source = message.getSource();
+            obj.sourceQQ = temp.qq;
+            int[] temp1 = obj.source.getIds();
+            if (temp1.length != 0 && temp1[0] != -1) {
+                obj.id = temp1[0];
+            }
+            BotStart.addMessage(temp.qq, obj.id, obj);
+        } else {
+            if (temp.type == 0) {
+                MessageBuff.put("F:" + temp.id, item);
+            } else if (temp.type == 1) {
+                MessageBuff.put("G:" + temp.id, item);
+            } else if (temp.type == 2) {
+                MessageBuff.put("G:" + temp.id + "F:" + temp.id, item);
             }
         }
     }

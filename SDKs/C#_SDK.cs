@@ -229,6 +229,20 @@ namespace ColoryrSDK
         public string uuid { get; set; }
         public string url { get; set; }
     }
+    /// <summary>
+    /// 消息队列
+    /// </summary>
+    record MessageBuffPack : PackBase
+    {
+        public bool send { get; set; }
+        public List<string> text { get; set; }
+        public string img { get; set; }
+        public string imgurl { get; set; }
+        public int type;
+        public long id { get; set; }
+        public long fid { get; set; }
+    }
+
     //更多pack请看文档说明
     class BuildPack
     {
@@ -237,7 +251,7 @@ namespace ColoryrSDK
         /// </summary>
         /// <param name="obj">对象</param>
         /// <param name="index">包ID</param>
-        /// <returns></returns>
+        /// <returns>构建好的包</returns>
         public static byte[] Build(object obj, byte index)
         {
             byte[] data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj) + " ");
@@ -252,20 +266,19 @@ namespace ColoryrSDK
         /// <param name="fid">发给朋友的qq号</param>
         /// <param name="img">图片BASE64流</param>
         /// <param name="index">包ID</param>
-        /// <returns></returns>
+        /// <returns>构建好的包</returns>
         public static byte[] BuildImage(long qq, long id, long fid, string img, byte index)
         {
             string temp = "";
             if (id != 0)
             {
-                temp += "id=" + id + "&";
+                temp += $"id={id}&";
             }
             if (fid != 0)
             {
-                temp += "fid=" + fid + "&";
+                temp += $"fid={fid}&";
             }
-            temp += "qq=" + qq + "&";
-            temp += "img=" + img;
+            temp += $"qq={qq}&img={img}";
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[^1] = index;
             return data;
@@ -277,12 +290,37 @@ namespace ColoryrSDK
         /// <param name="id">发送给的id</param>
         /// <param name="sound">音频BASE64</param>
         /// <param name="index">包ID</param>
-        /// <returns></returns>
+        /// <returns>构建好的包</returns>
         public static byte[] BuildSound(long qq, long id, string sound, byte index)
         {
-            string temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
+            string temp = $"id={id}&qq={qq}&sound={sound}";
             byte[] data = Encoding.UTF8.GetBytes(temp + " ");
             data[^1] = index;
+            return data;
+        }
+        /// <summary>
+        /// 构建消息队列物图片包
+        /// </summary>
+        /// <param name="qq">运行的qq号</param>
+        /// <param name="id">发送给的id</param>
+        /// <param name="fid">发送给的fid</param>
+        /// <param name="type">消息类型</param>
+        /// <param name="img">图片BASE64流</param>
+        /// <returns>构建好的包</returns>
+        public static byte[] BuildBuffImage(long qq, long id, long fid, int type, string img, bool send)
+        {
+            string temp = "";
+            if (id != 0)
+            {
+                temp += $"id={id}&";
+            }
+            if (fid != 0)
+            {
+                temp += $"fid={fid}&";
+            }
+            temp += $"qq={qq}&img={img}&type={type}&send={send}";
+            byte[] data = Encoding.UTF8.GetBytes(temp + " ");
+            data[^1] = 97;
             return data;
         }
     }
@@ -547,7 +585,7 @@ namespace ColoryrSDK
         }
         public void CallEvent(long qq, long eventid, int dofun, List<object> arg)
         {
-            var data = BuildPack.Build(new EventCallPack { qq= qq, eventid = eventid, dofun = dofun, arg = arg }, 59);
+            var data = BuildPack.Build(new EventCallPack { qq = qq, eventid = eventid, dofun = dofun, arg = arg }, 59);
             QueueSend.Add(data);
         }
         public void SendGroupMessage(long qq, long id, List<string> message)
@@ -606,6 +644,16 @@ namespace ColoryrSDK
             var data = BuildPack.Build(new GetImageUrlPack { qq = qq, uuid = uuid }, 90);
             QueueSend.Add(data);
         }
+        public void AddMessageBuff(long qq, long id, long fid, List<string> text, string imgurl, int type, bool send)
+        {
+            var data = BuildPack.Build(new MessageBuffPack { qq = qq, send = send, text = text, imgurl = imgurl, type = type, fid = fid, id = id }, 97);
+            QueueSend.Add(data);
+        }
+        public void AddMessageImageBuff(long qq, long id, long fid, string img, int type, bool send)
+        {
+            var data = BuildPack.BuildBuffImage(qq, id, fid, type, img, send);
+            QueueSend.Add(data);
+        }
         private void SendStop()
         {
             var data = BuildPack.Build(new object(), 127);
@@ -614,9 +662,8 @@ namespace ColoryrSDK
         public void Stop()
         {
             LogOut("机器人正在断开");
-            if (IsConnect)
-                SendStop();
             IsRun = false;
+            SendStop();
             if (Socket != null)
                 Socket.Close();
             LogOut("机器人已断开");

@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.1.13-SNAPSHOT'
+version '3.2.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -18,12 +18,8 @@ dependencies {
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
-//    compile 'com.google.code.gson:gson:2.8.6'
     compile 'com.alibaba:fastjson:1.2.73'
     compile "org.java-websocket:Java-WebSocket:1.5.1"
-
-//    compile 'net.mamoe:mirai-core-jvm:2.3.1'
-//    compile "net.mamoe:mirai-login-solver-selenium:1.0-dev-16"
 
     api "net.mamoe:mirai-core-api:2.4.2"
     runtimeOnly "net.mamoe:mirai-core:2.4.2"

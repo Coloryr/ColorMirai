@@ -26,36 +26,39 @@ public class EventCall {
     public static void DoEvent(long qq, long id, int dofun, List<Object> arg) {
         if (EventsDo.containsKey(id)) {
             try {
-                EventBase event = EventsDo.remove(id);
-                if (event.qq != qq)
+                EventBase task = EventsDo.remove(id);
+                if (task.qq != qq)
                     return;
-                switch (event.type) {
-                    case 4:
-                        BotInvitedJoinGroupRequestEvent data = (BotInvitedJoinGroupRequestEvent) event.event;
+                switch (task.type) {
+                    case 4: {
+                        BotInvitedJoinGroupRequestEvent event = (BotInvitedJoinGroupRequestEvent) task.event;
                         if (dofun == 0) {
-                            data.accept();
+                            event.accept();
                         } else if (dofun == 1) {
-                            data.ignore();
+                            event.ignore();
                         }
                         break;
-                    case 37:
-                        MemberJoinRequestEvent data1 = (MemberJoinRequestEvent) event.event;
+                    }
+                    case 37: {
+                        MemberJoinRequestEvent event = (MemberJoinRequestEvent) task.event;
                         if (dofun == 0) {
-                            data1.accept();
+                            event.accept();
                         } else if (dofun == 1) {
-                            data1.reject((Boolean) arg.get(0), (String) arg.get(1));
+                            event.reject((Boolean) arg.get(0), (String) arg.get(1));
                         } else if (dofun == 2) {
-                            data1.ignore((Boolean) arg.get(0));
+                            event.ignore((Boolean) arg.get(0));
                         }
                         break;
-                    case 46:
-                        NewFriendRequestEvent data2 = (NewFriendRequestEvent) event.event;
+                    }
+                    case 46: {
+                        NewFriendRequestEvent event = (NewFriendRequestEvent) task.event;
                         if (dofun == 0) {
-                            data2.accept();
+                            event.accept();
                         } else if (dofun == 1) {
-                            data2.reject((Boolean) arg.get(0));
+                            event.reject((Boolean) arg.get(0));
                         }
                         break;
+                    }
                 }
             } catch (Exception e) {
                 Start.logger.error("处理事件发送错误", e);

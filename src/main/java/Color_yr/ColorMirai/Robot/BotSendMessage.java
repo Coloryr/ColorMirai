@@ -33,9 +33,7 @@ public class BotSendMessage {
                 } else if (item.startsWith("quote:")) {
                     int id = Integer.parseInt(item.replace("quote:", ""));
                     MessageSaveObj call = BotStart.getMessage(qq, id);
-                    if (call == null)
-                        continue;
-                    if (call.source == null)
+                    if (call == null || call.source == null)
                         continue;
                     QuoteReply quote = new QuoteReply(call.source);
                     messageChain = messageChain.plus(quote);

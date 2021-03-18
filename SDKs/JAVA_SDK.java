@@ -81,6 +81,83 @@ class SendGroupPrivateMessagePack extends PackBase {
     public List<String> message;
 }
 
+class SendFriendImagePack extends PackBase {
+    public long id;
+    public String img;
+}
+
+class GroupMuteAll extends PackBase {
+    public long id;
+}
+
+class GroupUnmuteAll extends PackBase
+{
+    public long id;
+}
+
+class SetGroupMemberCard extends PackBase {
+    public long id;
+    public long fid;
+    public String card;
+}
+
+class SetGroupName extends PackBase {
+    public long id;
+    public String name;
+}
+
+class NewFriendRequestEventPack extends PackBase {
+    public long id;
+    public long fid;
+    public String name;
+    public String message;
+    public long eventid;
+}
+
+class ReCallMessage extends PackBase {
+    public long id;
+}
+
+class LoadFileSendToGroupImagePack extends PackBase {
+    public long id;
+    public String file;
+}
+
+class GroupMessagePostSendEventPack extends PackBase {
+    public long id;
+    public boolean res;
+    public List<String> message;
+    public String error;
+}
+
+class MemberNudgePack extends PackBase {
+    public long id;
+    public long fid;
+}
+
+class FriendNudgePack extends PackBase {
+    public long id;
+}
+
+class GetImageUrlPack extends PackBase {
+    public String uuid;
+}
+
+class ReImagePack extends PackBase {
+    public String uuid;
+    public String url;
+}
+
+class MessageBuffPack extends PackBase {
+    public boolean send;
+    public List<String> text;
+    public String img;
+    public String imgurl;
+    public int type;
+    public long id;
+    public long fid;
+}
+
 class BuildPack {
     public static byte[] Build(Object data, int index) {
         String str = JSON.toJSONString(data) + " ";
@@ -97,18 +174,30 @@ class BuildPack {
         if (fid != 0) {
             temp += "fid=" + fid + "&";
         }
-        temp += "qq=" + qq + "&";
-        temp += "img=" + img;
-        String str = temp + " ";
-        byte[] temp1 = str.getBytes(StandardCharsets.UTF_8);
+        temp += "qq=" + qq + "&" + "img=" + img + " ";
+        byte[] temp1 = temp.getBytes(StandardCharsets.UTF_8);
         temp1[temp1.length - 1] = (byte) index;
         return temp1;
     }
 
     public static byte[] BuildSound(long qq, long id, String sound, byte index) {
-        String temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
+        String temp = "id=" + id + "&qq=" + qq + "&sound=" + sound + " ";
         byte[] data = temp.getBytes(StandardCharsets.UTF_8);
         data[data.length - 1] = index;
+        return data;
+    }
+
+    public static byte[] BuildBuffImage(long qq, long id, long fid, int type, String img, boolean send) {
+        String temp = "";
+        if (id != 0) {
+            temp += "id=" + id + "&";
+        }
+        if (fid != 0) {
+            temp += "fid=" + fid + "&";
+        }
+        temp += "qq=" + qq + "&img=" + img + "&type=" + type + "&send=" + send + " ";
+        byte[] data = temp.getBytes(StandardCharsets.UTF_8);
+        data[data.length - 1] = 97;
         return data;
     }
 }
@@ -327,6 +416,49 @@ public class Robot {
 
     public void SendFriendImage(long qq, long id, String img) {
         byte[] data = BuildPack.BuildImage(qq, id, 0, img, 63);
+        QueueSend.add(data);
+    }
+
+    public void SendMemberNudge(long qq_, long id_, long fid_) {
+        byte[] data = BuildPack.Build(new MemberNudgePack() {{
+            qq = qq_;
+            id = id_;
+            fid = fid_;
+        }}, 84);
+        QueueSend.add(data);
+    }
+
+    public void SendFriendNudge(long qq_, long id_) {
+        byte[] data = BuildPack.Build(new FriendNudgePack() {{
+            qq = qq_;
+            id = id_;
+        }}, 83);
+        QueueSend.add(data);
+    }
+
+    public void GetImageUrl(long qq_, String uuid_) {
+        byte[] data = BuildPack.Build(new GetImageUrlPack() {{
+            qq = qq_;
+            uuid = uuid_;
+        }}, 90);
+        QueueSend.add(data);
+    }
+
+    public void AddMessageBuff(long qq_, long id_, long fid_, List<String> text_, String imgurl_, int type_, boolean send_) {
+        byte[] data = BuildPack.Build(new MessageBuffPack() {{
+            qq = qq_;
+            send = send_;
+            text = text_;
+            imgurl = imgurl_;
+            type = type_;
+            fid = fid_;
+            id = id_;
+        }}, 97);
+        QueueSend.add(data);
+    }
+
+    public void AddMessageImageBuff(long qq, long id, long fid, String img, int type, boolean send) {
+        byte[] data = BuildPack.BuildBuffImage(qq, id, fid, type, img, send);
         QueueSend.add(data);
     }
 
