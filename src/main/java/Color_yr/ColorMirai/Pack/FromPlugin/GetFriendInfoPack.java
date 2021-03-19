@@ -3,9 +3,9 @@ package Color_yr.ColorMirai.Pack.FromPlugin;
 import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
-85 [机器人]群荣耀获取
-id: 群号
+92 [插件]获取朋友信息
+id：朋友QQ号
  */
-public class GetGroupHonorListDataPack extends PackBase {
+public class GetFriendInfoPack extends PackBase {
     public long id;
 }

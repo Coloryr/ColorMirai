@@ -3,7 +3,7 @@ package Color_yr.ColorMirai.Pack.FromPlugin;
 import java.util.List;
 
 /*
-0 插件开始连接
+0 [插件]插件开始连接
 Name：插件名字
 Reg：注册的事件
 Groups：监听QQ群列表

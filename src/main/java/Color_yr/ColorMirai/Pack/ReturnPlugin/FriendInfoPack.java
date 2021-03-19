@@ -1,16 +1,17 @@
 package Color_yr.ColorMirai.Pack.ReturnPlugin;
 
+import Color_yr.ColorMirai.Pack.PackBase;
 import net.mamoe.mirai.data.UserProfile;
 
 /*
-56 [插件]获取好友列表
+92 [插件]获取朋友信息
 id：QQ号
-name：昵称
 img：头像图片
+remark：好友备注
+userProfile：用户详细资料
  */
-public class FriendsPack {
+public class FriendInfoPack extends PackBase {
     public long id;
-    public String name;
     public String img;
     public String remark;
     public UserProfile userProfile;

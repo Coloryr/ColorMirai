@@ -3,10 +3,7 @@ package Color_yr.ColorMirai.Plugin;
 import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.FromPlugin.*;
 import Color_yr.ColorMirai.Pack.PackDo;
-import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
-import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
-import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
-import Color_yr.ColorMirai.Pack.ReturnPlugin.ReImagePack;
+import Color_yr.ColorMirai.Pack.ReturnPlugin.*;
 import Color_yr.ColorMirai.Plugin.Objs.BuffObj;
 import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
@@ -26,7 +23,6 @@ import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -87,26 +83,35 @@ public class ThePlugin {
                             break;
                         case 55:
                             GetPack pack17 = JSON.parseObject(task.data, GetPack.class);
-                            List<GroupsPack> data = BotGetData.getGroups(runQQ == 0 ? pack17.qq : runQQ);
+                            List<GroupInfo> data = BotGetData.getGroups(pack17.qq);
                             if (data == null)
                                 break;
-                            if (Socket.send(PackDo.BuildPack(data, 55)))
+                            ListGroupPack pack31= new ListGroupPack();
+                            pack31.qq = pack17.qq;
+                            pack31.groups = data;
+                            if (Socket.send(PackDo.BuildPack(pack31, 55)))
                                 close();
                             break;
                         case 56:
                             GetPack pack18 = JSON.parseObject(task.data, GetPack.class);
-                            List<FriendsPack> data1 = BotGetData.getFriends(runQQ == 0 ? pack18.qq : runQQ);
+                            List<FriendInfoPack> data1 = BotGetData.getFriends(pack18.qq);
                             if (data1 == null)
                                 break;
-                            if (Socket.send(PackDo.BuildPack(data1, 56)))
+                            ListFriendPack pack30 = new ListFriendPack();
+                            pack30.friends = data1;
+                            pack30.qq = pack18.qq;
+                            if (Socket.send(PackDo.BuildPack(pack30, 56)))
                                 close();
                             break;
                         case 57:
                             GetGroupMemberInfoPack pack3 = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
-                            List<MemberInfoPack> data2 = BotGetData.getMembers(runQQ == 0 ? pack3.qq : runQQ, pack3.id);
+                            List<MemberInfoPack> data2 = BotGetData.getMembers(pack3.qq, pack3.id);
                             if (data2 == null)
                                 break;
-                            if (Socket.send(PackDo.BuildPack(data2, 57)))
+                            ListMemberPack pack33 = new ListMemberPack();
+                            pack33.qq = pack3.qq;
+                            pack33.members = data2;
+                            if (Socket.send(PackDo.BuildPack(pack33, 57)))
                                 close();
                             break;
                         case 58:
@@ -247,24 +252,25 @@ public class ThePlugin {
                                 close();
                             break;
                         case 92:
-                            GetMemberInfo pack27 = JSON.parseObject(task.data, GetMemberInfo.class);
-                            FriendsPack obj2 = BotGetData.getFriend(pack27.qq, pack27.id);
+                            GetFriendInfoPack pack27 = JSON.parseObject(task.data, GetFriendInfoPack.class);
+                            FriendInfoPack obj2 = BotGetData.getFriend(pack27.qq, pack27.id);
                             if (obj2 == null)
                                 break;
+                            obj2.qq = pack27.qq;
                             if (Socket.send(PackDo.BuildPack(obj2, 92)))
                                 close();
                             break;
                         case 93:
                             MusicSharePack pack28 = JSON.parseObject(task.data, MusicSharePack.class);
-                            BotSendMusicShare.SendMusicShare(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
-                            break;
-                        case 94:
-                            pack28 = JSON.parseObject(task.data, MusicSharePack.class);
-                            BotSendMusicShare.SendMusicShareGroup(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
-                            break;
-                        case 95:
-                            pack28 = JSON.parseObject(task.data, MusicSharePack.class);
-                            BotSendMusicShare.SendMusicShareMember(pack28.qq, pack28.id, pack28.fid, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            if(pack28.type1 == 0) {
+                                BotSendMusicShare.SendMusicShare(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            }
+                            else if(pack28.type1 == 1) {
+                                BotSendMusicShare.SendMusicShareGroup(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            }
+                            else if(pack28.type1 == 2) {
+                                BotSendMusicShare.SendMusicShareMember(pack28.qq, pack28.id, pack28.fid, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                            }
                             break;
                         case 96:
                             EssenceMessagePack pack29 = JSON.parseObject(task.data, EssenceMessagePack.class);

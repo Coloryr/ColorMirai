@@ -5,7 +5,7 @@ import Color_yr.ColorMirai.Pack.PackBase;
 import java.util.List;
 
 /*
-97：消息队列
+97 [插件]消息队列
 send：是否发送
 text：消息内容
 img：图片内容

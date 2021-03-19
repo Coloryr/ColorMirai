@@ -12,14 +12,17 @@ namespace ColoryrSDK
     /// <summary>
     /// 基础包
     /// </summary>
-    abstract record PackBase
+    public abstract record PackBase
     {
+        /// <summary>
+        /// QQ号
+        /// </summary>
         public long qq { get; set; }
     }
     /// <summary>
-    /// 开始包
+    /// 0 [插件]插件开始连接
     /// </summary>
-    record PackStart
+    public record StartPack
     {
         /// <summary>
         /// 插件名字
@@ -42,10 +45,212 @@ namespace ColoryrSDK
         /// </summary>
         public long RunQQ { get; set; }
     }
+    public enum Sex
+    {
+        MALE,
+        FEMALE,
+        UNKNOWN
+    }
+    public enum MemberPermission
+    {
+        MEMBER,
+        ADMINISTRATOR,
+        OWNER
+    }
+    public record UserProfile
+    {
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string nickname { get; set; }
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string email { get; set; }
+        /// <summary>
+        /// 年龄
+        /// </summary>
+        public int age { get; set; }
+        /// <summary>
+        /// QQ等级
+        /// </summary>
+        public int qLevel { get; set; }
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public Sex sex { get; set; }
+    }
+    /// <summary>
+    /// 92 [插件]获取朋友信息
+    /// </summary>
+    public record FriendInfoPack
+    {
+        /// <summary>
+        /// QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 头像图片
+        /// </summary>
+        public string img { get; set; }
+        /// <summary>
+        /// 好友备注
+        /// </summary>
+        public string remark { get; set; }
+        /// <summary>
+        /// 用户详细资料
+        /// </summary>
+        public UserProfile userProfile { get; set; }
+    }
+    public record GroupInfo
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id;
+        /// <summary>
+        /// 群名
+        /// </summary>
+        public string name;
+        /// <summary>
+        /// 群头像
+        /// </summary>
+        public string img;
+        /// <summary>
+        /// 所有者QQ号
+        /// </summary>
+        public long oid;
+        /// <summary>
+        /// 机器人所拥有的权限
+        /// </summary>
+        public MemberPermission per;
+    }
+    /// <summary>
+    /// 91 [插件]获取群成员信息
+    /// </summary>
+    public record MemberInfoPack
+    {
+        /// <summary>
+        /// QQ号码
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string nick { get; set; }
+        /// <summary>
+        /// 头像图片
+        /// </summary>
+        public string img { get; set; }
+        /// <summary>
+        /// 群权限
+        /// </summary>
+        public MemberPermission per { get; set; }
+        /// <summary>
+        /// 群名片
+        /// </summary>
+        public string nameCard { get; set; }
+        /// <summary>
+        /// 群头衔
+        /// </summary>
+        public string specialTitle { get; set; }
+        /// <summary>
+        /// 头像下载链接
+        /// </summary>
+        public string avatarUrl { get; set; }
+        /// <summary>
+        /// 被禁言剩余时长
+        /// </summary>
+        public int muteTimeRemaining { get; set; }
+        /// <summary>
+        /// 入群时间
+        /// </summary>
+        public int joinTimestamp { get; set; }
+        /// <summary>
+        /// 最后发言时间
+        /// </summary>
+        public int lastSpeakTimestamp { get; set; }
+    }
+    /// <summary>
+    /// 56 [插件]获取好友列表
+    /// </summary>
+    public record ListFriendPack : PackBase
+    {
+        /// <summary>
+        /// 朋友列表
+        /// </summary>
+        public List<FriendInfoPack> friends { get; set; }
+    }
+    /// <summary>
+    /// 55 [插件]获取群列表
+    /// </summary>
+    public record ListGroupPack : PackBase
+    {
+        /// <summary>
+        /// 群列表
+        /// </summary>
+        public List<GroupInfo> groups { get; set; }
+    }
+    /// <summary>
+    /// 66 [插件]解除禁言
+    /// </summary>
+    public record UnmuteGroupMemberPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 57 [插件]获取群成员
+    /// </summary>
+    public record ListMemberPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 成员列表
+        /// </summary>
+        public List<MemberInfoPack> members { get; set; }
+    }
+    /// <summary>
+    /// 64 [插件]删除群员
+    /// </summary>
+    public record DeleteGroupMemberPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 96 [插件]设置群精华消息
+    /// </summary>
+    public record EssenceMessagePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 消息ID
+        /// </summary>
+        public long mid { get; set; }
+    }
     /// <summary>
     /// 群消息事件包
     /// </summary>
-    record GroupMessageEventPack : PackBase
+    public record GroupMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
@@ -55,53 +260,63 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群消息包
     /// </summary>
-    record SendGroupMessagePack : PackBase
+    public record SendGroupMessagePack : PackBase
     {
         public long id { get; set; }
         public List<string> message { get; set; }
     }
     /// <summary>
-    /// 发送朋友消息包
+    /// 54 [插件]发送好友消息
     /// </summary>
-    record SendFriendMessagePack : PackBase
+    public record SendFriendMessagePack : PackBase
     {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
         public List<string> message { get; set; }
     }
     /// <summary>
-    /// 发送群私聊消息包
+    /// 53 [插件]发送私聊消息
     /// </summary>
-    record SendGroupPrivateMessagePack : PackBase
+    public record SendGroupPrivateMessagePack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
         public long fid { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
         public List<string> message { get; set; }
     }
     /// <summary>
     /// 临时消息事件包
     /// </summary>
-    record TempMessageEventPack : PackBase
+    public record TempMessageEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
-        public string name { get; set; }
-        public List<string> message { get; set; }
-        public int time { get; set; }
     }
     /// <summary>
     /// 朋友消息事件包
     /// </summary>
-    record FriendMessageEventPack : PackBase
+    public record FriendMessageEventPack : PackBase
     {
         public long id { get; set; }
         public string name { get; set; }
-        public List<string> message { get; set; }
-        public int time { get; set; }
     }
     /// <summary>
     /// 发送群图片包
     /// </summary>
-    record SendGroupImagePack : PackBase
+    public record SendGroupImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
@@ -109,16 +324,15 @@ namespace ColoryrSDK
     /// <summary>
     /// 发送群私聊图片包
     /// </summary>
-    record SendGroupPrivateImagePack : PackBase
+    public record SendGroupPrivateImagePack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
-        public string img { get; set; }
     }
     /// <summary>
     /// 发送朋友图片包
     /// </summary>
-    record SendFriendImagePack : PackBase
+    public record SendFriendImagePack : PackBase
     {
         public long id { get; set; }
         public string img { get; set; }
@@ -138,113 +352,363 @@ namespace ColoryrSDK
         public long id { get; set; }
     }
     /// <summary>
-    /// 设置群员名字包
+    /// 69 [插件]设置群名片
     /// </summary>
-    record SetGroupMemberCard : PackBase
+    public record SetGroupMemberCard : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
         public long fid { get; set; }
+        /// <summary>
+        /// 新的群名片
+        /// </summary>
         public string card { get; set; }
     }
     /// <summary>
-    /// 设置群名包
+    /// 70 [插件]设置群名
     /// </summary>
-    record SetGroupName : PackBase
+    public record SetGroupNamePack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 新的群名
+        /// </summary>
         public string name { get; set; }
     }
     /// <summary>
     /// 加好友请求事件包
     /// </summary>
-    record NewFriendRequestEventPack : PackBase
+    public record NewFriendRequestEventPack : PackBase
     {
         public long id { get; set; }
         public long fid { get; set; }
-        public string name { get; set; }
-        public string message { get; set; }
-        public long eventid { get; set; }
     }
     /// <summary>
-    /// 事件处理包
+    /// 59 [插件]回应事件
     /// </summary>
-    record EventCallPack : PackBase
+    public record EventCallPack : PackBase
     {
+        /// <summary>
+        /// 事件ID
+        /// </summary>
         public long eventid { get; set; }
+        /// <summary>
+        /// 方法
+        /// </summary>
         public int dofun { get; set; }
+        /// <summary>
+        /// 附带参数
+        /// </summary>
         public List<object> arg { get; set; }
     }
     /// <summary>
     /// 撤回消息包
     /// </summary>
-    record ReCallMessage : PackBase
+    public record ReCallMessage : PackBase
     {
         public long id { get; set; }
     }
     /// <summary>
-    /// 加载本地图片发送到群包
+    /// 75 [插件]从本地文件加载图片发送到群
     /// </summary>
-    record LoadFileSendToGroupImagePack : PackBase
+    public record LoadFileSendToGroupImagePack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string file { get; set; }
+    }
+    /// <summary>
+    /// 76 [插件]从本地文件加载图片发送到群私聊
+    /// </summary>
+    public record LoadFileSendToGroupPrivateImagePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string file { get; set; }
+    }
+    /// <summary>
+    /// 78 [插件]从本地文件加载语音发送到群s
+    /// </summary>
+    public record LoadFileSendToGroupSoundPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
         public string file { get; set; }
     }
     /// <summary>
     /// 发送群消息之后的事件包
     /// </summary>
-    record GroupMessagePostSendEventPack : PackBase
+    public record GroupMessagePostSendEventPack : PackBase
     {
         public long id { get; set; }
         public bool res { get; set; }
-        public List<string> message { get; set; }
-        public string error { get; set; }
     }
     /// <summary>
-    /// 发送群员戳一戳
+    /// 84 [插件]发送群成员戳一戳
     /// </summary>
-    record MemberNudgePack : PackBase
+    public record MemberNudgePack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
         public long fid { get; set; }
     }
     /// <summary>
-    /// 发送朋友戳一戳
+    /// 83 [插件]发送朋友戳一戳
     /// </summary>
-    record FriendNudgePack : PackBase
+    public record FriendNudgePack : PackBase
     {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 57 [插件]获取群成员
+    /// </summary>
+    public record GetGroupMemberInfoPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 58 [插件]获取群设置
+    /// </summary>
+    public record GetGroupSettingPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
     }
     /// <summary>
     /// 获取图片Url
     /// </summary>
-    record GetImageUrlPack : PackBase
+    public record GetImageUrlPack : PackBase
     {
+        /// <summary>
+        /// 图片UUID
+        /// </summary>
         public string uuid { get; set; }
     }
     /// <summary>
-    /// 返回Url
+    /// 92 [插件]获取朋友信息
     /// </summary>
-    record ReImagePack : PackBase
+    public record GetFriendInfoPack : PackBase
     {
+        /// <summary>
+        /// 朋友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 91 [插件]获取群成员信息
+    /// </summary>
+    public record GetMemberInfo : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 55 [插件]获取群列表
+    /// 56 [插件] 获取好友列表
+    /// </summary>
+    public record GetPack : PackBase
+    {
+
+    }
+    /// <summary>
+    /// 67 [插件]开启全员禁言
+    /// </summary>
+    public record GroupMuteAllPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 68 [插件]关闭全员禁言
+    /// </summary>
+    public record GroupUnmuteAllPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 77 [插件]从本地文件加载图片发送到朋友
+    /// </summary>
+    public record LoadFileSendToFriendImagePack : PackBase
+    {
+        /// <summary>
+        /// 朋友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string file { get; set; }
+    }
+    /// <summary>
+    /// 90 [插件]获取图片Url
+    /// </summary>
+    public record ReImagePack : PackBase
+    {
+        /// <summary>
+        /// 图片UUID
+        /// </summary>
         public string uuid { get; set; }
+        /// <summary>
+        /// 图片地址
+        /// </summary>
         public string url { get; set; }
     }
     /// <summary>
-    /// 消息队列
+    /// 97 [插件]消息队列
     /// </summary>
-    record MessageBuffPack : PackBase
+    public record MessageBuffPack : PackBase
     {
+        /// <summary>
+        /// 是否发送
+        /// </summary>
         public bool send { get; set; }
+        /// <summary>
+        /// 消息内容
+        /// </summary>
         public List<string> text { get; set; }
+        /// <summary>
+        /// 图片内容
+        /// </summary>
         public string img { get; set; }
+        /// <summary>
+        /// 图片路径
+        /// </summary>
         public string imgurl { get; set; }
+        /// <summary>
+        /// 发送对象类型
+        /// </summary>
         public int type;
+        /// <summary>
+        /// 发送目标
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 发送目标
+        /// </summary>
         public long fid { get; set; }
     }
-
-    //更多pack请看文档说明
-    class BuildPack
+    /// <summary>
+    /// 93 [插件]发送音乐分享
+    /// </summary>
+    public record MusicSharePack : PackBase
+    {
+        /// <summary>
+        /// 发送目标
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 发送目标
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 音乐类型
+        /// </summary>
+        public int type { get; set; }
+        /// <summary>
+        /// 目标类型
+        /// </summary>
+        public int type1 { get; set; }
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string title { get; set; }
+        /// <summary>
+        /// 概要
+        /// </summary>
+        public string summary { get; set; }
+        /// <summary>
+        /// 跳转Url
+        /// </summary>
+        public string jumpUrl { get; set; }
+        /// <summary>
+        /// 图片Url
+        /// </summary>
+        public string pictureUrl { get; set; }
+        /// <summary>
+        /// 音乐Url
+        /// </summary>
+        public string musicUrl { get; set; }
+    }
+    /// <summary>
+    /// 65 [插件]禁言群员
+    /// </summary>
+    public record MuteGroupMemberPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
+    }
+    /// <summary>
+    /// 71 [插件]撤回消息
+    /// </summary>
+    public record ReCallMessagePack : PackBase
+    {
+        /// <summary>
+        /// 消息ID
+        /// </summary>
+        public int id { get; set; }
+    }
+    public class BuildPack
     {
         /// <summary>
         /// 构建一个包
@@ -415,7 +879,7 @@ namespace ColoryrSDK
         private Thread DoThread;
         private ConcurrentBag<RobotTask> QueueRead;
         private ConcurrentBag<byte[]> QueueSend;
-        private PackStart PackStart;
+        private StartPack PackStart;
         private RobotConfig Config;
 
         /// <summary>
@@ -578,80 +1042,8 @@ namespace ColoryrSDK
             LogOut("机器人已连接");
             IsConnect = true;
         }
-        public void ReCall(long qq, long id)
+        public void AddTask(byte[] data)
         {
-            var data = BuildPack.Build(new ReCallMessage { qq = qq, id = id }, 71);
-            QueueSend.Add(data);
-        }
-        public void CallEvent(long qq, long eventid, int dofun, List<object> arg)
-        {
-            var data = BuildPack.Build(new EventCallPack { qq = qq, eventid = eventid, dofun = dofun, arg = arg }, 59);
-            QueueSend.Add(data);
-        }
-        public void SendGroupMessage(long qq, long id, List<string> message)
-        {
-            var data = BuildPack.Build(new SendGroupMessagePack { qq = qq, id = id, message = message }, 52);
-            QueueSend.Add(data);
-        }
-        public void SendGroupPrivateMessage(long qq, long id, long fid, List<string> message)
-        {
-            var data = BuildPack.Build(new SendGroupPrivateMessagePack { qq = qq, id = id, fid = fid, message = message }, 53);
-            QueueSend.Add(data);
-        }
-        public void SendFriendMessage(long qq, long id, List<string> message)
-        {
-            var data = BuildPack.Build(new SendFriendMessagePack { qq = qq, id = id, message = message }, 54);
-            QueueSend.Add(data);
-        }
-        public void SendGroupImage(long qq, long id, string img)
-        {
-            var data = BuildPack.BuildImage(qq, id, 0, img, 61);
-            QueueSend.Add(data);
-        }
-        public void SendGroupPrivateImage(long qq, long id, long fid, string img)
-        {
-            var data = BuildPack.BuildImage(qq, id, fid, img, 62);
-            QueueSend.Add(data);
-        }
-        public void SendFriendImage(long qq, long id, string img)
-        {
-            var data = BuildPack.BuildImage(qq, id, 0, img, 63);
-            QueueSend.Add(data);
-        }
-
-        public void SendGroupSound(long qq, long id, string sound)
-        {
-            var data = BuildPack.BuildSound(qq, id, sound, 74);
-            QueueSend.Add(data);
-        }
-        public void SendGroupImageFile(long qq, long id, string file)
-        {
-            var data = BuildPack.Build(new LoadFileSendToGroupImagePack { qq = qq, id = id, file = file }, 75);
-            QueueSend.Add(data);
-        }
-        public void SendMemberNudge(long qq, long id, long fid)
-        {
-            var data = BuildPack.Build(new MemberNudgePack { qq = qq, id = id, fid = fid }, 84);
-            QueueSend.Add(data);
-        }
-        public void SendFriendNudge(long qq, long id)
-        {
-            var data = BuildPack.Build(new FriendNudgePack { qq = qq, id = id }, 83);
-            QueueSend.Add(data);
-        }
-        public void GetImageUrl(long qq, string uuid)
-        {
-            var data = BuildPack.Build(new GetImageUrlPack { qq = qq, uuid = uuid }, 90);
-            QueueSend.Add(data);
-        }
-        public void AddMessageBuff(long qq, long id, long fid, List<string> text, string imgurl, int type, bool send)
-        {
-            var data = BuildPack.Build(new MessageBuffPack { qq = qq, send = send, text = text, imgurl = imgurl, type = type, fid = fid, id = id }, 97);
-            QueueSend.Add(data);
-        }
-        public void AddMessageImageBuff(long qq, long id, long fid, string img, int type, bool send)
-        {
-            var data = BuildPack.BuildBuffImage(qq, id, fid, type, img, send);
             QueueSend.Add(data);
         }
         private void SendStop()

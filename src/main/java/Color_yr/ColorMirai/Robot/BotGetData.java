@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.Robot;
 
-import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendsPack;
-import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupsPack;
+import Color_yr.ColorMirai.Pack.ReturnPlugin.FriendInfoPack;
+import Color_yr.ColorMirai.Pack.ReturnPlugin.GroupInfo;
 import Color_yr.ColorMirai.Pack.ReturnPlugin.MemberInfoPack;
 import Color_yr.ColorMirai.Start;
 import net.mamoe.mirai.Bot;
@@ -16,23 +16,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BotGetData {
-    public static List<GroupsPack> getGroups(long qq) {
+    public static List<GroupInfo> getGroups(long qq) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
-            List<GroupsPack> list = new ArrayList<>();
+            List<GroupInfo> list = new ArrayList<>();
             for (Group item : bot.getGroups()) {
-                GroupsPack info = new GroupsPack();
-                info.qq = qq;
+                GroupInfo info = new GroupInfo();
                 info.id = item.getId();
                 info.name = item.getName();
                 info.img = item.getAvatarUrl();
                 info.oid = item.getOwner().getId();
-                info.oname = item.getOwner().getNameCard();
-                info.per = item.getBotPermission().name();
+                info.per = item.getBotPermission();
                 list.add(info);
             }
             return list;
@@ -42,7 +40,7 @@ public class BotGetData {
         }
     }
 
-    public static FriendsPack getFriend(long qq, long id) {
+    public static FriendInfoPack getFriend(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
@@ -54,9 +52,8 @@ public class BotGetData {
                 Start.logger.warn("QQ号:" + qq + "不存在朋友:" + id);
                 return null;
             }
-            FriendsPack info = new FriendsPack();
+            FriendInfoPack info = new FriendInfoPack();
             info.id = item.getId();
-            info.name = item.getNick();
             info.img = item.getAvatarUrl();
             info.remark = item.getRemark();
             info.userProfile = item.queryProfile();
@@ -67,18 +64,17 @@ public class BotGetData {
         }
     }
 
-    public static List<FriendsPack> getFriends(long qq) {
+    public static List<FriendInfoPack> getFriends(long qq) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 Start.logger.warn("不存在QQ号:" + qq);
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
-            List<FriendsPack> list = new ArrayList<>();
+            List<FriendInfoPack> list = new ArrayList<>();
             for (Friend item : bot.getFriends()) {
-                FriendsPack info = new FriendsPack();
+                FriendInfoPack info = new FriendInfoPack();
                 info.id = item.getId();
-                info.name = item.getNick();
                 info.img = item.getAvatarUrl();
                 info.remark = item.getRemark();
                 list.add(info);
@@ -107,10 +103,9 @@ public class BotGetData {
                 for (NormalMember item : group1.getMembers()) {
                     MemberInfoPack info = new MemberInfoPack();
                     info.id = item.getId();
-                    info.name = item.getNameCard();
                     info.img = item.getAvatarUrl();
                     info.nick = item.getNick();
-                    info.per = item.getPermission().name();
+                    info.per = item.getPermission();
                     info.nameCard = item.getNameCard();
                     info.specialTitle = item.getSpecialTitle();
                     info.avatarUrl = item.getAvatarUrl();
@@ -150,10 +145,9 @@ public class BotGetData {
                 }
                 MemberInfoPack info = new MemberInfoPack();
                 info.id = item.getId();
-                info.name = item.getNameCard();
                 info.img = item.getAvatarUrl();
                 info.nick = item.getNick();
-                info.per = item.getPermission().name();
+                info.per = item.getPermission();
                 info.nameCard = item.getNameCard();
                 info.specialTitle = item.getSpecialTitle();
                 info.avatarUrl = item.getAvatarUrl();

@@ -934,6 +934,19 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(89, JSON.toJSONString(pack), qq, 0, qq));
     }
 
+    //98 [机器人]龙王改变时（事件）
+    @EventHandler
+    public void onGroupTalkativeChangeEvent(GroupTalkativeChangeEvent event) {
+        if (PluginUtils.havePlugin())
+            return;
+        long qq = event.getBot().getId();
+        long id = event.getGroup().getId();
+        long fid = event.getNow().getId();
+        long old = event.getPrevious().getId();
+        GroupTalkativeChangePack pack = new GroupTalkativeChangePack(qq, id, fid, old);
+        BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
+    }
+
     //处理在处理事件中发生的未捕获异常
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
