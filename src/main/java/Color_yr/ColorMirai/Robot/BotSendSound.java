@@ -8,7 +8,6 @@ import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.util.Base64;
 
 public class BotSendSound {
     public static void SendGroupSound(long qq, long id, String sound) {

@@ -12,7 +12,10 @@ import Color_yr.ColorMirai.Robot.*;
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.*;
+import net.mamoe.mirai.contact.Friend;
+import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.GroupSettings;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageUtils;
@@ -114,7 +117,7 @@ public class ThePlugin {
                             if (data == null)
                                 break;
                             ListMemberPack pack1 = new ListMemberPack();
-                            pack1.qq =  runQQ == 0 ? pack.qq : runQQ;
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.members = data;
                             if (Socket.send(PackDo.BuildPack(pack1, 57)))
                                 close();
@@ -133,11 +136,12 @@ public class ThePlugin {
                                 close();
                             break;
                         }
-                        case 59:
-                            EventCallPack pack5 = JSON.parseObject(task.data, EventCallPack.class);
-                            EventCall.DoEvent(runQQ == 0 ? pack5.qq : runQQ, pack5.eventid, pack5.dofun, pack5.arg);
+                        case 59: {
+                            EventCallPack pack = JSON.parseObject(task.data, EventCallPack.class);
+                            EventCall.DoEvent(runQQ == 0 ? pack.qq : runQQ, pack.eventid, pack.dofun, pack.arg);
                             break;
-                        case 61:
+                        }
+                        case 61: {
                             Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
                             if (formdata.containsKey("id") && formdata.containsKey("img") && formdata.containsKey("qq")) {
                                 try {
@@ -149,144 +153,166 @@ public class ThePlugin {
                                 }
                             }
                             break;
-                        case 62:
-                            Map<String, String> formdata1 = PackDo.parseDataFromPack(task.data);
-                            if (formdata1.containsKey("id") && formdata1.containsKey("fid") && formdata1.containsKey("img") && formdata1.containsKey("qq")) {
+                        }
+                        case 62: {
+                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
+                            if (formdata.containsKey("id") && formdata.containsKey("fid") && formdata.containsKey("img") && formdata.containsKey("qq")) {
                                 try {
-                                    long id = Long.parseLong(formdata1.get("id"));
-                                    long fid = Long.parseLong(formdata1.get("fid"));
-                                    long qq = Long.parseLong(formdata1.get("qq"));
-                                    BotSendImage.sendGroupPrivateImage(runQQ == 0 ? qq : runQQ, id, fid, formdata1.get("img"));
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long fid = Long.parseLong(formdata.get("fid"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    BotSendImage.sendGroupPrivateImage(runQQ == 0 ? qq : runQQ, id, fid, formdata.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
-                        case 63:
-                            Map<String, String> formdata2 = PackDo.parseDataFromPack(task.data);
-                            if (formdata2.containsKey("id") && formdata2.containsKey("img")) {
+                        }
+                        case 63: {
+                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
+                            if (formdata.containsKey("id") && formdata.containsKey("img")) {
                                 try {
-                                    long id = Long.parseLong(formdata2.get("id"));
-                                    long qq = Long.parseLong(formdata2.get("qq"));
-                                    BotSendImage.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata2.get("img"));
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    BotSendImage.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
-                        case 64:
-                            DeleteGroupMemberPack pack9 = JSON.parseObject(task.data, DeleteGroupMemberPack.class);
-                            BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack9.qq : runQQ, pack9.id, pack9.fid);
+                        }
+                        case 64: {
+                            DeleteGroupMemberPack pack = JSON.parseObject(task.data, DeleteGroupMemberPack.class);
+                            BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
-                        case 65:
-                            MuteGroupMemberPack pack10 = JSON.parseObject(task.data, MuteGroupMemberPack.class);
-                            BotGroupDo.MuteGroupMember(runQQ == 0 ? pack10.qq : runQQ, pack10.id, pack10.fid, pack10.time);
+                        }
+                        case 65: {
+                            MuteGroupMemberPack pack = JSON.parseObject(task.data, MuteGroupMemberPack.class);
+                            BotGroupDo.MuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
-                        case 66:
-                            UnmuteGroupMemberPack pack11 = JSON.parseObject(task.data, UnmuteGroupMemberPack.class);
-                            BotGroupDo.UnmuteGroupMember(runQQ == 0 ? pack11.qq : runQQ, pack11.id, pack11.fid);
+                        }
+                        case 66: {
+                            UnmuteGroupMemberPack pack = JSON.parseObject(task.data, UnmuteGroupMemberPack.class);
+                            BotGroupDo.UnmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
-                        case 67:
-                            GroupMuteAllPack pack12 = JSON.parseObject(task.data, GroupMuteAllPack.class);
-                            BotGroupDo.GroupMuteAll(runQQ == 0 ? pack12.qq : runQQ, pack12.id);
+                        }
+                        case 67: {
+                            GroupMuteAllPack pack = JSON.parseObject(task.data, GroupMuteAllPack.class);
+                            BotGroupDo.GroupMuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
-                        case 68:
-                            GroupUnmuteAllPack pack13 = JSON.parseObject(task.data, GroupUnmuteAllPack.class);
-                            BotGroupDo.GroupUnmuteAll(runQQ == 0 ? pack13.qq : runQQ, pack13.id);
+                        }
+                        case 68: {
+                            GroupUnmuteAllPack pack = JSON.parseObject(task.data, GroupUnmuteAllPack.class);
+                            BotGroupDo.GroupUnmuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
-                        case 69:
-                            SetGroupMemberCard pack14 = JSON.parseObject(task.data, SetGroupMemberCard.class);
-                            BotGroupDo.SetGroupMemberCard(runQQ == 0 ? pack14.qq : runQQ, pack14.id, pack14.fid, pack14.card);
+                        }
+                        case 69: {
+                            SetGroupMemberCard pack = JSON.parseObject(task.data, SetGroupMemberCard.class);
+                            BotGroupDo.SetGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
-                        case 70:
-                            SetGroupNamePack pack15 = JSON.parseObject(task.data, SetGroupNamePack.class);
-                            BotGroupDo.SetGroupName(runQQ == 0 ? pack15.qq : runQQ, pack15.id, pack15.name);
+                        }
+                        case 70: {
+                            SetGroupNamePack pack = JSON.parseObject(task.data, SetGroupNamePack.class);
+                            BotGroupDo.SetGroupName(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
-                        case 71:
-                            ReCallMessagePack pack16 = JSON.parseObject(task.data, ReCallMessagePack.class);
-                            BotStart.ReCall(pack16.qq, pack16.id);
+                        }
+                        case 71: {
+                            ReCallMessagePack pack = JSON.parseObject(task.data, ReCallMessagePack.class);
+                            BotStart.ReCall(pack.qq, pack.id);
                             break;
-                        case 74:
-                            Map<String, String> formdata3 = PackDo.parseDataFromPack(task.data);
-                            if (formdata3.containsKey("id") && formdata3.containsKey("sound") && formdata3.containsKey("qq")) {
+                        }
+                        case 74: {
+                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
+                            if (formdata.containsKey("id") && formdata.containsKey("sound") && formdata.containsKey("qq")) {
                                 try {
-                                    long id = Long.parseLong(formdata3.get("id"));
-                                    long qq = Long.parseLong(formdata3.get("qq"));
-                                    BotSendSound.SendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata3.get("sound"));
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    BotSendSound.SendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata.get("sound"));
                                 } catch (Exception e) {
                                     Start.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
-                        case 75:
-                            LoadFileSendToGroupImagePack pack19 = JSON.parseObject(task.data, LoadFileSendToGroupImagePack.class);
-                            BotSendImage.sendGroupImageFile(runQQ == 0 ? pack19.qq : runQQ, pack19.id, pack19.file);
+                        }
+                        case 75: {
+                            LoadFileSendToGroupImagePack pack = JSON.parseObject(task.data, LoadFileSendToGroupImagePack.class);
+                            BotSendImage.sendGroupImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                        }
+                        break;
+                        case 76: {
+                            LoadFileSendToGroupPrivateImagePack pack = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
+                            BotSendImage.sendGroupPrivateImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.file);
                             break;
-                        case 76:
-                            LoadFileSendToGroupPrivateImagePack pack20 = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
-                            BotSendImage.sendGroupPrivateImageFile(runQQ == 0 ? pack20.qq : runQQ, pack20.id, pack20.fid, pack20.file);
+                        }
+                        case 77: {
+                            LoadFileSendToFriendImagePack pack = JSON.parseObject(task.data, LoadFileSendToFriendImagePack.class);
+                            BotSendImage.sendFriendImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                             break;
-                        case 77:
-                            LoadFileSendToFriendImagePack pack21 = JSON.parseObject(task.data, LoadFileSendToFriendImagePack.class);
-                            BotSendImage.sendFriendImageFile(runQQ == 0 ? pack21.qq : runQQ, pack21.id, pack21.file);
+                        }
+                        case 78: {
+                            LoadFileSendToGroupSoundPack pack = JSON.parseObject(task.data, LoadFileSendToGroupSoundPack.class);
+                            BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                             break;
-                        case 78:
-                            LoadFileSendToGroupSoundPack pack22 = JSON.parseObject(task.data, LoadFileSendToGroupSoundPack.class);
-                            BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack22.qq : runQQ, pack22.id, pack22.file);
+                        }
+                        case 83: {
+                            FriendNudgePack pack = JSON.parseObject(task.data, FriendNudgePack.class);
+                            BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                        }
+                        break;
+                        case 84: {
+                            MemberNudgePack pack = JSON.parseObject(task.data, MemberNudgePack.class);
+                            BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
-                        case 83:
-                            FriendNudgePack pack23 = JSON.parseObject(task.data, FriendNudgePack.class);
-                            BotSendNudge.SendNudge(runQQ == 0 ? pack23.qq : runQQ, pack23.id);
-                            break;
-                        case 84:
-                            MemberNudgePack pack24 = JSON.parseObject(task.data, MemberNudgePack.class);
-                            BotSendNudge.SendNudge(runQQ == 0 ? pack24.qq : runQQ, pack24.id, pack24.fid);
-                            break;
-                        case 90:
-                            GetImageUrlPack pack25 = JSON.parseObject(task.data, GetImageUrlPack.class);
-                            String data4 = BotGetData.GetImg(pack25.qq, pack25.uuid);
+                        }
+                        case 90: {
+                            GetImageUrlPack pack = JSON.parseObject(task.data, GetImageUrlPack.class);
+                            String data4 = BotGetData.GetImg(runQQ == 0 ? pack.qq : runQQ, pack.uuid);
                             if (data4 == null)
                                 break;
-                            ReImagePack obj = new ReImagePack();
-                            obj.uuid = pack25.uuid;
-                            obj.url = data4;
-                            obj.qq = pack25.qq;
-                            if (Socket.send(PackDo.BuildPack(obj, 90)))
+                            ReImagePack pack1 = new ReImagePack();
+                            pack1.uuid = pack.uuid;
+                            pack1.url = data4;
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            if (Socket.send(PackDo.BuildPack(pack1, 90)))
                                 close();
                             break;
-                        case 91:
-                            GetMemberInfo pack26 = JSON.parseObject(task.data, GetMemberInfo.class);
-                            MemberInfoPack obj1 = BotGetData.getMemberInfo(pack26.qq, pack26.id, pack26.fid);
-                            if (obj1 == null)
+                        }
+                        case 91: {
+                            GetMemberInfo pack = JSON.parseObject(task.data, GetMemberInfo.class);
+                            MemberInfoPack pack1 = BotGetData.getMemberInfo(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            if (pack1 == null)
                                 break;
-                            if (Socket.send(PackDo.BuildPack(obj1, 91)))
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            if (Socket.send(PackDo.BuildPack(pack1, 91)))
                                 close();
                             break;
-                        case 92:
-                            GetFriendInfoPack pack27 = JSON.parseObject(task.data, GetFriendInfoPack.class);
-                            FriendInfoPack obj2 = BotGetData.getFriend(pack27.qq, pack27.id);
-                            if (obj2 == null)
+                        }
+                        case 92: {
+                            GetFriendInfoPack pack = JSON.parseObject(task.data, GetFriendInfoPack.class);
+                            FriendInfoPack pack1 = BotGetData.getFriend(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            if (pack1 == null)
                                 break;
-                            obj2.qq = pack27.qq;
-                            if (Socket.send(PackDo.BuildPack(obj2, 92)))
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            if (Socket.send(PackDo.BuildPack(pack1, 92)))
                                 close();
                             break;
-                        case 93:
-                            MusicSharePack pack28 = JSON.parseObject(task.data, MusicSharePack.class);
-                            if(pack28.type1 == 0) {
-                                BotSendMusicShare.SendMusicShare(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
-                            }
-                            else if(pack28.type1 == 1) {
-                                BotSendMusicShare.SendMusicShareGroup(pack28.qq, pack28.id, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
-                            }
-                            else if(pack28.type1 == 2) {
-                                BotSendMusicShare.SendMusicShareMember(pack28.qq, pack28.id, pack28.fid, pack28.type, pack28.title, pack28.summary, pack28.jumpUrl, pack28.pictureUrl, pack28.musicUrl);
+                        }
+                        case 93: {
+                            MusicSharePack pack = JSON.parseObject(task.data, MusicSharePack.class);
+                            if (pack.type1 == 0) {
+                                BotSendMusicShare.SendMusicShare(pack.qq, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                            } else if (pack.type1 == 1) {
+                                BotSendMusicShare.SendMusicShareGroup(pack.qq, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                            } else if (pack.type1 == 2) {
+                                BotSendMusicShare.SendMusicShareMember(pack.qq, pack.id, pack.fid, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             }
                             break;
-                        case 96:
-                            EssenceMessagePack pack29 = JSON.parseObject(task.data, EssenceMessagePack.class);
-                            BotGroupDo.setEssenceMessage(pack29.qq, pack29.id, pack29.mid);
+                        }
+                        case 96: {
+                            EssenceMessagePack pack = JSON.parseObject(task.data, EssenceMessagePack.class);
+                            BotGroupDo.setEssenceMessage(pack.qq, pack.id, pack.mid);
                             break;
+                        }
                         case 97:
                             addBuff(task.data);
                             break;
@@ -386,8 +412,9 @@ public class ThePlugin {
                     temp.send = true;
             }
         }
-        if(temp == null)
+        if (temp == null)
             return;
+        temp.qq = runQQ == 0 ? temp.qq : runQQ;
         Bot bot = BotStart.getBots().get(temp.qq);
         if (bot == null) {
             Start.logger.warn("不存在QQ:" + temp.qq);

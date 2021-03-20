@@ -766,7 +766,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //73 [机器人]好友昵称改变（事件）
     @EventHandler
-    public void onFriendNickChangedEvent(FriendNickChangedEvent  event) {
+    public void onFriendNickChangedEvent(FriendNickChangedEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getFriend().getId();

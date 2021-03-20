@@ -1,6 +1,7 @@
 package Color_yr.ColorMirai.Pack.ToPlugin;
 
 import Color_yr.ColorMirai.Pack.PackBase;
+
 /*
 98 [机器人]龙王改变时（事件）
 id：群号

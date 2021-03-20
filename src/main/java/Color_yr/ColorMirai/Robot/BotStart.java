@@ -94,7 +94,7 @@ public class BotStart {
                 }
             }
         }, 0, 1, TimeUnit.SECONDS);
-        service1.scheduleAtFixedRate(()-> {
+        service1.scheduleAtFixedRate(() -> {
             if (!Tasks.isEmpty()) {
                 SendPackObj task = Tasks.remove(0);
                 task.data += " ";
