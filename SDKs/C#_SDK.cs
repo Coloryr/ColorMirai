@@ -44,9 +44,23 @@ namespace ColoryrSDK
         public List<MemberInfoPack> members { get; set; }
     }
     /// <summary>
+    /// 58 [插件]获取群设置
+    /// </summary>
+    public record GroupSettingPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 设定
+        /// </summary>
+        public GroupSettings setting { get; set; }
+    }
+    /// <summary>
     /// 91 [插件]获取群成员信息
     /// </summary>
-    public record MemberInfoPack
+    public record MemberInfoPack : PackBase
     {
         /// <summary>
         /// QQ号码
@@ -92,7 +106,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 92 [插件]获取朋友信息
     /// </summary>
-    public record FriendInfoPack
+    public record FriendInfoPack : PackBase
     {
         /// <summary>
         /// QQ号
@@ -180,6 +194,32 @@ namespace ColoryrSDK
         /// 机器人所拥有的权限
         /// </summary>
         public MemberPermission per;
+    }
+    /// <summary>
+    /// 群设定
+    /// </summary>
+    public record GroupSettings
+    {
+        /// <summary>
+        /// 入群公告, 没有时为空字符串.
+        /// </summary>
+        public string entranceAnnouncement { get; set; }
+        /// <summary>
+        /// 全体禁言状态
+        /// </summary>
+        public bool isMuteAll { get; set; }
+        /// <summary>
+        /// 允许群员邀请好友入群的状态
+        /// </summary>
+        public bool isAllowMemberInvite { get; set; }
+        /// <summary>
+        /// 自动加群审批
+        /// </summary>
+        public bool isAutoApproveEnabled { get; set; }
+        /// <summary>
+        /// 匿名聊天
+        /// </summary>
+        public bool isAnonymousChatEnabled { get; set; }
     }
     /// <summary>
     /// 基础包
