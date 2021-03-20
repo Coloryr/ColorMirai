@@ -3,11 +3,12 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
+86 [机器人]其他客户端上线（事件）
 appId:：设备Id
-kind：设备类型1
-platform：设备类型2
+kind：设备类型
+platform：设备类型
 deviceName：设备名字
-deviceKind：设备类型3
+deviceKind：设备类型
  */
 public class OtherClientOnlineEventPack extends PackBase {
     public int appId;

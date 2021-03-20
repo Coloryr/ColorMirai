@@ -7,10 +7,8 @@ import Color_yr.ColorMirai.Pack.PackBase;
 name：机器人nick
  */
 public class BotAvatarChangedPack extends PackBase {
-    public String name;
 
-    public BotAvatarChangedPack(long qq, String name) {
-        this.name = name;
+    public BotAvatarChangedPack(long qq) {
         this.qq = qq;
     }
 }

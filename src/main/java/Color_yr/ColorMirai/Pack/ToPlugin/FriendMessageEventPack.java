@@ -9,18 +9,16 @@ import java.util.List;
 
 /*
 51 [机器人]收到朋友消息（事件）
-id：朋友ID
-fname：发送人的群名片
+id：朋友QQ号
 message：消息
 time：时间
  */
 public class FriendMessageEventPack extends PackBase {
     public long id;
-    public String name;
     public List<String> message;
     public int time;
 
-    public FriendMessageEventPack(long qq, long id, String name, MessageChain message, int time) {
+    public FriendMessageEventPack(long qq, long id, MessageChain message, int time) {
         this.id = id;
         this.qq = qq;
         this.message = new ArrayList<>();
@@ -28,7 +26,6 @@ public class FriendMessageEventPack extends PackBase {
             this.message.add(item.toString());
         }
         this.message.add(message.contentToString());
-        this.name = name;
         this.time = time;
     }
 }

@@ -8,15 +8,13 @@ import Color_yr.ColorMirai.Pack.PackBase;
 id：群号
 fid：进群人QQ号
  */
-public class MemberJoinEventAPack extends PackBase {
+public class MemberJoinEventPack extends PackBase {
     public long id;
     public long fid;
-    public String name;
 
-    public MemberJoinEventAPack(long qq, long id, long fid, String name) {
+    public MemberJoinEventPack(long qq, long id, long fid) {
         this.fid = fid;
         this.qq = qq;
         this.id = id;
-        this.name = name;
     }
 }

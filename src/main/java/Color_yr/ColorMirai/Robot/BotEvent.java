@@ -35,9 +35,8 @@ public class BotEvent extends SimpleListenerHost {
     public void onBotAvatarChangedEvent(BotAvatarChangedEvent event) {
         if (PluginUtils.havePlugin())
             return;
-        String name = event.getBot().getNick();
         long qq = event.getBot().getId();
-        BotAvatarChangedPack pack = new BotAvatarChangedPack(qq, name);
+        BotAvatarChangedPack pack = new BotAvatarChangedPack(qq);
         BotStart.addTask(new SendPackObj(2, JSON.toJSONString(pack), 0, 0, qq));
     }
 
@@ -48,8 +47,9 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long qq = event.getBot().getId();
-        String name = event.getNew().name();
-        BotGroupPermissionChangePack pack = new BotGroupPermissionChangePack(qq, name, id);
+        MemberPermission now = event.getNew();
+        MemberPermission old = event.getOrigin();
+        BotGroupPermissionChangePack pack = new BotGroupPermissionChangePack(qq, now, old, id);
         BotStart.addTask(new SendPackObj(3, JSON.toJSONString(pack), 0, id, qq));
     }
 
@@ -59,14 +59,10 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroupId();
-        String name = "";
-        if (event.getInvitor() != null) {
-            name = event.getInvitor().getNick();
-        }
         long qq = event.getBot().getId();
         long fid = event.getInvitorId();
         long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), (byte) 4, event));
-        BotInvitedJoinGroupRequestEventPack pack = new BotInvitedJoinGroupRequestEventPack(qq, name, id, fid, eventid);
+        BotInvitedJoinGroupRequestEventPack pack = new BotInvitedJoinGroupRequestEventPack(qq, id, fid, eventid);
         BotStart.addTask(new SendPackObj(4, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -90,8 +86,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getInvitor().getId();
         long qq = event.getBot().getId();
-        String name = event.getInvitor().getNick();
-        BotJoinGroupEventBPack pack = new BotJoinGroupEventBPack(qq, name, id, fid);
+        BotJoinGroupEventBPack pack = new BotJoinGroupEventBPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(6, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -112,10 +107,9 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroup().getId();
-        String name = event.getOperator().getNick();
         long fid = event.getOperator().getId();
         long qq = event.getBot().getId();
-        BotLeaveEventBPack pack = new BotLeaveEventBPack(qq, name, id, fid);
+        BotLeaveEventBPack pack = new BotLeaveEventBPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(7, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -127,9 +121,8 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         int time = event.getDurationSeconds();
         long qq = event.getBot().getId();
-        String name = event.getOperator().getNick();
         long fid = event.getOperator().getId();
-        BotMuteEventPack pack = new BotMuteEventPack(qq, name, id, fid, time);
+        BotMuteEventPack pack = new BotMuteEventPack(qq, id, fid, time);
         BotStart.addTask(new SendPackObj(9, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -239,22 +232,20 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getFriend().getId();
-        String name = event.getFriend().getNick();
         long qq = event.getBot().getId();
-        FriendAddEventPack pack = new FriendAddEventPack(qq, name, id);
+        FriendAddEventPack pack = new FriendAddEventPack(qq, id);
         BotStart.addTask(new SendPackObj(18, JSON.toJSONString(pack), id, 0, qq));
     }
 
-    //19 [机器人]好友头像被修改（事件）
+    //19 [机器人]好友头像修改（事件）
     @EventHandler
     public void onFriendAvatarChangedEvent(FriendAvatarChangedEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getFriend().getId();
-        String name = event.getFriend().getNick();
         long qq = event.getBot().getId();
         String url = event.getFriend().getAvatarUrl();
-        FriendAvatarChangedEventPack pack = new FriendAvatarChangedEventPack(qq, name, id, url);
+        FriendAvatarChangedEventPack pack = new FriendAvatarChangedEventPack(qq, id, url);
         BotStart.addTask(new SendPackObj(19, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -265,8 +256,7 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getFriend().getId();
         long qq = event.getBot().getId();
-        String name = event.getFriend().getNick();
-        FriendDeleteEventPack pack = new FriendDeleteEventPack(qq, name, id);
+        FriendDeleteEventPack pack = new FriendDeleteEventPack(qq, id);
         BotStart.addTask(new SendPackObj(20, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -276,7 +266,6 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getTarget().getId();
-        String name = event.getTarget().getNick();
         boolean res = event.getReceipt() != null;
         MessageSource message = null;
         if (res) {
@@ -287,7 +276,7 @@ public class BotEvent extends SimpleListenerHost {
             error = event.getException().getMessage();
         }
         long qq = event.getBot().getId();
-        FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(qq, message, id, name, res, error);
+        FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(qq, message, id, res, error);
         BotStart.addTask(new SendPackObj(21, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -299,8 +288,7 @@ public class BotEvent extends SimpleListenerHost {
         Message message = event.getMessage();
         long id = event.getTarget().getId();
         long qq = event.getBot().getId();
-        String name = event.getTarget().getNick();
-        FriendMessagePreSendEventPack pack = new FriendMessagePreSendEventPack(qq, message, id, name);
+        FriendMessagePreSendEventPack pack = new FriendMessagePreSendEventPack(qq, message, id);
         BotStart.addTask(new SendPackObj(22, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -311,9 +299,9 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getFriend().getId();
         String old = event.getOldRemark();
-        String name = event.getNewRemark();
+        String now = event.getNewRemark();
         long qq = event.getBot().getId();
-        FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(qq, id, old, name);
+        FriendRemarkChangeEventPack pack = new FriendRemarkChangeEventPack(qq, id, old, now);
         BotStart.addTask(new SendPackObj(23, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -328,9 +316,9 @@ public class BotEvent extends SimpleListenerHost {
             fid = event.getOperator().getId();
         }
         boolean old = event.getOrigin();
-        boolean new_ = event.getNew();
+        boolean now = event.getNew();
         long qq = event.getBot().getId();
-        GroupAllowAnonymousChatEventPack pack = new GroupAllowAnonymousChatEventPack(qq, id, fid, old, new_);
+        GroupAllowAnonymousChatEventPack pack = new GroupAllowAnonymousChatEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(24, JSON.toJSONString(pack), 0, id, qq));
     }
 
@@ -341,10 +329,10 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         boolean old = event.getOrigin();
-        boolean new_ = event.getNew();
+        boolean now = event.getNew();
         boolean bot = event.isByBot();
         long qq = event.getBot().getId();
-        GroupAllowConfessTalkEventPack pack = new GroupAllowConfessTalkEventPack(qq, id, old, new_, bot);
+        GroupAllowConfessTalkEventPack pack = new GroupAllowConfessTalkEventPack(qq, id, old, now, bot);
         BotStart.addTask(new SendPackObj(25, JSON.toJSONString(pack), 0, id, qq));
     }
 
@@ -359,9 +347,9 @@ public class BotEvent extends SimpleListenerHost {
             fid = event.getOperator().getId();
         }
         boolean old = event.getOrigin();
-        boolean new_ = event.getNew();
+        boolean now = event.getNew();
         long qq = event.getBot().getId();
-        GroupAllowMemberInviteEventPack pack = new GroupAllowMemberInviteEventPack(qq, id, fid, old, new_);
+        GroupAllowMemberInviteEventPack pack = new GroupAllowMemberInviteEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(26, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -376,9 +364,9 @@ public class BotEvent extends SimpleListenerHost {
             fid = event.getOperator().getId();
         }
         String old = event.getOrigin();
-        String new_ = event.getNew();
+        String now = event.getNew();
         long qq = event.getBot().getId();
-        GroupEntranceAnnouncementChangeEventPack pack = new GroupEntranceAnnouncementChangeEventPack(qq, id, fid, old, new_);
+        GroupEntranceAnnouncementChangeEventPack pack = new GroupEntranceAnnouncementChangeEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(27, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -425,9 +413,9 @@ public class BotEvent extends SimpleListenerHost {
             fid = event.getOperator().getId();
         }
         boolean old = event.getOrigin();
-        boolean new_ = event.getNew();
+        boolean now = event.getNew();
         long qq = event.getBot().getId();
-        GroupMuteAllEventPack pack = new GroupMuteAllEventPack(qq, id, fid, old, new_);
+        GroupMuteAllEventPack pack = new GroupMuteAllEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(30, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -442,9 +430,9 @@ public class BotEvent extends SimpleListenerHost {
             fid = event.getOperator().getId();
         }
         String old = event.getOrigin();
-        String new_ = event.getNew();
+        String now = event.getNew();
         long qq = event.getBot().getId();
-        GroupNameChangeEventPack pack = new GroupNameChangeEventPack(qq, id, fid, old, new_);
+        GroupNameChangeEventPack pack = new GroupNameChangeEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(31, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -454,9 +442,9 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getTarget().getId();
-        String name = event.getImage().getImageId();
+        String uuid = event.getImage().getImageId();
         long qq = event.getBot().getId();
-        ImageUploadEventAPack pack = new ImageUploadEventAPack(qq, id, name);
+        ImageUploadEventAPack pack = new ImageUploadEventAPack(qq, id, uuid);
         BotStart.addTask(new SendPackObj(32, JSON.toJSONString(pack), 0, id, qq));
     }
 
@@ -482,9 +470,9 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
         String old = event.getOrigin();
-        String new_ = event.getNew();
+        String now = event.getNew();
         long qq = event.getBot().getId();
-        MemberCardChangeEventPack pack = new MemberCardChangeEventPack(qq, id, fid, old, new_);
+        MemberCardChangeEventPack pack = new MemberCardChangeEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(34, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -495,9 +483,8 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
-        String name = event.getMember().getNameCard();
         long qq = event.getBot().getId();
-        MemberJoinEventAPack pack = new MemberJoinEventAPack(qq, id, fid, name);
+        MemberJoinEventPack pack = new MemberJoinEventPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(35, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -508,9 +495,8 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
-        String name = event.getMember().getNameCard();
         long qq = event.getBot().getId();
-        MemberJoinEventAPack pack = new MemberJoinEventAPack(qq, id, fid, name);
+        MemberJoinEventPack pack = new MemberJoinEventPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(36, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -545,15 +531,12 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
-        String fname = event.getMember().getNameCard();
-        String ename = "";
         long eid = 0;
         if (event.getOperator() != null) {
             eid = event.getOperator().getId();
-            ename = event.getOperator().getNameCard();
         }
         long qq = event.getBot().getId();
-        MemberLeaveEventAPack pack = new MemberLeaveEventAPack(qq, id, fid, eid, fname, ename);
+        MemberLeaveEventAPack pack = new MemberLeaveEventAPack(qq, id, fid, eid);
         BotStart.addTask(new SendPackObj(38, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -564,9 +547,8 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
-        String name = event.getMember().getNameCard();
         long qq = event.getBot().getId();
-        MemberLeaveEventBPack pack = new MemberLeaveEventBPack(qq, id, fid, name);
+        MemberLeaveEventBPack pack = new MemberLeaveEventBPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(39, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -578,15 +560,12 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
         long eid = 0;
-        String fname = event.getMember().getNameCard();
-        String ename = "";
         int time = event.getDurationSeconds();
         if (event.getOperator() != null) {
             eid = event.getOperator().getId();
-            ename = event.getOperator().getNameCard();
         }
         long qq = event.getBot().getId();
-        MemberMuteEventPack pack = new MemberMuteEventPack(qq, id, fid, eid, fname, ename, time);
+        MemberMuteEventPack pack = new MemberMuteEventPack(qq, id, fid, eid, time);
         BotStart.addTask(new SendPackObj(40, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -597,10 +576,10 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
-        String old = event.getOrigin().name();
-        String new_ = event.getNew().name();
+        MemberPermission old = event.getOrigin();
+        MemberPermission now = event.getNew();
         long qq = event.getBot().getId();
-        MemberPermissionChangeEventPack pack = new MemberPermissionChangeEventPack(qq, id, fid, old, new_);
+        MemberPermissionChangeEventPack pack = new MemberPermissionChangeEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(41, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -612,9 +591,9 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
         String old = event.getOrigin();
-        String new_ = event.getNew();
+        String now = event.getNew();
         long qq = event.getBot().getId();
-        MemberSpecialTitleChangeEventPack pack = new MemberSpecialTitleChangeEventPack(qq, id, fid, old, new_);
+        MemberSpecialTitleChangeEventPack pack = new MemberSpecialTitleChangeEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(42, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -626,14 +605,11 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
         long eid = 0;
-        String fname = event.getMember().getNameCard();
-        String ename = "";
         if (event.getOperator() != null) {
             eid = event.getOperator().getId();
-            ename = event.getOperator().getNameCard();
         }
         long qq = event.getBot().getId();
-        MemberUnmuteEventPack pack = new MemberUnmuteEventPack(qq, id, fid, eid, fname, ename);
+        MemberUnmuteEventPack pack = new MemberUnmuteEventPack(qq, id, fid, eid);
         BotStart.addTask(new SendPackObj(43, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -660,13 +636,11 @@ public class BotEvent extends SimpleListenerHost {
         int[] mid = event.getMessageIds();
         int time = event.getMessageTime();
         long oid = 0;
-        String oanme = "";
         if (event.getOperator() != null) {
             oid = event.getOperator().getId();
-            oanme = event.getOperator().getNameCard();
         }
         long qq = event.getBot().getId();
-        MessageRecallEventBPack pack = new MessageRecallEventBPack(qq, id, fid, mid, time, oid, oanme);
+        MessageRecallEventBPack pack = new MessageRecallEventBPack(qq, id, fid, mid, time, oid);
         BotStart.addTask(new SendPackObj(45, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -677,11 +651,10 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getFromGroupId();
         long fid = event.getFromId();
-        String name = event.getFromNick();
         String message = event.getMessage();
         long qq = event.getBot().getId();
         long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 46, event));
-        NewFriendRequestEventPack pack = new NewFriendRequestEventPack(qq, id, fid, name, message, eventid);
+        NewFriendRequestEventPack pack = new NewFriendRequestEventPack(qq, id, fid, message, eventid);
         BotStart.addTask(new SendPackObj(46, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -713,10 +686,9 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getTarget().getId();
-        String fname = event.getTarget().getNameCard();
         Message message = event.getMessage();
         long qq = event.getBot().getId();
-        TempMessagePreSendEventPack pack = new TempMessagePreSendEventPack(qq, id, fid, message, fname);
+        TempMessagePreSendEventPack pack = new TempMessagePreSendEventPack(qq, id, fid, message);
         BotStart.addTask(new SendPackObj(48, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -729,7 +701,6 @@ public class BotEvent extends SimpleListenerHost {
         long fid = event.getSender().getId();
         if (Start.Config.escapeSelf && BotStart.getBots().containsKey(fid))
             return;
-        String name = event.getSender().getNameCard();
         MessageChain message = event.getMessage();
         MessageSaveObj call = new MessageSaveObj();
         call.sourceQQ = event.getBot().getId();
@@ -738,7 +709,7 @@ public class BotEvent extends SimpleListenerHost {
         call.id = call.source.getIds()[0];
         long qq = event.getBot().getId();
         BotStart.addMessage(qq, call.id, call);
-        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, name, message);
+        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, message);
         BotStart.addTask(new SendPackObj(49, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -749,7 +720,6 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getSender().getId();
-        String name = event.getSenderName();
         MessageChain message = event.getMessage();
         MessageSaveObj call = new MessageSaveObj();
         call.sourceQQ = event.getBot().getId();
@@ -759,7 +729,7 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         BotStart.addMessage(qq, call.id, call);
-        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, name, message, time);
+        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, message, time);
         BotStart.addTask(new SendPackObj(50, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -769,7 +739,6 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getSender().getId();
-        String name = event.getSenderName();
         MessageChain message = event.getMessage();
         MessageSaveObj call = new MessageSaveObj();
         call.sourceQQ = event.getBot().getId();
@@ -779,7 +748,7 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         BotStart.addMessage(qq, call.id, call);
-        FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, name, message, time);
+        FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, message, time);
         BotStart.addTask(new SendPackObj(51, JSON.toJSONString(pack), id, 0, qq));
     }
 
@@ -789,11 +758,23 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getFriend().getId();
-        String name = event.getFriend().getNick();
         boolean input = event.getInputting();
         long qq = event.getBot().getId();
-        FriendInputStatusChangedEventPack pack = new FriendInputStatusChangedEventPack(qq, id, name, input);
+        FriendInputStatusChangedEventPack pack = new FriendInputStatusChangedEventPack(qq, id, input);
         BotStart.addTask(new SendPackObj(72, JSON.toJSONString(pack), id, 0, qq));
+    }
+
+    //73 [机器人]好友昵称改变（事件）
+    @EventHandler
+    public void onFriendNickChangedEvent(FriendNickChangedEvent  event) {
+        if (PluginUtils.havePlugin())
+            return;
+        long id = event.getFriend().getId();
+        String old = event.getFrom();
+        String now = event.getTo();
+        long qq = event.getBot().getId();
+        FriendNickChangedEventPack pack = new FriendNickChangedEventPack(qq, id, old, now);
+        BotStart.addTask(new SendPackObj(73, JSON.toJSONString(pack), id, 0, qq));
     }
 
     //79 [机器人]成员群恢复（事件）
@@ -804,8 +785,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
         long qq = event.getBot().getId();
-        String name = event.getMember().getNameCard();
-        MemberJoinRetrieveEventPack pack = new MemberJoinRetrieveEventPack(qq, id, fid, name);
+        MemberJoinRetrieveEventPack pack = new MemberJoinRetrieveEventPack(qq, id, fid);
         BotStart.addTask(new SendPackObj(79, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -834,22 +814,22 @@ public class BotEvent extends SimpleListenerHost {
         if (event.getSubject() instanceof Group) {
             Group group = (Group) event.getSubject();
             long id = group.getId();
-            MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+            NudgedEventPack pack = new NudgedEventPack(qq, id, fid, aid, action, suffix);
             BotStart.addTask(new SendPackObj(81, JSON.toJSONString(pack), fid, id, qq));
         } else if (event.getSubject() instanceof Stranger) {
             Stranger group = (Stranger) event.getSubject();
             long id = group.getId();
-            MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+            NudgedEventPack pack = new NudgedEventPack(qq, id, fid, aid, action, suffix);
             BotStart.addTask(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
         } else if (event.getSubject() instanceof Friend) {
             Friend group = (Friend) event.getSubject();
             long id = group.getId();
-            MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+            NudgedEventPack pack = new NudgedEventPack(qq, id, fid, aid, action, suffix);
             BotStart.addTask(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
         } else if (event.getSubject() instanceof Member) {
             Member group = (Member) event.getSubject();
             long id = group.getId();
-            MemberNudgedEventPack pack = new MemberNudgedEventPack(qq, id, fid, aid, action, suffix);
+            NudgedEventPack pack = new NudgedEventPack(qq, id, fid, aid, action, suffix);
             BotStart.addTask(new SendPackObj(82, JSON.toJSONString(pack), fid, id, qq));
         }
     }
@@ -913,24 +893,22 @@ public class BotEvent extends SimpleListenerHost {
         }
         String deviceName = event.getClient().getInfo().getDeviceName();
         String deviceKind = event.getClient().getInfo().getDeviceKind();
-        String senderName = event.getSenderName();
         MessageChain message = event.getMessage();
         long qq = event.getBot().getId();
-        OtherClientMessageEventPack pack = new OtherClientMessageEventPack(qq, appId, platform, deviceName, deviceKind, senderName, message);
+        OtherClientMessageEventPack pack = new OtherClientMessageEventPack(qq, appId, platform, deviceName, deviceKind, message);
         BotStart.addTask(new SendPackObj(88, JSON.toJSONString(pack), qq, 0, qq));
     }
 
-    //89 [机器人]他客户端发送群消息（事件）
+    //89 [机器人]其他客户端发送群消息（事件）
     @EventHandler
     public void onGroupMessageSyncEvent(GroupMessageSyncEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroup().getId();
         int time = event.getTime();
-        String senderName = event.getSenderName();
         MessageChain message = event.getMessage();
         long qq = event.getBot().getId();
-        GroupMessageSyncEventPack pack = new GroupMessageSyncEventPack(qq, id, time, senderName, message);
+        GroupMessageSyncEventPack pack = new GroupMessageSyncEventPack(qq, id, time, message);
         BotStart.addTask(new SendPackObj(89, JSON.toJSONString(pack), qq, 0, qq));
     }
 
@@ -941,9 +919,9 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long qq = event.getBot().getId();
         long id = event.getGroup().getId();
-        long fid = event.getNow().getId();
+        long now = event.getNow().getId();
         long old = event.getPrevious().getId();
-        GroupTalkativeChangePack pack = new GroupTalkativeChangePack(qq, id, fid, old);
+        GroupTalkativeChangePack pack = new GroupTalkativeChangePack(qq, id, now, old);
         BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
     }
 

@@ -2,6 +2,7 @@ package Color_yr.ColorMirai.Config;
 
 import Color_yr.ColorMirai.Start;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -68,7 +69,7 @@ public class ConfigRead {
             FileOutputStream out = new FileOutputStream(ConfigFile);
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
-            write.write(JSON.toJSONString(Start.Config));
+            write.write(JSON.toJSONString(Start.Config, SerializerFeature.PrettyFormat));
             write.close();
             out.close();
         } catch (Exception e) {

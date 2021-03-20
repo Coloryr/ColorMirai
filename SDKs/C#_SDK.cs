@@ -10,120 +10,38 @@ using System.Threading;
 namespace ColoryrSDK
 {
     /// <summary>
-    /// 基础包
+    /// 55 [插件]获取群列表
     /// </summary>
-    public abstract record PackBase
+    public record ListGroupPack : PackBase
     {
         /// <summary>
-        /// QQ号
+        /// 群列表
         /// </summary>
-        public long qq { get; set; }
+        public List<GroupInfo> groups { get; set; }
     }
     /// <summary>
-    /// 0 [插件]插件开始连接
+    /// 56 [插件]获取好友列表
     /// </summary>
-    public record StartPack
+    public record ListFriendPack : PackBase
     {
         /// <summary>
-        /// 插件名字
+        /// 朋友列表
         /// </summary>
-        public string Name { get; set; }
-        /// <summary>
-        /// 监听的包
-        /// </summary>
-        public List<byte> Reg { get; set; }
-        /// <summary>
-        /// 监听的群，可以为null
-        /// </summary>
-        public List<long> Groups { get; set; }
-        /// <summary>
-        /// 监听的QQ号，可以为null
-        /// </summary>
-        public List<long> QQs { get; set; }
-        /// <summary>
-        /// 运行的QQ，0为不指定
-        /// </summary>
-        public long RunQQ { get; set; }
-    }
-    public enum Sex
-    {
-        MALE,
-        FEMALE,
-        UNKNOWN
-    }
-    public enum MemberPermission
-    {
-        MEMBER,
-        ADMINISTRATOR,
-        OWNER
-    }
-    public record UserProfile
-    {
-        /// <summary>
-        /// 昵称
-        /// </summary>
-        public string nickname { get; set; }
-        /// <summary>
-        /// 邮箱
-        /// </summary>
-        public string email { get; set; }
-        /// <summary>
-        /// 年龄
-        /// </summary>
-        public int age { get; set; }
-        /// <summary>
-        /// QQ等级
-        /// </summary>
-        public int qLevel { get; set; }
-        /// <summary>
-        /// 性别
-        /// </summary>
-        public Sex sex { get; set; }
+        public List<FriendInfoPack> friends { get; set; }
     }
     /// <summary>
-    /// 92 [插件]获取朋友信息
+    /// 57 [插件]获取群成员
     /// </summary>
-    public record FriendInfoPack
-    {
-        /// <summary>
-        /// QQ号
-        /// </summary>
-        public long id { get; set; }
-        /// <summary>
-        /// 头像图片
-        /// </summary>
-        public string img { get; set; }
-        /// <summary>
-        /// 好友备注
-        /// </summary>
-        public string remark { get; set; }
-        /// <summary>
-        /// 用户详细资料
-        /// </summary>
-        public UserProfile userProfile { get; set; }
-    }
-    public record GroupInfo
+    public record ListMemberPack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
-        public long id;
+        public long id { get; set; }
         /// <summary>
-        /// 群名
+        /// 成员列表
         /// </summary>
-        public string name;
-        /// <summary>
-        /// 群头像
-        /// </summary>
-        public string img;
-        /// <summary>
-        /// 所有者QQ号
-        /// </summary>
-        public long oid;
-        /// <summary>
-        /// 机器人所拥有的权限
-        /// </summary>
-        public MemberPermission per;
+        public List<MemberInfoPack> members { get; set; }
     }
     /// <summary>
     /// 91 [插件]获取群成员信息
@@ -172,106 +90,877 @@ namespace ColoryrSDK
         public int lastSpeakTimestamp { get; set; }
     }
     /// <summary>
-    /// 56 [插件]获取好友列表
+    /// 92 [插件]获取朋友信息
     /// </summary>
-    public record ListFriendPack : PackBase
+    public record FriendInfoPack
     {
         /// <summary>
-        /// 朋友列表
+        /// QQ号
         /// </summary>
-        public List<FriendInfoPack> friends { get; set; }
+        public long id { get; set; }
+        /// <summary>
+        /// 头像图片
+        /// </summary>
+        public string img { get; set; }
+        /// <summary>
+        /// 好友备注
+        /// </summary>
+        public string remark { get; set; }
+        /// <summary>
+        /// 用户详细资料
+        /// </summary>
+        public UserProfile userProfile { get; set; }
     }
     /// <summary>
-    /// 55 [插件]获取群列表
+    /// 性别
     /// </summary>
-    public record ListGroupPack : PackBase
+    public enum Sex
+    {
+        MALE,
+        FEMALE,
+        UNKNOWN
+    }
+    /// <summary>
+    /// 成员权限
+    /// </summary>
+    public enum MemberPermission
+    {
+        MEMBER,
+        ADMINISTRATOR,
+        OWNER
+    }
+    /// <summary>
+    /// 用户信息
+    /// </summary>
+    public record UserProfile
     {
         /// <summary>
-        /// 群列表
+        /// 昵称
         /// </summary>
-        public List<GroupInfo> groups { get; set; }
+        public string nickname { get; set; }
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string email { get; set; }
+        /// <summary>
+        /// 年龄
+        /// </summary>
+        public int age { get; set; }
+        /// <summary>
+        /// QQ等级
+        /// </summary>
+        public int qLevel { get; set; }
+        /// <summary>
+        /// 性别
+        /// </summary>
+        public Sex sex { get; set; }
     }
     /// <summary>
-    /// 66 [插件]解除禁言
+    /// 群信息
     /// </summary>
-    public record UnmuteGroupMemberPack : PackBase
+    public record GroupInfo
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id;
+        /// <summary>
+        /// 群名
+        /// </summary>
+        public string name;
+        /// <summary>
+        /// 群头像
+        /// </summary>
+        public string img;
+        /// <summary>
+        /// 所有者QQ号
+        /// </summary>
+        public long oid;
+        /// <summary>
+        /// 机器人所拥有的权限
+        /// </summary>
+        public MemberPermission per;
+    }
+    /// <summary>
+    /// 基础包
+    /// </summary>
+    public abstract record PackBase
+    {
+        /// <summary>
+        /// QQ号
+        /// </summary>
+        public long qq { get; set; }
+    }
+    /// <summary>
+    /// 0 [插件]插件开始连接
+    /// </summary>
+    public record StartPack
+    {
+        /// <summary>
+        /// 插件名字
+        /// </summary>
+        public string Name { get; set; }
+        /// <summary>
+        /// 监听的包
+        /// </summary>
+        public List<byte> Reg { get; set; }
+        /// <summary>
+        /// 监听的群，可以为null
+        /// </summary>
+        public List<long> Groups { get; set; }
+        /// <summary>
+        /// 监听的QQ号，可以为null
+        /// </summary>
+        public List<long> QQs { get; set; }
+        /// <summary>
+        /// 运行的QQ，0为不指定
+        /// </summary>
+        public long RunQQ { get; set; }
+    }
+    /// <summary>
+    /// 1 [机器人]图片上传前. 可以阻止上传（事件）
+    /// </summary>
+    public record BeforeImageUploadPack : PackBase
+    {
+        /// <summary>
+        /// 发送给的号码
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 图片ID
+        /// </summary>
+        public string name { get; set; }
+    }
+    /// <summary>
+    /// 2 [机器人]头像被修改（通过其他客户端修改了头像）（事件）
+    /// </summary>
+    public record BotAvatarChangedPack : PackBase
+    {
+
+    }
+    /// <summary>
+    /// 3 [机器人]在群里的权限被改变. 操作人一定是群主（事件）
+    /// </summary>
+    public record BotGroupPermissionChangePack : PackBase
+    {
+        /// <summary>
+        /// 当前权限
+        /// </summary>
+        public MemberPermission now { get; set; }
+        /// <summary>
+        /// 旧的权限
+        /// </summary>
+        public MemberPermission old { get; set; }
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 4 [机器人]被邀请加入一个群（事件）
+    /// </summary>
+    public record BotInvitedJoinGroupRequestEventPack : PackBase
+    {
+        /// <summary>
+        /// 事件ID
+        /// </summary>
+        public long eventid { get; set; }
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 成员QQ号
+        /// 邀请人QQ号
         /// </summary>
         public long fid { get; set; }
     }
     /// <summary>
-    /// 57 [插件]获取群成员
+    /// 5 [机器人]成功加入了一个新群（不确定. 可能是主动加入）（事件）
     /// </summary>
-    public record ListMemberPack : PackBase
+    public record BotJoinGroupEventAPack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
-        /// <summary>
-        /// 成员列表
-        /// </summary>
-        public List<MemberInfoPack> members { get; set; }
     }
     /// <summary>
-    /// 64 [插件]删除群员
+    /// 6 [机器人]成功加入了一个新群（机器人被一个群内的成员直接邀请加入了群）（事件）
     /// </summary>
-    public record DeleteGroupMemberPack : PackBase
+    public record BotJoinGroupEventBPack : BotJoinGroupEventAPack
+    {
+        /// <summary>
+        /// 邀请人QQ
+        /// </summary>
+        public long fid;
+    }
+    /// <summary>
+    /// 7 [机器人]主动退出一个群（事件）
+    /// </summary>
+    public record BotLeaveEventAPack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
+    }
+    /// <summary>
+    /// 8 [机器人]被管理员或群主踢出群（事件）
+    /// </summary>
+    public record BotLeaveEventBPack : BotLeaveEventAPack
+    {
         /// <summary>
-        /// 群员QQ号
+        /// 执行人QQ
         /// </summary>
         public long fid { get; set; }
     }
     /// <summary>
-    /// 96 [插件]设置群精华消息
+    /// 9 [机器人]被禁言（事件）
     /// </summary>
-    public record EssenceMessagePack : PackBase
+    public record BotMuteEventPack : PackBase
     {
         /// <summary>
         /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 禁言时间
+        /// </summary>
+        public int time { get; set; }
+    }
+    /// <summary>
+    /// 10 [机器人]主动离线（事件）
+    /// 12 [机器人]被服务器断开（事件）
+    /// 13 [机器人]因网络问题而掉线（事件）
+    /// </summary>
+    public record BotOfflineEventAPack : PackBase
+    {
+        /// <summary>
+        /// 离线原因
+        /// </summary>
+        public string message { get; set; }
+    }
+    /// <summary>
+    /// 11 [机器人]被挤下线（事件）
+    /// </summary>
+    public record BotOfflineEventBPack : BotOfflineEventAPack
+    {
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string title { get; set; }
+    }
+    /// <summary>
+    /// 14 [机器人]服务器主动要求更换另一个服务器（事件）
+    /// </summary>
+    public record BotOfflineEventCPack : PackBase
+    {
+
+    }
+    /// <summary>
+    /// 15 [机器人]登录完成, 好友列表, 群组列表初始化完成（事件）
+    /// </summary>
+    public record BotOnlineEventPack : PackBase
+    {
+
+    }
+    /// <summary>
+    /// 16 [机器人]主动或被动重新登录（事件）
+    /// </summary>
+    public record BotReloginEventPack : PackBase
+    {
+        /// <summary>
+        /// 原因消息
+        /// </summary>
+        public string message { get; set; }
+    }
+    /// <summary>
+    /// 17 [机器人]被取消禁言（事件）
+    /// </summary>
+    public record BotUnmuteEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 18 [机器人]成功添加了一个新好友（事件）
+    /// </summary>
+    public record FriendAddEventPack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 19 [机器人]好友头像修改（事件）
+    /// </summary>
+    public record FriendAvatarChangedEventPack : PackBase
+    {
+        /// <summary>
+        /// 图片url
+        /// </summary>
+        public string url { get; set; }
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 20 [机器人]好友已被删除（事件）
+    /// </summary>
+    public record FriendDeleteEventPack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 21 [机器人]在好友消息发送后广播（事件）
+    /// </summary>
+    public record FriendMessagePostSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 是否成功发送
+        /// </summary>
+        public bool res { get; set; }
+        /// <summary>
+        /// 错误消息
+        /// </summary>
+        public string error { get; set; }
+    }
+    /// <summary>
+    /// 22 [机器人]在发送好友消息前广播（事件）
+    /// </summary>
+    public record FriendMessagePreSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 23 [机器人]好友昵称改变（事件）
+    /// </summary>
+    public record FriendRemarkChangeEventPack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 旧的昵称
+        /// </summary>
+        public string old { get; set; }
+        /// <summary>
+        /// 新的昵称
+        /// </summary>
+        public string now { get; set; }
+    }
+    /// <summary>
+    /// 24 [机器人]群 "匿名聊天" 功能状态改变（事件）
+    /// </summary>
+    public record GroupAllowAnonymousChatEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的状态
+        /// </summary>
+        public bool old { get; set; }
+        /// <summary>
+        /// 新的状态
+        /// </summary>
+        public bool now { get; set; }
+    }
+    /// <summary>
+    /// 25 [机器人]群 "坦白说" 功能状态改变（事件）
+    /// </summary>
+    public record GroupAllowConfessTalkEventPack : GroupAllowAnonymousChatEventPack
+    {
+
+    }
+    /// <summary>
+    /// 26 [机器人]群 "允许群员邀请好友加群" 功能状态改变（事件）
+    /// </summary>
+    public record GroupAllowMemberInviteEventPack : GroupAllowAnonymousChatEventPack
+    {
+
+    }
+    /// <summary>
+    /// 27 [机器人]入群公告改变（事件）
+    /// </summary>
+    public record GroupEntranceAnnouncementChangeEventPack : GroupAllowAnonymousChatEventPack
+    {
+
+    }
+    /// <summary>
+    /// 28 [机器人]在群消息发送后广播（事件）
+    /// </summary>
+    public record GroupMessagePostSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 是否发送成功
+        /// </summary>
+        public bool res { get; set; }
+        /// <summary>
+        /// 发送的消息
+        /// </summary>
+        public List<string> message { get; set; }
+        /// <summary>
+        /// 错误消息
+        /// </summary>
+        public string error { get; set; }
+    }
+    /// <summary>
+    /// 29 [机器人]在发送群消息前广播（事件）
+    /// </summary>
+    public record GroupMessagePreSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+    }
+    /// <summary>
+    /// 30 [机器人]群 "全员禁言" 功能状态改变（事件）
+    /// </summary>
+    public record GroupMuteAllEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的状态
+        /// </summary>
+        public bool old { get; set; }
+        /// <summary>
+        /// 新的状态
+        /// </summary>
+        public bool now { get; set; }
+    }
+    /// <summary>
+    /// 31 [机器人]群名改变（事件）
+    /// </summary>
+    public record GroupNameChangeEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的名字
+        /// </summary>
+        public string old { get; set; }
+        /// <summary>
+        /// 新的名字
+        /// </summary>
+        public string now { get; set; }
+    }
+    /// <summary>
+    /// 32 [机器人]图片上传成功（事件）
+    /// </summary>
+    public record ImageUploadEventAPack : PackBase
+    {
+        /// <summary>
+        /// 目标ID
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 图片ID
+        /// </summary>
+        public string uuid { get; set; }
+    }
+    /// <summary>
+    /// 33 [机器人]图片上传失败（事件）
+    /// </summary>
+    public record ImageUploadEventBPack : ImageUploadEventAPack
+    {
+        /// <summary>
+        /// 错误消息
+        /// </summary>
+        public string error { get; set; }
+        /// <summary>
+        /// 错误码
+        /// </summary>
+        public int index { get; set; }
+    }
+    /// <summary>
+    /// 34 [机器人]成员群名片改动（事件）
+    /// </summary>
+    public record MemberCardChangeEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的状态
+        /// </summary>
+        public string old { get; set; }
+        /// <summary>
+        /// 新的状态
+        /// </summary>
+        public string now { get; set; }
+    }
+    /// <summary>
+    /// 35 [机器人]成成员被邀请加入群（事件）
+    /// 36 [机器人] 成员主动加入群（事件）
+    /// </summary>
+    public record MemberJoinEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 进群人QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）
+    /// </summary>
+    public record MemberJoinRequestEventPack : PackBase
+    {
+        /// <summary>
+        /// 事件ID
+        /// </summary>
+        public long eventid { get; set; }
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 进群人
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 邀请人ID
+        /// </summary>
+        public long qif { get; set; }
+        /// <summary>
+        /// 入群消息
+        /// </summary>
+        public string message { get; set; }
+    }
+    /// <summary>
+    /// 38 [机器人]成员被踢出群（事件）
+    /// </summary>
+    public record MemberLeaveEventAPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 被踢出人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long eid { get; set; }
+    }
+    /// <summary>
+    /// 39 [机器人]成员主动离开（事件）
+    /// </summary>
+    public record MemberLeaveEventBPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 离开人QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 40 [机器人]群成员被禁言（事件）
+    /// </summary>
+    public record MemberMuteEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 被禁言的QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 执行禁言的QQ号
+        /// </summary>
+        public long eid { get; set; }
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
+    }
+    /// <summary>
+    /// 41 [机器人]成员权限改变（事件）
+    /// </summary>
+    public record MemberPermissionChangeEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的状态
+        /// </summary>
+        public MemberPermission old { get; set; }
+        /// <summary>
+        /// 新的状态
+        /// </summary>
+        public MemberPermission now { get; set; }
+    }
+    /// <summary>
+    /// 42 [机器人]成员群头衔改动（事件）
+    /// </summary>
+    public record MemberSpecialTitleChangeEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 旧的状态
+        /// </summary>
+        public string old { get; set; }
+        /// <summary>
+        /// 新的状态
+        /// </summary>
+        public string now { get; set; }
+    }
+    /// <summary>
+    /// 43 [机器人]群成员被取消禁言（事件）
+    /// </summary>
+    public record MemberUnmuteEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 被执行人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 执行人QQ号
+        /// </summary>
+        public long eid { get; set; }
+    }
+    /// <summary>
+    /// 44 [机器人]好友消息撤回（事件）
+    /// </summary>
+    public record MessageRecallEventAPack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
         /// </summary>
         public long id { get; set; }
         /// <summary>
         /// 消息ID
         /// </summary>
-        public long mid { get; set; }
+        public int[] mid { get; set; }
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
     }
     /// <summary>
-    /// 群消息事件包
+    /// 45 [机器人]群消息撤回事件（事件）
+    /// </summary>
+    public record MessageRecallEventBPack : PackBase
+    {
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 撤回者
+        /// </summary>
+        public long oid { get; set; }
+    }
+    /// <summary>
+    /// 46 [机器人]一个账号请求添加机器人为好友（事件）
+    /// </summary>
+    public record NewFriendRequestEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 请求人QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 请求消息
+        /// </summary>
+        public string message;
+        /// <summary>
+        /// 事件ID
+        /// </summary>
+        public long eventid;
+    }
+    /// <summary>
+    /// 47 [机器人]在群临时会话消息发送后广播（事件）
+    /// </summary>
+    public record TempMessagePostSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 发送到的QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 是否成功发送
+        /// </summary>
+        public bool res { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+        /// <summary>
+        /// 错误信息
+        /// </summary>
+        public string error { get; set; }
+    }
+    /// <summary>
+    /// 48 [机器人]在发送群临时会话消息前广播（事件）
+    /// </summary>
+    public record TempMessagePreSendEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 发送人的QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+    }
+    /// <summary>
+    /// 49 [机器人]收到群消息（事件）
     /// </summary>
     public record GroupMessageEventPack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 发送人QQ号
+        /// </summary>
         public long fid { get; set; }
-        public string name { get; set; }
+        /// <summary>
+        /// 发送的消息
+        /// </summary>
         public List<string> message { get; set; }
     }
     /// <summary>
-    /// 发送群消息包
+    /// 50 [机器人]收到群临时会话消息（事件）
+    /// </summary>
+    public record TempMessageEventPack : GroupMessageEventPack
+    {
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
+    }
+    /// <summary>
+    /// 51 [机器人]收到朋友消息（事件）
+    /// </summary>
+    public record FriendMessageEventPack : PackBase
+    {
+        /// <summary>
+        /// 朋友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
+    }
+    /// <summary>
+    /// 52 [插件]发送群消息
     /// </summary>
     public record SendGroupMessagePack : PackBase
     {
-        public long id { get; set; }
-        public List<string> message { get; set; }
-    }
-    /// <summary>
-    /// 54 [插件]发送好友消息
-    /// </summary>
-    public record SendFriendMessagePack : PackBase
-    {
         /// <summary>
-        /// 好友QQ号
+        /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
@@ -298,57 +987,129 @@ namespace ColoryrSDK
         public List<string> message { get; set; }
     }
     /// <summary>
-    /// 临时消息事件包
+    /// 54 [插件]发送好友消息
     /// </summary>
-    public record TempMessageEventPack : PackBase
+    public record SendFriendMessagePack : PackBase
     {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 消息
+        /// </summary>
+        public List<string> message { get; set; }
+    }
+    /// <summary>
+    /// 55 [插件]获取群列表
+    /// 56 [插件] 获取好友列表
+    /// </summary>
+    public record GetPack : PackBase
+    {
+
+    }
+    /// <summary>
+    /// 57 [插件]获取群成员
+    /// </summary>
+    public record GetGroupMemberInfoPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 58 [插件]获取群设置
+    /// </summary>
+    public record GetGroupSettingPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 59 [插件]回应事件
+    /// </summary>
+    public record EventCallPack : PackBase
+    {
+        /// <summary>
+        /// 事件ID
+        /// </summary>
+        public long eventid { get; set; }
+        /// <summary>
+        /// 方法
+        /// </summary>
+        public int dofun { get; set; }
+        /// <summary>
+        /// 附带参数
+        /// </summary>
+        public List<object> arg { get; set; }
+    }
+    /// <summary>
+    /// 64 [插件]删除群员
+    /// </summary>
+    public record DeleteGroupMemberPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
         public long fid { get; set; }
     }
     /// <summary>
-    /// 朋友消息事件包
+    /// 65 [插件]禁言群员
     /// </summary>
-    public record FriendMessageEventPack : PackBase
+    public record MuteGroupMemberPack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
-        public string name { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public int time { get; set; }
     }
     /// <summary>
-    /// 发送群图片包
+    /// 66 [插件]解除禁言
     /// </summary>
-    public record SendGroupImagePack : PackBase
+    public record UnmuteGroupMemberPack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
-        public string img { get; set; }
-    }
-    /// <summary>
-    /// 发送群私聊图片包
-    /// </summary>
-    public record SendGroupPrivateImagePack : PackBase
-    {
-        public long id { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
         public long fid { get; set; }
     }
     /// <summary>
-    /// 发送朋友图片包
+    /// 67 [插件]开启全员禁言
     /// </summary>
-    public record SendFriendImagePack : PackBase
+    public record GroupMuteAllPack : PackBase
     {
-        public long id { get; set; }
-        public string img { get; set; }
-    }
-    /// <summary>
-    /// 群全部禁言包
-    /// </summary>
-    record GroupMuteAll : PackBase
-    {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
     }
     /// <summary>
-    /// 群全部解禁包
+    /// 68 [插件]关闭全员禁言
     /// </summary>
-    record GroupUnmuteAll : PackBase
+    public record GroupUnmuteAllPack : PackBase
     {
+        /// <summary>
+        /// 群号
+        /// </summary>
         public long id { get; set; }
     }
     /// <summary>
@@ -384,37 +1145,46 @@ namespace ColoryrSDK
         public string name { get; set; }
     }
     /// <summary>
-    /// 加好友请求事件包
+    /// 71 [插件]撤回消息
     /// </summary>
-    public record NewFriendRequestEventPack : PackBase
+    public record ReCallMessagePack : PackBase
     {
-        public long id { get; set; }
-        public long fid { get; set; }
+        /// <summary>
+        /// 消息ID
+        /// </summary>
+        public int id { get; set; }
     }
     /// <summary>
-    /// 59 [插件]回应事件
+    /// 72 [机器人]友输入状态改变（事件）
     /// </summary>
-    public record EventCallPack : PackBase
+    public record FriendInputStatusChangedEventPack : PackBase
     {
         /// <summary>
-        /// 事件ID
+        /// 好友QQ号
         /// </summary>
-        public long eventid { get; set; }
+        public long id { get; set; }
         /// <summary>
-        /// 方法
+        /// 输入状态
         /// </summary>
-        public int dofun { get; set; }
-        /// <summary>
-        /// 附带参数
-        /// </summary>
-        public List<object> arg { get; set; }
+        public bool input { get; set; }
     }
     /// <summary>
-    /// 撤回消息包
+    /// 73 [机器人]好友昵称改变（事件）
     /// </summary>
-    public record ReCallMessage : PackBase
+    public record FriendNickChangedEventPack : PackBase
     {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 旧的昵称
+        /// </summary>
+        public string old { get; set; }
+        /// <summary>
+        /// 新的昵称
+        /// </summary>
+        public string now { get; set; }
     }
     /// <summary>
     /// 75 [插件]从本地文件加载图片发送到群
@@ -449,6 +1219,20 @@ namespace ColoryrSDK
         public string file { get; set; }
     }
     /// <summary>
+    /// 77 [插件]从本地文件加载图片发送到朋友
+    /// </summary>
+    public record LoadFileSendToFriendImagePack : PackBase
+    {
+        /// <summary>
+        /// 朋友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string file { get; set; }
+    }
+    /// <summary>
     /// 78 [插件]从本地文件加载语音发送到群s
     /// </summary>
     public record LoadFileSendToGroupSoundPack : PackBase
@@ -463,12 +1247,65 @@ namespace ColoryrSDK
         public string file { get; set; }
     }
     /// <summary>
-    /// 发送群消息之后的事件包
+    /// 79 [机器人]成员群恢复（事件）
     /// </summary>
-    public record GroupMessagePostSendEventPack : PackBase
+    public record MemberJoinRetrieveEventPack : PackBase
     {
+        /// <summary>
+        /// QQ群
+        /// </summary>
         public long id { get; set; }
-        public bool res { get; set; }
+        /// <summary>
+        /// 成员QQ号
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 80 [机器人]机器人群恢复（事件）
+    /// </summary>
+    public record BotJoinGroupEventRetrieveEventPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+    }
+    /// <summary>
+    /// 81 [机器人]群成员戳一戳（事件）
+    /// 82 [机器人]机器人被戳一戳（事件）
+    /// </summary>
+    public record NudgedEventPack : PackBase
+    {
+        /// <summary>
+        /// QQ群
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 发起戳一戳QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 被戳成员QQ号
+        /// </summary>
+        public long aid { get; set; }
+        /// <summary>
+        /// 戳一戳的动作名称
+        /// </summary>
+        public string action { get; set; }
+        /// <summary>
+        /// 戳一戳中设置的自定义后缀
+        /// </summary>
+        public string suffix { get; set; }
+    }
+    /// <summary>
+    /// 83 [插件]发送朋友戳一戳
+    /// </summary>
+    public record FriendNudgePack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
     }
     /// <summary>
     /// 84 [插件]发送群成员戳一戳
@@ -485,110 +1322,64 @@ namespace ColoryrSDK
         public long fid { get; set; }
     }
     /// <summary>
-    /// 83 [插件]发送朋友戳一戳
+    /// 86 [机器人]其他客户端上线（事件）
     /// </summary>
-    public record FriendNudgePack : PackBase
+    public record OtherClientOnlineEventPack : OtherClientOfflineEventPack
     {
         /// <summary>
-        /// 好友QQ号
+        /// 设备类型
         /// </summary>
-        public long id { get; set; }
+        public string kind { get; set; }
     }
     /// <summary>
-    /// 57 [插件]获取群成员
+    /// 87 [机器人]其他客户端离线（事件）
     /// </summary>
-    public record GetGroupMemberInfoPack : PackBase
+    public record OtherClientOfflineEventPack : PackBase
     {
         /// <summary>
-        /// 群号
+        /// 设备ID
         /// </summary>
-        public long id { get; set; }
+        public int appId { get; set; }
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public string platform { get; set; }
+        /// <summary>
+        /// 设备名字
+        /// </summary>
+        public string deviceName { get; set; }
+        /// <summary>
+        /// 设备类型
+        /// </summary>
+        public string deviceKind { get; set; }
     }
     /// <summary>
-    /// 58 [插件]获取群设置
+    /// 88 [机器人]其他客户端发送消息给 Bot（事件）
     /// </summary>
-    public record GetGroupSettingPack : PackBase
+    public record OtherClientMessageEventPack : OtherClientOfflineEventPack
     {
         /// <summary>
-        /// 群号
+        /// 信息
         /// </summary>
-        public long id { get; set; }
+        public List<string> message { get; set; }
     }
     /// <summary>
-    /// 获取图片Url
+    /// 89 [机器人]其他客户端发送群消息（事件）
     /// </summary>
-    public record GetImageUrlPack : PackBase
-    {
-        /// <summary>
-        /// 图片UUID
-        /// </summary>
-        public string uuid { get; set; }
-    }
-    /// <summary>
-    /// 92 [插件]获取朋友信息
-    /// </summary>
-    public record GetFriendInfoPack : PackBase
-    {
-        /// <summary>
-        /// 朋友QQ号
-        /// </summary>
-        public long id { get; set; }
-    }
-    /// <summary>
-    /// 91 [插件]获取群成员信息
-    /// </summary>
-    public record GetMemberInfo : PackBase
+    public record GroupMessageSyncEventPack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 群员QQ号
+        /// 时间
         /// </summary>
-        public long fid { get; set; }
-    }
-    /// <summary>
-    /// 55 [插件]获取群列表
-    /// 56 [插件] 获取好友列表
-    /// </summary>
-    public record GetPack : PackBase
-    {
-
-    }
-    /// <summary>
-    /// 67 [插件]开启全员禁言
-    /// </summary>
-    public record GroupMuteAllPack : PackBase
-    {
+        public int time { get; set; }
         /// <summary>
-        /// 群号
+        /// 消息
         /// </summary>
-        public long id { get; set; }
-    }
-    /// <summary>
-    /// 68 [插件]关闭全员禁言
-    /// </summary>
-    public record GroupUnmuteAllPack : PackBase
-    {
-        /// <summary>
-        /// 群号
-        /// </summary>
-        public long id { get; set; }
-    }
-    /// <summary>
-    /// 77 [插件]从本地文件加载图片发送到朋友
-    /// </summary>
-    public record LoadFileSendToFriendImagePack : PackBase
-    {
-        /// <summary>
-        /// 朋友QQ号
-        /// </summary>
-        public long id { get; set; }
-        /// <summary>
-        /// 文件路径
-        /// </summary>
-        public string file { get; set; }
+        public List<string> message { get; set; }
     }
     /// <summary>
     /// 90 [插件]获取图片Url
@@ -605,38 +1396,28 @@ namespace ColoryrSDK
         public string url { get; set; }
     }
     /// <summary>
-    /// 97 [插件]消息队列
+    /// 91 [插件]获取群成员信息
     /// </summary>
-    public record MessageBuffPack : PackBase
+    public record GetMemberInfo : PackBase
     {
         /// <summary>
-        /// 是否发送
-        /// </summary>
-        public bool send { get; set; }
-        /// <summary>
-        /// 消息内容
-        /// </summary>
-        public List<string> text { get; set; }
-        /// <summary>
-        /// 图片内容
-        /// </summary>
-        public string img { get; set; }
-        /// <summary>
-        /// 图片路径
-        /// </summary>
-        public string imgurl { get; set; }
-        /// <summary>
-        /// 发送对象类型
-        /// </summary>
-        public int type;
-        /// <summary>
-        /// 发送目标
+        /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 发送目标
+        /// 群员QQ号
         /// </summary>
         public long fid { get; set; }
+    }
+    /// <summary>
+    /// 92 [插件]获取朋友信息
+    /// </summary>
+    public record GetFriendInfoPack : PackBase
+    {
+        /// <summary>
+        /// 朋友QQ号
+        /// </summary>
+        public long id { get; set; }
     }
     /// <summary>
     /// 93 [插件]发送音乐分享
@@ -680,34 +1461,74 @@ namespace ColoryrSDK
         /// </summary>
         public string musicUrl { get; set; }
     }
+
     /// <summary>
-    /// 65 [插件]禁言群员
+    /// 96 [插件]设置群精华消息
     /// </summary>
-    public record MuteGroupMemberPack : PackBase
+    public record EssenceMessagePack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 成员QQ号
-        /// </summary>
-        public long fid { get; set; }
-        /// <summary>
-        /// 时间
-        /// </summary>
-        public int time { get; set; }
-    }
-    /// <summary>
-    /// 71 [插件]撤回消息
-    /// </summary>
-    public record ReCallMessagePack : PackBase
-    {
-        /// <summary>
         /// 消息ID
         /// </summary>
-        public int id { get; set; }
+        public long mid { get; set; }
     }
+    /// <summary>
+    /// 97 [插件]消息队列
+    /// </summary>
+    public record MessageBuffPack : PackBase
+    {
+        /// <summary>
+        /// 是否发送
+        /// </summary>
+        public bool send { get; set; }
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public List<string> text { get; set; }
+        /// <summary>
+        /// 图片内容
+        /// </summary>
+        public string img { get; set; }
+        /// <summary>
+        /// 图片路径
+        /// </summary>
+        public string imgurl { get; set; }
+        /// <summary>
+        /// 发送对象类型
+        /// </summary>
+        public int type;
+        /// <summary>
+        /// 发送目标
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 发送目标
+        /// </summary>
+        public long fid { get; set; }
+    }
+    /// <summary>
+    /// 98 [机器人]龙王改变时（事件）
+    /// </summary>
+    public record GroupTalkativeChangePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 当前龙王
+        /// </summary>
+        public long now { get; set; }
+        /// <summary>
+        /// 先前龙王
+        /// </summary>
+        public long old { get; set; }
+    }
+
     public class BuildPack
     {
         /// <summary>

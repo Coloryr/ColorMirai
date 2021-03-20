@@ -4,14 +4,15 @@ import Color_yr.ColorMirai.Pack.PackBase;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.SingleMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
-appId:：设备Id
-platform：设备类型2
+88 [机器人]其他客户端发送消息给 Bot（事件）
+appId：设备ID
+platform：设备类型
 deviceName：设备名字
-deviceKind：设备类型3
-senderName：发送者名字
+deviceKind：设备类型
 message：信息
  */
 public class OtherClientMessageEventPack extends PackBase {
@@ -19,16 +20,15 @@ public class OtherClientMessageEventPack extends PackBase {
     public String platform;
     public String deviceName;
     public String deviceKind;
-    public String senderName;
     public List<String> message;
 
-    public OtherClientMessageEventPack(long qq, int appId, String platform, String deviceName, String deviceKind, String senderName, MessageChain messages) {
+    public OtherClientMessageEventPack(long qq, int appId, String platform, String deviceName, String deviceKind, MessageChain messages) {
         this.qq = qq;
         this.appId = appId;
         this.deviceKind = deviceKind;
         this.platform = platform;
         this.deviceName = deviceName;
-        this.senderName = senderName;
+        this.message = new ArrayList<>();
         for (SingleMessage item : messages) {
             this.message.add(item.toString());
         }

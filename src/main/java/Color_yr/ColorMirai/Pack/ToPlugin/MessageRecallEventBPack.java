@@ -6,17 +6,15 @@ id：群号
 mid：消息ID
 time：时间
 fid：群员QQ号
-fname：群员群名片
+oid：撤回者
  */
 public class MessageRecallEventBPack extends MessageRecallEventAPack {
     public long fid;
     public long oid;
-    public String oname;
 
-    public MessageRecallEventBPack(long qq, long id, long fid, int[] mid, int time, long oid, String oname) {
+    public MessageRecallEventBPack(long qq, long id, long fid, int[] mid, int time, long oid) {
         super(qq, id, mid, time);
         this.fid = fid;
         this.oid = oid;
-        this.oname = oname;
     }
 }

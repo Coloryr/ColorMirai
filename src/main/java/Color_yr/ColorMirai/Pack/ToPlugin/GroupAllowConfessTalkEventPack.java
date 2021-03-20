@@ -7,19 +7,19 @@ import Color_yr.ColorMirai.Pack.PackBase;
 id：群号
 fid：执行人QQ号
 old：旧的状态
-new_：新的状态
+now：新的状态
  */
 public class GroupAllowConfessTalkEventPack extends PackBase {
     public long id;
     public boolean old;
-    public boolean new_;
+    public boolean now;
     public boolean bot;
 
     public GroupAllowConfessTalkEventPack(long qq, long id, boolean old, boolean new_, boolean bot) {
         this.id = id;
         this.qq = qq;
         this.old = old;
-        this.new_ = new_;
+        this.now = now;
         this.bot = bot;
     }
 }
