@@ -2,6 +2,10 @@
 
 [返回](../README.md)
 
+### [基础底包](../src/main/java/Color_yr/ColorMirai/Pack/PackBase.java)
+
+如果你插件没有设置运行QQ，则需要填写`qq`号
+
 ### [0 [插件]插件开始连接](../src/main/java/Color_yr/ColorMirai/Pack/FromPlugin/StartPack.java)
 
 

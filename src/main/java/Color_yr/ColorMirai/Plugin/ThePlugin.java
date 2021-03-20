@@ -69,59 +69,70 @@ public class ThePlugin {
                 if (!Tasks.isEmpty()) {
                     RePackObj task = Tasks.remove(0);
                     switch (task.index) {
-                        case 52:
+                        case 52: {
                             SendGroupMessagePack pack = JSON.parseObject(task.data, SendGroupMessagePack.class);
                             BotSendMessage.sendGroupMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
                             break;
-                        case 53:
-                            SendGroupPrivateMessagePack pack1 = JSON.parseObject(task.data, SendGroupPrivateMessagePack.class);
-                            BotSendMessage.sendGroupPrivateMessage(runQQ == 0 ? pack1.qq : runQQ, pack1.id, pack1.fid, pack1.message);
+                        }
+                        case 53: {
+                            SendGroupPrivateMessagePack pack = JSON.parseObject(task.data, SendGroupPrivateMessagePack.class);
+                            BotSendMessage.sendGroupPrivateMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.message);
                             break;
-                        case 54:
-                            SendFriendMessagePack pack2 = JSON.parseObject(task.data, SendFriendMessagePack.class);
-                            BotSendMessage.sendFriendMessage(runQQ == 0 ? pack2.qq : runQQ, pack2.id, pack2.message);
+                        }
+                        case 54: {
+                            SendFriendMessagePack pack = JSON.parseObject(task.data, SendFriendMessagePack.class);
+                            BotSendMessage.sendFriendMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
                             break;
-                        case 55:
-                            GetPack pack17 = JSON.parseObject(task.data, GetPack.class);
-                            List<GroupInfo> data = BotGetData.getGroups(pack17.qq);
+                        }
+                        case 55: {
+                            GetPack pack = JSON.parseObject(task.data, GetPack.class);
+                            List<GroupInfo> data = BotGetData.getGroups(runQQ == 0 ? pack.qq : runQQ);
                             if (data == null)
                                 break;
-                            ListGroupPack pack31= new ListGroupPack();
-                            pack31.qq = pack17.qq;
+                            ListGroupPack pack31 = new ListGroupPack();
+                            pack31.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack31.groups = data;
                             if (Socket.send(PackDo.BuildPack(pack31, 55)))
                                 close();
                             break;
-                        case 56:
-                            GetPack pack18 = JSON.parseObject(task.data, GetPack.class);
-                            List<FriendInfoPack> data1 = BotGetData.getFriends(pack18.qq);
-                            if (data1 == null)
+                        }
+                        case 56: {
+                            GetPack pack = JSON.parseObject(task.data, GetPack.class);
+                            List<FriendInfoPack> data = BotGetData.getFriends(runQQ == 0 ? pack.qq : runQQ);
+                            if (data == null)
                                 break;
-                            ListFriendPack pack30 = new ListFriendPack();
-                            pack30.friends = data1;
-                            pack30.qq = pack18.qq;
-                            if (Socket.send(PackDo.BuildPack(pack30, 56)))
+                            ListFriendPack pack1 = new ListFriendPack();
+                            pack1.friends = data;
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            if (Socket.send(PackDo.BuildPack(pack1, 56)))
                                 close();
                             break;
-                        case 57:
-                            GetGroupMemberInfoPack pack3 = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
-                            List<MemberInfoPack> data2 = BotGetData.getMembers(pack3.qq, pack3.id);
-                            if (data2 == null)
+                        }
+                        case 57: {
+                            GetGroupMemberInfoPack pack = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
+                            List<MemberInfoPack> data = BotGetData.getMembers(pack.qq, pack.id);
+                            if (data == null)
                                 break;
-                            ListMemberPack pack33 = new ListMemberPack();
-                            pack33.qq = pack3.qq;
-                            pack33.members = data2;
-                            if (Socket.send(PackDo.BuildPack(pack33, 57)))
+                            ListMemberPack pack1 = new ListMemberPack();
+                            pack1.qq =  runQQ == 0 ? pack.qq : runQQ;
+                            pack1.members = data;
+                            if (Socket.send(PackDo.BuildPack(pack1, 57)))
                                 close();
                             break;
-                        case 58:
-                            GetGroupSettingPack pack4 = JSON.parseObject(task.data, GetGroupSettingPack.class);
-                            GroupSettings data3 = BotGetData.getGroupInfo(runQQ == 0 ? pack4.qq : runQQ, pack4.id);
-                            if (data3 == null)
+                        }
+                        case 58: {
+                            GetGroupSettingPack pack = JSON.parseObject(task.data, GetGroupSettingPack.class);
+                            GroupSettings data = BotGetData.getGroupInfo(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            if (data == null)
                                 break;
-                            if (Socket.send(PackDo.BuildPack(data3, 58)))
+                            GroupSettingPack pack1 = new GroupSettingPack();
+                            pack1.setting = data;
+                            pack1.id = pack.id;
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            if (Socket.send(PackDo.BuildPack(data, 58)))
                                 close();
                             break;
+                        }
                         case 59:
                             EventCallPack pack5 = JSON.parseObject(task.data, EventCallPack.class);
                             EventCall.DoEvent(runQQ == 0 ? pack5.qq : runQQ, pack5.eventid, pack5.dofun, pack5.arg);
