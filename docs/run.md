@@ -64,8 +64,8 @@ pause
   - `LoginType`：登录的方式
   - 目前支持两种协议:
     - 安卓 `ANDROID_PHONE`
-    - 手表 `ANDROID_PAD`
-    - 平板 `ANDROID_WATCH`
+    - 手表 `ANDROID_WATCH`
+    - 平板 `ANDROID_PAD`
 - `escapeSelf`：是否跳过自己机器人的信息
 - `ReadEncoding`：读数据包编码
 - `SendEncoding`：发送数据包编码
@@ -85,5 +85,6 @@ pause
 
 1. 将协议切换成 手表 `ANDROID_WATCH`
 2. 登录成功后, 下次登录可以选择 安卓 `ANDROID_PHONE`
+3. 安装Chrome浏览器再次尝试
 
 还是无解可以尝试[这个](https://github.com/project-mirai/mirai-login-solver-selenium/#%E6%89%8B%E5%8A%A8%E5%AE%8C%E6%88%90%E6%BB%91%E5%8A%A8%E9%AA%8C%E8%AF%81)

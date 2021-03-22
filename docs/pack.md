@@ -191,14 +191,12 @@ public string error { get; set; }
 
 插件第一次连接需要发送一个数据包来注册所监听事件的包
 
-```Json
-{
-  "Name": "test",
-  "Reg": [49,50,51],
-  "Groups" : [],
-  "QQs" : [],
-  "RunQQ": 0
-}
+```
+public string Name { get; set; }
+public List<byte> Reg { get; set; }
+public List<long> Groups { get; set; }
+public List<long> QQs { get; set; }
+public long RunQQ { get; set; }
 ```
 
 - `Name`：插件名字
