@@ -2,11 +2,11 @@ package Color_yr.ColorMirai.Pack.ToPlugin;
 
 /*
 45 [机器人]群消息撤回事件（事件）
-id：群号
-mid：消息ID
-time：时间
-fid：群员QQ号
-oid：撤回者
+id:群号
+mid:消息ID
+time:时间
+fid:群员QQ号
+oid:撤回者
  */
 public class MessageRecallEventBPack extends MessageRecallEventAPack {
     public long fid;

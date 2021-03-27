@@ -4,8 +4,8 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 32 [机器人]图片上传成功（事件）
-id：目标ID
-uuid：图片ID
+id:目标ID
+uuid:图片ID
  */
 public class ImageUploadEventAPack extends PackBase {
     public long id;

@@ -4,9 +4,9 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 9 [机器人]被禁言（事件）
-id：群号
-fid：执行人QQ号
-time：禁言时间
+id:群号
+fid:执行人QQ号
+time:禁言时间
  */
 public class BotMuteEventPack extends PackBase {
     public long id;

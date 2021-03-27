@@ -1551,7 +1551,7 @@ namespace ColoryrSDK
         public long fid { get; set; }
     }
     /// <summary>
-    /// 98 [机器人]龙王改变时（事件）
+    /// 85 [机器人]龙王改变时（事件）
     /// </summary>
     public record GroupTalkativeChangePack : PackBase
     {

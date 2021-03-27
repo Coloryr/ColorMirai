@@ -912,7 +912,7 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(89, JSON.toJSONString(pack), qq, 0, qq));
     }
 
-    //98 [机器人]龙王改变时（事件）
+    //85 [机器人]龙王改变时（事件）
     @EventHandler
     public void onGroupTalkativeChangeEvent(GroupTalkativeChangeEvent event) {
         if (PluginUtils.havePlugin())

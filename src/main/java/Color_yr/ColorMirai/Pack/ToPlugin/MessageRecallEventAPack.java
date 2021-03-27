@@ -4,9 +4,9 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 44 [机器人]好友消息撤回（事件）
-id：好友QQ号
-mid：消息ID
-time：时间
+id:好友QQ号
+mid:消息ID
+time:时间
  */
 public class MessageRecallEventAPack extends PackBase {
     public long id;

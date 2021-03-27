@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.3.1-SNAPSHOT'
+version '3.4.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -21,9 +21,9 @@ dependencies {
     compile 'com.alibaba:fastjson:1.2.73'
     compile "org.java-websocket:Java-WebSocket:1.5.1"
 
-    api "net.mamoe:mirai-core-api:2.4.2"
-    runtimeOnly "net.mamoe:mirai-core:2.4.2"
-    runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
+    api "net.mamoe:mirai-core-api:2.5.0"
+    runtimeOnly "net.mamoe:mirai-core:2.5.0"
+//    runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
 
 }
 tasks.withType(JavaCompile) {

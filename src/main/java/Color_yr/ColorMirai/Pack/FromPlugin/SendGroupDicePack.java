@@ -3,11 +3,11 @@ package Color_yr.ColorMirai.Pack.FromPlugin;
 import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
-70 [插件]设置群名
+97 [插件]发送群骰子
 id:群号
-name:新的群名
+dice:点数
  */
-public class SetGroupNamePack extends PackBase {
+public class SendGroupDicePack extends PackBase {
     public long id;
-    public String name;
+    public int dice;
 }

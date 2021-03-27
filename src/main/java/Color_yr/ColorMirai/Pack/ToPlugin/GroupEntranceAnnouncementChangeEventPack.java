@@ -4,10 +4,10 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 27 [机器人]入群公告改变（事件）
-id：群号
-fid：执行人QQ号
-old：旧的状态
-now：新的状态
+id:群号
+fid:执行人QQ号
+old:旧的状态
+now:新的状态
  */
 public class GroupEntranceAnnouncementChangeEventPack extends PackBase {
     public long id;

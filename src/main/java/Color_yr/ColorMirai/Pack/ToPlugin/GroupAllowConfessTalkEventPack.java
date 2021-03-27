@@ -4,10 +4,10 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 25 [机器人]群 "坦白说" 功能状态改变（事件）
-id：群号
-fid：执行人QQ号
-old：旧的状态
-now：新的状态
+id:群号
+fid:执行人QQ号
+old:旧的状态
+now:新的状态
  */
 public class GroupAllowConfessTalkEventPack extends PackBase {
     public long id;

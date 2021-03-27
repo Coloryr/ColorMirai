@@ -4,8 +4,8 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 19 [机器人]好友头像修改（事件）
-id：好友QQ号
-url：图片url
+id:好友QQ号
+url:图片url
  */
 public class FriendAvatarChangedEventPack extends PackBase {
     public String url;

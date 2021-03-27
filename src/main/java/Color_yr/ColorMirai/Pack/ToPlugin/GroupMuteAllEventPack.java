@@ -4,10 +4,10 @@ import Color_yr.ColorMirai.Pack.PackBase;
 
 /*
 30 [机器人]群 "全员禁言" 功能状态改变（事件）
-id：群号
-fid：执行人QQ号
-old：旧的状态
-now：新的状态
+id:群号
+fid:执行人QQ号
+old:旧的状态
+now:新的状态
  */
 public class GroupMuteAllEventPack extends PackBase {
     public long id;
