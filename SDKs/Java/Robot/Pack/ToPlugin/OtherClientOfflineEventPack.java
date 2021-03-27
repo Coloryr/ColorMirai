@@ -4,10 +4,10 @@ import Robot.Pack.PackBase;
 
 /*
 87 [机器人]其他客户端离线（事件）
-appId:：设备ID
-platform：设备类型
-deviceName：设备名字
-deviceKind：设备类型
+appId::设备ID
+platform:设备类型
+deviceName:设备名字
+deviceKind:设备类型
  */
 public class OtherClientOfflineEventPack extends PackBase {
     public int appId;

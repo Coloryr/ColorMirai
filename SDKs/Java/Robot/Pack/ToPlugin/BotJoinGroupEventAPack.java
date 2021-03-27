@@ -4,7 +4,7 @@ import Robot.Pack.PackBase;
 
 /*
 5 [机器人]成功加入了一个新群（不确定. 可能是主动加入）（事件）
-id：群号
+id:群号
  */
 public class BotJoinGroupEventAPack extends PackBase {
     public long id;

@@ -6,7 +6,7 @@ import Robot.Pack.PackBase;
 81 [机器人]群成员戳一戳（事件）
 82 [机器人]机器人被戳一戳（事件）
 id: QQ群
-aid：发起戳一戳QQ号
+aid:发起戳一戳QQ号
 fid: 被戳成员QQ号
 action: 戳一戳的动作名称
 suffix: 戳一戳中设置的自定义后缀

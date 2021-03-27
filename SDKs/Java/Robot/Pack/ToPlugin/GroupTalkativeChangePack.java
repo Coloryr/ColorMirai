@@ -3,10 +3,10 @@ package Robot.Pack.ToPlugin;
 import Robot.Pack.PackBase;
 
 /*
-98 [机器人]龙王改变时（事件）
-id：群号
-now：当前龙王
-old：先前龙王
+85 [机器人]龙王改变时（事件）
+id:群号
+now:当前龙王
+old:先前龙王
  */
 public class GroupTalkativeChangePack extends PackBase {
     public long id;

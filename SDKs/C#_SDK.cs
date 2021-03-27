@@ -126,6 +126,20 @@ namespace ColoryrSDK
         public UserProfile userProfile { get; set; }
     }
     /// <summary>
+    /// 101 [插件]获取群文件
+    /// </summary>
+    public record GroupFilesPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件列表
+        /// </summary>
+        public List<string> files { get; set; }
+    }
+    /// <summary>
     /// 性别
     /// </summary>
     public enum Sex
@@ -1567,6 +1581,98 @@ namespace ColoryrSDK
         /// 先前龙王
         /// </summary>
         public long old { get; set; }
+    }
+    /// <summary>
+    /// 96 [插件]发送朋友骰子
+    /// </summary>
+    public record SendFriendDicePack : PackBase
+    {
+        /// <summary>
+        /// 好友QQ号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 点数
+        /// </summary>
+        public int dice { get; set; }
+    }
+    /// <summary>
+    /// 97 [插件]发送群骰子
+    /// </summary>
+    public record SendGroupDicePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 点数
+        /// </summary>
+        public int dice { get; set; }
+    }
+    /// <summary>
+    /// 98 [插件]发送群私聊骰子
+    /// </summary>
+    public record SendGroupPrivateDicePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
+        /// <summary>
+        /// 点数
+        /// </summary>
+        public int dice { get; set; }
+    }
+    /// <summary>
+    /// 99 [插件]上传群文件
+    /// </summary>
+    public record AddGroupFilePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string file { get; set; }
+        /// <summary>
+        /// 群文件名称
+        /// </summary>
+        public string name { get; set; }
+    }
+    /// <summary>
+    /// 100 [插件]删除群文件
+    /// </summary>
+    public record DeleteGroupFilePack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群文件名称
+        /// </summary>
+        public string name { get; set; }
+    }
+    /// <summary>
+    /// 101 [插件]获取群文件
+    /// </summary>
+    public record GetGroupFilesPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 文件夹
+        /// </summary>
+        public string name { get; set; }
     }
 
     public class BuildPack

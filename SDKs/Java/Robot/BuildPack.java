@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 
 import java.nio.charset.StandardCharsets;
 
-class BuildPack {
+public class BuildPack {
     public static byte[] Build(Object data, int index) {
         String str = JSON.toJSONString(data) + " ";
         byte[] temp = str.getBytes(StandardCharsets.UTF_8);

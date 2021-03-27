@@ -4,10 +4,10 @@ import Robot.Pack.PackBase;
 
 /*
 46 [机器人]一个账号请求添加机器人为好友（事件）
-id：群号
-fid：请求人QQ号
-message：请求消息
-eventid：事件ID
+id:群号
+fid:请求人QQ号
+message:请求消息
+eventid:事件ID
  */
 public class NewFriendRequestEventPack extends PackBase {
     public long id;

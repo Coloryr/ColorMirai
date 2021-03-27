@@ -2,8 +2,8 @@ package Robot.Pack.ToPlugin;
 
 /*
 11 [机器人]被挤下线（事件）
-title：标题
-message：离线原因
+title:标题
+message:离线原因
  */
 public class BotOfflineEventBPack extends BotOfflineEventAPack {
     public String title;

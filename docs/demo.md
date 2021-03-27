@@ -181,9 +181,9 @@ RobotConfig Config = new RobotConfig() {{
      IP = "127.0.0.1";
      Port = 23333;
      Pack = new ArrayList<Byte>() {{
-     add((byte) 49);
-     add((byte) 50);
-     add((byte) 51);
+        add(49);
+        add(50);
+        add(51);
      }};
      Groups = null;
      QQs = null;
@@ -191,29 +191,25 @@ RobotConfig Config = new RobotConfig() {{
      Time = 10000;
      Check = true;
      CallAction = (type, data) -> {
-     switch (type) {
-     case 49:
-     GroupMessageEventPack pack = JSON.parseObject(data, GroupMessageEventPack.class);
-     System.out.println("id = " + pack.id);
-     System.out.println("fid = " + pack.fid);
-     System.out.println("message = ");
-     for (String item : pack.message) {
-     System.out.println(item);
-     }
-     System.out.println();
-     SendGroupMessagePack pack1 = new SendGroupMessagePack();
-     pack1.id = pack.id;
-     pack1.qq = robot.QQs.get(0);
-     pack1.message = new ArrayList<String>() {{
-     add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
-     }};
-     robot.addTask(BuildPack.Build(pack1, 52));
-     break;
-     case 50:
-     break;
-     case 51:
-     break;
-     }
+        switch (type) {
+           case 49:
+              GroupMessageEventPack pack = JSON.parseObject(data, GroupMessageEventPack.class);
+              System.out.println("id = " + pack.id);
+              System.out.println("fid = " + pack.fid);
+              System.out.println("message = ");
+              for (String item : pack.message) {
+                 System.out.println(item);
+              }
+              System.out.println();
+              SendGroupMessagePack pack1 = new SendGroupMessagePack();
+              pack1.id = pack.id;
+              pack1.qq = robot.QQs.get(0);
+              pack1.message = new ArrayList<String>() {{
+                 add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
+              }};
+              robot.addTask(BuildPack.Build(pack1, 52));
+           break;
+        }
      };
      LogAction = (type, data) -> {
      System.out.println("机器人日志:" + type.toString() + ":" + data);
@@ -255,10 +251,10 @@ public class ColoryrSDK {
          Name = "Demo";
          IP = "127.0.0.1";
          Port = 23333;
-         Pack = new ArrayList<Byte>() {{
-            add((byte) 49);
-            add((byte) 50);
-            add((byte) 51);
+         Pack = new ArrayList<Integer>() {{
+            add(49);
+            add(50);
+            add(51);
          }};
          Groups = null;
          QQs = null;
@@ -283,10 +279,6 @@ public class ColoryrSDK {
                      add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
                   }};
                   robot.addTask(BuildPack.Build(pack1, 52));
-                  break;
-               case 50:
-                  break;
-               case 51:
                   break;
             }
          };

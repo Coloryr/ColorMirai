@@ -4,10 +4,10 @@ import Robot.Pack.PackBase;
 
 /*
 31 [机器人]群名改变（事件）
-id：群号
-fid：执行人QQ号
-old：旧的名字
-now：新的名字
+id:群号
+fid:执行人QQ号
+old:旧的名字
+now:新的名字
  */
 public class GroupNameChangeEventPack extends PackBase {
     public long id;

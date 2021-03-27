@@ -4,15 +4,15 @@ import Robot.Pack.PackBase;
 
 /*
 93 [插件]发送音乐分享
-id：发送目标
-fid：发送目标
-type：音乐类型
-type1：目标类型
-title：标题
-summary：概要
-jumpUrl：跳转Url
-pictureUrl：图片Url
-musicUrl：音乐Url
+id:发送目标
+fid:发送目标
+type:音乐类型
+type1:目标类型
+title:标题
+summary:概要
+jumpUrl:跳转Url
+pictureUrl:图片Url
+musicUrl:音乐Url
  */
 public class MusicSharePack extends PackBase {
     public long id;

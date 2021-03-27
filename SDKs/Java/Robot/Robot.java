@@ -28,6 +28,7 @@ public class Robot {
     private StartPack StartPack;
     private RobotConfig Config;
     private int Times = 0;
+
     public void Set(RobotConfig Config) {
         this.Config = Config;
 
