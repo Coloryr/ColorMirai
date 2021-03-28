@@ -5,11 +5,9 @@
 ## C#
 
 1. 准备工作  
-   首先下载[SDK代码](../SDKs/C%23_SDK.cs)  并且导入到你的IDE  
+   下载[Visual Studio](https://visualstudio.microsoft.com/zh-hans/vs/)
    下载[net5](https://dotnet.microsoft.com/download/dotnet/5.0) 安装SDK  
-   下载[Visual Studio](https://visualstudio.microsoft.com/zh-hans/vs/)  
-   新建`.net core`项目，并选择`net5`  
-   安装[nuget](https://www.nuget.org/packages/Newtonsoft.Json/) 包
+   打开[demo代码](../demo/C%23)
 
 2. 开始编写代码  
    
@@ -163,8 +161,7 @@ while (true)
 ## JAVA
 
 1. 准备工作  
-   首先下载[SDK代码](../SDKs/Java/)并且导入到你的IDE(整个Robot文件夹)  
-   导入[fastjson](https://github.com/alibaba/fastjson/) 库
+   首先打开[demo代码](../demo/JAVA/)使用IDEA打开文件夹
 
 2. 开始编写
 

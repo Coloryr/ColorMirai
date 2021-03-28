@@ -6,8 +6,8 @@
 
 目前的SDK代码
 
-[C#](../SDKs/C%23_SDK.cs)  
-[JAVA](../SDKs/Java/)  
+[C#](../demo/C%23/netcore/ColoryrSDK.cs)  
+[JAVA](../demo/JAVA/src/Robot/Robot.java)  
 示例代码不包含Main函数，可以作为库用  
 
 ## 插件教程

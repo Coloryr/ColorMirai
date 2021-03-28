@@ -5,7 +5,7 @@ import java.util.List;
 public class RobotConfig {
     public String IP;
     public int Port;
-    public List<Byte> Pack;
+    public List<Integer> Pack;
     public String Name;
     public List<Long> Groups;
     public List<Long> QQs;
