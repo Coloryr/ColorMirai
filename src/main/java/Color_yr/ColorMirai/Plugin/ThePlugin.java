@@ -390,6 +390,18 @@ public class ThePlugin {
                                 close();
                             break;
                         }
+                        //102 [插件]移动群文件
+                        case 102: {
+                            MoveGroupFilePack pack = JSON.parseObject(task.data, MoveGroupFilePack.class);
+                            BotGroupFile.moveFile(pack.qq, pack.id, pack.old, pack.dir);
+                            break;
+                        }
+                        //103 [插件]重命名群文件
+                        case 103: {
+                            RemoveGroupFilePack pack = JSON.parseObject(task.data, RemoveGroupFilePack.class);
+                            BotGroupFile.renameFile(pack.qq, pack.id, pack.old, pack.now);
+                            break;
+                        }
                         //127 [插件]断开连接
                         case 127: {
                             close();

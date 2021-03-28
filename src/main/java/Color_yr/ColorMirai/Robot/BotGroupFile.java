@@ -89,7 +89,6 @@ public class BotGroupFile {
             while (list.hasNext()) {
                 RemoteFile temp = list.next();
                 if (!temp.isFile()) {
-                    //todo: mirai-core的bug
                     Iterator<RemoteFile> list1 = temp.listFilesIterator(false);
                     while (list1.hasNext()) {
                         RemoteFile temp1 = list1.next();
@@ -104,5 +103,51 @@ public class BotGroupFile {
             Start.logger.error("获取群文件列表失败", e);
         }
         return null;
+    }
+
+    public static void moveFile(long qq, long id, String old, String dir) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            RemoteFile remoteFile = group.getFilesRoot().resolve(old);
+            if (!remoteFile.exists()) {
+                Start.logger.warn("群：" + id + "文件：" + old + " 不存在");
+                return;
+            }
+            remoteFile.moveTo(dir);
+        } catch (Exception e) {
+            Start.logger.error("群文件移动失败", e);
+        }
+    }
+
+    public static void renameFile(long qq, long id, String old, String now) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                Start.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            RemoteFile remoteFile = group.getFilesRoot().resolve(old);
+            if (!remoteFile.exists()) {
+                Start.logger.warn("群：" + id + "文件：" + old + " 不存在");
+                return;
+            }
+            remoteFile.renameTo(now);
+        } catch (Exception e) {
+            Start.logger.error("群文件重命名失败", e);
+        }
     }
 }
