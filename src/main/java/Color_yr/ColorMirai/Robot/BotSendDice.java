@@ -1,25 +1,22 @@
 package Color_yr.ColorMirai.Robot;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.data.*;
-
-import java.util.List;
 
 public class BotSendDice {
     public static void sendGroupDice(long qq, long group, int dice) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
-                Start.logger.warn("不存在QQ号:" + qq);
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Group group1 = BotStart.getBots().get(qq).getGroup(group);
             if (group1 == null) {
-                Start.logger.warn("机器人" + qq + "不存在群:" + group);
+                ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
                 return;
             }
             MessageChain messageChain = MessageUtils.newChain(dice == -1 ? Dice.random() : new Dice(dice));
@@ -34,25 +31,25 @@ public class BotSendDice {
                 BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
-            Start.logger.error("发送群骰子失败", e);
+            ColorMiraiMain.logger.error("发送群骰子失败", e);
         }
     }
 
     public static void sendGroupPrivateDice(long qq, long group, long fid, int dice) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
-                Start.logger.warn("不存在QQ号:" + qq);
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Group group1 = BotStart.getBots().get(qq).getGroup(group);
             if (group1 == null) {
-                Start.logger.warn("机器人" + qq + "不存在群:" + group);
+                ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
                 return;
             }
             MessageChain messageChain = MessageUtils.newChain(dice == -1 ? Dice.random() : new Dice(dice));
             NormalMember member = group1.get(fid);
             if (member == null) {
-                Start.logger.warn("群：" + group + "不存在群员:" + fid);
+                ColorMiraiMain.logger.warn("群：" + group + "不存在群员:" + fid);
                 return;
             }
             MessageSource source = member.sendMessage(messageChain).getSource();
@@ -65,21 +62,21 @@ public class BotSendDice {
                 BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
-            Start.logger.error("发送群私聊骰子失败", e);
+            ColorMiraiMain.logger.error("发送群私聊骰子失败", e);
         }
     }
 
     public static void sendFriendDice(long qq, long fid, int dice) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
-                Start.logger.warn("不存在QQ号:" + qq);
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
             MessageChain messageChain = MessageUtils.newChain(dice == -1 ? Dice.random() : new Dice(dice));
             Friend friend = bot.getFriend(fid);
             if (friend == null) {
-                Start.logger.warn("机器人" + qq + "不存在朋友:" + fid);
+                ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
                 return;
             }
             MessageSource source = friend.sendMessage(messageChain).getSource();
@@ -92,7 +89,7 @@ public class BotSendDice {
                 BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
-            Start.logger.error("发送朋友骰子失败", e);
+            ColorMiraiMain.logger.error("发送朋友骰子失败", e);
         }
     }
 }

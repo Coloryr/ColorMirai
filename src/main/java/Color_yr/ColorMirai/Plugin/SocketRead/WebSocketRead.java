@@ -2,7 +2,7 @@ package Color_yr.ColorMirai.Plugin.SocketRead;
 
 import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import org.java_websocket.WebSocket;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class WebSocketRead {
                     String data = list.remove(0);
                     if (data == null)
                         return null;
-                    byte[] temp = data.getBytes(Start.ReadCharset);
+                    byte[] temp = data.getBytes(ColorMiraiMain.ReadCharset);
                     return new RePackObj(temp[temp.length - 1], data.substring(0, data.length() - 1));
                 }
                 return null;

@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Config;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 
@@ -16,7 +16,7 @@ public class ConfigRead {
             ConfigFile = new File(local + "MainConfig.json");
             if (!ConfigFile.exists()) {
                 ConfigFile.createNewFile();
-                Start.Config = new ConfigObj();
+                ColorMiraiMain.Config = new ConfigObj();
                 Save();
                 return true;
             } else {
@@ -29,32 +29,32 @@ public class ConfigRead {
                 while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
-                Start.Config = JSON.parseObject(data.toString(), ConfigObj.class);
-                if (Start.Config.QQs == null) {
-                    Start.Config = new ConfigObj();
+                ColorMiraiMain.Config = JSON.parseObject(data.toString(), ConfigObj.class);
+                if (ColorMiraiMain.Config.QQs == null) {
+                    ColorMiraiMain.Config = new ConfigObj();
                     Save();
                 }
                 bf.close();
                 reader.close();
             }
 
-            if (Start.Config.ReadEncoding == null || Start.Config.ReadEncoding.isEmpty()) {
-                Start.ReadCharset = StandardCharsets.UTF_8;
+            if (ColorMiraiMain.Config.ReadEncoding == null || ColorMiraiMain.Config.ReadEncoding.isEmpty()) {
+                ColorMiraiMain.ReadCharset = StandardCharsets.UTF_8;
             } else {
                 try {
-                    Start.ReadCharset = Charset.forName(Start.Config.ReadEncoding);
+                    ColorMiraiMain.ReadCharset = Charset.forName(ColorMiraiMain.Config.ReadEncoding);
                 } catch (Exception e) {
-                    Start.ReadCharset = StandardCharsets.UTF_8;
+                    ColorMiraiMain.ReadCharset = StandardCharsets.UTF_8;
                 }
             }
 
-            if (Start.Config.SendEncoding == null || Start.Config.SendEncoding.isEmpty()) {
-                Start.SendCharset = StandardCharsets.UTF_8;
+            if (ColorMiraiMain.Config.SendEncoding == null || ColorMiraiMain.Config.SendEncoding.isEmpty()) {
+                ColorMiraiMain.SendCharset = StandardCharsets.UTF_8;
             } else {
                 try {
-                    Start.SendCharset = Charset.forName(Start.Config.SendEncoding);
+                    ColorMiraiMain.SendCharset = Charset.forName(ColorMiraiMain.Config.SendEncoding);
                 } catch (Exception e) {
-                    Start.SendCharset = StandardCharsets.UTF_8;
+                    ColorMiraiMain.SendCharset = StandardCharsets.UTF_8;
                 }
             }
 
@@ -69,11 +69,11 @@ public class ConfigRead {
             FileOutputStream out = new FileOutputStream(ConfigFile);
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
-            write.write(JSON.toJSONString(Start.Config, SerializerFeature.PrettyFormat));
+            write.write(JSON.toJSONString(ColorMiraiMain.Config, SerializerFeature.PrettyFormat));
             write.close();
             out.close();
         } catch (Exception e) {
-            Start.logger.error("配置文件保存失败", e);
+            ColorMiraiMain.logger.error("配置文件保存失败", e);
             e.printStackTrace();
         }
     }

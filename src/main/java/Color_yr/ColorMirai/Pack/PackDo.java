@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Pack;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;
 
 import java.util.HashMap;
@@ -112,13 +112,17 @@ import java.util.Map;
 101 [插件]获取群文件
 102 [插件]移动群文件
 103 [插件]重命名群文件
+104 [插件]创新群文件文件夹
+105 [插件]删除群文件文件夹
+106 [插件]重命名群文件文件夹
+107 [插件]下载群文件到指定位置
 
 127 [插件]断开连接
 */
 public class PackDo {
     public static byte[] BuildPack(Object data, int index) {
         String str = JSON.toJSONString(data) + " ";
-        byte[] temp = str.getBytes(Start.SendCharset);
+        byte[] temp = str.getBytes(ColorMiraiMain.SendCharset);
         temp[temp.length - 1] = (byte) index;
         return temp;
     }

@@ -2,6 +2,7 @@ package Color_yr.ColorMirai;
 
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
+import Color_yr.ColorMirai.Plugin.Download.DownloadUtils;
 import Color_yr.ColorMirai.Plugin.PluginSocket.IPluginSocket;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
@@ -15,7 +16,7 @@ import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Scanner;
 
-public class Start {
+public class ColorMiraiMain {
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static final Base64.Decoder decoder = Base64.getDecoder();
     public static String RunDir;
@@ -50,6 +51,8 @@ public class Start {
             return;
         }
 
+        DownloadUtils.start();
+
         Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
@@ -82,14 +85,19 @@ public class Start {
                         break;
                     case "stop":
                         logger.info("正在停止");
-                        PluginSocket.pluginServerStop();
-                        BotStart.stop();
-                        System.exit(0);
+                        stop();
                         return;
                 }
             }
         } catch (Exception e) {
             logger.error("控制台发生错误", e);
         }
+    }
+
+    public static void stop() {
+        DownloadUtils.stop();
+        PluginSocket.pluginServerStop();
+        BotStart.stop();
+        System.exit(0);
     }
 }

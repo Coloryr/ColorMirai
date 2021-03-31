@@ -5,7 +5,7 @@ import Color_yr.ColorMirai.EventDo.EventCall;
 import Color_yr.ColorMirai.Pack.ToPlugin.*;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.contact.*;
@@ -699,7 +699,7 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getSubject().getId();
         long fid = event.getSender().getId();
-        if (Start.Config.escapeSelf && BotStart.getBots().containsKey(fid))
+        if (ColorMiraiMain.Config.escapeSelf && BotStart.getBots().containsKey(fid))
             return;
         MessageChain message = event.getMessage();
         MessageSaveObj call = new MessageSaveObj();
@@ -928,6 +928,6 @@ public class BotEvent extends SimpleListenerHost {
     //处理在处理事件中发生的未捕获异常
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
-        Start.logger.error("在事件处理中发生异常" + "\n" + context, exception);
+        ColorMiraiMain.logger.error("在事件处理中发生异常" + "\n" + context, exception);
     }
 }

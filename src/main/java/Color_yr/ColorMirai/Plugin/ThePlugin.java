@@ -9,7 +9,7 @@ import Color_yr.ColorMirai.Plugin.Objs.RePackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.*;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
@@ -158,7 +158,7 @@ public class ThePlugin {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     BotSendImage.sendGroupImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"));
                                 } catch (Exception e) {
-                                    Start.logger.error("解析发生错误", e);
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
@@ -173,7 +173,7 @@ public class ThePlugin {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     BotSendImage.sendGroupPrivateImage(runQQ == 0 ? qq : runQQ, id, fid, formdata.get("img"));
                                 } catch (Exception e) {
-                                    Start.logger.error("解析发生错误", e);
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
@@ -187,7 +187,7 @@ public class ThePlugin {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     BotSendImage.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"));
                                 } catch (Exception e) {
-                                    Start.logger.error("解析发生错误", e);
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
@@ -249,7 +249,7 @@ public class ThePlugin {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     BotSendSound.SendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata.get("sound"));
                                 } catch (Exception e) {
-                                    Start.logger.error("解析发生错误", e);
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
                             }
                             break;
@@ -393,13 +393,37 @@ public class ThePlugin {
                         //102 [插件]移动群文件
                         case 102: {
                             MoveGroupFilePack pack = JSON.parseObject(task.data, MoveGroupFilePack.class);
-                            BotGroupFile.moveFile(pack.qq, pack.id, pack.old, pack.dir);
+                            BotGroupFile.moveFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.dir);
                             break;
                         }
                         //103 [插件]重命名群文件
                         case 103: {
                             RemoveGroupFilePack pack = JSON.parseObject(task.data, RemoveGroupFilePack.class);
-                            BotGroupFile.renameFile(pack.qq, pack.id, pack.old, pack.now);
+                            BotGroupFile.renameFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
+                            break;
+                        }
+                        //104 [插件]创新群文件文件夹
+                        case 104: {
+                            AddGroupDirPack pack = JSON.parseObject(task.data, AddGroupDirPack.class);
+                            BotGroupFile.addGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
+                            break;
+                        }
+                        //105 [插件]删除群文件文件夹
+                        case 105: {
+                            RemoveGroupDirPack pack = JSON.parseObject(task.data, RemoveGroupDirPack.class);
+                            BotGroupFile.removeGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
+                            break;
+                        }
+                        //106 [插件]重命名群文件文件夹
+                        case 106: {
+                            RenameGroupDirPack pack = JSON.parseObject(task.data, RenameGroupDirPack.class);
+                            BotGroupFile.renameGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
+                            break;
+                        }
+                        //107 [插件]下载群文件到指定位置
+                        case 107: {
+                            DownloadGroupFilePack pack = JSON.parseObject(task.data, DownloadGroupFilePack.class);
+                            BotGroupFile.downloadGroupFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name, pack.dir);
                             break;
                         }
                         //127 [插件]断开连接
@@ -408,7 +432,7 @@ public class ThePlugin {
                             break;
                         }
                         default: {
-                            Start.logger.error("不知道的包");
+                            ColorMiraiMain.logger.error("不知道的包");
                             break;
                         }
                     }
@@ -417,7 +441,7 @@ public class ThePlugin {
             } catch (Exception e) {
                 if (!isRun)
                     break;
-                Start.logger.error("数据处理发生异常", e);
+                ColorMiraiMain.logger.error("数据处理发生异常", e);
                 close();
             }
         }
@@ -440,21 +464,21 @@ public class ThePlugin {
                     QQs.addAll(StartPack.QQs);
                 }
                 if (StartPack.RunQQ != 0 && !BotStart.getBotsKey().contains(StartPack.RunQQ)) {
-                    Start.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
+                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
                     Socket.close();
                     return;
                 }
                 runQQ = StartPack.RunQQ;
                 PluginUtils.addPlugin(name, this);
                 String data = JSON.toJSONString(BotStart.getBotsKey());
-                Socket.send(data.getBytes(Start.SendCharset));
+                Socket.send(data.getBytes(ColorMiraiMain.SendCharset));
             } else {
-                Start.logger.warn("插件连接初始化失败");
+                ColorMiraiMain.logger.warn("插件连接初始化失败");
                 Socket.close();
                 return;
             }
         } catch (Exception e) {
-            Start.logger.error("插件连接初始化失败", e);
+            ColorMiraiMain.logger.error("插件连接初始化失败", e);
             return;
         }
         isRun = true;
@@ -469,7 +493,7 @@ public class ThePlugin {
             } catch (Exception e) {
                 if (!isRun)
                     break;
-                Start.logger.error("连接发生异常", e);
+                ColorMiraiMain.logger.error("连接发生异常", e);
                 close();
             }
         }
@@ -509,7 +533,7 @@ public class ThePlugin {
         temp.qq = runQQ == 0 ? temp.qq : runQQ;
         Bot bot = BotStart.getBots().get(temp.qq);
         if (bot == null) {
-            Start.logger.warn("不存在QQ:" + temp.qq);
+            ColorMiraiMain.logger.warn("不存在QQ:" + temp.qq);
             return;
         }
         BuffObj item = null;
@@ -522,7 +546,7 @@ public class ThePlugin {
                 item = new BuffObj();
                 Friend contact = bot.getFriend(temp.id);
                 if (contact == null) {
-                    Start.logger.warn("QQ:" + temp.qq + " 不存在朋友:" + temp.id);
+                    ColorMiraiMain.logger.warn("QQ:" + temp.qq + " 不存在朋友:" + temp.id);
                     return;
                 }
                 item.contact = contact;
@@ -538,7 +562,7 @@ public class ThePlugin {
                 item = new BuffObj();
                 Group contact = bot.getGroup(temp.id);
                 if (contact == null) {
-                    Start.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
+                    ColorMiraiMain.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
                     return;
                 }
                 item.contact = contact;
@@ -554,12 +578,12 @@ public class ThePlugin {
                 item = new BuffObj();
                 Group group = bot.getGroup(temp.id);
                 if (group == null) {
-                    Start.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
+                    ColorMiraiMain.logger.warn("QQ:" + temp.qq + " 不存在群:" + temp.id);
                     return;
                 }
                 NormalMember contact = group.get(temp.fid);
                 if (contact == null) {
-                    Start.logger.warn("QQ:" + temp.qq + " 群:" + temp.id + " 不存在成员:" + temp.fid);
+                    ColorMiraiMain.logger.warn("QQ:" + temp.qq + " 群:" + temp.id + " 不存在成员:" + temp.fid);
                     return;
                 }
                 item.contact = contact;
@@ -596,10 +620,10 @@ public class ThePlugin {
         }
         if (temp.img != null && !temp.img.isEmpty()) {
             try {
-                ExternalResource image = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(temp.img)));
+                ExternalResource image = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(temp.img)));
                 item.message = item.message.plus(item.contact.uploadImage(image));
             } catch (IOException e) {
-                Start.logger.error("消息队列添加图片失败", e);
+                ColorMiraiMain.logger.error("消息队列添加图片失败", e);
                 e.printStackTrace();
             }
         }
@@ -610,7 +634,7 @@ public class ThePlugin {
                 item.message = item.message.plus(item.contact.uploadImage(image));
                 stream.close();
             } catch (IOException e) {
-                Start.logger.error("消息队列添加图片失败", e);
+                ColorMiraiMain.logger.error("消息队列添加图片失败", e);
                 e.printStackTrace();
             }
         }
@@ -654,7 +678,7 @@ public class ThePlugin {
             Socket.close();
             PluginUtils.removePlugin(name);
         } catch (Exception e) {
-            Start.logger.error("插件断开失败", e);
+            ColorMiraiMain.logger.error("插件断开失败", e);
         }
     }
 }

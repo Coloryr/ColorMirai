@@ -4,7 +4,7 @@ import Color_yr.ColorMirai.Config.QQsObj;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Plugin.ThePlugin;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.Mirai;
@@ -25,30 +25,30 @@ public class BotStart {
     private static final ScheduledExecutorService service1 = Executors.newSingleThreadScheduledExecutor();
 
     public static boolean Start() {
-        for (QQsObj item : Start.Config.QQs) {
+        for (QQsObj item : ColorMiraiMain.Config.QQs) {
             Bot bot = BotFactory.INSTANCE.newBot(item.QQ, item.Password, new BotConfiguration() {{
-                fileBasedDeviceInfo(Start.RunDir + item.Info);
+                fileBasedDeviceInfo(ColorMiraiMain.RunDir + item.Info);
                 setProtocol(item.LoginType);
-                setHighwayUploadCoroutineCount(Start.Config.HighwayUpload);
-                redirectNetworkLogToDirectory(new File(Start.RunDir + "/BotNetWork"));
-                redirectBotLogToDirectory(new File(Start.RunDir + "/BotLog"));
-                setAutoReconnectOnForceOffline(Start.Config.AutoReconnect);
+                setHighwayUploadCoroutineCount(ColorMiraiMain.Config.HighwayUpload);
+                redirectNetworkLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotNetWork"));
+                redirectBotLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotLog"));
+                setAutoReconnectOnForceOffline(ColorMiraiMain.Config.AutoReconnect);
             }});
             try {
-                Start.logger.info("正在登录QQ:" + item.QQ);
-                Start.logger.info("如果登录卡住，去看看BotLog文件夹里面的日志有没有验证码");
+                ColorMiraiMain.logger.info("正在登录QQ:" + item.QQ);
+                ColorMiraiMain.logger.info("如果登录卡住，去看看BotLog文件夹里面的日志有没有验证码");
                 bot.login();
                 bots.put(item.QQ, bot);
-                Start.logger.info("QQ:" + item.QQ + "已登录");
+                ColorMiraiMain.logger.info("QQ:" + item.QQ + "已登录");
             } catch (WrongPasswordException e) {
-                Start.logger.error("机器人密码错误", e);
+                ColorMiraiMain.logger.error("机器人密码错误", e);
             } catch (Exception e) {
-                Start.logger.error("机器人错误", e);
+                ColorMiraiMain.logger.error("机器人错误", e);
                 return false;
             }
         }
         if (bots.size() == 0) {
-            Start.logger.error("没有QQ号登录");
+            ColorMiraiMain.logger.error("没有QQ号登录");
             return false;
         }
 
@@ -66,7 +66,7 @@ public class BotStart {
                         Map<Integer, MessageSaveObj> list = MessageList.get(item.bot);
                         MessageSaveObj obj = list.get(item.mid);
                         if (obj == null) {
-                            Start.logger.warn("不存在消息:" + item.mid);
+                            ColorMiraiMain.logger.warn("不存在消息:" + item.mid);
                             continue;
                         }
                         if (obj.time > 0 || obj.time == -1)
@@ -75,7 +75,7 @@ public class BotStart {
                                 list.remove(item.mid);
                                 MessageList.put(item.bot, list);
                             } catch (Exception e) {
-                                Start.logger.error("消息撤回失败", e);
+                                ColorMiraiMain.logger.error("消息撤回失败", e);
                             }
                     }
                 }
@@ -85,7 +85,7 @@ public class BotStart {
                 for (Map.Entry<Integer, MessageSaveObj> item1 : item.entrySet()) {
                     item1.getValue().time -= 1;
                 }
-                if (item.size() >= Start.Config.MaxList) {
+                if (item.size() >= ColorMiraiMain.Config.MaxList) {
                     Iterator<Integer> iterator = item.keySet().iterator();
                     if (iterator.hasNext()) {
                         iterator.next();
@@ -98,14 +98,14 @@ public class BotStart {
             if (!Tasks.isEmpty()) {
                 SendPackObj task = Tasks.remove(0);
                 task.data += " ";
-                byte[] temp = task.data.getBytes(Start.SendCharset);
+                byte[] temp = task.data.getBytes(ColorMiraiMain.SendCharset);
                 temp[temp.length - 1] = task.index;
                 for (ThePlugin item : PluginUtils.getAll()) {
                     item.callEvent(task, temp);
                 }
             }
         }, 0, 100, TimeUnit.MICROSECONDS);
-        Start.logger.info("机器人已启动");
+        ColorMiraiMain.logger.info("机器人已启动");
         return true;
     }
 
@@ -123,14 +123,14 @@ public class BotStart {
                 }
             bots.clear();
         } catch (Exception e) {
-            Start.logger.error("关闭机器人时出现错误", e);
+            ColorMiraiMain.logger.error("关闭机器人时出现错误", e);
         }
     }
 
     public static MessageSaveObj getMessage(long qq, int index) {
         Map<Integer, MessageSaveObj> list = MessageList.get(qq);
         if (list == null) {
-            Start.logger.warn("不存在QQ:" + qq);
+            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
             return null;
         }
         return list.get(index);
@@ -143,7 +143,7 @@ public class BotStart {
             obj.bot = qq;
             reList.add(obj);
         } catch (Exception e) {
-            Start.logger.error("消息撤回失败", e);
+            ColorMiraiMain.logger.error("消息撤回失败", e);
         }
     }
 
@@ -154,7 +154,7 @@ public class BotStart {
     public static void addMessage(long qq, int data, MessageSaveObj obj) {
         Map<Integer, MessageSaveObj> list = MessageList.get(qq);
         if (list == null) {
-            Start.logger.warn("不存在QQ:" + qq);
+            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
         } else {
             list.put(data, obj);
             MessageList.put(qq, list);

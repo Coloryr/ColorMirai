@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Robot;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
@@ -18,18 +18,18 @@ public class BotSendMusicShare {
         } else if (type == 3) {
             kind = MusicKind.MiguMusic;
         } else {
-            Start.logger.warn("不存在音乐类型:" + type);
+            ColorMiraiMain.logger.warn("不存在音乐类型:" + type);
             return;
         }
         MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);
         if (!BotStart.getBots().containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
+            ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return;
         }
         Bot bot = BotStart.getBots().get(qq);
         Friend friend = bot.getFriend(id);
         if (friend == null) {
-            Start.logger.warn("机器人:" + qq + "不存在朋友:" + id);
+            ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + id);
             return;
         }
         friend.sendMessage(music);
@@ -44,17 +44,17 @@ public class BotSendMusicShare {
         } else if (type == 3) {
             kind = MusicKind.MiguMusic;
         } else {
-            Start.logger.warn("不存在音乐类型:" + type);
+            ColorMiraiMain.logger.warn("不存在音乐类型:" + type);
             return;
         }
         if (!BotStart.getBots().containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
+            ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return;
         }
         Bot bot = BotStart.getBots().get(qq);
         Group group = bot.getGroup(id);
         if (group == null) {
-            Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+            ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
             return;
         }
         MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);
@@ -70,22 +70,22 @@ public class BotSendMusicShare {
         } else if (type == 3) {
             kind = MusicKind.MiguMusic;
         } else {
-            Start.logger.warn("不存在音乐类型:" + type);
+            ColorMiraiMain.logger.warn("不存在音乐类型:" + type);
             return;
         }
         if (!BotStart.getBots().containsKey(qq)) {
-            Start.logger.warn("不存在QQ号:" + qq);
+            ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return;
         }
         Bot bot = BotStart.getBots().get(qq);
         Group group = bot.getGroup(id);
         if (group == null) {
-            Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+            ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
             return;
         }
         NormalMember member = group.get(fid);
         if (member == null) {
-            Start.logger.warn("群:" + id + "不存在群成员:" + fid);
+            ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
             return;
         }
         MusicShare music = new MusicShare(kind, title, summary, jumpUrl, pictureUrl, musicUrl);

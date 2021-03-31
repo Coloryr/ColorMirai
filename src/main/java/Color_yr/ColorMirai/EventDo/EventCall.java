@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.EventDo;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
 import net.mamoe.mirai.event.events.MemberJoinRequestEvent;
 import net.mamoe.mirai.event.events.NewFriendRequestEvent;
@@ -61,7 +61,7 @@ public class EventCall {
                     }
                 }
             } catch (Exception e) {
-                Start.logger.error("处理事件发送错误", e);
+                ColorMiraiMain.logger.error("处理事件发送错误", e);
             }
         }
     }

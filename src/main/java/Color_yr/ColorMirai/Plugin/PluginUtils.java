@@ -3,7 +3,7 @@ package Color_yr.ColorMirai.Plugin;
 import Color_yr.ColorMirai.Plugin.Objs.SendPackObj;
 import Color_yr.ColorMirai.Plugin.Objs.SocketObj;
 import Color_yr.ColorMirai.Robot.BotStart;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import org.java_websocket.WebSocket;
 
 import java.net.Socket;
@@ -44,16 +44,16 @@ public class PluginUtils {
             temp.close();
         }
         PluginList.put(name, plugin);
-        Start.logger.info("插件[" + name + "]已连接");
+        ColorMiraiMain.logger.info("插件[" + name + "]已连接");
     }
 
     public static void removePlugin(String name) {
         PluginList.remove(name);
-        Start.logger.info("插件[" + name + "]已断开");
+        ColorMiraiMain.logger.info("插件[" + name + "]已断开");
     }
 
     public static void init() {
-        if (Start.Config.Pack) {
+        if (ColorMiraiMain.Config.Pack) {
             service.scheduleAtFixedRate(() -> BotStart.addTask(new SendPackObj(60, "{}", 0, 0, 0)),
                     0, 30, TimeUnit.SECONDS);
         }

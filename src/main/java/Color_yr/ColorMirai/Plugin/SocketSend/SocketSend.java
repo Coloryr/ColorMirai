@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Plugin.SocketSend;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 
 import java.net.Socket;
 
@@ -13,7 +13,7 @@ public class SocketSend {
             socket.getOutputStream().flush();
             return false;
         } catch (Exception e) {
-            Start.logger.error("插件通信出现问题", e);
+            ColorMiraiMain.logger.error("插件通信出现问题", e);
             return true;
         }
     }

@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.Plugin.PluginSocket;
 
 import Color_yr.ColorMirai.Plugin.PluginUtils;
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -20,7 +20,7 @@ public class MyWebSocket implements IPluginSocket {
 
     @Override
     public boolean pluginServerStart() {
-        SocketServer = new WebSocketServer(new InetSocketAddress(Start.Config.Port)) {
+        SocketServer = new WebSocketServer(new InetSocketAddress(ColorMiraiMain.Config.Port)) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
                 List<String> list = new ArrayList<>();
@@ -45,19 +45,19 @@ public class MyWebSocket implements IPluginSocket {
 
             @Override
             public void onError(WebSocket conn, Exception ex) {
-                Start.logger.error("插件通信出现问题:" + conn.toString(), ex);
+                ColorMiraiMain.logger.error("插件通信出现问题:" + conn.toString(), ex);
             }
 
             @Override
             public void onStart() {
-                Start.logger.info("WebSocket已启动");
+                ColorMiraiMain.logger.info("WebSocket已启动");
             }
         };
         try {
             SocketServer.start();
             return true;
         } catch (Exception e) {
-            Start.logger.error("WebSocket初始化失败", e);
+            ColorMiraiMain.logger.error("WebSocket初始化失败", e);
             return false;
         }
     }
@@ -67,7 +67,7 @@ public class MyWebSocket implements IPluginSocket {
         try {
             SocketServer.stop();
         } catch (Exception e) {
-            Start.logger.error("WebSocket关闭失败", e);
+            ColorMiraiMain.logger.error("WebSocket关闭失败", e);
         }
     }
 }

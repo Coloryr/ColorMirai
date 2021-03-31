@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.Robot;
 
-import Color_yr.ColorMirai.Start;
+import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -13,14 +13,14 @@ public class BotSendSound {
     public static void SendGroupSound(long qq, long id, String sound) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
-                Start.logger.warn("不存在QQ号:" + qq);
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            ExternalResource voice = ExternalResource.create(new ByteArrayInputStream(Start.decoder.decode(sound)));
+            ExternalResource voice = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(sound)));
             Group group = bot.getGroup(id);
             if (group == null) {
-                Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
             MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
@@ -33,20 +33,20 @@ public class BotSendSound {
             }
             BotStart.addMessage(qq, obj.id, obj);
         } catch (Exception e) {
-            Start.logger.error("发送群语音失败", e);
+            ColorMiraiMain.logger.error("发送群语音失败", e);
         }
     }
 
     public static void SendGroupSoundFile(long qq, long id, String file) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
-                Start.logger.warn("不存在QQ号:" + qq);
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
             Group group = bot.getGroup(id);
             if (group == null) {
-                Start.logger.warn("机器人:" + qq + "不存在群:" + id);
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
             FileInputStream stream = new FileInputStream(file);
@@ -62,7 +62,7 @@ public class BotSendSound {
             BotStart.addMessage(qq, obj.id, obj);
             stream.close();
         } catch (Exception e) {
-            Start.logger.error("发送群语音失败", e);
+            ColorMiraiMain.logger.error("发送群语音失败", e);
         }
     }
 }
