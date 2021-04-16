@@ -5,9 +5,16 @@
 ## 无法登录解决
 
 1. 在启动参数哪里加上`-Dmirai.slider.captcha.supported`
-2. 启动之后会出现一个弹窗，复制网址到浏览器打开
-3. 按下`F12`打开控制台
-4. 复制下面的内容到控制台，并回车
+例如
+```
+"C:\Program Files\AdoptOpenJDK\jdk-8.0.282.8-hotspot\bin\java.exe" -Dmirai.slider.captcha.supported -Xmx1024M -jar ColorMirai-3.4.4-all.jar
+```
+3. 启动之后会出现一个弹窗
+4. 打开浏览器
+5. 按下`F12`打开控制台
+6. 切换到**手机模式**(不懂自行百度)
+7. 复制弹窗的网址打开
+8. 复制下面的内容到控制台(console)，并回车
 ```js
 /*
  * Copyright 2019-2021 Mamoe Technologies and contributors.
@@ -88,3 +95,5 @@
 6. 复制**网页**弹窗的内容复制到弹窗中回车
 7. 如果需要设备锁认证就用在下一个弹窗中点`设备锁`
 8. 完成设备锁后关闭弹窗即可
+
+如果没有弹窗出现，检查下是不是用的**手机模式**，或者多试几次，如果还不行，群里私聊
