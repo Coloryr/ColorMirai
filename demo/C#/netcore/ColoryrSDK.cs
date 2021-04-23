@@ -976,6 +976,10 @@ namespace ColoryrSDK
         /// </summary>
         public long fid { get; set; }
         /// <summary>
+        /// 发送人权限
+        /// </summary>
+        public MemberPermission permission { get; set; }
+        /// <summary>
         /// 发送的消息
         /// </summary>
         public List<string> message { get; set; }

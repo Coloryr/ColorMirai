@@ -1,5 +1,6 @@
 package Robot.Pack.ToPlugin;
 
+import Robot.Pack.MemberPermission;
 import Robot.Pack.PackBase;
 
 import java.util.List;
@@ -13,5 +14,6 @@ message:发送的消息
 public class GroupMessageEventPack extends PackBase {
     public long id;
     public long fid;
+    public MemberPermission permission;
     public List<String> message;
 }

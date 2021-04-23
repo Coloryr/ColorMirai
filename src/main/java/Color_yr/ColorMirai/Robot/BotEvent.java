@@ -709,13 +709,13 @@ public class BotEvent extends SimpleListenerHost {
         call.id = call.source.getIds()[0];
         long qq = event.getBot().getId();
         BotStart.addMessage(qq, call.id, call);
-        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, message);
+        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, message, event.getPermission());
         BotStart.addTask(new SendPackObj(49, JSON.toJSONString(pack), fid, id, qq));
     }
 
     //50 [机器人]收到群临时会话消息（事件）
     @EventHandler
-    public void onTempMessageEvent(TempMessageEvent event) {
+    public void onTempMessageEvent(GroupTempMessageEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getGroup().getId();
@@ -729,7 +729,7 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         BotStart.addMessage(qq, call.id, call);
-        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, message, time);
+        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, message, time, event.getSender().getPermission());
         BotStart.addTask(new SendPackObj(50, JSON.toJSONString(pack), fid, id, qq));
     }
 
