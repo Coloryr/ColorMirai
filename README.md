@@ -18,7 +18,7 @@
 ## 依赖ColorMirai的插件
 
 [Minecraft_QQ_Gui/Cmd](https://github.com/HeartAge/Minecraft_QQ-C-Server-)  
-[GitHubPush](https://github.com/Coloryr/GitHubPush)
+[GitHubPush](https://github.com/Coloryr/GitHubPush)  
 [BotBiliBili](https://github.com/Coloryr/BotBiliBili)
 
 ## 使用ColorMirai的项目
