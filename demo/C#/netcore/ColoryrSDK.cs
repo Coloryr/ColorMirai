@@ -2019,6 +2019,8 @@ namespace ColoryrSDK
         }
         private void SendStop()
         {
+            if (!IsConnect)
+                return;
             var data = BuildPack.Build(new object(), 127);
             Socket.Send(data);
         }
