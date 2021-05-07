@@ -1942,12 +1942,8 @@ namespace ColoryrSDK
                         else if (Config.Check && time >= 20)
                         {
                             time = 0;
-                            if (Socket.Poll(1000, SelectMode.SelectRead))
-                            {
-                                LogOut("机器人连接中断");
-                                IsConnect = false;
-                                RobotStateEvent.Invoke(StateType.Disconnect);
-                            }
+                            var temp = BuildPack.Build(new object(), 60);
+                            AddTask(temp);
                         }
                         else if (QueueSend.TryTake(out byte[] Send))
                         {
@@ -1958,6 +1954,8 @@ namespace ColoryrSDK
                     }
                     catch (Exception e)
                     {
+                        IsConnect = false;
+                        RobotStateEvent.Invoke(StateType.Disconnect);
                         if (IsFirst)
                         {
                             IsRun = false;
