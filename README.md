@@ -19,7 +19,8 @@
 
 [Minecraft_QQ_Gui/Cmd](https://github.com/HeartAge/Minecraft_QQ-C-Server-)  
 [GitHubPush](https://github.com/Coloryr/GitHubPush)  
-[BotBiliBili](https://github.com/Coloryr/BotBiliBili)
+[BotBiliBili](https://github.com/Coloryr/BotBiliBili)  
+[McPing](https://github.com/Coloryr/McPing)
 
 ## 使用ColorMirai的项目
 
