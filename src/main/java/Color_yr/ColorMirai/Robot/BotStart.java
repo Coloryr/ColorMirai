@@ -23,6 +23,7 @@ public class BotStart {
     private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
     private static final ScheduledExecutorService service1 = Executors.newSingleThreadScheduledExecutor();
+    private static final BotLoginSolver login = new BotLoginSolver();
 
     public static boolean Start() {
         for (QQsObj item : ColorMiraiMain.Config.QQs) {
@@ -33,6 +34,7 @@ public class BotStart {
                 redirectNetworkLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotNetWork"));
                 redirectBotLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotLog"));
                 setAutoReconnectOnForceOffline(ColorMiraiMain.Config.AutoReconnect);
+                setLoginSolver(login);
             }});
             try {
                 ColorMiraiMain.logger.info("正在登录QQ:" + item.QQ);
