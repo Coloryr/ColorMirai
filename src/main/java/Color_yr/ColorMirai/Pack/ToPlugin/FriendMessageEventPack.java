@@ -12,13 +12,15 @@ import java.util.List;
 id:朋友QQ号
 message:消息
 time:时间
+name:昵称
  */
 public class FriendMessageEventPack extends PackBase {
     public long id;
     public List<String> message;
     public int time;
+    public String name;
 
-    public FriendMessageEventPack(long qq, long id, MessageChain message, int time) {
+    public FriendMessageEventPack(long qq, long id, MessageChain message, int time, String name) {
         this.id = id;
         this.qq = qq;
         this.message = new ArrayList<>();
@@ -27,5 +29,6 @@ public class FriendMessageEventPack extends PackBase {
         }
         this.message.add(message.contentToString());
         this.time = time;
+        this.name = name;
     }
 }

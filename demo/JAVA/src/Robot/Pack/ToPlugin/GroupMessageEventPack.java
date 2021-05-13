@@ -10,10 +10,13 @@ import java.util.List;
 id:群号
 fid:发送人QQ号
 message:发送的消息
+permission:权限
+name:群名片
  */
 public class GroupMessageEventPack extends PackBase {
     public long id;
     public long fid;
     public MemberPermission permission;
     public List<String> message;
+    public String name;
 }

@@ -9,12 +9,13 @@ id:群号
 fid:发送人QQ号
 message:发送的消息
 time:时间
+name:群名片
  */
 public class TempMessageEventPack extends GroupMessageEventPack {
     public int time;
 
-    public TempMessageEventPack(long qq, long id, long fid, MessageChain message, int time, MemberPermission permission) {
-        super(qq, id, fid, message, permission);
+    public TempMessageEventPack(long qq, long id, long fid, MessageChain message, int time, MemberPermission permission, String name) {
+        super(qq, id, fid, message, permission, name);
         this.time = time;
     }
 

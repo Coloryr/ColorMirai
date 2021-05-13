@@ -983,6 +983,10 @@ namespace ColoryrSDK
         /// 发送的消息
         /// </summary>
         public List<string> message { get; set; }
+        /// <summary>
+        /// 群名片
+        /// </summary>
+        public string name { get; set; }
     }
     /// <summary>
     /// 50 [机器人]收到群临时会话消息（事件）
@@ -1011,6 +1015,10 @@ namespace ColoryrSDK
         /// 时间
         /// </summary>
         public int time { get; set; }
+        /// <summary>
+        /// 昵称
+        /// </summary>
+        public string name { get; set; }
     }
     /// <summary>
     /// 52 [插件]发送群消息

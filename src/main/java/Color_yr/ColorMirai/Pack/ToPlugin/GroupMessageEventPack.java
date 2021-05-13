@@ -14,14 +14,16 @@ id:群号
 fid:发送人QQ号
 message:发送的消息
 permission:权限
+name:群名片
  */
 public class GroupMessageEventPack extends PackBase {
     public long id;
     public long fid;
     public MemberPermission permission;
     public List<String> message;
+    public String name;
 
-    public GroupMessageEventPack(long qq, long id, long fid, MessageChain message, MemberPermission permission) {
+    public GroupMessageEventPack(long qq, long id, long fid, MessageChain message, MemberPermission permission, String name) {
         this.fid = fid;
         this.qq = qq;
         this.id = id;
@@ -31,5 +33,6 @@ public class GroupMessageEventPack extends PackBase {
             this.message.add(item.toString());
         }
         this.message.add(message.contentToString());
+        this.name = name;
     }
 }
