@@ -39,7 +39,7 @@ public class BotSendMessage {
                     QuoteReply quote = new QuoteReply(call.source);
                     messageChain = messageChain.plus(quote);
                 } else if (item.startsWith("[mirai:")) {
-                    messageChain = MiraiCode.deserializeMiraiCode(item);
+                    messageChain = messageChain.plus(MiraiCode.deserializeMiraiCode(item));
                 } else {
                     messageChain = messageChain.plus(item);
                 }
