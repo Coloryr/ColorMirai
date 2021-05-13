@@ -6,6 +6,7 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.message.code.MiraiCode;
 import net.mamoe.mirai.message.data.*;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public class BotSendMessage {
                         continue;
                     QuoteReply quote = new QuoteReply(call.source);
                     messageChain = messageChain.plus(quote);
+                } else if (item.startsWith("[mirai:")) {
+                    messageChain = MiraiCode.deserializeMiraiCode(item);
                 } else {
                     messageChain = messageChain.plus(item);
                 }
