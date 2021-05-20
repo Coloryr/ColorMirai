@@ -53,6 +53,7 @@ public class Robot {
 
         DoThread = new Thread(() -> {
             RobotTask task;
+            int count = 0;
             while (IsRun) {
                 try {
                     if (!QueueRead.isEmpty()) {
@@ -60,6 +61,13 @@ public class Robot {
                         RobotCallEvent.CallAction(task.index, task.data);
                     }
                     Thread.sleep(10);
+                    if (Config.Check) {
+                        count++;
+                        if (count >= 30000) {
+                            count = 0;
+                            QueueSend.add(BuildPack.Build(new Object(), 60));
+                        }
+                    }
                 } catch (Exception e) {
                     LogError(e);
                 }
