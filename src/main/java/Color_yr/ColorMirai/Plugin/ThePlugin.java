@@ -431,6 +431,10 @@ public class ThePlugin {
                             close();
                             break;
                         }
+                        //60 心跳包
+                        case 60:{
+                            break;
+                        }
                         default: {
                             ColorMiraiMain.logger.error("不知道的包");
                             break;
