@@ -9,9 +9,11 @@ import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
 import Color_yr.ColorMirai.Plugin.ThePlugin;
 import Color_yr.ColorMirai.Robot.BotStart;
+import io.github.mzdluo123.silk4j.AudioUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Base64;
 import java.util.Scanner;
@@ -31,6 +33,11 @@ public class ColorMiraiMain {
         if (ConfigRead.ReadStart(RunDir)) {
             logger.info("请修改配置文件后重新启动");
             return;
+        }
+        try {
+            AudioUtils.init();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         PluginUtils.init();
         logger.info("初始化完成");
