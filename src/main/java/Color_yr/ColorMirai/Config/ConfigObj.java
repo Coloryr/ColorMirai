@@ -6,7 +6,8 @@ import java.util.List;
 public class ConfigObj {
     public List<QQsObj> QQs;
     public boolean Pack;
-    public int Port;
+    public int SocketPort;
+    public int WebSocketPort;
     public boolean escapeSelf;
     public long MaxList;
     public String SendEncoding;
@@ -21,7 +22,8 @@ public class ConfigObj {
         }};
         Pack = true;
         escapeSelf = true;
-        Port = 23333;
+        SocketPort = 23333;
+        WebSocketPort = 23334;
         MaxList = 100000;
         SendEncoding = "UTF-8";
         ReadEncoding = "UTF-8";

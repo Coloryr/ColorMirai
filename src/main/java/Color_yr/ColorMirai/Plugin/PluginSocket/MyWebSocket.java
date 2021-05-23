@@ -13,14 +13,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class MyWebSocket implements IPluginSocket {
+public class MyWebSocket {
 
     public static Map<WebSocket, List<String>> WebSocketData = new ConcurrentHashMap<>();
     private WebSocketServer SocketServer;
 
-    @Override
     public boolean pluginServerStart() {
-        SocketServer = new WebSocketServer(new InetSocketAddress(ColorMiraiMain.Config.Port)) {
+        SocketServer = new WebSocketServer(new InetSocketAddress(ColorMiraiMain.Config.WebSocketPort)) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
                 List<String> list = new ArrayList<>();
@@ -62,7 +61,6 @@ public class MyWebSocket implements IPluginSocket {
         }
     }
 
-    @Override
     public void pluginServerStop() {
         try {
             SocketServer.stop();

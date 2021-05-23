@@ -3,7 +3,6 @@ package Color_yr.ColorMirai;
 import Color_yr.ColorMirai.Config.ConfigObj;
 import Color_yr.ColorMirai.Config.ConfigRead;
 import Color_yr.ColorMirai.Plugin.Download.DownloadUtils;
-import Color_yr.ColorMirai.Plugin.PluginSocket.IPluginSocket;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
 import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
 import Color_yr.ColorMirai.Plugin.PluginUtils;
@@ -25,7 +24,8 @@ public class ColorMiraiMain {
     public static ConfigObj Config;
     public static Charset SendCharset;
     public static Charset ReadCharset;
-    public static IPluginSocket PluginSocket;
+    private static MyWebSocket WebSocket;
+    private  static MySocketServer Socket;
 
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";
@@ -48,12 +48,17 @@ public class ColorMiraiMain {
         }
 
         if (Config.SocketType == 1) {
-            PluginSocket = new MyWebSocket();
+            WebSocket = new MyWebSocket();
         } else {
-            PluginSocket = new MySocketServer();
+            Socket = new MySocketServer();
         }
 
-        if (!PluginSocket.pluginServerStart()) {
+        if (!Socket.pluginServerStart()) {
+            logger.error("socket启动失败");
+            return;
+        }
+
+        if (!WebSocket.pluginServerStart()) {
             logger.error("socket启动失败");
             return;
         }
@@ -103,7 +108,8 @@ public class ColorMiraiMain {
 
     public static void stop() {
         DownloadUtils.stop();
-        PluginSocket.pluginServerStop();
+        Socket.pluginServerStop();
+        WebSocket.pluginServerStop();
         BotStart.stop();
         System.exit(0);
     }

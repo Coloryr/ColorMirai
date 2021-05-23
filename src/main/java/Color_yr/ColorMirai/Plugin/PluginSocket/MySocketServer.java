@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class MySocketServer implements IPluginSocket {
+public class MySocketServer {
 
     private ServerSocket ServerSocket;
     private Thread ServerThread;
@@ -15,8 +15,8 @@ public class MySocketServer implements IPluginSocket {
 
     public boolean pluginServerStart() {
         try {
-            ServerSocket = new ServerSocket(ColorMiraiMain.Config.Port);
-            ColorMiraiMain.logger.info("Socket已启动:" + ColorMiraiMain.Config.Port);
+            ServerSocket = new ServerSocket(ColorMiraiMain.Config.SocketPort);
+            ColorMiraiMain.logger.info("Socket已启动:" + ColorMiraiMain.Config.SocketPort);
             isStart = true;
             ServerThread = new Thread(() -> {
                 while (isStart) {
