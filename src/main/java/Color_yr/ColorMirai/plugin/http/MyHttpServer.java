@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.plugin.http;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
-import Color_yr.ColorMirai.plugin.http.HttpContext.HttpAuth;
+import Color_yr.ColorMirai.plugin.http.context.HttpAuth;
 import Color_yr.ColorMirai.plugin.ISocket;
 import com.sun.net.httpserver.HttpServer;
 

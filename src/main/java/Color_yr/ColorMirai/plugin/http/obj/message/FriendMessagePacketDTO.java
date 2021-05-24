@@ -1,6 +1,6 @@
-package Color_yr.ColorMirai.plugin.http.HttpObj.Message;
+package Color_yr.ColorMirai.plugin.http.obj.message;
 
-import Color_yr.ColorMirai.plugin.http.HttpObj.Contact.QQDTO;
+import Color_yr.ColorMirai.plugin.http.obj.contact.QQDTO;
 
 public class FriendMessagePacketDTO extends MessagePacketDTO {
     public String type;

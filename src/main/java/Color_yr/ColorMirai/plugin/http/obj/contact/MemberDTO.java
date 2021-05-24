@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.HttpObj.Contact;
+package Color_yr.ColorMirai.plugin.http.obj.contact;
 
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.contact.MemberPermission;

@@ -1,6 +1,6 @@
-package Color_yr.ColorMirai.plugin.http.HttpObj.Message;
+package Color_yr.ColorMirai.plugin.http.obj.message;
 
-import Color_yr.ColorMirai.plugin.http.HttpObj.Contact.MemberDTO;
+import Color_yr.ColorMirai.plugin.http.obj.contact.MemberDTO;
 
 public class TempMessagePacketDTO extends MessagePacketDTO{
     public MemberDTO sender;

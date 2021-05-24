@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.HttpContext;
+package Color_yr.ColorMirai.plugin.http.context;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
