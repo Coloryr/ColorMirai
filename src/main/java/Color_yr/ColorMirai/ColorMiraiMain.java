@@ -1,13 +1,17 @@
 package Color_yr.ColorMirai;
 
-import Color_yr.ColorMirai.Config.ConfigObj;
-import Color_yr.ColorMirai.Config.ConfigRead;
-import Color_yr.ColorMirai.Plugin.Download.DownloadUtils;
-import Color_yr.ColorMirai.Plugin.PluginSocket.MySocketServer;
-import Color_yr.ColorMirai.Plugin.PluginSocket.MyWebSocket;
-import Color_yr.ColorMirai.Plugin.PluginUtils;
-import Color_yr.ColorMirai.Plugin.ThePlugin;
-import Color_yr.ColorMirai.Robot.BotStart;
+import Color_yr.ColorMirai.config.ConfigObj;
+import Color_yr.ColorMirai.config.ConfigRead;
+import Color_yr.ColorMirai.config.SessionObj;
+import Color_yr.ColorMirai.plugin.download.DownloadUtils;
+import Color_yr.ColorMirai.plugin.ISocket;
+import Color_yr.ColorMirai.plugin.http.MyHttpServer;
+import Color_yr.ColorMirai.plugin.http.SessionManager;
+import Color_yr.ColorMirai.plugin.socket.MySocketServer;
+import Color_yr.ColorMirai.plugin.socket.MyWebSocket;
+import Color_yr.ColorMirai.plugin.PluginUtils;
+import Color_yr.ColorMirai.plugin.ThePlugin;
+import Color_yr.ColorMirai.robot.BotStart;
 import io.github.mzdluo123.silk4j.AudioUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,17 +19,21 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Base64;
+import java.util.Random;
 import java.util.Scanner;
 
 public class ColorMiraiMain {
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static final Base64.Decoder decoder = Base64.getDecoder();
+    public static final Random random = new Random();
     public static String RunDir;
     public static ConfigObj Config;
+    public static SessionObj Sessions;
     public static Charset SendCharset;
     public static Charset ReadCharset;
-    private static MyWebSocket WebSocket;
-    private  static MySocketServer Socket;
+    private static ISocket WebSocket;
+    private static ISocket Socket;
+    private static ISocket Http;
 
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";
@@ -39,6 +47,8 @@ public class ColorMiraiMain {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        SessionManager.start();
+        DownloadUtils.start();
         PluginUtils.init();
         logger.info("初始化完成");
 
@@ -47,11 +57,9 @@ public class ColorMiraiMain {
             return;
         }
 
-        if (Config.SocketType == 1) {
-            WebSocket = new MyWebSocket();
-        } else {
-            Socket = new MySocketServer();
-        }
+        WebSocket = new MyWebSocket();
+        Socket = new MySocketServer();
+        Http = new MyHttpServer();
 
         if (!Socket.pluginServerStart()) {
             logger.error("socket启动失败");
@@ -59,11 +67,14 @@ public class ColorMiraiMain {
         }
 
         if (!WebSocket.pluginServerStart()) {
-            logger.error("socket启动失败");
+            logger.error("websocket启动失败");
             return;
         }
-
-        DownloadUtils.start();
+        if(!Http.pluginServerStart())
+        {
+            logger.error("mirai-http-api启动失败");
+            return;
+        }
 
         Scanner scanner = new Scanner(System.in);
         try {
