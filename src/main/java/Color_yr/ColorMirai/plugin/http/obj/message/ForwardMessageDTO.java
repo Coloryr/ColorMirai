@@ -1,5 +1,8 @@
 package Color_yr.ColorMirai.plugin.http.obj.message;
 
+import net.mamoe.mirai.message.data.ForwardMessage;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ForwardMessageDTO extends MessageDTO {
@@ -18,5 +21,26 @@ public class ForwardMessageDTO extends MessageDTO {
         this.preview = preview;
         this.source = source;
         this.summary = summary;
+    }
+
+    public ForwardMessageDTO(ForwardMessage message) {
+        List<NodeDTO> list = new ArrayList<>();
+        for (ForwardMessage.Node node : message.getNodeList()) {
+            list.add(
+                    new NodeDTO(
+                            node.getSenderId(),
+                            node.getTime(),
+                            node.getSenderName(),
+                            MessageDTO.toMessageChainDTO(
+                                    node.getMessageChain())));
+        }
+        message.getNodeList();
+        this.type = "Forward";
+        this.brief = message.getBrief();
+        this.nodeList = list;
+        this.title = message.getTitle();
+        this.preview = message.getPreview();
+        this.source = message.getSource();
+        this.summary = message.getSummary();
     }
 }

@@ -17,6 +17,7 @@ public class ConfigObj {
     public int HighwayUpload;
     public String authKey;
     public long authTime;
+    public int cacheSize;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -34,5 +35,6 @@ public class ConfigObj {
         HighwayUpload = 10;
         authKey = "123456789";
         authTime = 1800;
+        cacheSize = 100;
     }
 }

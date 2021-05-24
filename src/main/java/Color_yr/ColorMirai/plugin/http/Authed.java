@@ -3,23 +3,26 @@ package Color_yr.ColorMirai.plugin.http;
 import Color_yr.ColorMirai.robot.BotStart;
 import net.mamoe.mirai.Bot;
 
-import java.util.Queue;
-
 public class Authed {
 
     private Bot bot;
-    private Queue<>
+    private MessageQueue messageQueue;
+    private CacheQueue cacheQueue;
 
-    public static Authed create(long qq)
-    {
-        if(BotStart.getBots().containsKey(qq))
-        {
-
+    public static Authed create(long qq) {
+        if (BotStart.getBots().containsKey(qq)) {
+            return new Authed(BotStart.getBots().get(qq));
         }
+        return null;
     }
 
-    public void close()
-    {
+    public Authed(Bot bot) {
+        messageQueue = new MessageQueue();
+        cacheQueue = new CacheQueue();
+        this.bot = bot;
+    }
+
+    public void close() {
 
     }
 }
