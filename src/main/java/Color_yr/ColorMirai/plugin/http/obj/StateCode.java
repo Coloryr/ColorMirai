@@ -29,4 +29,6 @@ public class StateCode {
             = new StateCode(20, "Bot被禁言");
     public static StateCode MessageTooLarge
             = new StateCode(30, "消息过长");
+    public static StateCode Unknown
+            = new StateCode(-1, "未支持操作");
 }

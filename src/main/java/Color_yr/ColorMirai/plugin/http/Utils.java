@@ -2,32 +2,35 @@ package Color_yr.ColorMirai.plugin.http;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
 import kotlinx.serialization.KSerializer;
-import net.mamoe.mirai.message.data.Face;
-import net.mamoe.mirai.message.data.MessageContent;
-import net.mamoe.mirai.message.data.PokeMessage;
+import net.mamoe.mirai.contact.Contact;
+import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Utils {
-    private static final String all = "QWERTYUIOPASDFGHJKLZXCVBNM1234567890qwertyuiopasdfghjklzxcvbnm";
     private static final Map<Integer, String> id2Name = new HashMap<>();
     private static final Map<String, Integer> name2Id = new HashMap<>();
 
     private static final Map<Integer, String> poke2name = new HashMap<>();
     private static final Map<String, Integer> name2Poke = new HashMap<>();
 
-    public static boolean checkKey(String key) {
-        return key.equals(ColorMiraiMain.Config.authKey);
+    public static Map<String, String> queryToMap(String query) {
+        Map<String, String> result = new HashMap<>();
+        for (String param : query.split("&")) {
+            String[] pair = param.split("=");
+            if (pair.length > 1) {
+                result.put(pair[0], pair[1]);
+            } else {
+                result.put(pair[0], "");
+            }
+        }
+        return result;
     }
 
-    public static String generateRandomSessionKey() {
-        StringBuilder builder = new StringBuilder();
-        int data = ColorMiraiMain.random.nextInt(all.length() - 1);
-        for (int a = 0; a < 8; a++) {
-            builder.append(all.charAt(data));
-        }
-        return builder.toString();
+    public static boolean checkKey(String key) {
+        return key.equals(ColorMiraiMain.Config.authKey);
     }
 
     public static String getFace(int id) {
@@ -56,6 +59,16 @@ public class Utils {
             return name2Poke.get(name);
         }
         return 1;
+    }
+
+    public static MessageReceipt<Contact> sendMessage(QuoteReply quote, MessageChain messageChain, Contact target) {
+        MessageChain send;
+        if (quote == null) {
+            send = messageChain;
+        } else {
+            send = MessageUtils.newChain(quote, messageChain);
+        }
+        return target.sendMessage(send);
     }
 
     static {

@@ -6,6 +6,7 @@ import Color_yr.ColorMirai.plugin.http.obj.EventDTO;
 import Color_yr.ColorMirai.plugin.http.obj.IgnoreEventDTO;
 import Color_yr.ColorMirai.plugin.http.obj.contact.MemberDTO;
 import Color_yr.ColorMirai.plugin.http.obj.contact.QQDTO;
+import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
@@ -59,6 +60,24 @@ public class MessageDTO implements DTO {
             list.add(dto);
         }
         return list;
+    }
+
+    public static MessageChain toMessageChain(Contact contact, List<MessageDTO> messages)
+    {
+        MessageChainBuilder builder = new MessageChainBuilder();
+        for(MessageDTO item : messages)
+        {
+            builder.add(item.type);
+        }
+    }
+
+    public static Message toMessage(Contact contact, MessageDTO message)
+    {
+        if(message instanceof AtDTO)
+        {
+            AtDTO item = (AtDTO)message;
+            
+        }
     }
 
     public static MessageDTO toDTO(SingleMessage item) {

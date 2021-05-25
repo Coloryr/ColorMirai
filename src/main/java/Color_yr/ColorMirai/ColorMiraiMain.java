@@ -42,20 +42,23 @@ public class ColorMiraiMain {
             logger.info("请修改配置文件后重新启动");
             return;
         }
+
+        PluginUtils.init();
+        DownloadUtils.start();
         try {
             AudioUtils.init();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        SessionManager.start();
-        DownloadUtils.start();
-        PluginUtils.init();
-        logger.info("初始化完成");
 
         if (!BotStart.Start()) {
             logger.error("机器人启动失败");
             return;
         }
+
+        SessionManager.start();
+
+        logger.info("初始化完成");
 
         WebSocket = new MyWebSocket();
         Socket = new MySocketServer();
@@ -70,8 +73,7 @@ public class ColorMiraiMain {
             logger.error("websocket启动失败");
             return;
         }
-        if(!Http.pluginServerStart())
-        {
+        if (!Http.pluginServerStart()) {
             logger.error("mirai-http-api启动失败");
             return;
         }
@@ -119,8 +121,10 @@ public class ColorMiraiMain {
 
     public static void stop() {
         DownloadUtils.stop();
+        SessionManager.stop();
         Socket.pluginServerStop();
         WebSocket.pluginServerStop();
+        Http.pluginServerStop();
         BotStart.stop();
         System.exit(0);
     }
