@@ -16,6 +16,7 @@ public class SessionManager {
     private static int saveCount;
 
     public static Authed get(String key) {
+        ColorMiraiMain.Sessions.allSession.get(key).reset();
         return allAuthed.get(key);
     }
 
@@ -31,12 +32,6 @@ public class SessionManager {
         authed = new Authed(qq);
         allAuthed.put(key, authed);
         ConfigRead.SaveSession();
-    }
-
-    public static void tickReset(String key) {
-        if (!haveKey(key))
-            return;
-        ColorMiraiMain.Sessions.allSession.get(key).reset();
     }
 
     public static void close(String key) {
