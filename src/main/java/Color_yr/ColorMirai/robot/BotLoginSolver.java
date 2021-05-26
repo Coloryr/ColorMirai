@@ -13,6 +13,11 @@ import java.util.Scanner;
 
 public class BotLoginSolver extends LoginSolver {
 
+    @Override
+    public boolean isSliderCaptchaSupported() {
+        return true;
+    }
+
     @Nullable
     @Override
     public String onSolvePicCaptcha(@NotNull Bot bot, @NotNull byte[] bytes, @NotNull Continuation<? super String> continuation) {
