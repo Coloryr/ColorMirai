@@ -33,7 +33,8 @@ public class BotLoginSolver extends LoginSolver {
             e.printStackTrace();
         }
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine().trim().replace("\n", "");
+        String temp = scanner.nextLine().trim().replace("\n", "");
+        return temp;
     }
 
     @Nullable
@@ -43,7 +44,8 @@ public class BotLoginSolver extends LoginSolver {
         System.out.println("操作过程请看：https://github.com/Coloryr/ColorMirai/blob/main/docs/login.md");
         System.out.println("网址：" + s);
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine().trim().replace("\n", "");
+        String temp = scanner.nextLine().trim().replace("\n", "");
+        return temp;
     }
 
     @Nullable
@@ -53,6 +55,7 @@ public class BotLoginSolver extends LoginSolver {
         System.out.println("操作过程请看：https://github.com/Coloryr/ColorMirai/blob/main/docs/login.md");
         System.out.println("网址：" + s);
         Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine().trim().replace("\n", "");
+        String temp = scanner.nextLine().trim().replace("\n", "");
+        return temp;
     }
 }
