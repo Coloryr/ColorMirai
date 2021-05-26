@@ -33,7 +33,7 @@ public class UploadVoice implements HttpHandler {
         SimpleRequestContext simpleRequestContext = new SimpleRequestContext(StandardCharsets.UTF_8, inputStream, t.getRequestHeaders().get("Content-type").get(0));
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
-        boolean is = ServletFileUpload.isMultipartContent(simpleRequestContext );
+        boolean is = ServletFileUpload.isMultipartContent(simpleRequestContext);
         // 解析出所有的部件
         try {
             List<FileItem> fileItems = upload.parseRequest(simpleRequestContext);
@@ -53,13 +53,13 @@ public class UploadVoice implements HttpHandler {
         }
         String response;
         if (!SessionManager.haveKey(sessionKey)) {
-            response = JSONObject.toJSONString(StateCode.AuthKeyFail);
+            response = JSONObject.toJSONString(StateCode.IllegalSession);
         } else if (SessionManager.get(sessionKey) == null) {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(sessionKey);
             if (imgdata == null) {
-                response = JSONObject.toJSONString(StateCode.NoOperateSupport);
+                response = JSONObject.toJSONString(StateCode.Null);
                 Utils.send(t, response);
                 return;
             }

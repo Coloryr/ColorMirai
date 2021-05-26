@@ -18,7 +18,7 @@ public abstract class PostBaseMessage implements HttpHandler {
         SendDTO obj = JSONObject.parseObject(inputStream, SendDTO.class);
         String response;
         if (!SessionManager.haveKey(obj.sessionKey)) {
-            response = JSONObject.toJSONString(StateCode.AuthKeyFail);
+            response = JSONObject.toJSONString(StateCode.IllegalSession);
         } else if (SessionManager.get(obj.sessionKey) == null) {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {

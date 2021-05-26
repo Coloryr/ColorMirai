@@ -35,7 +35,7 @@ public class UploadImage implements HttpHandler {
         SimpleRequestContext simpleRequestContext = new SimpleRequestContext(StandardCharsets.UTF_8, inputStream, t.getRequestHeaders().get("Content-type").get(0));
         DiskFileItemFactory factory = new DiskFileItemFactory();
         ServletFileUpload upload = new ServletFileUpload(factory);
-        boolean is = ServletFileUpload.isMultipartContent(simpleRequestContext );
+        boolean is = ServletFileUpload.isMultipartContent(simpleRequestContext);
         // 解析出所有的部件
         try {
             List<FileItem> fileItems = upload.parseRequest(simpleRequestContext);
@@ -61,7 +61,7 @@ public class UploadImage implements HttpHandler {
         } else {
             Authed authed = SessionManager.get(sessionKey);
             if (imgdata == null) {
-                response = JSONObject.toJSONString(StateCode.NoOperateSupport);
+                response = JSONObject.toJSONString(StateCode.Null);
                 Utils.send(t, response);
                 return;
             }

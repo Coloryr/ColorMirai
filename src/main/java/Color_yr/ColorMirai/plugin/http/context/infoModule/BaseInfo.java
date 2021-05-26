@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.context.messageModule;
+package Color_yr.ColorMirai.plugin.http.context.infoModule;
 
 import Color_yr.ColorMirai.plugin.http.Authed;
 import Color_yr.ColorMirai.plugin.http.SessionManager;
@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Map;
 
-public abstract class GetBaseMessage implements HttpHandler {
+public abstract class BaseInfo implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         URI requestedUri = t.getRequestURI();
         String query = requestedUri.getRawQuery();

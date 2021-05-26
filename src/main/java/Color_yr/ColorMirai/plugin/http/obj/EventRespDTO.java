@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.obj.event;
+package Color_yr.ColorMirai.plugin.http.obj;
 
 import Color_yr.ColorMirai.plugin.http.obj.VerifyDTO;
 

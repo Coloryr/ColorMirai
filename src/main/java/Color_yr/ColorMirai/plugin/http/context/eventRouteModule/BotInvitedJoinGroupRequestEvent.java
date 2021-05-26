@@ -5,16 +5,15 @@ import Color_yr.ColorMirai.plugin.http.obj.StateCode;
 import Color_yr.ColorMirai.plugin.http.obj.EventRespDTO;
 import net.mamoe.mirai.Mirai;
 
-public class NewFriendRequestEvent extends BaseResp {
+public class BotInvitedJoinGroupRequestEvent extends BaseResp {
     @Override
     public Object toDo(Authed authed, EventRespDTO parameters) {
-        Mirai.getInstance().solveNewFriendRequestEvent(
+        Mirai.getInstance().solveBotInvitedJoinGroupRequestEvent(
                 authed.bot,
                 parameters.eventId,
                 parameters.fromId,
-                "",
-                parameters.operate == 0,
-                parameters.operate == 2);
+                parameters.groupId,
+                parameters.operate == 0);
         return StateCode.Success;
     }
 }

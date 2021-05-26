@@ -2,6 +2,8 @@ package Color_yr.ColorMirai.plugin.http;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.plugin.ISocket;
+import Color_yr.ColorMirai.plugin.http.context.SendNudge;
+import Color_yr.ColorMirai.plugin.http.context.WebsocketRouteModule;
 import Color_yr.ColorMirai.plugin.http.context.authModule.Auth;
 import Color_yr.ColorMirai.plugin.http.context.authModule.Release;
 import Color_yr.ColorMirai.plugin.http.context.authModule.Verify;
@@ -9,11 +11,25 @@ import Color_yr.ColorMirai.plugin.http.context.commandModule.Command;
 import Color_yr.ColorMirai.plugin.http.context.commandModule.Managers;
 import Color_yr.ColorMirai.plugin.http.context.commandModule.Register;
 import Color_yr.ColorMirai.plugin.http.context.commandModule.Send;
+import Color_yr.ColorMirai.plugin.http.context.configRouteModule.About;
+import Color_yr.ColorMirai.plugin.http.context.configRouteModule.Config;
+import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.BotInvitedJoinGroupRequestEvent;
+import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.MemberJoinRequestEvent;
+import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.NewFriendRequestEvent;
+import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileDelete;
+import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileMove;
+import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileRename;
+import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupMkdir;
+import Color_yr.ColorMirai.plugin.http.context.groupManageModule.*;
+import Color_yr.ColorMirai.plugin.http.context.infoModule.FriendList;
+import Color_yr.ColorMirai.plugin.http.context.infoModule.GroupFileList;
+import Color_yr.ColorMirai.plugin.http.context.infoModule.GroupList;
+import Color_yr.ColorMirai.plugin.http.context.infoModule.MemberList;
 import Color_yr.ColorMirai.plugin.http.context.messageModule.*;
+import Color_yr.ColorMirai.plugin.http.obj.file.GroupFileInfo;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.commons.fileupload.RequestContext;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -46,10 +62,34 @@ public class MyHttpServer implements ISocket, HttpHandler {
             server.createContext("/uploadVoice", new UploadVoice());
             server.createContext("/recall", new Recall());
             server.createContext("/setEssence", new FetchLatestMessage());
-            server.createContext("/resp/newFriendRequestEvent", new FetchLatestMessage());
-            server.createContext("/resp/memberJoinRequestEvent", new FetchLatestMessage());
-            server.createContext("/resp/botInvitedJoinGroupRequestEvent", new FetchLatestMessage());
-            server.createContext("", this);
+            server.createContext("/resp/newFriendRequestEvent", new NewFriendRequestEvent());
+            server.createContext("/resp/memberJoinRequestEvent", new MemberJoinRequestEvent());
+            server.createContext("/resp/botInvitedJoinGroupRequestEvent", new BotInvitedJoinGroupRequestEvent());
+            server.createContext("/friendList", new FriendList());
+            server.createContext("/groupList", new GroupList());
+            server.createContext("/memberList", new MemberList());
+            server.createContext("/groupFileList", new GroupFileList());
+            server.createContext("/groupFileInfo", new GroupFileInfo());
+            server.createContext("/muteAll", new MuteAll());
+            server.createContext("/unmuteAll", new UnmuteAll());
+            server.createContext("/mute", new Mute());
+            server.createContext("/unmute", new Unmute());
+            server.createContext("/kick", new Kick());
+            server.createContext("/quit", new Quit());
+            server.createContext("/groupConfig", new GroupConfig());
+            server.createContext("/memberInfo", new MemberInfo());
+            server.createContext("/about", new About());
+            server.createContext("/config", new Config());
+            server.createContext("/message", new WebsocketRouteModule());
+            server.createContext("/event", new WebsocketRouteModule());
+            server.createContext("/all", new WebsocketRouteModule());
+            server.createContext("/sendNudge", new SendNudge());
+            server.createContext("/groupFileRename", new GroupFileRename());
+            server.createContext("/groupFileMove", new GroupFileMove());
+            server.createContext("/groupFileDelete", new GroupFileDelete());
+            server.createContext("/groupMkdir", new GroupMkdir());
+            server.createContext("/uploadFileAndSend", new SendNudge());
+            server.createContext("/", this);
 
             server.setExecutor(null);
             server.start();
@@ -70,7 +110,7 @@ public class MyHttpServer implements ISocket, HttpHandler {
 
     @Override
     public void handle(HttpExchange t) throws IOException {
-        t.getResponseHeaders().set("Localtion", "https://github.com/Coloryr/ColorMirai/blob/main/docs/http.md");
+        t.getResponseHeaders().set("Location", "https://github.com/Coloryr/ColorMirai/blob/main/docs/http.md");
         t.sendResponseHeaders(301, 0);
         t.close();
     }

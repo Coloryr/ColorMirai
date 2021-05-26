@@ -35,4 +35,8 @@ public class StateCode {
             = new StateCode(40, "消息为空");
     public static StateCode Error
             = new StateCode(50, "发生错误");
+    public static StateCode Exists
+            = new StateCode(60, "已存在");
+    public static StateCode Null
+            = new StateCode(70, "参数不存在");
 }

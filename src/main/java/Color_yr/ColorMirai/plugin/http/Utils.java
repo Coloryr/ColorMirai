@@ -120,6 +120,18 @@ public class Utils {
         return null;
     }
 
+    public static String toUHexString(byte[] data) {
+        StringBuilder sb = new StringBuilder(data.length);
+        String sTemp;
+        for (byte datum : data) {
+            sTemp = Integer.toHexString(0xFF & datum);
+            if (sTemp.length() < 2)
+                sb.append(0);
+            sb.append(sTemp.toUpperCase());
+        }
+        return sb.toString();
+    }
+
     static {
         for (PokeMessage item : PokeMessage.values) {
             poke2name.put(item.getId(), item.getName());

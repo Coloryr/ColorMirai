@@ -21,16 +21,15 @@ public class Recall implements HttpHandler {
         RecallDTO obj = JSONObject.parseObject(inputStream, RecallDTO.class);
         String response;
         if (!SessionManager.haveKey(obj.sessionKey)) {
-            response = JSONObject.toJSONString(StateCode.AuthKeyFail);
+            response = JSONObject.toJSONString(StateCode.IllegalSession);
         } else if (SessionManager.get(obj.sessionKey) == null) {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(obj.sessionKey);
             OnlineMessageSource messageSource = authed.cacheQueue.get(obj.target);
-            if(messageSource == null) {
+            if (messageSource == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
-            }
-            else {
+            } else {
                 Mirai.getInstance().recallMessage(messageSource.getBot(), messageSource);
                 BotStart.removeMessage(authed.bot.getId(), obj.target);
                 response = JSONObject.toJSONString(StateCode.Success);
