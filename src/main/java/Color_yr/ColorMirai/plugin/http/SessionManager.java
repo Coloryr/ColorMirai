@@ -115,8 +115,8 @@ public class SessionManager {
 
     private static String generateRandomSessionKey() {
         StringBuilder builder = new StringBuilder();
-        int data = ColorMiraiMain.random.nextInt(all.length() - 1);
-        for (int a = 0; a < 8; a++) {
+        for (int a = 0; a < 16; a++) {
+            int data = ColorMiraiMain.random.nextInt(all.length() - 1);
             builder.append(all.charAt(data));
         }
         return builder.toString();

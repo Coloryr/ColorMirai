@@ -19,7 +19,7 @@ public class Utils {
     private static final Map<String, Integer> name2Id = new HashMap<>();
 
     private static final Map<Integer, String> poke2name = new HashMap<>();
-    private static final Map<String, Integer> name2Poke = new HashMap<>();
+    private static final Map<String, PokeMessage> name2Poke = new HashMap<>();
 
     public static Map<String, String> queryToMap(String query) {
         Map<String, String> result = new HashMap<>();
@@ -59,11 +59,11 @@ public class Utils {
         return "未知戳一戳";
     }
 
-    public static int getPoke(String name) {
+    public static PokeMessage getPoke(String name) {
         if (name2Poke.containsKey(name)) {
             return name2Poke.get(name);
         }
-        return 1;
+        return PokeMessage.ChuoYiChuo;
     }
 
     public static void send(HttpExchange t, String data) throws IOException {
@@ -106,6 +106,21 @@ public class Utils {
         return null;
     }
 
+    public static byte[] getBytesFile(String url) {
+        try {
+            File file = new File(url);
+            if (!file.exists())
+                return null;
+            FileInputStream inputStream = new FileInputStream(file);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            return buffer;
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("获取图片发生错误", e);
+        }
+        return null;
+    }
+
     public static File saveFile(byte[] datas) {
         try {
             UUID uuid = UUID.randomUUID();
@@ -132,10 +147,35 @@ public class Utils {
         return sb.toString();
     }
 
+
+    public static byte hexToByte(String inHex) {
+        return (byte) Integer.parseInt(inHex, 16);
+    }
+
+    public static byte[] hexToByteArray(String inHex) {
+        int hexlen = inHex.length();
+        byte[] result;
+        if (hexlen % 2 == 1) {
+            //奇数
+            hexlen++;
+            result = new byte[(hexlen / 2)];
+            inHex = "0" + inHex;
+        } else {
+            //偶数
+            result = new byte[(hexlen / 2)];
+        }
+        int j = 0;
+        for (int i = 0; i < hexlen; i += 2) {
+            result[j] = hexToByte(inHex.substring(i, i + 2));
+            j++;
+        }
+        return result;
+    }
+
     static {
         for (PokeMessage item : PokeMessage.values) {
             poke2name.put(item.getId(), item.getName());
-            name2Poke.put(item.getName(), item.getId());
+            name2Poke.put(item.getName(), item);
         }
         for (int a = 0; a < Face.names.length; a++) {
             Face face = new Face(a);

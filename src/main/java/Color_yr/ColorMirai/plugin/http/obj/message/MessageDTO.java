@@ -6,6 +6,7 @@ import Color_yr.ColorMirai.plugin.http.obj.EventDTO;
 import Color_yr.ColorMirai.plugin.http.obj.IgnoreEventDTO;
 import Color_yr.ColorMirai.plugin.http.obj.contact.MemberDTO;
 import Color_yr.ColorMirai.plugin.http.obj.contact.QQDTO;
+import com.alibaba.fastjson.annotation.JSONType;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
@@ -13,10 +14,15 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.GroupTempMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.utils.ExternalResource;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JSONType(seeAlso = {XmlDTO.class, VoiceDTO.class,ImageDTO.class,
+        UnknownMessageDTO.class,StrangerMessagePacketDTO.class, TempMessagePacketDTO.class,
+        PlainDTO.class,FriendMessagePacketDTO.class,ForwardMessageDTO.class,FlashImageDTO.class,
+        FileMessageDTO.class,FaceDTO.class,AtDTO.class,AtAllDTO.class,AppDTO.class}, typeKey = "type")
 public class MessageDTO implements DTO {
     public static EventDTO toDTO(MessageEvent event) {
         EventDTO pack;
@@ -74,8 +80,126 @@ public class MessageDTO implements DTO {
         if (message instanceof AtDTO) {
             AtDTO item = (AtDTO) message;
             return new At(item.target);
-        } else
+        } else if (message instanceof AtAllDTO) {
+            return AtAll.INSTANCE;
+        } else if (message instanceof FaceDTO) {
+            FaceDTO item = (FaceDTO) message;
+            if (item.faceId >= 0) {
+                return new Face(item.faceId);
+            }
+            if (item.name != null && !item.name.isEmpty()) {
+                return new Face(Utils.getFace(item.name));
+            }
+            return new Face(255);
+        } else if (message instanceof PlainDTO) {
+            PlainDTO item = (PlainDTO) message;
+            return new PlainText(item.text);
+        } else if (message instanceof ImageDTO) {
+            ImageDTO item = (ImageDTO) message;
+            if (item.imageId != null && !item.imageId.isEmpty())
+                return Image.fromId(item.imageId);
+            if (item.url != null && !item.url.isEmpty()) {
+                byte[] temp = Utils.getBytes(item.url);
+                if (temp == null)
+                    return null;
+                ExternalResource image = ExternalResource.create(temp);
+                return contact.uploadImage(image);
+            }
+            if (item.path != null && !item.path.isEmpty()) {
+                byte[] temp = Utils.getBytesFile(item.url);
+                if (temp == null)
+                    return null;
+                ExternalResource image = ExternalResource.create(temp);
+                return contact.uploadImage(image);
+            }
             return null;
+        } else if (message instanceof FlashImageDTO) {
+            FlashImageDTO item = (FlashImageDTO) message;
+            if (item.imageId != null && !item.imageId.isEmpty())
+                return new FlashImage(Image.fromId(item.imageId));
+            if (item.url != null && !item.url.isEmpty()) {
+                byte[] temp = Utils.getBytes(item.url);
+                if (temp == null)
+                    return null;
+                ExternalResource image = ExternalResource.create(temp);
+                return new FlashImage(contact.uploadImage(image));
+            }
+            if (item.path != null && !item.path.isEmpty()) {
+                byte[] temp = Utils.getBytesFile(item.url);
+                if (temp == null)
+                    return null;
+                ExternalResource image = ExternalResource.create(temp);
+                return new FlashImage(contact.uploadImage(image));
+            }
+            return null;
+        } else if (message instanceof ForwardMessageDTO) {
+            ForwardMessageDTO item = (ForwardMessageDTO) message;
+            List<ForwardMessage.Node> list = new ArrayList<>();
+            for (NodeDTO item1 : item.nodeList) {
+                ForwardMessage.Node node = new ForwardMessage.Node(
+                        item1.senderId,
+                        item1.time,
+                        item1.senderName,
+                        toMessageChain(contact, item1.messageChain)
+                );
+                list.add(node);
+            }
+            return new ForwardMessage(
+                    item.preview,
+                    item.title,
+                    item.brief,
+                    item.source,
+                    item.summary,
+                    list
+            );
+        } else if (message instanceof VoiceDTO) {
+            VoiceDTO item = (VoiceDTO) message;
+            if (contact instanceof Group) {
+                Group group = (Group) contact;
+                if (item.voiceId != null && !item.voiceId.isEmpty()) {
+                    int index = item.voiceId.indexOf('.');
+                    String temp = item.voiceId;
+                    if (index != -1)
+                        temp = item.voiceId.substring(0, index);
+                    return new Voice(item.voiceId, Utils.hexToByteArray(temp), 0, 0, "");
+                }
+                if (item.url != null && !item.url.isEmpty()) {
+                    byte[] temp = Utils.getBytes(item.url);
+                    if (temp == null)
+                        return null;
+                    ExternalResource voice = ExternalResource.create(temp);
+                    return group.uploadVoice(voice);
+                }
+                if (item.path != null && !item.path.isEmpty()) {
+                    byte[] temp = Utils.getBytesFile(item.path);
+                    if (temp == null)
+                        return null;
+                    ExternalResource voice = ExternalResource.create(temp);
+                    return group.uploadVoice(voice);
+                }
+            } else
+                return null;
+        } else if (message instanceof XmlDTO) {
+            XmlDTO item = (XmlDTO) message;
+            return new SimpleServiceMessage(60, item.xml);
+        } else if (message instanceof JsonDTO) {
+            JsonDTO item = (JsonDTO) message;
+            return new SimpleServiceMessage(1, item.json);
+        } else if (message instanceof AppDTO) {
+            AppDTO item = (AppDTO) message;
+            return new LightApp(item.content);
+        } else if (message instanceof MusicShareDTO) {
+            MusicShareDTO item = (MusicShareDTO) message;
+            if (item.brief != null && !item.brief.isEmpty()) {
+                return new MusicShare(MusicKind.valueOf(item.kind), item.title, item.summary, item.jumpUrl, item.pictureUrl, item.musicUrl, item.brief);
+            } else {
+                return new MusicShare(MusicKind.valueOf(item.kind), item.title, item.summary, item.jumpUrl, item.pictureUrl, item.musicUrl);
+            }
+        } else if (message instanceof PokeMessageDTO) {
+            PokeMessageDTO item = (PokeMessageDTO) message;
+            return Utils.getPoke(item.name);
+        }
+        return null;
     }
 
     public static MessageDTO toDTO(SingleMessage item) {
