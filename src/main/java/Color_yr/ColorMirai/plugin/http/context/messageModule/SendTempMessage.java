@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.context.MessageModule;
+package Color_yr.ColorMirai.plugin.http.context.messageModule;
 
 import Color_yr.ColorMirai.plugin.http.Authed;
 import Color_yr.ColorMirai.plugin.http.Utils;
@@ -11,10 +11,11 @@ import Color_yr.ColorMirai.robot.MessageSaveObj;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.QuoteReply;
 
-public class SendGroupMessage extends PostBaseMessage {
+public class SendTempMessage extends PostBaseMessage {
     @Override
     public Object toDo(Authed authed, SendDTO parameters) {
         QuoteReply quoteReply = null;
@@ -24,15 +25,16 @@ public class SendGroupMessage extends PostBaseMessage {
 
         Bot bot = authed.bot;
 
-        Group group = bot.getGroup(parameters.target);
-        if (group == null) {
-            group = bot.getGroup(parameters.group);
-        }
+        Group group = bot.getGroup(parameters.group);
         if (group == null) {
             return StateCode.NoElement;
         }
+        NormalMember member = group.get(parameters.qq);
+        if (member == null) {
+            return StateCode.NoElement;
+        }
 
-        MessageReceipt<Contact> receipt = Utils.sendMessage(quoteReply, MessageDTO.toMessageChain(group, parameters.messageChain), group);
+        MessageReceipt<Contact> receipt = Utils.sendMessage(quoteReply, MessageDTO.toMessageChain(member, parameters.messageChain), member);
         authed.cacheQueue.add(receipt.getSource());
         int id = receipt.getSource().getIds()[0];
         BotStart.addMessage(bot.getId(), id, new MessageSaveObj() {{

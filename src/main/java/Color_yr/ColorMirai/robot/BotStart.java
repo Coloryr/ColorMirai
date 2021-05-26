@@ -163,6 +163,16 @@ public class BotStart {
         }
     }
 
+    public static void removeMessage(long qq, int data) {
+        Map<Integer, MessageSaveObj> list = MessageList.get(qq);
+        if (list == null) {
+            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
+        } else {
+            list.remove(data);
+            MessageList.put(qq, list);
+        }
+    }
+
     public static List<Long> getBotsKey() {
         return new ArrayList<>(bots.keySet());
     }

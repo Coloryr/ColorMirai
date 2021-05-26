@@ -1,22 +1,24 @@
-package Color_yr.ColorMirai.plugin.http.context.MessageModule;
+package Color_yr.ColorMirai.plugin.http.context.messageModule;
 
 import Color_yr.ColorMirai.plugin.http.Authed;
 import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.http.Utils;
 import Color_yr.ColorMirai.plugin.http.obj.StateCode;
-import Color_yr.ColorMirai.plugin.http.obj.message.SendDTO;
-import Color_yr.ColorMirai.plugin.http.obj.message.SendImageDTO;
+import Color_yr.ColorMirai.plugin.http.obj.message.RecallDTO;
+import Color_yr.ColorMirai.robot.BotStart;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import net.mamoe.mirai.Mirai;
+import net.mamoe.mirai.message.data.OnlineMessageSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SendImageMessage implements HttpHandler {
+public class Recall implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         InputStream inputStream = t.getRequestBody();
-        SendImageDTO obj = JSONObject.parseObject(inputStream, SendImageDTO.class);
+        RecallDTO obj = JSONObject.parseObject(inputStream, RecallDTO.class);
         String response;
         if (!SessionManager.haveKey(obj.sessionKey)) {
             response = JSONObject.toJSONString(StateCode.AuthKeyFail);
@@ -24,10 +26,16 @@ public class SendImageMessage implements HttpHandler {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(obj.sessionKey);
-            
-            response = JSONObject.toJSONString();
+            OnlineMessageSource messageSource = authed.cacheQueue.get(obj.target);
+            if(messageSource == null) {
+                response = JSONObject.toJSONString(StateCode.NoElement);
+            }
+            else {
+                Mirai.getInstance().recallMessage(messageSource.getBot(), messageSource);
+                BotStart.removeMessage(authed.bot.getId(), obj.target);
+                response = JSONObject.toJSONString(StateCode.Success);
+            }
         }
         Utils.send(t, response);
     }
-
 }

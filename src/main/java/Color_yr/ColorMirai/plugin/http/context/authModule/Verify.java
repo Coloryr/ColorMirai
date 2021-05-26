@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.context.AuthModule;
+package Color_yr.ColorMirai.plugin.http.context.authModule;
 
 import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.http.Utils;
@@ -11,7 +11,6 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 public class Verify implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {

@@ -1,4 +1,4 @@
-package Color_yr.ColorMirai.plugin.http.context.MessageModule;
+package Color_yr.ColorMirai.plugin.http.context.messageModule;
 
 import Color_yr.ColorMirai.plugin.http.Authed;
 import Color_yr.ColorMirai.plugin.http.SessionManager;
