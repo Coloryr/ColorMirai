@@ -6,18 +6,14 @@ import Color_yr.ColorMirai.plugin.http.Utils;
 import Color_yr.ColorMirai.plugin.http.context.SimpleRequestContext;
 import Color_yr.ColorMirai.plugin.http.obj.StateCode;
 import Color_yr.ColorMirai.plugin.http.obj.file.UploadFileRetDTO;
-import Color_yr.ColorMirai.plugin.http.obj.message.UploadImageRetDTO;
 import Color_yr.ColorMirai.robot.BotStart;
 import Color_yr.ColorMirai.robot.MessageSaveObj;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.FileMessage;
-import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.utils.ExternalResource;
@@ -27,12 +23,10 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.Optional;
 
 public class UploadFileAndSend implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {

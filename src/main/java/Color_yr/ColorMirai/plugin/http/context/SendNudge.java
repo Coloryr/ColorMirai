@@ -5,7 +5,6 @@ import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.http.Utils;
 import Color_yr.ColorMirai.plugin.http.obj.NudgeDTO;
 import Color_yr.ColorMirai.plugin.http.obj.StateCode;
-import Color_yr.ColorMirai.plugin.http.obj.group.MuteDTO;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;

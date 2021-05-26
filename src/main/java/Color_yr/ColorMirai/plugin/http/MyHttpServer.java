@@ -16,10 +16,7 @@ import Color_yr.ColorMirai.plugin.http.context.configRouteModule.Config;
 import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.BotInvitedJoinGroupRequestEvent;
 import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.MemberJoinRequestEvent;
 import Color_yr.ColorMirai.plugin.http.context.eventRouteModule.NewFriendRequestEvent;
-import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileDelete;
-import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileMove;
-import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupFileRename;
-import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.GroupMkdir;
+import Color_yr.ColorMirai.plugin.http.context.fileRouteModule.*;
 import Color_yr.ColorMirai.plugin.http.context.groupManageModule.*;
 import Color_yr.ColorMirai.plugin.http.context.infoModule.FriendList;
 import Color_yr.ColorMirai.plugin.http.context.infoModule.GroupFileList;
@@ -88,7 +85,7 @@ public class MyHttpServer implements ISocket, HttpHandler {
             server.createContext("/groupFileMove", new GroupFileMove());
             server.createContext("/groupFileDelete", new GroupFileDelete());
             server.createContext("/groupMkdir", new GroupMkdir());
-            server.createContext("/uploadFileAndSend", new SendNudge());
+            server.createContext("/uploadFileAndSend", new UploadFileAndSend());
             server.createContext("/", this);
 
             server.setExecutor(null);

@@ -1,8 +1,8 @@
 package Color_yr.ColorMirai.plugin.http.context.eventRouteModule;
 
 import Color_yr.ColorMirai.plugin.http.Authed;
-import Color_yr.ColorMirai.plugin.http.obj.StateCode;
 import Color_yr.ColorMirai.plugin.http.obj.EventRespDTO;
+import Color_yr.ColorMirai.plugin.http.obj.StateCode;
 import net.mamoe.mirai.Mirai;
 
 public class NewFriendRequestEvent extends BaseResp {

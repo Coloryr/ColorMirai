@@ -1,7 +1,5 @@
 package Color_yr.ColorMirai.plugin.http.obj;
 
-import Color_yr.ColorMirai.plugin.http.obj.VerifyDTO;
-
 public class EventRespDTO extends VerifyDTO {
     public long eventId;
     public long fromId;
