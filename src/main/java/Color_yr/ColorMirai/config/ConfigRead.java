@@ -56,7 +56,7 @@ public class ConfigRead {
                     data.append(new String(buf, 0, length));
                 }
                 ColorMiraiMain.Sessions = JSON.parseObject(data.toString(), SessionObj.class);
-                if (ColorMiraiMain.Sessions.allSession == null) {
+                if (ColorMiraiMain.Sessions == null || ColorMiraiMain.Sessions.allSession == null) {
                     ColorMiraiMain.Sessions = new SessionObj();
                     SaveSession();
                 }

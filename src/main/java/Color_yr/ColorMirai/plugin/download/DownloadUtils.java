@@ -2,7 +2,9 @@ package Color_yr.ColorMirai.plugin.download;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
@@ -16,7 +18,7 @@ public class DownloadUtils {
         HttpURLConnection connection = null;
         InputStream is = null;
         int bytesum = 0;
-        int byteread = 0;
+        int byteread;
         while (isRun) {
             try {
                 if (!tasks.isEmpty()) {

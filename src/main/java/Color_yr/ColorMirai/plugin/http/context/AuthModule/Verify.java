@@ -1,6 +1,7 @@
 package Color_yr.ColorMirai.plugin.http.context.AuthModule;
 
 import Color_yr.ColorMirai.plugin.http.SessionManager;
+import Color_yr.ColorMirai.plugin.http.Utils;
 import Color_yr.ColorMirai.plugin.http.obj.StateCode;
 import Color_yr.ColorMirai.plugin.http.obj.auth.BindDTO;
 import Color_yr.ColorMirai.robot.BotStart;
@@ -25,9 +26,6 @@ public class Verify implements HttpHandler {
             SessionManager.create(obj.sessionKey, obj.qq);
             response = JSONObject.toJSONString(StateCode.Success);
         }
-        t.sendResponseHeaders(200, response.length());
-        OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        Utils.send(t, response);
     }
 }

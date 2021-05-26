@@ -31,4 +31,8 @@ public class StateCode {
             = new StateCode(30, "消息过长");
     public static StateCode Unknown
             = new StateCode(-1, "未支持操作");
+    public static StateCode MessageNull
+            = new StateCode(40, "消息为空");
+    public static StateCode Error
+            = new StateCode(50, "发生错误");
 }

@@ -19,7 +19,7 @@ public class BotLoginSolver extends LoginSolver {
         System.out.println("登录需要输入验证码，请在根目录下打开captcha.png查看验证码，然后在控制台输入验证码后回车");
         File file = new File(ColorMiraiMain.RunDir, "captcha.png");
         try {
-            if(file.exists())
+            if (file.exists())
                 file.delete();
             file.createNewFile();
             FileOutputStream outputStream = new FileOutputStream(file);

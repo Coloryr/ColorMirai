@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.robot;
 
+import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.pack.re.FriendInfoPack;
 import Color_yr.ColorMirai.pack.re.GroupInfo;
 import Color_yr.ColorMirai.pack.re.MemberInfoPack;
-import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.Mirai;
 import net.mamoe.mirai.contact.Friend;

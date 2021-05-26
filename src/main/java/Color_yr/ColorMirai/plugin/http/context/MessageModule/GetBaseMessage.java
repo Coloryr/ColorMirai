@@ -4,16 +4,13 @@ import Color_yr.ColorMirai.plugin.http.Authed;
 import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.http.Utils;
 import Color_yr.ColorMirai.plugin.http.obj.StateCode;
-import Color_yr.ColorMirai.plugin.http.obj.command.PostCommandDTO;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GetBaseMessage implements HttpHandler {
@@ -24,10 +21,7 @@ public abstract class GetBaseMessage implements HttpHandler {
         String response;
         if (!parameters.containsKey("sessionKey")) {
             response = JSONObject.toJSONString(new StateCode(400, "错误"));
-            t.sendResponseHeaders(400, response.length());
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+            Utils.send(t, response);
             return;
         }
         String key = parameters.get("sessionKey");
@@ -39,10 +33,7 @@ public abstract class GetBaseMessage implements HttpHandler {
             Authed authed = SessionManager.get(key);
             response = JSONObject.toJSONString(toDo(authed, parameters));
         }
-        t.sendResponseHeaders(200, response.length());
-        OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        Utils.send(t, response);
     }
 
     abstract public Object toDo(Authed authed, Map<String, String> parameters);

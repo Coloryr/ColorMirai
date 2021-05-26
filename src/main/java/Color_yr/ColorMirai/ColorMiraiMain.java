@@ -3,19 +3,20 @@ package Color_yr.ColorMirai;
 import Color_yr.ColorMirai.config.ConfigObj;
 import Color_yr.ColorMirai.config.ConfigRead;
 import Color_yr.ColorMirai.config.SessionObj;
-import Color_yr.ColorMirai.plugin.download.DownloadUtils;
 import Color_yr.ColorMirai.plugin.ISocket;
+import Color_yr.ColorMirai.plugin.PluginUtils;
+import Color_yr.ColorMirai.plugin.ThePlugin;
+import Color_yr.ColorMirai.plugin.download.DownloadUtils;
 import Color_yr.ColorMirai.plugin.http.MyHttpServer;
 import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.socket.MySocketServer;
 import Color_yr.ColorMirai.plugin.socket.MyWebSocket;
-import Color_yr.ColorMirai.plugin.PluginUtils;
-import Color_yr.ColorMirai.plugin.ThePlugin;
 import Color_yr.ColorMirai.robot.BotStart;
 import io.github.mzdluo123.silk4j.AudioUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Base64;
@@ -27,6 +28,7 @@ public class ColorMiraiMain {
     public static final Base64.Decoder decoder = Base64.getDecoder();
     public static final Random random = new Random();
     public static String RunDir;
+    public static String tempDir;
     public static ConfigObj Config;
     public static SessionObj Sessions;
     public static Charset SendCharset;
@@ -37,6 +39,11 @@ public class ColorMiraiMain {
 
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";
+        tempDir = RunDir + "temp/";
+        File dir = new File(tempDir);
+        if (!dir.exists()) {
+            dir.mkdir();
+        }
         logger.info("正在启动");
         if (ConfigRead.ReadStart(RunDir)) {
             logger.info("请修改配置文件后重新启动");

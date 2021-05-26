@@ -10,11 +10,11 @@ import Color_yr.ColorMirai.robot.BotStart;
 import Color_yr.ColorMirai.robot.MessageSaveObj;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Contact;
-import net.mamoe.mirai.contact.Friend;
+import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.QuoteReply;
 
-public class SendFriendMessage extends PostBaseMessage {
+public class SendGroupMessage extends PostBaseMessage {
     @Override
     public Object toDo(Authed authed, SendDTO parameters) {
         QuoteReply quoteReply = null;
@@ -24,15 +24,15 @@ public class SendFriendMessage extends PostBaseMessage {
 
         Bot bot = authed.bot;
 
-        Friend friend = bot.getFriend(parameters.target);
-        if (friend == null) {
-            friend = bot.getFriend(parameters.qq);
+        Group group = bot.getGroup(parameters.target);
+        if (group == null) {
+            group = bot.getGroup(parameters.group);
         }
-        if (friend == null) {
+        if (group == null) {
             return StateCode.NoElement;
         }
 
-        MessageReceipt<Contact> receipt = Utils.sendMessage(quoteReply, MessageDTO.toMessageChain(friend, parameters.messageChain), friend);
+        MessageReceipt<Contact> receipt = Utils.sendMessage(quoteReply, MessageDTO.toMessageChain(group, parameters.messageChain), group);
         authed.cacheQueue.add(receipt.getSource());
         int id = receipt.getSource().getIds()[0];
         BotStart.addMessage(bot.getId(), id, new MessageSaveObj() {{

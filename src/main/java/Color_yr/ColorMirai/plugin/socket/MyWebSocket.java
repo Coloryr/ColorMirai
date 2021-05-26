@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.plugin.socket;
 
-import Color_yr.ColorMirai.plugin.ISocket;
-import Color_yr.ColorMirai.plugin.socket.obj.RePackObj;
-import Color_yr.ColorMirai.plugin.PluginUtils;
 import Color_yr.ColorMirai.ColorMiraiMain;
+import Color_yr.ColorMirai.plugin.ISocket;
+import Color_yr.ColorMirai.plugin.PluginUtils;
+import Color_yr.ColorMirai.plugin.socket.obj.RePackObj;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -84,7 +84,7 @@ public class MyWebSocket implements ISocket {
 
             @Override
             public void onStart() {
-                ColorMiraiMain.logger.info("WebSocket已启动");
+                ColorMiraiMain.logger.info("WebSocket已启动:" + ColorMiraiMain.Config.WebSocketPort);
             }
         };
         try {

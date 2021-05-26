@@ -1,9 +1,9 @@
 package Color_yr.ColorMirai.plugin;
 
+import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.plugin.socket.obj.SendPackObj;
 import Color_yr.ColorMirai.plugin.socket.obj.SocketObj;
 import Color_yr.ColorMirai.robot.BotStart;
-import Color_yr.ColorMirai.ColorMiraiMain;
 import org.java_websocket.WebSocket;
 
 import java.net.Socket;

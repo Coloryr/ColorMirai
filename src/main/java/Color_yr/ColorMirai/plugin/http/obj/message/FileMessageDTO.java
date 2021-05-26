@@ -1,5 +1,8 @@
 package Color_yr.ColorMirai.plugin.http.obj.message;
 
+import com.alibaba.fastjson.annotation.JSONType;
+
+@JSONType(typeName = "File")
 public class FileMessageDTO extends MessageDTO {
     public String id;
     public int internalId;
@@ -11,6 +14,5 @@ public class FileMessageDTO extends MessageDTO {
         this.internalId = internalId;
         this.name = name;
         this.size = size;
-        this.type = "File";
     }
 }

@@ -21,9 +21,6 @@ public class Command implements HttpHandler {
         } else {
             response = JSONObject.toJSONString(StateCode.Unknown);
         }
-        t.sendResponseHeaders(200, response.length());
-        OutputStream os = t.getResponseBody();
-        os.write(response.getBytes());
-        os.close();
+        Utils.send(t, response);
     }
 }

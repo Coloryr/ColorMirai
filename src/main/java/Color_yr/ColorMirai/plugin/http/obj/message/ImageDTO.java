@@ -1,5 +1,8 @@
 package Color_yr.ColorMirai.plugin.http.obj.message;
 
+import com.alibaba.fastjson.annotation.JSONType;
+
+@JSONType(typeName = "Image")
 public class ImageDTO extends MessageDTO {
     public String imageId;
     public String url;
@@ -9,6 +12,5 @@ public class ImageDTO extends MessageDTO {
         this.imageId = imageId;
         this.url = url;
         this.path = path;
-        this.type = "Image";
     }
 }

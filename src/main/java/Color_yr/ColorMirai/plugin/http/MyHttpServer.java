@@ -1,8 +1,8 @@
 package Color_yr.ColorMirai.plugin.http;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
-import Color_yr.ColorMirai.plugin.http.context.AuthModule.Auth;
 import Color_yr.ColorMirai.plugin.ISocket;
+import Color_yr.ColorMirai.plugin.http.context.AuthModule.Auth;
 import Color_yr.ColorMirai.plugin.http.context.AuthModule.Release;
 import Color_yr.ColorMirai.plugin.http.context.AuthModule.Verify;
 import Color_yr.ColorMirai.plugin.http.context.CommandModule.Command;
@@ -21,7 +21,7 @@ public class MyHttpServer implements ISocket {
     @Override
     public boolean pluginServerStart() {
         try {
-            server = HttpServer.create(new InetSocketAddress(8000), 0);
+            server = HttpServer.create(new InetSocketAddress(ColorMiraiMain.Config.HttpPort), 10);
             server.createContext("/auth", new Auth());
             server.createContext("/verify", new Verify());
             server.createContext("/release", new Release());
@@ -35,10 +35,10 @@ public class MyHttpServer implements ISocket {
             server.createContext("/peekMessage", new PeekMessage());
             server.createContext("/peekLatestMessage", new PeekLatestMessage());
             server.createContext("/messageFromId", new MessageFromId());
-            server.createContext("/sendFriendMessage", new FetchLatestMessage());
-            server.createContext("/sendGroupMessage", new FetchLatestMessage());
-            server.createContext("/sendTempMessage", new FetchLatestMessage());
-            server.createContext("/sendImageMessage", new FetchLatestMessage());
+            server.createContext("/sendFriendMessage", new SendFriendMessage());
+            server.createContext("/sendGroupMessage", new SendGroupMessage());
+            server.createContext("/sendTempMessage", new SendTempMessage());
+            server.createContext("/sendImageMessage", new UploadImage());
             server.createContext("/uploadImage", new FetchLatestMessage());
             server.createContext("/uploadVoice", new FetchLatestMessage());
             server.createContext("/recall", new FetchLatestMessage());
@@ -46,6 +46,7 @@ public class MyHttpServer implements ISocket {
 
             server.setExecutor(null);
             server.start();
+            ColorMiraiMain.logger.info("mirai-http-api已启动:" + ColorMiraiMain.Config.HttpPort);
         } catch (IOException e) {
             ColorMiraiMain.logger.error("mirai-http-api启动错误", e);
             return false;

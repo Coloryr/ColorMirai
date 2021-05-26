@@ -114,8 +114,7 @@ public class SessionManager {
         }
     }
 
-    public static boolean haveKey(String key)
-    {
+    public static boolean haveKey(String key) {
         return ColorMiraiMain.Sessions.allSession.containsKey(key);
     }
 

@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageDTO implements DTO {
-    public String type;
-
     public static EventDTO toDTO(MessageEvent event) {
         EventDTO pack;
         if (event instanceof FriendMessageEvent) {
@@ -62,22 +60,22 @@ public class MessageDTO implements DTO {
         return list;
     }
 
-    public static MessageChain toMessageChain(Contact contact, List<MessageDTO> messages)
-    {
+    public static MessageChain toMessageChain(Contact contact, List<MessageDTO> messages) {
         MessageChainBuilder builder = new MessageChainBuilder();
-        for(MessageDTO item : messages)
-        {
-            builder.add(item.type);
+        for (MessageDTO item : messages) {
+            Message message = toMessage(contact, item);
+            if (message != null)
+                builder.add(message);
         }
+        return builder.build();
     }
 
-    public static Message toMessage(Contact contact, MessageDTO message)
-    {
-        if(message instanceof AtDTO)
-        {
-            AtDTO item = (AtDTO)message;
-            
-        }
+    public static Message toMessage(Contact contact, MessageDTO message) {
+        if (message instanceof AtDTO) {
+            AtDTO item = (AtDTO) message;
+            return new At(item.target);
+        } else
+            return null;
     }
 
     public static MessageDTO toDTO(SingleMessage item) {
@@ -141,7 +139,7 @@ public class MessageDTO implements DTO {
         } else if (item instanceof PokeMessage) {
             PokeMessage item1 = (PokeMessage) item;
             return new PokeMessageDTO(Utils.getPoke(item1.getId()));
-        }else {
+        } else {
             return new UnknownMessageDTO();
         }
     }

@@ -5,7 +5,10 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
-import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.message.data.Dice;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.message.data.MessageUtils;
 
 public class BotSendDice {
     public static void sendGroupDice(long qq, long group, int dice) {

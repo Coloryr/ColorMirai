@@ -11,6 +11,8 @@ public class Session {
     public void tick() {
         time--;
     }
-    public void reset(){time = ColorMiraiMain.Config.authTime;
+
+    public void reset() {
+        time = ColorMiraiMain.Config.authTime;
     }
 }

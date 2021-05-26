@@ -1,5 +1,8 @@
 package Color_yr.ColorMirai.plugin.http.obj.message;
 
+import com.alibaba.fastjson.annotation.JSONType;
+
+@JSONType(typeName = "MusicShare")
 public class MusicShareDTO extends MessageDTO {
     public String kind;
     public String title;
@@ -10,7 +13,6 @@ public class MusicShareDTO extends MessageDTO {
     public String brief;
 
     public MusicShareDTO(String kind, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl, String brief) {
-        this.type = "MusicShare";
         this.brief = brief;
         this.kind = kind;
         this.pictureUrl = pictureUrl;

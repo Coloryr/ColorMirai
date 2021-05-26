@@ -1,15 +1,15 @@
 package Color_yr.ColorMirai.plugin;
 
+import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.event.EventCall;
-import Color_yr.ColorMirai.pack.from.*;
 import Color_yr.ColorMirai.pack.PackDo;
+import Color_yr.ColorMirai.pack.from.*;
 import Color_yr.ColorMirai.pack.re.*;
 import Color_yr.ColorMirai.plugin.socket.obj.BuffObj;
 import Color_yr.ColorMirai.plugin.socket.obj.RePackObj;
 import Color_yr.ColorMirai.plugin.socket.obj.SendPackObj;
 import Color_yr.ColorMirai.plugin.socket.obj.SocketObj;
 import Color_yr.ColorMirai.robot.*;
-import Color_yr.ColorMirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
@@ -432,7 +432,7 @@ public class ThePlugin {
                             break;
                         }
                         //60 心跳包
-                        case 60:{
+                        case 60: {
                             break;
                         }
                         default: {

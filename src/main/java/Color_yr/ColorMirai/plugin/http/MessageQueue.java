@@ -55,6 +55,7 @@ public class MessageQueue extends ConcurrentLinkedDeque<BotEvent> {
         }
         return list;
     }
+
     public List<EventDTO> peekLatest(int size) {
         int count = size;
 

@@ -1,10 +1,12 @@
 package Color_yr.ColorMirai.plugin.http.obj.message;
 
+import com.alibaba.fastjson.annotation.JSONType;
 import net.mamoe.mirai.message.data.ForwardMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@JSONType(typeName = "Forward")
 public class ForwardMessageDTO extends MessageDTO {
     public List<String> preview;
     public String title;
@@ -14,7 +16,6 @@ public class ForwardMessageDTO extends MessageDTO {
     public List<NodeDTO> nodeList;
 
     public ForwardMessageDTO(List<String> preview, String title, String brief, String source, String summary, List<NodeDTO> nodeList) {
-        this.type = "Forward";
         this.brief = brief;
         this.nodeList = nodeList;
         this.title = title;
@@ -35,7 +36,6 @@ public class ForwardMessageDTO extends MessageDTO {
                                     node.getMessageChain())));
         }
         message.getNodeList();
-        this.type = "Forward";
         this.brief = message.getBrief();
         this.nodeList = list;
         this.title = message.getTitle();
