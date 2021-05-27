@@ -14,6 +14,7 @@
 - [**Demo**](./docs/demo.md)
 - [**数据包详解**](./docs/pack.md)
 - [**无法登录解决**](./docs/login.md)
+- [**mirai-http-api兼容**](./docs/http.md)
 
 ## 依赖ColorMirai的插件
 
