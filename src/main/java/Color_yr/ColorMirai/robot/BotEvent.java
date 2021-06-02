@@ -483,8 +483,11 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
+        String name = event.getMember().getNameCard();
+        long ifid = event.getInvitor().getId();
+        String iname = event.getInvitor().getNameCard();
         long qq = event.getBot().getId();
-        MemberJoinEventPack pack = new MemberJoinEventPack(qq, id, fid);
+        InviteMemberJoinEventPack pack = new InviteMemberJoinEventPack(qq, id, fid, name, ifid, iname);
         BotStart.addTask(new SendPackObj(35, JSON.toJSONString(pack), fid, id, qq));
     }
 
@@ -495,8 +498,9 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getGroup().getId();
         long fid = event.getMember().getId();
+        String name = event.getMember().getNameCard();
         long qq = event.getBot().getId();
-        MemberJoinEventPack pack = new MemberJoinEventPack(qq, id, fid);
+        MemberJoinEventPack pack = new MemberJoinEventPack(qq, id, fid, name);
         BotStart.addTask(new SendPackObj(36, JSON.toJSONString(pack), fid, id, qq));
     }
 

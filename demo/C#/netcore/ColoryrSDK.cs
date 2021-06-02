@@ -709,6 +709,19 @@ namespace ColoryrSDK
     }
     /// <summary>
     /// 35 [机器人]成成员被邀请加入群（事件）
+    /// </summary>
+    public record InviteMemberJoinEventPack : MemberJoinEventPack
+    {
+        /// <summary>
+        /// 邀请人QQ号
+        /// </summary>
+        public long ifid { get; set; }
+        /// <summary>
+        /// 邀请人昵称
+        /// </summary>
+        public string iname { get; set; }
+    }
+    /// <summary>
     /// 36 [机器人] 成员主动加入群（事件）
     /// </summary>
     public record MemberJoinEventPack : PackBase
@@ -721,6 +734,10 @@ namespace ColoryrSDK
         /// 进群人QQ号
         /// </summary>
         public long fid { get; set; }
+        /// <summary>
+        /// 加入人昵称
+        /// </summary>
+        public string name { get; set; }
     }
     /// <summary>
     /// 37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）

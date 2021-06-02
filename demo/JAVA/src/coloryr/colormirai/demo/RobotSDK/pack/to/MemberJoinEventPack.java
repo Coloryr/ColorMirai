@@ -1,6 +1,6 @@
-package Color_yr.ColorMirai.pack.to;
+package coloryr.colormirai.demo.RobotSDK.pack.to;
 
-import Color_yr.ColorMirai.pack.PackBase;
+import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
 
 /*
 36 [机器人]成员主动加入群（事件）
@@ -20,3 +20,4 @@ public class MemberJoinEventPack extends PackBase {
         this.name = name;
     }
 }
+
