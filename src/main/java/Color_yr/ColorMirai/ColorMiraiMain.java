@@ -12,7 +12,6 @@ import Color_yr.ColorMirai.plugin.http.SessionManager;
 import Color_yr.ColorMirai.plugin.socket.MySocketServer;
 import Color_yr.ColorMirai.plugin.socket.MyWebSocket;
 import Color_yr.ColorMirai.robot.BotStart;
-import io.github.mzdluo123.silk4j.AudioUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -52,11 +51,6 @@ public class ColorMiraiMain {
 
         PluginUtils.init();
         DownloadUtils.start();
-        try {
-            AudioUtils.init();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         if (!BotStart.Start()) {
             logger.error("机器人启动失败");

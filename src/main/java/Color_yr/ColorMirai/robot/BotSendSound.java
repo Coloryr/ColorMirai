@@ -1,7 +1,7 @@
 package Color_yr.ColorMirai.robot;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
-import io.github.mzdluo123.silk4j.AudioUtils;
+//import io.github.mzdluo123.silk4j.AudioUtils;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
@@ -19,9 +19,10 @@ public class BotSendSound {
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            File res = AudioUtils.mp3ToSilk(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(sound)));
-            FileInputStream inputStream = new FileInputStream(res);
-            ExternalResource voice = ExternalResource.create(inputStream);
+//            File res = AudioUtils.mp3ToSilk(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(sound)));
+//            FileInputStream inputStream = new FileInputStream(res);
+//            ExternalResource voice = ExternalResource.create(inputStream);
+            ExternalResource voice = ExternalResource.create(ColorMiraiMain.decoder.decode(sound));
             Group group = bot.getGroup(id);
             if (group == null) {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
@@ -37,7 +38,7 @@ public class BotSendSound {
             }
             BotStart.addMessage(qq, obj.id, obj);
             voice.close();
-            res.delete();
+//            res.delete();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
         }
@@ -56,9 +57,10 @@ public class BotSendSound {
                 return;
             }
             FileInputStream stream = new FileInputStream(file);
-            File res = AudioUtils.mp3ToSilk(stream);
-            FileInputStream stream1 = new FileInputStream(res);
-            ExternalResource voice = ExternalResource.create(stream1);
+//            File res = AudioUtils.mp3ToSilk(stream);
+//            FileInputStream stream1 = new FileInputStream(res);
+//            ExternalResource voice = ExternalResource.create(stream1);
+            ExternalResource voice = ExternalResource.create(stream);
             MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
@@ -69,8 +71,8 @@ public class BotSendSound {
             }
             BotStart.addMessage(qq, obj.id, obj);
             stream.close();
-            stream1.close();
-            res.delete();
+//            stream1.close();
+//            res.delete();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
         }
