@@ -103,3 +103,7 @@
 
 如果没有弹窗出现，检查下是不是用的**手机模式**，或者多试几次，如果还不行，去network哪里找`ticket`对应的值填到框里面。
 还不会私聊发远程桌面
+
+填ticket的是shabi  
+填ticket的是shabi  
+填ticket的是shabi
