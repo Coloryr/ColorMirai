@@ -17,6 +17,10 @@ public class BotSendMusicShare {
             kind = MusicKind.QQMusic;
         } else if (type == 3) {
             kind = MusicKind.MiguMusic;
+        } else if (type == 4) {
+            kind = MusicKind.KugouMusic;
+        } else if (type == 5) {
+            kind = MusicKind.KuwoMusic;
         } else {
             ColorMiraiMain.logger.warn("不存在音乐类型:" + type);
             return;
@@ -43,6 +47,10 @@ public class BotSendMusicShare {
             kind = MusicKind.QQMusic;
         } else if (type == 3) {
             kind = MusicKind.MiguMusic;
+        } else if (type == 4) {
+            kind = MusicKind.KugouMusic;
+        } else if (type == 5) {
+            kind = MusicKind.KuwoMusic;
         } else {
             ColorMiraiMain.logger.warn("不存在音乐类型:" + type);
             return;

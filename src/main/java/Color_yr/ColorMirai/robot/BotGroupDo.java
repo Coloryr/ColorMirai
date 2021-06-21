@@ -3,6 +3,7 @@ package Color_yr.ColorMirai.robot;
 import Color_yr.ColorMirai.ColorMiraiMain;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.contact.NormalMember;
 
 public class BotGroupDo {
@@ -167,6 +168,34 @@ public class BotGroupDo {
             MessageSaveObj obj = BotStart.getMessage(qq, mid);
             if (obj != null)
                 group.setEssenceMessage(obj.source);
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("设置群精华消息失败", e);
+        }
+    }
+
+    public static void setAdmin(long qq, long id, long fid, boolean set) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            NormalMember member = group.getBotAsMember();
+            if (member.getPermission() != MemberPermission.OWNER) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "不是群主");
+                return;
+            }
+            member = group.get(fid);
+            if (member == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "中没有群员:" + fid);
+                return;
+            }
+            member.modifyAdmin(set);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("设置群精华消息失败", e);
         }

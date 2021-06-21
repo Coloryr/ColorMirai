@@ -34,7 +34,7 @@ public class BotStart {
                 redirectNetworkLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotNetWork"));
                 redirectBotLogToDirectory(new File(ColorMiraiMain.RunDir + "/BotLog"));
                 setAutoReconnectOnForceOffline(ColorMiraiMain.Config.AutoReconnect);
-                setLoginSolver(login);
+//                setLoginSolver(login);
             }});
             try {
                 ColorMiraiMain.logger.info("正在登录QQ:" + item.QQ);

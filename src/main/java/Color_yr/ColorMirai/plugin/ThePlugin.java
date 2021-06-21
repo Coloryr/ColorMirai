@@ -426,6 +426,12 @@ public class ThePlugin {
                             BotGroupFile.downloadGroupFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name, pack.dir);
                             break;
                         }
+                        //108 [插件]设置取消管理员
+                        case 108: {
+                            SetGroupAdminPack pack = JSON.parseObject(task.data, SetGroupAdminPack.class);
+                            BotGroupDo.setAdmin(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
+                            break;
+                        }
                         //127 [插件]断开连接
                         case 127: {
                             close();
