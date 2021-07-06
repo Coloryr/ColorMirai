@@ -3,13 +3,11 @@ package Color_yr.ColorMirai.pack.from;
 import Color_yr.ColorMirai.pack.PackBase;
 
 /*
-65 [插件]禁言群员
+66 [插件]解除禁言
 id:群号
 fid:成员QQ号
-time:时间
  */
-public class MuteGroupMemberPack extends PackBase {
+public class GroupMemberUnmutePack extends PackBase {
     public long id;
     public long fid;
-    public int time;
 }

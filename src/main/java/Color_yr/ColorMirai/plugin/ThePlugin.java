@@ -16,6 +16,7 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.GroupSettings;
 import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.contact.announcement.OnlineAnnouncement;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.At;
 import net.mamoe.mirai.message.data.MessageUtils;
@@ -200,13 +201,13 @@ public class ThePlugin {
                         }
                         //65 [插件]禁言群员
                         case 65: {
-                            MuteGroupMemberPack pack = JSON.parseObject(task.data, MuteGroupMemberPack.class);
+                            GroupMemberMutePack pack = JSON.parseObject(task.data, GroupMemberMutePack.class);
                             BotGroupDo.MuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
-                            UnmuteGroupMemberPack pack = JSON.parseObject(task.data, UnmuteGroupMemberPack.class);
+                            GroupMemberUnmutePack pack = JSON.parseObject(task.data, GroupMemberUnmutePack.class);
                             BotGroupDo.UnmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
@@ -256,25 +257,25 @@ public class ThePlugin {
                         }
                         //75 [插件]从本地文件加载图片发送到群
                         case 75: {
-                            LoadFileSendToGroupImagePack pack = JSON.parseObject(task.data, LoadFileSendToGroupImagePack.class);
+                            SendGroupImageFilePack pack = JSON.parseObject(task.data, SendGroupImageFilePack.class);
                             BotSendImage.sendGroupImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                             break;
                         }
                         //76 [插件]从本地文件加载图片发送到群私聊
                         case 76: {
-                            LoadFileSendToGroupPrivateImagePack pack = JSON.parseObject(task.data, LoadFileSendToGroupPrivateImagePack.class);
+                            SendGroupPrivateImageFilePack pack = JSON.parseObject(task.data, SendGroupPrivateImageFilePack.class);
                             BotSendImage.sendGroupPrivateImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.file);
                             break;
                         }
                         //77 [插件]从本地文件加载图片发送到朋友
                         case 77: {
-                            LoadFileSendToFriendImagePack pack = JSON.parseObject(task.data, LoadFileSendToFriendImagePack.class);
+                            SendFriendImageFilePack pack = JSON.parseObject(task.data, SendFriendImageFilePack.class);
                             BotSendImage.sendFriendImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                             break;
                         }
                         //78 [插件]从本地文件加载语音发送到群
                         case 78: {
-                            LoadFileSendToGroupSoundPack pack = JSON.parseObject(task.data, LoadFileSendToGroupSoundPack.class);
+                            SendGroupSoundFilePack pack = JSON.parseObject(task.data, SendGroupSoundFilePack.class);
                             BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                             break;
                         }
@@ -286,7 +287,7 @@ public class ThePlugin {
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
-                            MemberNudgePack pack = JSON.parseObject(task.data, MemberNudgePack.class);
+                            GroupMemberNudgePack pack = JSON.parseObject(task.data, GroupMemberNudgePack.class);
                             BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
@@ -340,7 +341,7 @@ public class ThePlugin {
                         }
                         //94 [插件]设置群精华消息
                         case 94: {
-                            EssenceMessagePack pack = JSON.parseObject(task.data, EssenceMessagePack.class);
+                            GroupEssenceMessagePack pack = JSON.parseObject(task.data, GroupEssenceMessagePack.class);
                             BotGroupDo.setEssenceMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.mid);
                             break;
                         }
@@ -431,6 +432,39 @@ public class ThePlugin {
                             SetGroupAdminPack pack = JSON.parseObject(task.data, SetGroupAdminPack.class);
                             BotGroupDo.setAdmin(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
                             break;
+                        }
+                        //109 [插件]获取群公告
+                        case 109:
+                        {
+                            GetGroupAnnouncementsPack pack = JSON.parseObject(task.data, GetGroupAnnouncementsPack.class);
+                            List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            if (data == null)
+                                return;
+                            GroupAnnouncementsPack pack1 = new GroupAnnouncementsPack();
+                            pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            pack1.id = pack.id;
+                            pack1.list = data;
+                            if (Socket.send(PackDo.BuildPack(pack1, 109)))
+                                close();
+                            break;
+                        }
+                        //
+                        case 110:
+                        {
+                            SetGetGroupAnnouncementsPack pack =    JSON.parseObject(task.data, SetGetGroupAnnouncementsPack.class);
+                            BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile,pack.sendToNewMember,pack.isPinned,pack.showEditCard,pack.showPopup,pack.requireConfirmation, pack.text);
+                        }
+                        //111 [插件]删除群公告
+                        case  111:
+                        {
+                            DeleteGroupAnnouncementsPack pack = JSON.parseObject(task.data, DeleteGroupAnnouncementsPack.class);
+                            BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                        }
+                        //112 [插件]发送好友语言文件
+                        case 112:
+                        {
+                            SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
+                           BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                         }
                         //127 [插件]断开连接
                         case 127: {

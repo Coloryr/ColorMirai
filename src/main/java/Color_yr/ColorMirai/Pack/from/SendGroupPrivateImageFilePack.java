@@ -8,7 +8,7 @@ id:群号
 fid:群员QQ号
 file:文件路径
  */
-public class LoadFileSendToGroupPrivateImagePack extends PackBase {
+public class SendGroupPrivateImageFilePack extends PackBase {
     public long id;
     public long fid;
     public String file;
