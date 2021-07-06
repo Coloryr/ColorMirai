@@ -1,15 +1,12 @@
 package Color_yr.ColorMirai.robot;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
-//import io.github.mzdluo123.silk4j.AudioUtils;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.FileInputStream;
 
 public class BotSendSound {

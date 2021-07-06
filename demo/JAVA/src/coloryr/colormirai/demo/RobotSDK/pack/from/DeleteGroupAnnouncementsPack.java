@@ -3,11 +3,11 @@ package coloryr.colormirai.demo.RobotSDK.pack.from;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
 
 /*
-94 [插件]设置群精华消息
+111 [插件]删除群公告
 id:群号
-mid:消息ID
+fid:唯一识别属性
  */
-public class EssenceMessagePack extends PackBase {
+public class DeleteGroupAnnouncementsPack extends PackBase {
     public long id;
-    public int mid;
+    public String fid;
 }

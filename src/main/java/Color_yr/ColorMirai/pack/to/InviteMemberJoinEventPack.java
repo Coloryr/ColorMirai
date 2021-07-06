@@ -1,4 +1,5 @@
 package Color_yr.ColorMirai.pack.to;
+
 /*
 35 [机器人]成成员被邀请加入群（事件）
 id:群号

@@ -19,10 +19,10 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.util.ArrayList;
 import java.util.List;
 
-@JSONType(seeAlso = {XmlDTO.class, VoiceDTO.class,ImageDTO.class,
-        UnknownMessageDTO.class,StrangerMessagePacketDTO.class, TempMessagePacketDTO.class,
-        PlainDTO.class,FriendMessagePacketDTO.class,ForwardMessageDTO.class,FlashImageDTO.class,
-        FileMessageDTO.class,FaceDTO.class,AtDTO.class,AtAllDTO.class,AppDTO.class}, typeKey = "type")
+@JSONType(seeAlso = {XmlDTO.class, VoiceDTO.class, ImageDTO.class,
+        UnknownMessageDTO.class, StrangerMessagePacketDTO.class, TempMessagePacketDTO.class,
+        PlainDTO.class, FriendMessagePacketDTO.class, ForwardMessageDTO.class, FlashImageDTO.class,
+        FileMessageDTO.class, FaceDTO.class, AtDTO.class, AtAllDTO.class, AppDTO.class}, typeKey = "type")
 public class MessageDTO implements DTO {
     public static EventDTO toDTO(MessageEvent event) {
         EventDTO pack;

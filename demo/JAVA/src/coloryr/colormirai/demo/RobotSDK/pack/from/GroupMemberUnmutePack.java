@@ -7,7 +7,7 @@ import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
 id:群号
 fid:成员QQ号
  */
-public class UnmuteGroupMemberPack extends PackBase {
+public class GroupMemberUnmutePack extends PackBase {
     public long id;
     public long fid;
 }

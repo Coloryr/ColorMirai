@@ -434,37 +434,51 @@ public class ThePlugin {
                             break;
                         }
                         //109 [插件]获取群公告
-                        case 109:
-                        {
+                        case 109: {
                             GetGroupAnnouncementsPack pack = JSON.parseObject(task.data, GetGroupAnnouncementsPack.class);
                             List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
+                            List<GroupAnnouncement> list = new ArrayList<>();
+                            for (OnlineAnnouncement item : data) {
+                                GroupAnnouncement item1 = new GroupAnnouncement();
+                                item1.senderId = item.getSenderId();
+                                item1.fid = item.getFid();
+                                item1.allConfirmed = item.getAllConfirmed();
+                                item1.confirmedMembersCount = item.getConfirmedMembersCount();
+                                item1.publicationTime = item.getPublicationTime();
+                                item1.content = item.getContent();
+                                if (item.getParameters().getImage() != null)
+                                    item1.image = item.getParameters().getImage().getId();
+                                item1.sendToNewMember = item.getParameters().getSendToNewMember();
+                                item1.isPinned = item.getParameters().isPinned();
+                                item1.showEditCard = item.getParameters().getShowEditCard();
+                                item1.showPopup = item.getParameters().getShowPopup();
+                                item1.requireConfirmation = item.getParameters().getRequireConfirmation();
+                                list.add(item1);
+                            }
                             GroupAnnouncementsPack pack1 = new GroupAnnouncementsPack();
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
-                            pack1.list = data;
+                            pack1.list = list;
                             if (Socket.send(PackDo.BuildPack(pack1, 109)))
                                 close();
                             break;
                         }
                         //
-                        case 110:
-                        {
-                            SetGetGroupAnnouncementsPack pack =    JSON.parseObject(task.data, SetGetGroupAnnouncementsPack.class);
-                            BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile,pack.sendToNewMember,pack.isPinned,pack.showEditCard,pack.showPopup,pack.requireConfirmation, pack.text);
+                        case 110: {
+                            SetGetGroupAnnouncementsPack pack = JSON.parseObject(task.data, SetGetGroupAnnouncementsPack.class);
+                            BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
                         }
                         //111 [插件]删除群公告
-                        case  111:
-                        {
+                        case 111: {
                             DeleteGroupAnnouncementsPack pack = JSON.parseObject(task.data, DeleteGroupAnnouncementsPack.class);
                             BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                         }
                         //112 [插件]发送好友语言文件
-                        case 112:
-                        {
+                        case 112: {
                             SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
-                           BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                            BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                         }
                         //127 [插件]断开连接
                         case 127: {
