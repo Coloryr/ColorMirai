@@ -32,13 +32,13 @@ pause
 
 `MainConfig.json`
 
-```Json
+```Json5
 {
-  "AutoReconnect": true,
-  "HighwayUpload": 10,
-  "MaxList": 100000,
-  "Pack": true,
-  "Port": 23333,
+  "AutoReconnect":true,
+  "HighwayUpload":10,
+  "HttpPort":23335,
+  "MaxList":100000,
+  "Pack":true,
   "QQs": [
     {
       "Info": "info.json",
@@ -47,16 +47,22 @@ pause
       "QQ": 0
     }
   ],
-  "ReadEncoding": "UTF-8",
-  "SendEncoding": "UTF-8",
-  "SocketType": 0,
-  "escapeSelf": true
+  "ReadEncoding":"UTF-8",
+  "SendEncoding":"UTF-8",
+  "SocketPort":23333,
+  "WebSocketPort":23334,
+  "authKey":"123456789",
+  "authTime":1800,
+  "cacheSize":100,
+  "escapeSelf":true
 }
 ```
 
 - `MaxList`：最大消息列表
 - `Pack`：是否发送心跳包
-- `Port`：启动的端口
+- `SocketPort`：Socket启动的端口
+- `HttpPort`：mirai-http-api启动端口
+- `WebSocketPort`：websocket启动的端口
 - `QQs` : QQ账号列表 (可以添加多个)
   - `Info`：登录设备信息
   - `QQ`：登录的QQ号
@@ -74,6 +80,9 @@ pause
     - WebSocket [1]
 - `AutoReconnect`：自动重连
 - `HighwayUpload`：上传通道数
+- `authKey`：mriai-http-api密钥
+- `authTime`：密钥刷新时间
+- `cacheSize`：缓存大小
 
 设置完成后再次启动ColorMirai，出现
 ```
