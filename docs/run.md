@@ -54,7 +54,8 @@ pause
   "authKey":"123456789",
   "authTime":1800,
   "cacheSize":100,
-  "escapeSelf":true
+  "escapeSelf":true,
+  "noInput": false
 }
 ```
 
@@ -83,9 +84,17 @@ pause
 - `authKey`：mriai-http-api密钥
 - `authTime`：密钥刷新时间
 - `cacheSize`：缓存大小
+- `noInput`：没有输入
 
 设置完成后再次启动ColorMirai，出现
 ```
 [INFO] Socket已启动: 23333
 ``` 
 说明机器人已成功启动
+
+## Linux下的挂后台启动
+首先修改配置文件的`noInput`为true  
+然后用下面指令启动
+```
+nohut java -jar ColorMirai-xxx-all.jar &
+```
