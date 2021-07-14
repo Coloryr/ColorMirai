@@ -18,6 +18,7 @@ public class ConfigObj {
     public String authKey;
     public long authTime;
     public int cacheSize;
+    public boolean noInput;
 
     public ConfigObj() {
         QQs = new ArrayList<QQsObj>() {{
@@ -36,5 +37,6 @@ public class ConfigObj {
         authKey = "123456789";
         authTime = 1800;
         cacheSize = 100;
+        noInput = false;
     }
 }

@@ -78,6 +78,10 @@ public class ColorMiraiMain {
             return;
         }
 
+        if (Config.noInput) {
+            return;
+        }
+
         Scanner scanner = new Scanner(System.in);
         try {
             while (true) {
