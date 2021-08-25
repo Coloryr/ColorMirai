@@ -5,12 +5,10 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.5.6'
+version '3.5.7'
 
 repositories {
     mavenCentral()
-    jcenter()
-    maven { url = uri("https://dl.bintray.com/karlatemp/misc") }
 }
 
 dependencies {
@@ -18,14 +16,14 @@ dependencies {
 
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
-    compile 'com.alibaba:fastjson:1.2.73'
-    compile "org.java-websocket:Java-WebSocket:1.5.1"
+    compile 'com.alibaba:fastjson:1.2.78'
+    compile 'org.java-websocket:Java-WebSocket:1.5.2'
     compile "commons-fileupload:commons-fileupload:1.4"
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 //    compile fileTree(dir:'lib',include:['silk4j-1.2-dev.jar'])
 
-    api "net.mamoe:mirai-core-api:2.7-M2"
-    runtimeOnly "net.mamoe:mirai-core:2.7-M2"
+    api "net.mamoe:mirai-core-api:2.7-RC"
+    runtimeOnly "net.mamoe:mirai-core:2.7-RC"
     //runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
 
 }

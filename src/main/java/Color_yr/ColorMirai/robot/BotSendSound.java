@@ -23,7 +23,7 @@ public class BotSendSound {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
+            MessageReceipt<Group> message = group.sendMessage(group.uploadAudio(voice));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -52,7 +52,7 @@ public class BotSendSound {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource voice = ExternalResource.create(stream);
-            MessageReceipt message = group.sendMessage(group.uploadVoice(voice));
+            MessageReceipt<Group> message = group.sendMessage(group.uploadAudio(voice));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -81,7 +81,7 @@ public class BotSendSound {
             }
             FileInputStream stream = new FileInputStream(file);
             ExternalResource voice = ExternalResource.create(stream);
-            MessageReceipt message = friend.sendMessage(friend.uploadVoice(voice));
+            MessageReceipt<Friend> message = friend.sendMessage(friend.uploadAudio(voice));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
