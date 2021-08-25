@@ -96,5 +96,5 @@ pause
 首先修改配置文件的`noInput`为true  
 然后用下面指令启动
 ```
-nohut java -jar ColorMirai-xxx-all.jar &
+nohup java -jar ColorMirai-xxx-all.jar &
 ```
