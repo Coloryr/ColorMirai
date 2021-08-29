@@ -2,7 +2,12 @@
 
 [返回](../README.md)
 
-## 无法登录解决
+## 新版本方法
+https://mirai.mamoe.net/topic/223/%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95%E7%9A%84%E4%B8%B4%E6%97%B6%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88
+
+注：在`ColorMirai`中设备的信息文件名叫`info.json`
+
+## 旧版本方法
 (这个是旧版本的使用说明)
 
 1. 使用安卓模式登录
@@ -108,6 +113,3 @@
 填ticket的是shabi  
 填ticket的是shabi  
 填ticket的是shabi
-
-## 其他方法
-https://mirai.mamoe.net/topic/223/%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95%E7%9A%84%E4%B8%B4%E6%97%B6%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88
