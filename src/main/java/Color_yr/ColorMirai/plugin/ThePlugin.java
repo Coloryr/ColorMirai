@@ -490,7 +490,7 @@ public class ThePlugin {
                             break;
                         }
                         default: {
-                            ColorMiraiMain.logger.error("不知道的包");
+                            ColorMiraiMain.logger.error("不知道的包" + task.index);
                             break;
                         }
                     }
