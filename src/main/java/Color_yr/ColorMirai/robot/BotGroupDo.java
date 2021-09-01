@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.List;
 
 public class BotGroupDo {
-    public static void DeleteGroupMember(long qq, long id, long fid) {
+    public static void DeleteGroupMember(long qq, long id, long fid, boolean black) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -29,7 +29,7 @@ public class BotGroupDo {
                 ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
                 return;
             }
-            member.kick("");
+            member.kick("", black);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("踢出成员失败", e);
         }

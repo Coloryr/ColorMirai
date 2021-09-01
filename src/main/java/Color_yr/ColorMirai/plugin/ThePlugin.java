@@ -196,7 +196,7 @@ public class ThePlugin {
                         //64 [插件]删除群员
                         case 64: {
                             DeleteGroupMemberPack pack = JSON.parseObject(task.data, DeleteGroupMemberPack.class);
-                            BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid ,pack.black);
                             break;
                         }
                         //65 [插件]禁言群员
