@@ -42,8 +42,8 @@ public class ConfigRead {
 
             if (!SessionFile.exists()) {
                 SessionFile.createNewFile();
-                ColorMiraiMain.Config = new ConfigObj();
-                Save();
+                ColorMiraiMain.Sessions = new SessionObj();
+                SaveSession();
                 return true;
             } else {
                 InputStreamReader reader = new InputStreamReader(
