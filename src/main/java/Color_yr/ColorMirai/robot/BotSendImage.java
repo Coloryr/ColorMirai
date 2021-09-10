@@ -10,6 +10,7 @@ import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 
 public class BotSendImage {
 
@@ -36,6 +37,7 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群图片失败", e);
         }
@@ -64,6 +66,7 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
             stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群图片失败", e);
@@ -97,6 +100,7 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送私聊图片失败", e);
         }
@@ -130,6 +134,7 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
             stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送私聊图片失败", e);
@@ -148,7 +153,8 @@ public class BotSendImage {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + id);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(img)));
+            InputStream stream = new ByteArrayInputStream(ColorMiraiMain.decoder.decode(img));
+            ExternalResource image = ExternalResource.create(stream);
             MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
@@ -158,6 +164,8 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
+            stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友失败", e);
         }
@@ -186,6 +194,7 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            image.close();
             stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友失败", e);

@@ -690,6 +690,7 @@ public class ThePlugin {
                 FileInputStream stream = new FileInputStream(temp.imgurl);
                 ExternalResource image = ExternalResource.create(stream);
                 item.message = item.message.plus(item.contact.uploadImage(image));
+                image.close();
                 stream.close();
             } catch (IOException e) {
                 ColorMiraiMain.logger.error("消息队列添加图片失败", e);

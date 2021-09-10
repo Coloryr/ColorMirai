@@ -245,7 +245,9 @@ public class BotGroupDo {
                     ColorMiraiMain.logger.warn("不存在图片:" + image);
                     return;
                 }
-                image1 = announcements.uploadImage(ExternalResource.create(file));
+                ExternalResource resource = ExternalResource.create(file);
+                image1 = announcements.uploadImage(resource);
+                resource.close();
             }
             AnnouncementParametersBuilder builder = new AnnouncementParametersBuilder();
             if (image1 != null) {

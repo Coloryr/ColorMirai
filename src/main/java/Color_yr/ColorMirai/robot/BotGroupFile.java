@@ -41,6 +41,7 @@ public class BotGroupFile {
                 call.id = temp[0];
                 BotStart.addMessage(qq, call.id, call);
             }
+            tempfile.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("上传群文件失败", e);
         }

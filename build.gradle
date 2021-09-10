@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.5.8'
+version '3.5.9'
 
 repositories {
     mavenCentral()
@@ -22,8 +22,8 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 //    compile fileTree(dir:'lib',include:['silk4j-1.2-dev.jar'])
 
-    api "net.mamoe:mirai-core-api:2.7.0"
-    runtimeOnly "net.mamoe:mirai-core:2.7.0"
+    api "net.mamoe:mirai-core-api:2.7.1-dev-1"
+    runtimeOnly "net.mamoe:mirai-core:2.7.1-dev-1"
     //runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
 
 }

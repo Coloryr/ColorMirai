@@ -93,6 +93,7 @@ public class UploadImage implements HttpHandler {
                     }});
                 }
             }
+            resource.close();
         }
         Utils.send(t, response);
     }

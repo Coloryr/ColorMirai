@@ -108,6 +108,7 @@ public class UploadFileAndSend implements HttpHandler {
                         response = JSONObject.toJSONString(new UploadFileRetDTO() {{
                             this.id = fileMessage.getId();
                         }});
+                        resource.close();
                     }
                 }
             } catch (NumberFormatException | IllegalStateException e) {

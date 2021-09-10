@@ -61,6 +61,7 @@ public class BotSendSound {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            voice.close();
             stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
@@ -90,6 +91,7 @@ public class BotSendSound {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
+            voice.close();
             stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送好友语音失败", e);

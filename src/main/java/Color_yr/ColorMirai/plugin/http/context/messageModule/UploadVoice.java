@@ -91,6 +91,7 @@ public class UploadVoice implements HttpHandler {
                     }});
                 }
             }
+            resource.close();
         }
         Utils.send(t, response);
     }

@@ -16,6 +16,7 @@ import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,14 +104,26 @@ public class MessageDTO implements DTO {
                 if (temp == null)
                     return null;
                 ExternalResource image = ExternalResource.create(temp);
-                return contact.uploadImage(image);
+                Image image1 = contact.uploadImage(image);
+                try {
+                    image.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return image1;
             }
             if (item.path != null && !item.path.isEmpty()) {
                 byte[] temp = Utils.getBytesFile(item.url);
                 if (temp == null)
                     return null;
                 ExternalResource image = ExternalResource.create(temp);
-                return contact.uploadImage(image);
+                Image image1 = contact.uploadImage(image);
+                try {
+                    image.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return image1;
             }
             return null;
         } else if (message instanceof FlashImageDTO) {
@@ -122,14 +135,26 @@ public class MessageDTO implements DTO {
                 if (temp == null)
                     return null;
                 ExternalResource image = ExternalResource.create(temp);
-                return new FlashImage(contact.uploadImage(image));
+                FlashImage image1 = new FlashImage(contact.uploadImage(image));
+                try {
+                    image.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return image1;
             }
             if (item.path != null && !item.path.isEmpty()) {
                 byte[] temp = Utils.getBytesFile(item.url);
                 if (temp == null)
                     return null;
                 ExternalResource image = ExternalResource.create(temp);
-                return new FlashImage(contact.uploadImage(image));
+                FlashImage image1 = new FlashImage(contact.uploadImage(image));
+                try {
+                    image.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return image1;
             }
             return null;
         } else if (message instanceof ForwardMessageDTO) {
@@ -168,14 +193,26 @@ public class MessageDTO implements DTO {
                     if (temp == null)
                         return null;
                     ExternalResource voice = ExternalResource.create(temp);
-                    return group.uploadVoice(voice);
+                    OfflineAudio audio = group.uploadAudio(voice);
+                    try {
+                        voice.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return audio;
                 }
                 if (item.path != null && !item.path.isEmpty()) {
                     byte[] temp = Utils.getBytesFile(item.path);
                     if (temp == null)
                         return null;
                     ExternalResource voice = ExternalResource.create(temp);
-                    return group.uploadVoice(voice);
+                    OfflineAudio audio = group.uploadAudio(voice);
+                    try {
+                        voice.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return audio;
                 }
             } else
                 return null;

@@ -73,6 +73,7 @@ public class SendImageMessage implements HttpHandler {
             } else {
                 MessageChain message = MessageUtils.newChain();
                 List<Image> list = new ArrayList<>();
+                List<ExternalResource> resources = new ArrayList<>();
                 for (String item : obj.urls) {
                     byte[] temp = Utils.getBytes(item);
                     if (temp == null)
@@ -81,6 +82,7 @@ public class SendImageMessage implements HttpHandler {
                     Image image1 = contact.uploadImage(image);
                     list.add(image1);
                     message.add(image1);
+                    resources.add(image);
                 }
                 if (message.isEmpty()) {
                     response = JSONObject.toJSONString(StateCode.MessageNull);
@@ -96,9 +98,15 @@ public class SendImageMessage implements HttpHandler {
                     }});
                     response = JSONObject.toJSONString(list);
                 }
+                resources.forEach((item) -> {
+                    try {
+                        item.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
         }
         Utils.send(t, response);
     }
-
 }
