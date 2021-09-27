@@ -25,7 +25,8 @@
 
 ## 使用ColorMirai的项目
 
-[CmdControl](https://github.com/Coloryr/CmdControl)
+[CmdControl](https://github.com/Coloryr/CmdControl)  
+[ColoryrServer](https://github.com/Coloryr/ColoryrWork)
 
 <!--有人帮你写2333-->
 懒得写了（jiushi）
