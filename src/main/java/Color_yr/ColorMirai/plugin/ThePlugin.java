@@ -678,8 +678,10 @@ public class ThePlugin {
         }
         if (temp.img != null && !temp.img.isEmpty()) {
             try {
-                ExternalResource image = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(temp.img)));
+                ByteArrayInputStream stream = new ByteArrayInputStream(ColorMiraiMain.decoder.decode(temp.img));
+                ExternalResource image = ExternalResource.createAutoCloseable(ExternalResource.create(stream));
                 item.message = item.message.plus(item.contact.uploadImage(image));
+                stream.close();
             } catch (IOException e) {
                 ColorMiraiMain.logger.error("消息队列添加图片失败", e);
                 e.printStackTrace();
@@ -688,9 +690,8 @@ public class ThePlugin {
         if (temp.imgurl != null && !temp.imgurl.isEmpty()) {
             try {
                 FileInputStream stream = new FileInputStream(temp.imgurl);
-                ExternalResource image = ExternalResource.create(stream);
+                ExternalResource image = ExternalResource.createAutoCloseable(ExternalResource.create(stream));
                 item.message = item.message.plus(item.contact.uploadImage(image));
-                image.close();
                 stream.close();
             } catch (IOException e) {
                 ColorMiraiMain.logger.error("消息队列添加图片失败", e);

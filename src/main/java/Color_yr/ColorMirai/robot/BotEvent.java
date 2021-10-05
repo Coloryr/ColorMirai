@@ -932,6 +932,17 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
     }
 
+    //113 [机器人]群解散消息（事件）
+    @EventHandler
+    public void onGroupDisbandEvent(BotLeaveEvent.Disband event) {
+        if (PluginUtils.havePlugin())
+            return;
+        long qq = event.getBot().getId();
+        long id = event.getGroup().getId();
+        GroupDisbandPack pack = new GroupDisbandPack(qq, id);
+        BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
+    }
+
     //处理在处理事件中发生的未捕获异常
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {

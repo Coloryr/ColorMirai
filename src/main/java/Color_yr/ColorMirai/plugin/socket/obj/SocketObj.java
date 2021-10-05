@@ -13,11 +13,12 @@ import java.net.SocketException;
 public class SocketObj {
     private final ISend Send;
     private final IRead Read;
-    public Socket Socket;
-    public WebSocket WebSocket;
+    private final Socket Socket;
+    private final WebSocket WebSocket;
 
     public SocketObj(Socket socket) {
         this.Socket = socket;
+        this.WebSocket = null;
         Send = (data) -> MySocketServer.send(data, Socket);
         Read = () -> MySocketServer.read(Socket);
         try {
@@ -29,6 +30,7 @@ public class SocketObj {
 
     public SocketObj(WebSocket socket) {
         this.WebSocket = socket;
+        this.Socket = null;
         Send = (data) -> MyWebSocket.send(data, WebSocket);
         Read = () -> MyWebSocket.read(WebSocket);
     }

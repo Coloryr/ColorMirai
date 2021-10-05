@@ -26,19 +26,7 @@ public class BotSendMessage {
             }
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
-                if (item.startsWith("at:")) {
-                    Member member = group1.get(Long.parseLong(item.replace("at:", "")));
-                    if (member == null)
-                        continue;
-                    messageChain = messageChain.plus(new At(member.getId()));
-                } else if (item.startsWith("quote:")) {
-                    int id = Integer.parseInt(item.replace("quote:", ""));
-                    MessageSaveObj call = BotStart.getMessage(qq, id);
-                    if (call == null || call.source == null)
-                        continue;
-                    QuoteReply quote = new QuoteReply(call.source);
-                    messageChain = messageChain.plus(quote);
-                } else if (item.startsWith("[mirai:")) {
+                if (item.startsWith("[mirai:")) {
                     messageChain = messageChain.plus(MiraiCode.deserializeMiraiCode(item));
                 } else {
                     messageChain = messageChain.plus(item);
