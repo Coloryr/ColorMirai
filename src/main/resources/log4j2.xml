@@ -7,10 +7,11 @@
             <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
         </Console>
         <RollingRandomAccessFile name="File"
-                                 fileName="PluginLog/logs.log"
+                                 fileName="logs.log"
                                  filePattern="logs/logs-%d{yyyy-MM-dd HH-mm}-%i.log"
+                                 charset="UTF-8"
                                  target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
+            <PatternLayout charset="UTF-8" pattern="[%d{HH:mm:ss.SSS}][%level]%msg%xEx%n"/>
             <Policies>
                 <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
                 <SizeBasedTriggeringPolicy size="100 MB"/>

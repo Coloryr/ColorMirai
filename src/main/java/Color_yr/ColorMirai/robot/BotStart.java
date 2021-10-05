@@ -23,7 +23,6 @@ public class BotStart {
     private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
     private static final ScheduledExecutorService service1 = Executors.newSingleThreadScheduledExecutor();
-    private static final BotLoginSolver login = new BotLoginSolver();
 
     public static boolean Start() {
         for (QQsObj item : ColorMiraiMain.Config.QQs) {

@@ -12,6 +12,6 @@ public class QQsObj {
         QQ = 0;
         Password = "请填写你的密码";
         LoginType = BotConfiguration.MiraiProtocol.ANDROID_PHONE;
-        Info = "info.json";
+        Info = "device.json";
     }
 }
