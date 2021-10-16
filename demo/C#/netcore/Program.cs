@@ -4,13 +4,13 @@ using Newtonsoft.Json;
 
 Robot robot = new();
 
-void Message(byte type, string data)
+void Message(byte type, object data)
 {
     switch (type)
     {
         case 46:
             {
-                var pack = JsonConvert.DeserializeObject<NewFriendRequestEventPack>(data);
+                var pack = data as NewFriendRequestEventPack;
                 var temp = BuildPack.Build(new EventCallPack
                 {
                     eventid = pack.eventid,
@@ -21,7 +21,7 @@ void Message(byte type, string data)
             }
         case 49:
             {
-                var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
+                var pack = data as GroupMessageEventPack;
                 var temp = BuildPack.Build(new SendGroupMessagePack
                 {
                     qq = robot.QQs[0],
@@ -39,9 +39,6 @@ void Message(byte type, string data)
             break;
         case 51:
 
-            break;
-        case 101:
-            Console.WriteLine(data);
             break;
     }
 }
@@ -78,8 +75,31 @@ while (!robot.IsConnect) ;
 while (true)
 {
     string temp = Console.ReadLine();
-    switch (temp)
+    string[] arg = temp.Split(' ');
+    switch (arg[0])
     {
+        case "friends":
+            if (arg.Length != 2)
+            {
+                Console.WriteLine("错误的参数");
+                break;
+            }
+            if (!long.TryParse(arg[1], out long qq))
+            {
+                Console.WriteLine("错误的参数");
+                break;
+            }
+            robot.GetFriends(qq, (res) =>
+            {
+                foreach (var item in res.friends)
+                {
 
+                }
+            });
+            break;
+        case "groups":
+            break;
+        case "members":
+            break;
     }
 }

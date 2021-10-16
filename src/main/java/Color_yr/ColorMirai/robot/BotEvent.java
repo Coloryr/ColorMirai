@@ -841,6 +841,19 @@ public class BotEvent extends SimpleListenerHost {
         }
     }
 
+    //85 [机器人]龙王改变时（事件）
+    @EventHandler
+    public void onGroupTalkativeChangeEvent(GroupTalkativeChangeEvent event) {
+        if (PluginUtils.havePlugin())
+            return;
+        long qq = event.getBot().getId();
+        long id = event.getGroup().getId();
+        long now = event.getNow().getId();
+        long old = event.getPrevious().getId();
+        GroupTalkativeChangePack pack = new GroupTalkativeChangePack(qq, id, now, old);
+        BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
+    }
+
     //86 [机器人]其他客户端上线（事件）
     @EventHandler
     public void onOtherClientOnlineEvent(OtherClientOnlineEvent event) {
@@ -917,19 +930,6 @@ public class BotEvent extends SimpleListenerHost {
         long qq = event.getBot().getId();
         GroupMessageSyncEventPack pack = new GroupMessageSyncEventPack(qq, id, time, message);
         BotStart.addTask(new SendPackObj(89, JSON.toJSONString(pack), qq, 0, qq));
-    }
-
-    //85 [机器人]龙王改变时（事件）
-    @EventHandler
-    public void onGroupTalkativeChangeEvent(GroupTalkativeChangeEvent event) {
-        if (PluginUtils.havePlugin())
-            return;
-        long qq = event.getBot().getId();
-        long id = event.getGroup().getId();
-        long now = event.getNow().getId();
-        long old = event.getPrevious().getId();
-        GroupTalkativeChangePack pack = new GroupTalkativeChangePack(qq, id, now, old);
-        BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
     }
 
     //113 [机器人]群解散消息（事件）

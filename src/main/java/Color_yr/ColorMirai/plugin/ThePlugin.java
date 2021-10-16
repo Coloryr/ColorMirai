@@ -465,7 +465,7 @@ public class ThePlugin {
                                 close();
                             break;
                         }
-                        //
+                        //110 [插件]设置群公告
                         case 110: {
                             SetGetGroupAnnouncementsPack pack = JSON.parseObject(task.data, SetGetGroupAnnouncementsPack.class);
                             BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
