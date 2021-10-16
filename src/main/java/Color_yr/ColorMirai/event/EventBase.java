@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.event;
 
-import Color_yr.ColorMirai.pack.PackBase;
+import Color_yr.ColorMirai.plugin.socket.pack.PackBase;
 import net.mamoe.mirai.event.events.BotEvent;
 
 public class EventBase extends PackBase {

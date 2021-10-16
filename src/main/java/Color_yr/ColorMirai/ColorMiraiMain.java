@@ -3,14 +3,13 @@ package Color_yr.ColorMirai;
 import Color_yr.ColorMirai.config.ConfigObj;
 import Color_yr.ColorMirai.config.ConfigRead;
 import Color_yr.ColorMirai.config.SessionObj;
-import Color_yr.ColorMirai.plugin.ISocket;
-import Color_yr.ColorMirai.plugin.PluginUtils;
-import Color_yr.ColorMirai.plugin.ThePlugin;
+import Color_yr.ColorMirai.plugin.socket.PluginUtils;
+import Color_yr.ColorMirai.plugin.socket.ThePlugin;
 import Color_yr.ColorMirai.plugin.download.DownloadUtils;
-import Color_yr.ColorMirai.plugin.http.MyHttpServer;
-import Color_yr.ColorMirai.plugin.http.SessionManager;
-import Color_yr.ColorMirai.plugin.socket.MySocketServer;
-import Color_yr.ColorMirai.plugin.socket.MyWebSocket;
+import Color_yr.ColorMirai.plugin.mirai_http_api.MiraiHttpApiServer;
+import Color_yr.ColorMirai.plugin.mirai_http_api.SessionManager;
+import Color_yr.ColorMirai.plugin.socket.PluginSocketServer;
+import Color_yr.ColorMirai.plugin.socket.PluginWebSocketServer;
 import Color_yr.ColorMirai.robot.BotStart;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,9 +30,9 @@ public class ColorMiraiMain {
     public static SessionObj Sessions;
     public static Charset SendCharset;
     public static Charset ReadCharset;
-    private static ISocket WebSocket;
-    private static ISocket Socket;
-    private static ISocket Http;
+    private static PluginWebSocketServer WebSocket;
+    private static PluginSocketServer Socket;
+    private static MiraiHttpApiServer Http;
 
     public static void main(String[] args) {
         RunDir = System.getProperty("user.dir") + "/";
@@ -60,9 +59,9 @@ public class ColorMiraiMain {
 
         logger.info("初始化完成");
 
-        WebSocket = new MyWebSocket();
-        Socket = new MySocketServer();
-        Http = new MyHttpServer();
+        WebSocket = new PluginWebSocketServer();
+        Socket = new PluginSocketServer();
+        Http = new MiraiHttpApiServer();
 
         if (!Socket.pluginServerStart()) {
             logger.error("socket启动失败");

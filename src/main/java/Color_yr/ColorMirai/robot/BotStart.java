@@ -2,8 +2,8 @@ package Color_yr.ColorMirai.robot;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.config.QQsObj;
-import Color_yr.ColorMirai.plugin.PluginUtils;
-import Color_yr.ColorMirai.plugin.ThePlugin;
+import Color_yr.ColorMirai.plugin.socket.PluginUtils;
+import Color_yr.ColorMirai.plugin.socket.ThePlugin;
 import Color_yr.ColorMirai.plugin.socket.obj.SendPackObj;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;

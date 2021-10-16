@@ -1,6 +1,6 @@
 package Color_yr.ColorMirai.config;
 
-import Color_yr.ColorMirai.plugin.http.Session;
+import Color_yr.ColorMirai.plugin.mirai_http_api.Session;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
