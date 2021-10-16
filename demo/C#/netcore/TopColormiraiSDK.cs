@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace ColoryrSDK
 {
@@ -106,6 +106,22 @@ namespace ColoryrSDK
                 qq = qq,
                 id = group
             }, 58);
+            AddTask(data);
+        }
+        /// <summary>
+        /// 52 [插件]发送群消息
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="message">消息</param>
+        public void SendGroupMessage(long qq, long group, List<string> message)
+        {
+            var data = BuildPack.Build(new SendGroupMessagePack()
+            {
+                qq = qq,
+                id = group,
+                message = message
+            }, 52);
             AddTask(data);
         }
     }

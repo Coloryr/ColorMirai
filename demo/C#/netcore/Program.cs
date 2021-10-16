@@ -1,6 +1,5 @@
-﻿using System;
-using ColoryrSDK;
-using Newtonsoft.Json;
+﻿using ColoryrSDK;
+using System;
 
 Robot robot = new();
 
@@ -91,9 +90,10 @@ while (true)
             }
             robot.GetFriends(qq, (res) =>
             {
+                Console.WriteLine($"{res.qq}的好友：");
                 foreach (var item in res.friends)
                 {
-
+                    Console.WriteLine($"{item.id} {item.remark}");
                 }
             });
             break;

@@ -2067,7 +2067,7 @@ namespace ColoryrSDK
             { 7, typeof(BotLeaveEventAPack) },
             { 8, typeof(BotLeaveEventBPack) },
             { 9, typeof(BotMuteEventPack) },
-            {10, typeof(BotOfflineEventAPack) },
+            { 10, typeof(BotOfflineEventAPack) },
             { 11, typeof(BotOfflineEventBPack) },
             { 12, typeof(BotOfflineEventAPack) },
             { 13, typeof(BotOfflineEventAPack) },
@@ -2252,6 +2252,8 @@ namespace ColoryrSDK
                     {
                         if (QueueRead.TryTake(out RobotTask task))
                         {
+                            if (task.Index == 60)
+                                continue;
                             CallTop(task.Index, task.Data);
                             if (RobotSDK.PackType.TryGetValue(task.Index, out var type))
                             {
