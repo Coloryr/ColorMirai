@@ -25,23 +25,28 @@ public class GroupFileMove implements HttpHandler {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(obj.sessionKey);
-            Group group = authed.bot.getGroup(obj.target);
+            Group group = null;
+            if (obj.target != 0) {
+                group = authed.bot.getGroup(obj.target);
+            } else if (obj.group != 0) {
+                group = authed.bot.getGroup(obj.group);
+            } else if (obj.qq != 0) {
+                group = authed.bot.getGroup(obj.qq);
+            }
             if (group == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
+                RemoteFile moveTo = group.getFilesRoot();
+                if (obj.moveToPath != null) {
+                    moveTo = moveTo.resolve(obj.moveToPath);
+                }
+                moveTo = moveTo.resolveById(obj.id);
                 RemoteFile remoteFile = group.getFilesRoot().resolveById(obj.id);
                 if (remoteFile == null) {
                     response = JSONObject.toJSONString(StateCode.NoElement);
                 } else {
-                    RemoteFile dir = group.getFilesRoot().resolve(obj.movePath + "/" + remoteFile.getName());
-                    if (dir.getParent() != null &&
-                            ((dir.getParent() != null && dir.getParent().exists())
-                                    || (dir.getParent() != null && dir.isFile()))) {
-                        response = JSONObject.toJSONString(StateCode.NoElement);
-                    } else {
-                        boolean res = remoteFile.moveTo(dir);
-                        response = JSONObject.toJSONString(res ? StateCode.Success : StateCode.PermissionDenied);
-                    }
+                    boolean res = remoteFile.moveTo(moveTo);
+                    response = JSONObject.toJSONString(res ? StateCode.Success : StateCode.PermissionDenied);
                 }
             }
         }

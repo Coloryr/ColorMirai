@@ -1,6 +1,9 @@
 package Color_yr.ColorMirai.plugin.mirai_http_api;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileInfo;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileList;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.*;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.SendNudge;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.WebsocketRouteModule;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.authModule.Auth;
@@ -17,10 +20,6 @@ import Color_yr.ColorMirai.plugin.mirai_http_api.context.eventRouteModule.Member
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.eventRouteModule.NewFriendRequestEvent;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileRouteModule.*;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.groupManageModule.*;
-import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.FriendList;
-import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.GroupFileList;
-import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.GroupList;
-import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.MemberList;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.messageModule.*;
 import Color_yr.ColorMirai.plugin.mirai_http_api.obj.file.GroupFileInfo;
 import com.sun.net.httpserver.HttpExchange;
@@ -36,8 +35,8 @@ public class MiraiHttpApiServer implements HttpHandler {
     public boolean pluginServerStart() {
         try {
             server = HttpServer.create(new InetSocketAddress(ColorMiraiMain.Config.HttpPort), 10);
-            server.createContext("/auth", new Auth());
-            server.createContext("/verify", new Verify());
+            server.createContext("/verify", new Auth());
+            server.createContext("/bind", new Verify());
             server.createContext("/release", new Release());
             server.createContext("/command/register", new Register());
             server.createContext("/command/send", new Send());
@@ -79,11 +78,16 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/event", new WebsocketRouteModule());
             server.createContext("/all", new WebsocketRouteModule());
             server.createContext("/sendNudge", new SendNudge());
-            server.createContext("/groupFileRename", new GroupFileRename());
-            server.createContext("/groupFileMove", new GroupFileMove());
-            server.createContext("/groupFileDelete", new GroupFileDelete());
-            server.createContext("/groupMkdir", new GroupMkdir());
             server.createContext("/uploadFileAndSend", new UploadFileAndSend());
+            server.createContext("/botProfile", new BotProfile());
+            server.createContext("friendProfile", new FriendProfile());
+            server.createContext("/memberProfile", new MemberProfile());
+            server.createContext("/file/list", new FileList());
+            server.createContext("/file/info", new FileInfo());
+            server.createContext("/file/mkdir", new GroupMkdir());
+            server.createContext("/file/delete", new GroupFileDelete());
+            server.createContext("/file/move", new GroupFileMove());
+            server.createContext("/file/rename", new GroupFileRename());
             server.createContext("/", this);
 
             server.setExecutor(null);

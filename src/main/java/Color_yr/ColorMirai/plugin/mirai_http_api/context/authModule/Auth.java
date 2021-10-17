@@ -17,7 +17,7 @@ public class Auth implements HttpHandler {
         InputStream inputStream = t.getRequestBody();
         AuthDTO obj = JSONObject.parseObject(inputStream, AuthDTO.class);
         String response;
-        if (!Utils.checkKey(obj.authKey)) {
+        if (!Utils.checkKey(obj.verifyKey)) {
             response = JSONObject.toJSONString(StateCode.AuthKeyFail);
         } else {
             AuthRetDTO obj1 = new AuthRetDTO(0, SessionManager.createTempSession().key);

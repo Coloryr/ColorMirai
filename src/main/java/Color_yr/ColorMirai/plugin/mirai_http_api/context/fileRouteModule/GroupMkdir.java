@@ -3,8 +3,10 @@ package Color_yr.ColorMirai.plugin.mirai_http_api.context.fileRouteModule;
 import Color_yr.ColorMirai.plugin.mirai_http_api.Authed;
 import Color_yr.ColorMirai.plugin.mirai_http_api.SessionManager;
 import Color_yr.ColorMirai.plugin.mirai_http_api.Utils;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileUtils;
 import Color_yr.ColorMirai.plugin.mirai_http_api.obj.StateCode;
 import Color_yr.ColorMirai.plugin.mirai_http_api.obj.file.MkDirDTO;
+import Color_yr.ColorMirai.plugin.mirai_http_api.obj.file.RemoteFileItem;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -25,16 +27,26 @@ public class GroupMkdir implements HttpHandler {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(obj.sessionKey);
-            Group group = authed.bot.getGroup(obj.group);
+            Group group = null;
+            if (obj.target != 0) {
+                group = authed.bot.getGroup(obj.target);
+            } else if (obj.group != 0) {
+                group = authed.bot.getGroup(obj.group);
+            } else if (obj.qq != 0) {
+                group = authed.bot.getGroup(obj.qq);
+            }
             if (group == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
-                RemoteFile remoteFile = group.getFilesRoot().resolve(obj.dir);
+                RemoteFile remoteFile = group.getFilesRoot();
                 if (remoteFile.isDirectory()) {
                     response = JSONObject.toJSONString(StateCode.Exists);
                 } else {
+                    remoteFile = remoteFile.resolve(obj.directoryName);
                     boolean res = remoteFile.mkdir();
-                    response = JSONObject.toJSONString(res ? StateCode.Success : StateCode.PermissionDenied);
+                    RemoteFileItem item = new RemoteFileItem();
+                    item.data = FileUtils.get(remoteFile, false);
+                    response = JSONObject.toJSONString(item);
                 }
             }
         }

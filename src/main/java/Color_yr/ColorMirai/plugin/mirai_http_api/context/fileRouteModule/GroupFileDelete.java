@@ -25,11 +25,23 @@ public class GroupFileDelete implements HttpHandler {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(obj.sessionKey);
-            Group group = authed.bot.getGroup(obj.target);
+            Group group = null;
+            if (obj.target != 0) {
+                group = authed.bot.getGroup(obj.target);
+            } else if (obj.group != 0) {
+                group = authed.bot.getGroup(obj.group);
+            } else if (obj.qq != 0) {
+                group = authed.bot.getGroup(obj.qq);
+            }
             if (group == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
-                RemoteFile remoteFile = group.getFilesRoot().resolveById(obj.id);
+                RemoteFile remoteFile = group.getFilesRoot();
+                if (obj.path != null) {
+                    remoteFile = remoteFile.resolve(obj.path);
+                } else if (!obj.id.isEmpty()) {
+                    remoteFile = remoteFile.resolveById(obj.id);
+                }
                 if (remoteFile == null) {
                     response = JSONObject.toJSONString(StateCode.NoElement);
                 } else {
