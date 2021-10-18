@@ -1,6 +1,7 @@
 package Color_yr.ColorMirai.plugin.mirai_http_api;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.botModule.DeleteFriend;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileInfo;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileList;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.infoModule.*;
@@ -55,7 +56,7 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/uploadImage", new UploadImage());
             server.createContext("/uploadVoice", new UploadVoice());
             server.createContext("/recall", new Recall());
-            server.createContext("/setEssence", new FetchLatestMessage());
+            server.createContext("/setEssence", new SetEssence());
             server.createContext("/resp/newFriendRequestEvent", new NewFriendRequestEvent());
             server.createContext("/resp/memberJoinRequestEvent", new MemberJoinRequestEvent());
             server.createContext("/resp/botInvitedJoinGroupRequestEvent", new BotInvitedJoinGroupRequestEvent());
@@ -78,7 +79,6 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/event", new WebsocketRouteModule());
             server.createContext("/all", new WebsocketRouteModule());
             server.createContext("/sendNudge", new SendNudge());
-            server.createContext("/uploadFileAndSend", new UploadFileAndSend());
             server.createContext("/botProfile", new BotProfile());
             server.createContext("friendProfile", new FriendProfile());
             server.createContext("/memberProfile", new MemberProfile());
@@ -88,6 +88,9 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/file/delete", new GroupFileDelete());
             server.createContext("/file/move", new GroupFileMove());
             server.createContext("/file/rename", new GroupFileRename());
+            server.createContext("/file/upload", new UploadFileAndSend());
+            server.createContext("/deleteFriend", new DeleteFriend());
+            server.createContext("/memberAdmin", new MemberAdmin());
             server.createContext("/", this);
 
             server.setExecutor(null);

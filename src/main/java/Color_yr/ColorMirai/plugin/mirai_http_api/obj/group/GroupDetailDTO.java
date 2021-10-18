@@ -11,6 +11,10 @@ public class GroupDetailDTO implements DTO {
     public boolean autoApprove;
     public boolean anonymousChat;
 
+    public GroupDetailDTO(){
+
+    }
+
     public GroupDetailDTO(Group group) {
         this.name = group.getName();
         this.announcement = group.getSettings().getEntranceAnnouncement();

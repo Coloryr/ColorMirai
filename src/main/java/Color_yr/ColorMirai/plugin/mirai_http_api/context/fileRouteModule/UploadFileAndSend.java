@@ -4,7 +4,9 @@ import Color_yr.ColorMirai.plugin.mirai_http_api.Authed;
 import Color_yr.ColorMirai.plugin.mirai_http_api.SessionManager;
 import Color_yr.ColorMirai.plugin.mirai_http_api.Utils;
 import Color_yr.ColorMirai.plugin.mirai_http_api.context.SimpleRequestContext;
+import Color_yr.ColorMirai.plugin.mirai_http_api.context.fileModule.FileUtils;
 import Color_yr.ColorMirai.plugin.mirai_http_api.obj.StateCode;
+import Color_yr.ColorMirai.plugin.mirai_http_api.obj.contact.GroupDTO;
 import Color_yr.ColorMirai.plugin.mirai_http_api.obj.file.UploadFileRetDTO;
 import Color_yr.ColorMirai.robot.BotStart;
 import Color_yr.ColorMirai.robot.MessageSaveObj;
@@ -35,7 +37,6 @@ public class UploadFileAndSend implements HttpHandler {
         String type = "";
         String sessionKey = "";
         String target = "";
-        String file = "";
         String path = "";
         SimpleRequestContext simpleRequestContext = new SimpleRequestContext(StandardCharsets.UTF_8, inputStream, t.getRequestHeaders().get("Content-type").get(0));
         DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -52,10 +53,8 @@ public class UploadFileAndSend implements HttpHandler {
                         type = item.getString();
                     } else if (item.getFieldName().equals("target")) {
                         target = item.getString();
-                    } else if (item.getFieldName().equals("file")) {
-                        file = item.getString();
                     } else if (item.getFieldName().equals("path")) {
-                        file = item.getString();
+                        path = item.getString();
                     }
                 } else {
                     filedata = item.get();
@@ -107,6 +106,13 @@ public class UploadFileAndSend implements HttpHandler {
                         }});
                         response = JSONObject.toJSONString(new UploadFileRetDTO() {{
                             this.id = fileMessage.getId();
+                            this.name = fileMessage.getName();
+                            this.path = dir.resolve(fileMessage.getName()).getPath();
+                            this.contact = new GroupDTO((Group) dir.getContact());
+                            this.isFile = true;
+                            this.isDirectory = false;
+                            this.isDictionary = false;
+                            this.parent = FileUtils.get(dir.resolve(fileMessage.getName()).getParent(), false);
                         }});
                         resource.close();
                     }
