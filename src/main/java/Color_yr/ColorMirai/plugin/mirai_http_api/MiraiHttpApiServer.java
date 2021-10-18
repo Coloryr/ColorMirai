@@ -39,10 +39,10 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/verify", new Auth());
             server.createContext("/bind", new Verify());
             server.createContext("/release", new Release());
-            server.createContext("/command/register", new Register());
-            server.createContext("/command/send", new Send());
-            server.createContext("/managers", new Managers());
-            server.createContext("/command", new Command());
+//            server.createContext("/command/register", new Register());
+//            server.createContext("/command/send", new Send());
+//            server.createContext("/managers", new Managers());
+//            server.createContext("/command", new Command());
             server.createContext("/countMessage", new CountMessage());
             server.createContext("/fetchMessage", new FetchMessage());
             server.createContext("/fetchLatestMessage", new FetchLatestMessage());

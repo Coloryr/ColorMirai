@@ -5,6 +5,11 @@ import Color_yr.ColorMirai.plugin.mirai_http_api.obj.EventDTO;
 
 public class EventRestfulResult implements DTO {
     public int code;
-    public String errorMessage;
+    public String msg;
     public EventDTO data;
+
+    public EventRestfulResult() {
+        code = 0;
+        msg = "";
+    }
 }
