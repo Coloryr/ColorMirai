@@ -8,7 +8,7 @@ id:群号
 old:旧的名字
 now:新的名字
  */
-public class RenameGroupDirPack extends PackBase {
+public class GroupRenameDirPack extends PackBase {
     public long id;
     public String old;
     public String now;

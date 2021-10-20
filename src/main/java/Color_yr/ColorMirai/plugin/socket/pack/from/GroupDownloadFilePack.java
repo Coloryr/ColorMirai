@@ -3,13 +3,13 @@ package Color_yr.ColorMirai.plugin.socket.pack.from;
 import Color_yr.ColorMirai.plugin.socket.pack.PackBase;
 
 /*
-102 [插件]移动群文件
+107 [插件]下载群文件到指定位置
 id:群号
-old:原群文件名字
-dir:新群文件路径
+fid:文件ID
+dir:下载到的路径
  */
-public class MoveGroupFilePack extends PackBase {
+public class GroupDownloadFilePack extends PackBase {
     public long id;
-    public String old;
+    public String fid;
     public String dir;
 }

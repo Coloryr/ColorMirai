@@ -29,6 +29,8 @@ namespace ColoryrSDK
         private readonly Dictionary<string, Action<string>> GetImageUrlMap = new();
         private readonly Dictionary<QQMember, Action<MemberInfoPack>> GetMemberInfoMap = new();
         private readonly Dictionary<QQFriend, Action<FriendInfoPack>> GetFriendInfoMap = new();
+        private readonly Dictionary<QQGroup, Action<GroupFilesPack>> GetGroupFilesMap = new();
+        private readonly Dictionary<QQGroup, Action<GroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
         private partial void CallTop(byte index, string data)
         {
             if (index == 55)
@@ -80,7 +82,33 @@ namespace ColoryrSDK
             }
             else if (index == 92)
             {
-
+                var pack = JsonConvert.DeserializeObject<FriendInfoPack>(data);
+                var key = new QQFriend() { QQ = pack.qq, Friend = pack.id };
+                if (GetFriendInfoMap.TryGetValue(key, out var action))
+                {
+                    GetFriendInfoMap.Remove(key);
+                    action.Invoke(pack);
+                }
+            }
+            else if (index == 101)
+            {
+                var pack = JsonConvert.DeserializeObject<GroupFilesPack>(data);
+                var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                if (GetGroupFilesMap.TryGetValue(key, out var action))
+                {
+                    GetGroupFilesMap.Remove(key);
+                    action.Invoke(pack);
+                }
+            }
+            else if (index == 109)
+            {
+                var pack = JsonConvert.DeserializeObject<GroupAnnouncementsPack>(data);
+                var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                if (GetGroupAnnouncementsMap.TryGetValue(key, out var action))
+                {
+                    GetGroupAnnouncementsMap.Remove(key);
+                    action.Invoke(pack);
+                }
             }
         }
         /// <summary>
@@ -592,6 +620,357 @@ namespace ColoryrSDK
                 pictureUrl = pictureUrl,
                 musicUrl = musicUrl
             }, 93);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 94 [插件]设置群精华消息
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="mid">消息ID</param>
+        public void GroupSetEssenceMessage(long qq, long group, long mid)
+        {
+            var data = BuildPack.Build(new GroupSetEssenceMessagePack()
+            {
+                qq = qq,
+                id = group,
+                mid = mid
+            }, 94);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 95 [插件]消息队列
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="id">发送目标</param>
+        /// <param name="fid">发送目标</param>
+        /// <param name="file">图片文件位置</param>
+        /// <param name="message">消息内容</param>
+        /// <param name="send">是否发送</param>
+        public void MessageBuff(long qq, long id, long fid, SendToType type,
+            string file, List<string> message, bool send)
+        {
+            var data = BuildPack.Build(new MessageBuffPack()
+            {
+                qq = qq,
+                id = id,
+                fid = fid,
+                type = (int)type,
+                imgurl = file,
+                text = message,
+                send = send
+            }, 95);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 96 [插件]发送朋友骰子
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="friend">好友QQ号</param>
+        /// <param name="dice">点数</param>
+        public void SendFriendDice(long qq, long friend, int dice)
+        {
+            var data = BuildPack.Build(new SendFriendDicePack()
+            {
+                qq = qq,
+                id = friend,
+                dice = dice
+            }, 96);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 97 [插件]发送群骰子
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="dice">点数</param>
+        public void SendGroupDice(long qq, long group, int dice)
+        {
+            var data = BuildPack.Build(new SendGroupDicePack()
+            {
+                qq = qq,
+                id = group,
+                dice = dice
+            }, 97);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 98 [插件]发送群私聊骰子
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="member">群成员</param>
+        /// <param name="dice">点数</param>
+        public void SendGroupPrivateDice(long qq, long group, long member, int dice)
+        {
+            var data = BuildPack.Build(new SendGroupPrivateDicePack()
+            {
+                qq = qq,
+                id = group,
+                fid = member,
+                dice = dice
+            }, 98);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 99 [插件]上传群文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="file">文件路径</param>
+        /// <param name="name">群文件名称</param>
+        public void GroupAddFilePack(long qq, long group, string file, string name)
+        {
+            var data = BuildPack.Build(new GroupAddFilePack()
+            {
+                qq = qq,
+                id = group,
+                file = file,
+                name = name
+            }, 99);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 100 [插件]删除群文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="name">群文件ID</param>
+        public void GroupDeleteFile(long qq, long group, string fid)
+        {
+            var data = BuildPack.Build(new GroupDeleteFilePack()
+            {
+                qq = qq,
+                id = group,
+                fid = fid
+            }, 100);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 101 [插件]获取群文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        public void GroupGetFiles(long qq, long group, Action<GroupFilesPack> res)
+        {
+            var key = new QQGroup() { QQ = qq, Group = group };
+            GetGroupFilesMap.Add(key, res);
+            var data = BuildPack.Build(new GroupGetFilesPack()
+            {
+                qq = qq,
+                id = group
+            }, 101);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 102 [插件]移动群文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="fid">文件ID</param>
+        /// <param name="dir">新的路径</param>
+        public void GroupMoveFile(long qq, long group, string fid, string dir)
+        {
+            var data = BuildPack.Build(new GroupMoveFilePack()
+            {
+                qq = qq,
+                id = group,
+                fid = fid,
+                dir = dir
+            }, 102);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 103 [插件]重命名群文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="fid">文件ID</param>
+        /// <param name="name">新文件名</param>
+        public void GroupRemoveFile(long qq, long group, string fid, string name)
+        {
+            var data = BuildPack.Build(new GroupRenameFilePack()
+            {
+                qq = qq,
+                id = group,
+                fid = fid,
+                now = name
+            }, 103);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 104 [插件]创新群文件文件夹
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="dir">文件夹名字</param>
+        public void GroupAddDir(long qq, long group, string dir)
+        {
+            var data = BuildPack.Build(new GroupAddDirPack()
+            {
+                qq = qq,
+                id = group,
+                dir = dir
+            }, 104);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 105 [插件]删除群文件文件夹
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="dir">文件夹名字</param>
+        public void GroupRemoveDir(long qq, long group, string dir)
+        {
+            var data = BuildPack.Build(new GroupRemoveDirPack()
+            {
+                qq = qq,
+                id = group,
+                dir = dir
+            }, 105);
+            AddTask(data);
+        }
+        /// <summary>
+        /// 106 [插件]重命名群文件文件夹
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="old">旧的名字</param>
+        /// <param name="now">新的名字</param>
+        public void GroupRenameDir(long qq, long group, string old, string now)
+        {
+            var data = BuildPack.Build(new GroupRenameDirPack()
+            {
+                qq = qq,
+                id = group,
+                old = old,
+                now = now
+            }, 106);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 107 [插件]下载群文件到指定位置
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="fid">文件ID</param>
+        /// <param name="file">下载到的位置</param>
+        public void GroupDownloadFile(long qq, long group, string fid, string file)
+        {
+            var data = BuildPack.Build(new GroupDownloadFilePack()
+            {
+                qq = qq,
+                id = group,
+                fid = fid,
+                dir = file
+            }, 107);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 108 [插件]设置取消管理员
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="member">群成员QQ号</param>
+        /// <param name="set">是否设置</param>
+        public void GroupSetAdmin(long qq, long group, long member, bool set)
+        {
+            var data = BuildPack.Build(new GroupSetAdminPack()
+            {
+                qq = qq,
+                id = group,
+                fid = member,
+                type = set
+            }, 108);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 109 [插件]获取群公告
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        public void GroupGetAnnouncements(long qq, long group, Action<GroupAnnouncementsPack> res)
+        {
+            var key = new QQGroup() { QQ = qq, Group = group };
+            GetGroupAnnouncementsMap.Add(key, res);
+            var data = BuildPack.Build(new GroupGetAnnouncementsPack()
+            {
+                qq = qq,
+                id = group
+            }, 109);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 110 [插件]设置群公告
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        public void GroupSetAnnouncement(long qq, long group, string imageFile,
+            bool sendToNewMember, bool isPinned, bool showEditCard,
+            bool showPopup, bool requireConfirmation, string text)
+        {
+            var data = BuildPack.Build(new GroupSetAnnouncementPack()
+            {
+                qq = qq,
+                id = group,
+                imageFile = imageFile,
+                sendToNewMember = sendToNewMember,
+                isPinned = isPinned,
+                showEditCard = showEditCard,
+                showPopup = showPopup,
+                requireConfirmation = requireConfirmation,
+                text = text
+            }, 110);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 111 [插件]删除群公告
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="group">群号</param>
+        /// <param name="fid">公告ID</param>
+        public void GroupRemoveAnnouncement(long qq, long  group, string fid)
+        {
+            var data = BuildPack.Build(new GroupRemoveAnnouncementPack()
+            {
+                qq = qq,
+                id = group,
+                fid = fid
+            }, 111);
+            AddTask(data);
+        }
+
+        /// <summary>
+        /// 112 [插件]发送好友语言文件
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="friend">好友QQ号</param>
+        /// <param name="file">文件路径</param>
+        public void SendFriendSoundFile(long qq, long friend, string file)
+        {
+            var data = BuildPack.Build(new SendFriendSoundFilePack()
+            {
+                qq = qq,
+                id = friend,
+                file = file
+            }, 112);
             AddTask(data);
         }
     }

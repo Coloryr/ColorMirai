@@ -156,7 +156,21 @@ namespace ColoryrSDK
         /// <summary>
         /// 文件列表
         /// </summary>
-        public List<string> files { get; set; }
+        public List<GroupFileInfo> files { get; set; }
+    }
+    /// <summary>
+    /// 109 [插件]获取群公告
+    /// </summary>
+    public record GroupAnnouncementsPack : PackBase
+    {
+        /// <summary>
+        /// 群号
+        /// </summary>
+        public long id { get; set; }
+        /// <summary>
+        /// 群公告
+        /// </summary>
+        public List<GroupAnnouncement> list { get; set; }
     }
     //机器人枚举
     /// <summary>
@@ -178,6 +192,85 @@ namespace ColoryrSDK
         OWNER
     }
     //机器人数据类型
+    /// <summary>
+    /// 群公告
+    /// </summary>
+    public record GroupAnnouncement
+    {
+        /// <summary>
+        /// 发送者ID
+        /// </summary>
+        public long senderId;
+        public string fid;
+        public bool allConfirmed;
+        public int confirmedMembersCount;
+        public long publicationTime;
+        public string content;
+        public string image;
+        public bool sendToNewMember;
+        public bool isPinned;
+        public bool showEditCard;
+        public bool showPopup;
+        public bool requireConfirmation;
+    }
+    /// <summary>
+    /// 群文件信息
+    /// </summary>
+    public record GroupFileInfo
+    {
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string name { get; set; }
+        /// <summary>
+        /// 文件ID
+        /// </summary>
+        public string id { get; set; }
+        /// <summary>
+        /// 文件路径
+        /// </summary>
+        public string path { get; set; }
+        /// <summary>
+        /// 父层文件信息
+        /// </summary>
+        public GroupFileInfo parent { get; set; }
+        /// <summary>
+        /// 是否是文件
+        /// </summary>
+        public bool isFile { get; set; }
+        /// <summary>
+        /// 是否是文件夹
+        /// </summary>
+        public bool isDirectory { get; set; }
+        /// <summary>
+        /// 文件大小
+        /// </summary>
+        public long length { get; set; }
+        /// <summary>
+        /// 下载次数
+        /// </summary>
+        public int downloadTimes { get; set; }
+        /// <summary>
+        /// 上传者QQ号
+        /// </summary>
+        public long uploaderId { get; set; }
+        /// <summary>
+        /// 上传时间
+        /// </summary>
+        public long uploadTime { get; set; }
+        /// <summary>
+        /// 上次修改时间
+        /// </summary>
+        public long lastModifyTime { get; set; }
+        /// <summary>
+        /// SHA1
+        /// </summary>
+        public string sha1 { get; set; }
+        /// <summary>
+        /// MD5
+        /// </summary>
+        public string md5 { get; set; }
+    }
     /// <summary>
     /// 用户信息
     /// </summary>
@@ -1583,7 +1676,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 94 [插件]设置群精华消息
     /// </summary>
-    public record GroupEssenceMessagePack : PackBase
+    public record GroupSetEssenceMessagePack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1607,10 +1700,6 @@ namespace ColoryrSDK
         /// 消息内容
         /// </summary>
         public List<string> text { get; set; }
-        /// <summary>
-        /// 图片内容
-        /// </summary>
-        public string img { get; set; }
         /// <summary>
         /// 图片路径
         /// </summary>
@@ -1639,9 +1728,9 @@ namespace ColoryrSDK
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 消息ID
+        /// 点数
         /// </summary>
-        public long mid { get; set; }
+        public int dice { get; set; }
     }
     /// <summary>
     /// 97 [插件]发送群骰子
@@ -1678,7 +1767,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 99 [插件]上传群文件
     /// </summary>
-    public record AddGroupFilePack : PackBase
+    public record GroupAddFilePack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1696,44 +1785,40 @@ namespace ColoryrSDK
     /// <summary>
     /// 100 [插件]删除群文件
     /// </summary>
-    public record DeleteGroupFilePack : PackBase
+    public record GroupDeleteFilePack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 群文件名称
+        /// 群文件ID
         /// </summary>
-        public string name { get; set; }
+        public string fid { get; set; }
     }
     /// <summary>
     /// 101 [插件]获取群文件
     /// </summary>
-    public record GetGroupFilesPack : PackBase
+    public record GroupGetFilesPack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
-        /// <summary>
-        /// 文件夹
-        /// </summary>
-        public string name { get; set; }
     }
     /// <summary>
     /// 102 [插件]移动群文件
     /// </summary>
-    public record MoveGroupFilePack : PackBase
+    public record GroupMoveFilePack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 原群文件名字
+        /// 原群文件ID
         /// </summary>
-        public string old { get; set; }
+        public string fid { get; set; }
         /// <summary>
         /// 新群文件路径
         /// </summary>
@@ -1742,7 +1827,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 103 [插件]重命名群文件
     /// </summary>
-    public record RemoveGroupFilePack : PackBase
+    public record GroupRenameFilePack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1751,16 +1836,16 @@ namespace ColoryrSDK
         /// <summary>
         /// 旧群文件名
         /// </summary>
-        public string old { get; set; }
+        public string fid { get; set; }
         /// <summary>
         /// 新群文件名
         /// </summary>
-        public string dir { get; set; }
+        public string now { get; set; }
     }
     /// <summary>
     /// 104 [插件]创新群文件文件夹
     /// </summary>
-    public record AddGroupDirPack : PackBase
+    public record GroupAddDirPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1774,7 +1859,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 105 [插件]删除群文件文件夹
     /// </summary>
-    public record RemoveGroupDirPack : PackBase
+    public record GroupRemoveDirPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1788,7 +1873,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 106 [插件]重命名群文件文件夹
     /// </summary>
-    public record RenameGroupDirPack : PackBase
+    public record GroupRenameDirPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1806,16 +1891,16 @@ namespace ColoryrSDK
     /// <summary>
     /// 107 [插件]下载群文件到指定位置
     /// </summary>
-    public record DownloadGroupFilePack : PackBase
+    public record GroupDownloadFilePack : PackBase
     {
         /// <summary>
         /// 群号
         /// </summary>
         public long id { get; set; }
         /// <summary>
-        /// 文件路径
+        /// 文件ID
         /// </summary>
-        public string name { get; set; }
+        public string fid { get; set; }
         /// <summary>
         /// 下载到的路径
         /// </summary>
@@ -1824,7 +1909,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 108 [插件]设置取消管理员
     /// </summary>
-    public record SetGroupAdminPack : PackBase
+    public record GroupSetAdminPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1842,7 +1927,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 109 [插件]获取群公告
     /// </summary>
-    public record GetGroupAnnouncementsPack : PackBase
+    public record GroupGetAnnouncementsPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1852,7 +1937,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 110 [插件]设置群公告
     /// </summary>
-    public record SetGetGroupAnnouncementsPack : PackBase
+    public record GroupSetAnnouncementPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1890,7 +1975,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 111 [插件]删除群公告
     /// </summary>
-    public record DeleteGroupAnnouncementsPack : PackBase
+    public record GroupRemoveAnnouncementPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -2162,24 +2247,24 @@ namespace ColoryrSDK
             { 91, typeof(GetMemberInfo) },
             { 92, typeof(GetFriendInfoPack) },
             { 93, typeof(SendMusicSharePack) },
-            { 94, typeof(GroupEssenceMessagePack) },
+            { 94, typeof(GroupSetEssenceMessagePack) },
             { 95, typeof(MessageBuffPack) },
             { 96, typeof(SendFriendDicePack) },
             { 97, typeof(SendGroupDicePack) },
             { 98, typeof(SendGroupPrivateDicePack) },
-            { 99, typeof(AddGroupFilePack) },
-            { 100, typeof(DeleteGroupFilePack) },
-            { 101, typeof(GetGroupFilesPack) },
-            { 102, typeof(MoveGroupFilePack) },
-            { 103, typeof(RemoveGroupFilePack) },
-            { 104, typeof(AddGroupDirPack) },
-            { 105, typeof(RemoveGroupDirPack) },
-            { 106, typeof(RenameGroupDirPack) },
-            { 107, typeof(DownloadGroupFilePack) },
-            { 108, typeof(SetGroupAdminPack) },
-            { 109, typeof(GetGroupAnnouncementsPack) },
-            { 110, typeof(SetGetGroupAnnouncementsPack) },
-            { 111, typeof(DeleteGroupAnnouncementsPack) },
+            { 99, typeof(GroupAddFilePack) },
+            { 100, typeof(GroupDeleteFilePack) },
+            { 101, typeof(GroupGetFilesPack) },
+            { 102, typeof(GroupMoveFilePack) },
+            { 103, typeof(GroupRenameFilePack) },
+            { 104, typeof(GroupAddDirPack) },
+            { 105, typeof(GroupRemoveDirPack) },
+            { 106, typeof(GroupRenameDirPack) },
+            { 107, typeof(GroupDownloadFilePack) },
+            { 108, typeof(GroupSetAdminPack) },
+            { 109, typeof(GroupGetAnnouncementsPack) },
+            { 110, typeof(GroupSetAnnouncementPack) },
+            { 111, typeof(GroupRemoveAnnouncementPack) },
             { 112, typeof(SendFriendSoundFilePack) },
             { 113, typeof(GroupDisbandPack) }
         };

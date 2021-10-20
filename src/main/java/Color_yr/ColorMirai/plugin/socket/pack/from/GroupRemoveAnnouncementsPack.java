@@ -7,7 +7,7 @@ import Color_yr.ColorMirai.plugin.socket.pack.PackBase;
 id:群号
 fid:唯一识别属性
  */
-public class DeleteGroupAnnouncementsPack extends PackBase {
+public class GroupRemoveAnnouncementsPack extends PackBase {
     public long id;
     public String fid;
 }

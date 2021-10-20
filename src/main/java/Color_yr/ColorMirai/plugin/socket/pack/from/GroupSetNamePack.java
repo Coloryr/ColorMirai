@@ -3,11 +3,11 @@ package Color_yr.ColorMirai.plugin.socket.pack.from;
 import Color_yr.ColorMirai.plugin.socket.pack.PackBase;
 
 /*
-94 [插件]设置群精华消息
+70 [插件]设置群名
 id:群号
-mid:消息ID
+name:新的群名
  */
-public class GroupEssenceMessagePack extends PackBase {
+public class GroupSetNamePack extends PackBase {
     public long id;
-    public int mid;
+    public String name;
 }

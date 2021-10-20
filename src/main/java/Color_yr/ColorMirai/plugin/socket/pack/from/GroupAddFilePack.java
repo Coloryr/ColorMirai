@@ -8,7 +8,7 @@ id:群号
 file:系统文件路径
 name:群文件名称
  */
-public class AddGroupFilePack extends PackBase {
+public class GroupAddFilePack extends PackBase {
     public long id;
     public String file;
     public String name;

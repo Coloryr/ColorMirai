@@ -17,12 +17,10 @@ import net.mamoe.mirai.contact.GroupSettings;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.announcement.OnlineAnnouncement;
 import net.mamoe.mirai.message.MessageReceipt;
-import net.mamoe.mirai.message.data.At;
+import net.mamoe.mirai.message.code.MiraiCode;
 import net.mamoe.mirai.message.data.MessageUtils;
-import net.mamoe.mirai.message.data.QuoteReply;
 import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -118,7 +116,7 @@ public class ThePlugin {
                         }
                         //57 [插件]获取群成员
                         case 57: {
-                            GetGroupMemberInfoPack pack = JSON.parseObject(task.data, GetGroupMemberInfoPack.class);
+                            GroupGetMemberInfoPack pack = JSON.parseObject(task.data, GroupGetMemberInfoPack.class);
                             List<MemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 break;
@@ -131,7 +129,7 @@ public class ThePlugin {
                         }
                         //58 [插件]获取群设置
                         case 58: {
-                            GetGroupSettingPack pack = JSON.parseObject(task.data, GetGroupSettingPack.class);
+                            GroupGetSettingPack pack = JSON.parseObject(task.data, GroupGetSettingPack.class);
                             GroupSettings data = BotGetData.getGroupInfo(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 break;
@@ -194,7 +192,7 @@ public class ThePlugin {
                         }
                         //64 [插件]删除群员
                         case 64: {
-                            DeleteGroupMemberPack pack = JSON.parseObject(task.data, DeleteGroupMemberPack.class);
+                            GroupKickMemberPack pack = JSON.parseObject(task.data, GroupKickMemberPack.class);
                             BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.black);
                             break;
                         }
@@ -224,13 +222,13 @@ public class ThePlugin {
                         }
                         //69 [插件]设置群名片
                         case 69: {
-                            SetGroupMemberCard pack = JSON.parseObject(task.data, SetGroupMemberCard.class);
+                            GroupSetMemberCard pack = JSON.parseObject(task.data, GroupSetMemberCard.class);
                             BotGroupDo.SetGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
                         }
                         //70 [插件]设置群名
                         case 70: {
-                            SetGroupNamePack pack = JSON.parseObject(task.data, SetGroupNamePack.class);
+                            GroupSetNamePack pack = JSON.parseObject(task.data, GroupSetNamePack.class);
                             BotGroupDo.SetGroupName(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
@@ -342,7 +340,7 @@ public class ThePlugin {
                         }
                         //94 [插件]设置群精华消息
                         case 94: {
-                            GroupEssenceMessagePack pack = JSON.parseObject(task.data, GroupEssenceMessagePack.class);
+                            GroupSetEssenceMessagePack pack = JSON.parseObject(task.data, GroupSetEssenceMessagePack.class);
                             BotGroupDo.setEssenceMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.mid);
                             break;
                         }
@@ -368,20 +366,20 @@ public class ThePlugin {
                         }
                         //99 [插件]上传群文件
                         case 99: {
-                            AddGroupFilePack pack = JSON.parseObject(task.data, AddGroupFilePack.class);
+                            GroupAddFilePack pack = JSON.parseObject(task.data, GroupAddFilePack.class);
                             BotGroupFile.addFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.name);
                             break;
                         }
                         //100 [插件]删除群文件
                         case 100: {
-                            DeleteGroupFilePack pack = JSON.parseObject(task.data, DeleteGroupFilePack.class);
-                            BotGroupFile.deleteFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            GroupDeleteFilePack pack = JSON.parseObject(task.data, GroupDeleteFilePack.class);
+                            BotGroupFile.deleteFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //101 [插件]获取群文件
                         case 101: {
                             GetGroupFilesPack pack = JSON.parseObject(task.data, GetGroupFilesPack.class);
-                            List<String> data = BotGroupFile.getFiles(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<GroupFileInfo> data = BotGroupFile.getFiles(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
                             GroupFilesPack pack1 = new GroupFilesPack();
@@ -394,49 +392,49 @@ public class ThePlugin {
                         }
                         //102 [插件]移动群文件
                         case 102: {
-                            MoveGroupFilePack pack = JSON.parseObject(task.data, MoveGroupFilePack.class);
-                            BotGroupFile.moveFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.dir);
+                            GroupMoveFilePack pack = JSON.parseObject(task.data, GroupMoveFilePack.class);
+                            BotGroupFile.moveFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
                             break;
                         }
                         //103 [插件]重命名群文件
                         case 103: {
-                            RemoveGroupFilePack pack = JSON.parseObject(task.data, RemoveGroupFilePack.class);
-                            BotGroupFile.renameFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
+                            GroupRemoveFilePack pack = JSON.parseObject(task.data, GroupRemoveFilePack.class);
+                            BotGroupFile.renameFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.now);
                             break;
                         }
                         //104 [插件]创新群文件文件夹
                         case 104: {
-                            AddGroupDirPack pack = JSON.parseObject(task.data, AddGroupDirPack.class);
+                            GroupAddDirPack pack = JSON.parseObject(task.data, GroupAddDirPack.class);
                             BotGroupFile.addGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
                             break;
                         }
                         //105 [插件]删除群文件文件夹
                         case 105: {
-                            RemoveGroupDirPack pack = JSON.parseObject(task.data, RemoveGroupDirPack.class);
+                            GroupRemoveDirPack pack = JSON.parseObject(task.data, GroupRemoveDirPack.class);
                             BotGroupFile.removeGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
                             break;
                         }
                         //106 [插件]重命名群文件文件夹
                         case 106: {
-                            RenameGroupDirPack pack = JSON.parseObject(task.data, RenameGroupDirPack.class);
+                            GroupRenameDirPack pack = JSON.parseObject(task.data, GroupRenameDirPack.class);
                             BotGroupFile.renameGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
                             break;
                         }
                         //107 [插件]下载群文件到指定位置
                         case 107: {
-                            DownloadGroupFilePack pack = JSON.parseObject(task.data, DownloadGroupFilePack.class);
-                            BotGroupFile.downloadGroupFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name, pack.dir);
+                            GroupDownloadFilePack pack = JSON.parseObject(task.data, GroupDownloadFilePack.class);
+                            BotGroupFile.downloadGroupFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
                             break;
                         }
                         //108 [插件]设置取消管理员
                         case 108: {
-                            SetGroupAdminPack pack = JSON.parseObject(task.data, SetGroupAdminPack.class);
+                            GroupSetAdminPack pack = JSON.parseObject(task.data, GroupSetAdminPack.class);
                             BotGroupDo.setAdmin(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
                             break;
                         }
                         //109 [插件]获取群公告
                         case 109: {
-                            GetGroupAnnouncementsPack pack = JSON.parseObject(task.data, GetGroupAnnouncementsPack.class);
+                            GroupGetAnnouncementsPack pack = JSON.parseObject(task.data, GroupGetAnnouncementsPack.class);
                             List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
@@ -468,12 +466,12 @@ public class ThePlugin {
                         }
                         //110 [插件]设置群公告
                         case 110: {
-                            SetGetGroupAnnouncementsPack pack = JSON.parseObject(task.data, SetGetGroupAnnouncementsPack.class);
+                            GroupSetAnnouncementsPack pack = JSON.parseObject(task.data, GroupSetAnnouncementsPack.class);
                             BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
                         }
                         //111 [插件]删除群公告
                         case 111: {
-                            DeleteGroupAnnouncementsPack pack = JSON.parseObject(task.data, DeleteGroupAnnouncementsPack.class);
+                            GroupRemoveAnnouncementsPack pack = JSON.parseObject(task.data, GroupRemoveAnnouncementsPack.class);
                             BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                         }
                         //112 [插件]发送好友语言文件
@@ -578,8 +576,8 @@ public class ThePlugin {
             if (fromPack.containsKey("fid"))
                 temp.id = Long.parseLong(fromPack.get("fid"));
             temp.text = new ArrayList<>();
-            if (fromPack.containsKey("img")) {
-                temp.img = fromPack.get("img");
+            if (fromPack.containsKey("text")) {
+                temp.text.add(fromPack.get("text"));
             }
             if (fromPack.containsKey("send")) {
                 String data = fromPack.get("send");
@@ -653,39 +651,10 @@ public class ThePlugin {
             return;
         }
         for (String item1 : temp.text) {
-            if (item1.startsWith("at:")) {
-                if (temp.type == 1) {
-                    Group group1 = bot.getGroup(temp.id);
-                    if (group1 == null)
-                        continue;
-                    NormalMember member = group1.get(Long.parseLong(item1.replace("at:", "")));
-                    if (member == null)
-                        continue;
-                    item.message = item.message.plus(new At(member.getId()));
-                } else {
-                    item1 = item1.replace("at:", "");
-                    item.message = item.message.plus(item1);
-                }
-            } else if (item1.startsWith("quote:")) {
-                int id = Integer.parseInt(item1.replace("quote:", ""));
-                MessageSaveObj call = BotStart.getMessage(temp.qq, id);
-                if (call == null || call.source == null)
-                    continue;
-                QuoteReply quote = new QuoteReply(call.source);
-                item.message = item.message.plus(quote);
+            if (item1.startsWith("[mirai:")) {
+                item.message = item.message.plus(MiraiCode.deserializeMiraiCode(item1));
             } else {
                 item.message = item.message.plus(item1);
-            }
-        }
-        if (temp.img != null && !temp.img.isEmpty()) {
-            try {
-                ByteArrayInputStream stream = new ByteArrayInputStream(ColorMiraiMain.decoder.decode(temp.img));
-                ExternalResource image = ExternalResource.createAutoCloseable(ExternalResource.create(stream));
-                item.message = item.message.plus(item.contact.uploadImage(image));
-                stream.close();
-            } catch (IOException e) {
-                ColorMiraiMain.logger.error("消息队列添加图片失败", e);
-                e.printStackTrace();
             }
         }
         if (temp.imgurl != null && !temp.imgurl.isEmpty()) {

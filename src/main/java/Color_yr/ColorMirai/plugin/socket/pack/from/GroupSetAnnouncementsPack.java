@@ -13,7 +13,7 @@ showPopup:使用弹窗
 requireConfirmation:需要群成员确认
 text:公告内容
  */
-public class SetGetGroupAnnouncementsPack extends PackBase {
+public class GroupSetAnnouncementsPack extends PackBase {
     public long id;
     public String imageFile;
     public boolean sendToNewMember;

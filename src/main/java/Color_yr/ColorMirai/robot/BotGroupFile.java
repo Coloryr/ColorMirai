@@ -2,6 +2,8 @@ package Color_yr.ColorMirai.robot;
 
 import Color_yr.ColorMirai.ColorMiraiMain;
 import Color_yr.ColorMirai.plugin.download.DownloadUtils;
+import Color_yr.ColorMirai.plugin.mirai_http_api.Utils;
+import Color_yr.ColorMirai.plugin.socket.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.FileMessage;
@@ -59,8 +61,8 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(name);
-            if (!remoteFile.exists()) {
+            RemoteFile remoteFile = group.getFilesRoot().resolveById(name);
+            if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 不存在");
                 return;
             }
@@ -70,7 +72,7 @@ public class BotGroupFile {
         }
     }
 
-    public static List<String> getFiles(long qq, long id) {
+    public static List<GroupFileInfo> getFiles(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -82,7 +84,7 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return null;
             }
-            List<String> fileList = new ArrayList<>();
+            List<GroupFileInfo> fileList = new ArrayList<>();
             RemoteFile remoteFile = group.getFilesRoot();
             Iterator<RemoteFile> list = remoteFile.listFilesIterator(false);
             while (list.hasNext()) {
@@ -91,10 +93,12 @@ public class BotGroupFile {
                     Iterator<RemoteFile> list1 = temp.listFilesIterator(false);
                     while (list1.hasNext()) {
                         RemoteFile temp1 = list1.next();
-                        fileList.add(temp1.getPath());
+                        GroupFileInfo info = get(temp1);
+                        fileList.add(info);
                     }
                 } else {
-                    fileList.add(temp.getPath());
+                    GroupFileInfo info = get(temp);
+                    fileList.add(info);
                 }
             }
             return fileList;
@@ -104,7 +108,31 @@ public class BotGroupFile {
         return null;
     }
 
-    public static void moveFile(long qq, long id, String old, String dir) {
+    private static GroupFileInfo get(RemoteFile file) {
+        if (file == null)
+            return null;
+        GroupFileInfo info = new GroupFileInfo();
+        info.id = file.getId();
+        info.name = file.getName();
+        info.path = file.getPath();
+        info.parent = get(file.getParent());
+        info.isFile = file.isFile();
+        info.isDirectory = file.isDirectory();
+        info.length = file.length();
+        RemoteFile.FileInfo fileInfo = file.getInfo();
+        if (fileInfo != null) {
+            info.downloadTimes = fileInfo.getDownloadTimes();
+            info.uploaderId = fileInfo.getUploaderId();
+            info.uploadTime = fileInfo.getUploadTime();
+            info.lastModifyTime = fileInfo.getLastModifyTime();
+            info.sha1 = Utils.toUHexString(fileInfo.getSha1());
+            info.md5 = Utils.toUHexString(fileInfo.getMd5());
+        }
+
+        return info;
+    }
+
+    public static void moveFile(long qq, long id, String fid, String dir) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -116,18 +144,19 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(old);
-            if (!remoteFile.exists()) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + old + " 不存在");
+            RemoteFile remoteFile = group.getFilesRoot().resolveById(fid);
+            if (remoteFile == null) {
+                ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
                 return;
             }
-            remoteFile.moveTo(dir);
+            RemoteFile moveTo = group.getFilesRoot().resolve(dir);
+            remoteFile.moveTo(moveTo);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("群文件移动失败", e);
         }
     }
 
-    public static void renameFile(long qq, long id, String old, String now) {
+    public static void renameFile(long qq, long id, String fid, String now) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -139,9 +168,9 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(old);
-            if (!remoteFile.exists()) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + old + " 不存在");
+            RemoteFile remoteFile = group.getFilesRoot().resolveById(fid);
+            if (remoteFile == null) {
+                ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
                 return;
             }
             remoteFile.renameTo(now);
