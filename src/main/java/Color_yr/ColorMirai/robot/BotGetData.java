@@ -144,7 +144,6 @@ public class BotGetData {
                     return null;
                 }
                 MemberInfoPack info = new MemberInfoPack();
-                info.id = item.getId();
                 info.img = item.getAvatarUrl();
                 info.nick = item.getNick();
                 info.per = item.getPermission();

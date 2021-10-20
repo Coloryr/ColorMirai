@@ -7,7 +7,7 @@ import Color_yr.ColorMirai.plugin.socket.pack.PackBase;
 id: 群号
 fid: 成员QQ号
  */
-public class GroupMemberNudgePack extends PackBase {
+public class SendGroupMemberNudgePack extends PackBase {
     public long id;
     public long fid;
 }

@@ -280,13 +280,13 @@ public class ThePlugin {
                         }
                         //83 [插件]发送私聊戳一戳
                         case 83: {
-                            FriendNudgePack pack = JSON.parseObject(task.data, FriendNudgePack.class);
+                            SendFriendNudgePack pack = JSON.parseObject(task.data, SendFriendNudgePack.class);
                             BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
-                            GroupMemberNudgePack pack = JSON.parseObject(task.data, GroupMemberNudgePack.class);
+                            SendGroupMemberNudgePack pack = JSON.parseObject(task.data, SendGroupMemberNudgePack.class);
                             BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
@@ -311,6 +311,8 @@ public class ThePlugin {
                             if (pack1 == null)
                                 break;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            pack1.id = pack.id;
+                            pack1.fid = pack.fid;
                             if (Socket.send(PackDo.BuildPack(pack1, 91)))
                                 close();
                             break;
@@ -328,7 +330,7 @@ public class ThePlugin {
                         }
                         //93 [插件]发送音乐分享
                         case 93: {
-                            MusicSharePack pack = JSON.parseObject(task.data, MusicSharePack.class);
+                            SendMusicSharePack pack = JSON.parseObject(task.data, SendMusicSharePack.class);
                             if (pack.type1 == 0) {
                                 BotSendMusicShare.SendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             } else if (pack.type1 == 1) {

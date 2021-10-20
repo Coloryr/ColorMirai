@@ -61,7 +61,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroupId();
         long qq = event.getBot().getId();
         long fid = event.getInvitorId();
-        long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), (byte) 4, event));
+        long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 4, event));
         BotInvitedJoinGroupRequestEventPack pack = new BotInvitedJoinGroupRequestEventPack(qq, id, fid, eventid);
         BotStart.addTask(new SendPackObj(4, JSON.toJSONString(pack), fid, id, qq));
     }

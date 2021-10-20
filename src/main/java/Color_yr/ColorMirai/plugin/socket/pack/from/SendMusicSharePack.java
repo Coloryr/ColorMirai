@@ -14,7 +14,7 @@ jumpUrl:跳转Url
 pictureUrl:图片Url
 musicUrl:音乐Url
  */
-public class MusicSharePack extends PackBase {
+public class SendMusicSharePack extends PackBase {
     public long id;
     public long fid;
     public int type;

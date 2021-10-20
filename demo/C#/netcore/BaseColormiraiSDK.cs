@@ -59,14 +59,32 @@ namespace ColoryrSDK
         public GroupSettings setting { get; set; }
     }
     /// <summary>
+    /// 90 [插件]获取图片Url
+    /// </summary>
+    public record ReImagePack : PackBase
+    {
+        /// <summary>
+        /// 图片UUID
+        /// </summary>
+        public string uuid { get; set; }
+        /// <summary>
+        /// 图片地址
+        /// </summary>
+        public string url { get; set; }
+    }
+    /// <summary>
     /// 91 [插件]获取群成员信息
     /// </summary>
     public record MemberInfoPack : PackBase
     {
         /// <summary>
-        /// QQ号码
+        /// 群号
         /// </summary>
         public long id { get; set; }
+        /// <summary>
+        /// 群员QQ号
+        /// </summary>
+        public long fid { get; set; }
         /// <summary>
         /// 昵称
         /// </summary>
@@ -1089,7 +1107,7 @@ namespace ColoryrSDK
     }
     /// <summary>
     /// 55 [插件]获取群列表
-    /// 56 [插件] 获取好友列表
+    /// 56 [插件]获取好友列表
     /// </summary>
     public record GetPack : PackBase
     {
@@ -1136,7 +1154,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 64 [插件]删除群员
     /// </summary>
-    public record DeleteGroupMemberPack : PackBase
+    public record GroupDeleteMemberPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1202,7 +1220,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 69 [插件]设置群名片
     /// </summary>
-    public record SetGroupMemberCard : PackBase
+    public record GroupSetMemberCard : PackBase
     {
         /// <summary>
         /// 群号
@@ -1220,7 +1238,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 70 [插件]设置群名
     /// </summary>
-    public record SetGroupNamePack : PackBase
+    public record GroupSetNamePack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1320,7 +1338,7 @@ namespace ColoryrSDK
         public string file { get; set; }
     }
     /// <summary>
-    /// 78 [插件]从本地文件加载语音发送到群s
+    /// 78 [插件]从本地文件加载语音发送到群
     /// </summary>
     public record SendGroupSoundFilePack : PackBase
     {
@@ -1387,7 +1405,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 83 [插件]发送朋友戳一戳
     /// </summary>
-    public record FriendNudgePack : PackBase
+    public record SendFriendNudgePack : PackBase
     {
         /// <summary>
         /// 好友QQ号
@@ -1397,7 +1415,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 84 [插件]发送群成员戳一戳
     /// </summary>
-    public record GroupMemberNudgePack : PackBase
+    public record SendGroupMemberNudgePack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1495,10 +1513,6 @@ namespace ColoryrSDK
         /// 图片UUID
         /// </summary>
         public string uuid { get; set; }
-        /// <summary>
-        /// 图片地址
-        /// </summary>
-        public string url { get; set; }
     }
     /// <summary>
     /// 91 [插件]获取群成员信息
@@ -1527,7 +1541,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 93 [插件]发送音乐分享
     /// </summary>
-    public record MusicSharePack : PackBase
+    public record SendMusicSharePack : PackBase
     {
         /// <summary>
         /// 发送目标
@@ -2118,13 +2132,13 @@ namespace ColoryrSDK
             { 58, typeof(GetGroupSettingPack) },
             { 59, typeof(EventCallPack) },
             //60-63无
-            { 64, typeof(DeleteGroupMemberPack) },
+            { 64, typeof(GroupDeleteMemberPack) },
             { 65, typeof(GroupMemberMutePack) },
             { 66, typeof(GroupMemberUnmutePack) },
             { 67, typeof(GroupMuteAllPack) },
             { 68, typeof(GroupUnmuteAllPack) },
-            { 69, typeof(SetGroupMemberCard) },
-            { 70, typeof(SetGroupNamePack) },
+            { 69, typeof(GroupSetMemberCard) },
+            { 70, typeof(GroupSetNamePack) },
             { 71, typeof(ReCallMessagePack) },
             { 72, typeof(FriendInputStatusChangedEventPack) },
             { 73, typeof(FriendNickChangedEventPack) },
@@ -2137,8 +2151,8 @@ namespace ColoryrSDK
             { 80, typeof(BotJoinGroupEventRetrieveEventPack) },
             { 81, typeof(NudgedEventPack) },
             { 82, typeof(NudgedEventPack) },
-            { 83, typeof(FriendNudgePack) },
-            { 84, typeof(GroupMemberNudgePack) },
+            { 83, typeof(SendFriendNudgePack) },
+            { 84, typeof(SendGroupMemberNudgePack) },
             { 85, typeof(GroupTalkativeChangePack) },
             { 86, typeof(OtherClientOnlineEventPack) },
             { 87, typeof(OtherClientOfflineEventPack) },
@@ -2147,7 +2161,7 @@ namespace ColoryrSDK
             { 90, typeof(GetImageUrlPack) },
             { 91, typeof(GetMemberInfo) },
             { 92, typeof(GetFriendInfoPack) },
-            { 93, typeof(MusicSharePack) },
+            { 93, typeof(SendMusicSharePack) },
             { 94, typeof(GroupEssenceMessagePack) },
             { 95, typeof(MessageBuffPack) },
             { 96, typeof(SendFriendDicePack) },
