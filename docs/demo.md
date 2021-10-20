@@ -98,23 +98,36 @@ using Newtonsoft.Json;
 
 Robot robot = new();
 
-void Message(byte type, string data)
+void Message(byte type, object data)
 {
     switch (type)
     {
-        case 49:
-            var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
-            var temp = BuildPack.Build(new SendGroupMessagePack
+        case 46:
             {
-                qq = robot.QQs[0],
-                id = pack.id,
-                message = new()
+                var pack = data as NewFriendRequestEventPack;
+                var temp = BuildPack.Build(new EventCallPack
                 {
-                    $"{pack.fid} 你发送了消息 {pack.message[^1]}"
-                }
-            }, 52);
-            robot.AddTask(temp);
-            break;
+                    eventid = pack.eventid,
+                    dofun = 0,
+                }, 59);
+                robot.AddTask(temp);
+                break;
+            }
+        case 49:
+            {
+                var pack = data as GroupMessageEventPack;
+                var temp = BuildPack.Build(new SendGroupMessagePack
+                {
+                    qq = robot.QQs[0],
+                    id = pack.id,
+                    message = new()
+                    {
+                        $"{pack.fid} 你发送了消息 {pack.message[^1]}"
+                    }
+                }, 52);
+                robot.AddTask(temp);
+                break;
+            }
         case 50:
 
             break;
@@ -155,6 +168,34 @@ while (!robot.IsConnect) ;
 while (true)
 {
     string temp = Console.ReadLine();
+    string[] arg = temp.Split(' ');
+    switch (arg[0])
+    {
+        case "friends":
+            if (arg.Length != 2)
+            {
+                Console.WriteLine("错误的参数");
+                break;
+            }
+            if (!long.TryParse(arg[1], out long qq))
+            {
+                Console.WriteLine("错误的参数");
+                break;
+            }
+            robot.GetFriends(qq, (res) =>
+            {
+                Console.WriteLine($"{res.qq}的好友：");
+                foreach (var item in res.friends)
+                {
+                    Console.WriteLine($"{item.id} {item.remark}");
+                }
+            });
+            break;
+        case "groups":
+            break;
+        case "members":
+            break;
+    }
 }
 ```
 
