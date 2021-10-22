@@ -7,7 +7,7 @@
 目前的SDK代码
 
 [C#](../demo/C%23/netcore/BaseColormiraiSDK.cs)  
-[JAVA](../demo/JAVA/src/coloryr/colormirai/demo/RobotSDK/Robot.java)  
+[JAVA](../demo/JAVA/src/coloryr/colormirai/demo/RobotSDK/BaseRobot.java)  
 示例代码不包含Main函数，可以作为库用  
 
 ## 插件教程

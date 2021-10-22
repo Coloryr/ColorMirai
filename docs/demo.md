@@ -19,27 +19,34 @@
 static Robot Robot = new Robot();
 ```
 
-设置机器人回调，回调函数需要有byte, string两个参数  
+设置机器人回调，回调函数需要有byte, object两个参数  
 一个示例回调方法
 
 ```C#
-void Message(byte type, string data)
+void Message(byte type, object data)
 {
     switch (type)
     {
-        case 49:
-            var pack = JsonConvert.DeserializeObject<GroupMessageEventPack>(data);
-            var temp = BuildPack.Build(new SendGroupMessagePack
+        case 46:
             {
-                qq = robot.QQs[0],
-                id = pack.id,
-                message = new()
+                var pack = data as NewFriendRequestEventPack;
+                robot.NewFriendRequestCall(pack.qq, pack.eventid, Robot.FriendCallType.accept);
+                break;
+            }
+        case 49:
+            {
+                var pack = data as GroupMessageEventPack;
+                Console.WriteLine($"id = {pack.id}");
+                Console.WriteLine($"fid = {pack.fid}");
+                Console.WriteLine($"message = ");
+                foreach (var item in pack.message)
                 {
-                    $"{pack.fid} 你发送了消息 {pack.message[^1]}"
+                    Console.WriteLine(item);
                 }
-            }, 52);
-            robot.AddTask(temp);
-            break;
+                Console.WriteLine();
+                robot.SendGroupMessage(pack.qq, pack.id, new() { $"{pack.fid} 你发送了消息 {pack.message[^1]}" });
+                break;
+            }
         case 50:
 
             break;
@@ -92,9 +99,8 @@ Robot.Start();
 完整启动代码：
 
 ```C#
-using System;
 using ColoryrSDK;
-using Newtonsoft.Json;
+using System;
 
 Robot robot = new();
 
@@ -105,27 +111,21 @@ void Message(byte type, object data)
         case 46:
             {
                 var pack = data as NewFriendRequestEventPack;
-                var temp = BuildPack.Build(new EventCallPack
-                {
-                    eventid = pack.eventid,
-                    dofun = 0,
-                }, 59);
-                robot.AddTask(temp);
+                robot.NewFriendRequestCall(pack.qq, pack.eventid, Robot.FriendCallType.accept);
                 break;
             }
         case 49:
             {
                 var pack = data as GroupMessageEventPack;
-                var temp = BuildPack.Build(new SendGroupMessagePack
+                Console.WriteLine($"id = {pack.id}");
+                Console.WriteLine($"fid = {pack.fid}");
+                Console.WriteLine($"message = ");
+                foreach (var item in pack.message)
                 {
-                    qq = robot.QQs[0],
-                    id = pack.id,
-                    message = new()
-                    {
-                        $"{pack.fid} 你发送了消息 {pack.message[^1]}"
-                    }
-                }, 52);
-                robot.AddTask(temp);
+                    Console.WriteLine(item);
+                }
+                Console.WriteLine();
+                robot.SendGroupMessage(pack.qq, pack.id, new() { $"{pack.fid} 你发送了消息 {pack.message[^1]}" });
                 break;
             }
         case 50:
@@ -139,7 +139,6 @@ void Message(byte type, object data)
 
 void Log(LogType type, string data)
 {
-
     Console.WriteLine($"日志:{type} {data}");
 }
 
@@ -152,8 +151,9 @@ RobotConfig config = new()
 {
     IP = "127.0.0.1",
     Port = 23333,
-    Name = "Demo",
-    Pack = new() { 49, 50, 51 },
+    Name = "test",
+    Pack = new() { 46, 49, 50, 51 },
+    RunQQ = 0,
     Time = 10000,
     CallAction = Message,
     LogAction = Log,
@@ -195,6 +195,9 @@ while (true)
             break;
         case "members":
             break;
+        case "stop":
+            robot.Stop();
+            return;
     }
 }
 ```
@@ -208,135 +211,149 @@ while (true)
 
 创建机器人全局变量
 ```JAVA
-Robot Robot = new Robot();
+TopRobot robot = new TopRobot();
 ```
 
 实例化`RobotConfig`类
 
 ```JAVA
 RobotConfig Config = new RobotConfig() {{
-     Name = "Demo";
-     IP = "127.0.0.1";
-     Port = 23333;
-     Pack = new ArrayList<Byte>() {{
-        add(49);
-        add(50);
-        add(51);
-     }};
-     Groups = null;
-     QQs = null;
-     RunQQ = 0;
-     Time = 10000;
-     Check = true;
-     CallAction = (type, data) -> {
-        switch (type) {
-           case 49:
-              GroupMessageEventPack pack = JSON.parseObject(data, GroupMessageEventPack.class);
-              System.out.println("id = " + pack.id);
-              System.out.println("fid = " + pack.fid);
-              System.out.println("message = ");
-              for (String item : pack.message) {
-                 System.out.println(item);
-              }
-              System.out.println();
-              SendGroupMessagePack pack1 = new SendGroupMessagePack();
-              pack1.id = pack.id;
-              pack1.qq = robot.QQs.get(0);
-              pack1.message = new ArrayList<String>() {{
-                 add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
-              }};
-              robot.addTask(BuildPack.Build(pack1, 52));
-           break;
-        }
-     };
-     LogAction = (type, data) -> {
-     System.out.println("机器人日志:" + type.toString() + ":" + data);
-     };
-     StateAction = type -> {
-     System.out.println("机器人状态:" + type.toString());
-     };
-     }};
+   Name = "Demo";
+   IP = "127.0.0.1";
+   Port = 23333;
+   Pack = new ArrayList<Integer>() {{
+   this.add(46);
+   this.add(49);
+   this.add(50);
+   this.add(51);
+   }};
+   Groups = null;
+   QQs = null;
+   RunQQ = 0;
+   Time = 10000;
+   Check = true;
+   CallAction = ColoryrTest::messgae;
+   LogAction = ColoryrTest::log;
+   StateAction = ColoryrTest::state;
+}};
 ```
 
 根据需求填好参数后，实例化一个`Robot`类，并给机器人设置配置
 
 ```JAVA
-Robot.Set(Config);
+robot.Set(Config);
 ```
 
 启动机器人
 
 ```JAVA
-Robot.Start();
+robot.Start();
 ```
 
 完整启动代码：
 
 ```JAVA
-import Robot.Pack.FromPlugin.SendGroupMessagePack;
-import Robot.Pack.ToPlugin.GroupMessageEventPack;
-import Robot.*;
+package coloryr.colormirai.demo;
 
+import coloryr.colormirai.demo.RobotSDK.BuildPack;
+import coloryr.colormirai.demo.RobotSDK.BaseRobot;
+import coloryr.colormirai.demo.RobotSDK.RobotConfig;
+import coloryr.colormirai.demo.RobotSDK.TopRobot;
+import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
+import coloryr.colormirai.demo.RobotSDK.enums.LogType;
+import coloryr.colormirai.demo.RobotSDK.enums.StateType;
+import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
+import coloryr.colormirai.demo.RobotSDK.pack.from.SendGroupMessagePack;
+import coloryr.colormirai.demo.RobotSDK.pack.re.FriendInfoPack;
+import coloryr.colormirai.demo.RobotSDK.pack.to.GroupMessageEventPack;
+import coloryr.colormirai.demo.RobotSDK.pack.to.NewFriendRequestEventPack;
 import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ColoryrSDK {
+public class ColoryrTest {
+   private static TopRobot robot;
+
+   private static void messgae(byte type, PackBase data) {
+      switch (type) {
+         case 46:
+         {
+            NewFriendRequestEventPack pack  = (NewFriendRequestEventPack) data;
+            robot.NewFriendRequestCall(pack.qq, pack.eventid, FriendCallType.accept);
+            break;
+         }
+         case 49:
+            GroupMessageEventPack pack = (GroupMessageEventPack) data;
+            System.out.println("id = " + pack.id);
+            System.out.println("fid = " + pack.fid);
+            System.out.println("message = ");
+            for (String item : pack.message) {
+               System.out.println(item);
+            }
+            System.out.println();
+            robot.SendGroupMessage(pack.qq, pack.id, new ArrayList<String>(){{
+               this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
+            }});
+            break;
+      }
+   }
+
+   private static void log(LogType type, String data) {
+      System.out.println("机器人日志:" + type.toString() + ":" + data);
+   }
+
+   private static void state(StateType type) {
+      System.out.println("机器人状态:" + type.toString());
+   }
+
    public static void main(String[] arg) {
-      Robot robot = new Robot();
+      robot = new TopRobot();
       RobotConfig Config = new RobotConfig() {{
          Name = "Demo";
          IP = "127.0.0.1";
          Port = 23333;
          Pack = new ArrayList<Integer>() {{
-            add(49);
-            add(50);
-            add(51);
+            this.add(46);
+            this.add(49);
+            this.add(50);
+            this.add(51);
          }};
          Groups = null;
          QQs = null;
          RunQQ = 0;
          Time = 10000;
          Check = true;
-         CallAction = (type, data) -> {
-            switch (type) {
-               case 49:
-                  GroupMessageEventPack pack = JSON.parseObject(data, GroupMessageEventPack.class);
-                  System.out.println("id = " + pack.id);
-                  System.out.println("fid = " + pack.fid);
-                  System.out.println("message = ");
-                  for (String item : pack.message) {
-                     System.out.println(item);
-                  }
-                  System.out.println();
-                  SendGroupMessagePack pack1 = new SendGroupMessagePack();
-                  pack1.id = pack.id;
-                  pack1.qq = robot.QQs.get(0);
-                  pack1.message = new ArrayList<String>() {{
-                     add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
-                  }};
-                  robot.addTask(BuildPack.Build(pack1, 52));
-                  break;
-            }
-         };
-         LogAction = (type, data) -> {
-            System.out.println("机器人日志:" + type.toString() + ":" + data);
-         };
-         StateAction = type -> {
-            System.out.println("机器人状态:" + type.toString());
-         };
+         CallAction = ColoryrTest::messgae;
+         LogAction = ColoryrTest::log;
+         StateAction = ColoryrTest::state;
       }};
 
       robot.Set(Config);
-      robot.IsFirst = false;
       robot.Start();
       Scanner scanner = new Scanner(System.in);
-      for (; ; ) {
+      while (true) {
          String data = scanner.nextLine();
-         if (data.equals("stop")) {
+         String[] args = data.split(" ");
+         if (args[0].equals("stop")) {
             robot.Stop();
             return;
+         } else if (args[0].equals("friends")) {
+            if (arg.length != 2) {
+               System.out.println("错误的参数");
+               continue;
+            }
+            try {
+               long qq = Long.parseLong(args[1]);
+               robot.GetFriends(qq, (res) -> {
+                  System.out.println(res.qq + "的好友：");
+                  for (FriendInfoPack item : res.friends) {
+                     System.out.println(item.id + " " + item.remark);
+                  }
+               });
+            } catch (NumberFormatException e) {
+               System.out.println("错误的参数");
+            }
          }
       }
    }
