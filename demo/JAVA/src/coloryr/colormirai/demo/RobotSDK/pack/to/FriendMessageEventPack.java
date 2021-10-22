@@ -1,7 +1,10 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.SingleMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -16,4 +19,16 @@ public class FriendMessageEventPack extends PackBase {
     public List<String> message;
     public int time;
     public String name;
+
+    public FriendMessageEventPack(long qq, long id, MessageChain message, int time, String name) {
+        this.id = id;
+        this.qq = qq;
+        this.message = new ArrayList<>();
+        for (SingleMessage item : message) {
+            this.message.add(item.toString());
+        }
+        this.message.add(message.contentToString());
+        this.time = time;
+        this.name = name;
+    }
 }

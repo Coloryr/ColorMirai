@@ -1,11 +1,12 @@
 package coloryr.colormirai.demo.RobotSDK.pack.re;
 
-import coloryr.colormirai.demo.RobotSDK.pack.MemberPermission;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
+import net.mamoe.mirai.contact.MemberPermission;
 
 /*
 91 [插件]获取群成员信息
-id:QQ号码
+id:群号
+fid:群成员QQ号
 nick:昵称
 img:头像图片
 per:群权限
@@ -18,6 +19,7 @@ lastSpeakTimestamp:最后发言时间
  */
 public class MemberInfoPack extends PackBase {
     public long id;
+    public long fid;
     public String nick;
     public String img;
     public MemberPermission per;

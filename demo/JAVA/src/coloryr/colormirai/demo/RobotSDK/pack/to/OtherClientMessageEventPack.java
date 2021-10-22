@@ -1,7 +1,10 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.SingleMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -18,4 +21,17 @@ public class OtherClientMessageEventPack extends PackBase {
     public String deviceName;
     public String deviceKind;
     public List<String> message;
+
+    public OtherClientMessageEventPack(long qq, int appId, String platform, String deviceName, String deviceKind, MessageChain messages) {
+        this.qq = qq;
+        this.appId = appId;
+        this.deviceKind = deviceKind;
+        this.platform = platform;
+        this.deviceName = deviceName;
+        this.message = new ArrayList<>();
+        for (SingleMessage item : messages) {
+            this.message.add(item.toString());
+        }
+        this.message.add(messages.contentToString());
+    }
 }

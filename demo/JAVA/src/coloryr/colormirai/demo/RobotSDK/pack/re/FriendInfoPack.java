@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.re;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import coloryr.colormirai.demo.RobotSDK.pack.UserProfile;
+import net.mamoe.mirai.data.UserProfile;
 
 /*
 92 [插件]获取朋友信息

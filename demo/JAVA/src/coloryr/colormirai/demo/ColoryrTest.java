@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo;
 
 import coloryr.colormirai.demo.RobotSDK.BuildPack;
-import coloryr.colormirai.demo.RobotSDK.Robot;
+import coloryr.colormirai.demo.RobotSDK.BaseRobot;
 import coloryr.colormirai.demo.RobotSDK.RobotConfig;
 import coloryr.colormirai.demo.RobotSDK.pack.from.SendGroupMessagePack;
 import coloryr.colormirai.demo.RobotSDK.pack.to.GroupMessageEventPack;
@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class ColoryrTest {
     public static void main(String[] arg) {
-        Robot robot = new Robot();
+        BaseRobot robot = new BaseRobot();
         RobotConfig Config = new RobotConfig() {{
             Name = "Demo";
             IP = "127.0.0.1";
@@ -57,7 +57,7 @@ public class ColoryrTest {
         }};
 
         robot.Set(Config);
-        robot.IsFirst = false;
+        robot.isFirst = false;
         robot.Start();
         Scanner scanner = new Scanner(System.in);
         for (; ; ) {

@@ -1,6 +1,6 @@
 package coloryr.colormirai.demo.RobotSDK.pack.re;
 
-import coloryr.colormirai.demo.RobotSDK.pack.MemberPermission;
+import net.mamoe.mirai.contact.MemberPermission;
 
 /*
 id:群号

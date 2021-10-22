@@ -198,13 +198,13 @@ public class ThePlugin {
                         }
                         //65 [插件]禁言群员
                         case 65: {
-                            GroupMemberMutePack pack = JSON.parseObject(task.data, GroupMemberMutePack.class);
+                            GroupMuteMemberPack pack = JSON.parseObject(task.data, GroupMuteMemberPack.class);
                             BotGroupDo.MuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
-                            GroupMemberUnmutePack pack = JSON.parseObject(task.data, GroupMemberUnmutePack.class);
+                            GroupUnmuteMemberPack pack = JSON.parseObject(task.data, GroupUnmuteMemberPack.class);
                             BotGroupDo.UnmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
@@ -378,7 +378,7 @@ public class ThePlugin {
                         }
                         //101 [插件]获取群文件
                         case 101: {
-                            GetGroupFilesPack pack = JSON.parseObject(task.data, GetGroupFilesPack.class);
+                            GroupGetFilesPack pack = JSON.parseObject(task.data, GroupGetFilesPack.class);
                             List<GroupFileInfo> data = BotGroupFile.getFiles(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
@@ -398,7 +398,7 @@ public class ThePlugin {
                         }
                         //103 [插件]重命名群文件
                         case 103: {
-                            GroupRemoveFilePack pack = JSON.parseObject(task.data, GroupRemoveFilePack.class);
+                            GroupRenameFilePack pack = JSON.parseObject(task.data, GroupRenameFilePack.class);
                             BotGroupFile.renameFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.now);
                             break;
                         }
@@ -410,7 +410,7 @@ public class ThePlugin {
                         }
                         //105 [插件]删除群文件文件夹
                         case 105: {
-                            GroupRemoveDirPack pack = JSON.parseObject(task.data, GroupRemoveDirPack.class);
+                            GroupDeleteDirPack pack = JSON.parseObject(task.data, GroupDeleteDirPack.class);
                             BotGroupFile.removeGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
                             break;
                         }
@@ -466,12 +466,12 @@ public class ThePlugin {
                         }
                         //110 [插件]设置群公告
                         case 110: {
-                            GroupSetAnnouncementsPack pack = JSON.parseObject(task.data, GroupSetAnnouncementsPack.class);
+                            GroupAddAnnouncementPack pack = JSON.parseObject(task.data, GroupAddAnnouncementPack.class);
                             BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
                         }
                         //111 [插件]删除群公告
                         case 111: {
-                            GroupRemoveAnnouncementsPack pack = JSON.parseObject(task.data, GroupRemoveAnnouncementsPack.class);
+                            GroupDeleteAnnouncementPack pack = JSON.parseObject(task.data, GroupDeleteAnnouncementPack.class);
                             BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                         }
                         //112 [插件]发送好友语言文件

@@ -1,6 +1,5 @@
 package coloryr.colormirai.demo.RobotSDK.pack.re;
 
-import coloryr.colormirai.demo.RobotSDK.pack.GroupAnnouncement;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
 
 import java.util.List;

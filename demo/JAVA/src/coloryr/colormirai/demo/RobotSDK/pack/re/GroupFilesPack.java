@@ -11,5 +11,5 @@ files:文件列表
  */
 public class GroupFilesPack extends PackBase {
     public long id;
-    public List<String> files;
+    public List<GroupFileInfo> files;
 }

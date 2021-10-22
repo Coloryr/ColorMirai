@@ -1209,7 +1209,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 57 [插件]获取群成员
     /// </summary>
-    public record GetGroupMemberInfoPack : PackBase
+    public record GroupGetMemberInfoPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1219,7 +1219,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 58 [插件]获取群设置
     /// </summary>
-    public record GetGroupSettingPack : PackBase
+    public record GroupGetSettingPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1247,7 +1247,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 64 [插件]删除群员
     /// </summary>
-    public record GroupDeleteMemberPack : PackBase
+    public record GroupKickMemberPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1261,7 +1261,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 65 [插件]禁言群员
     /// </summary>
-    public record GroupMemberMutePack : PackBase
+    public record GroupMuteMemberPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1279,7 +1279,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 66 [插件]解除禁言
     /// </summary>
-    public record GroupMemberUnmutePack : PackBase
+    public record GroupUnmuteMemberPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1859,7 +1859,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 105 [插件]删除群文件文件夹
     /// </summary>
-    public record GroupRemoveDirPack : PackBase
+    public record GroupDeleteDirPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1937,7 +1937,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 110 [插件]设置群公告
     /// </summary>
-    public record GroupSetAnnouncementPack : PackBase
+    public record GroupAddAnnouncementPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -1975,7 +1975,7 @@ namespace ColoryrSDK
     /// <summary>
     /// 111 [插件]删除群公告
     /// </summary>
-    public record GroupRemoveAnnouncementPack : PackBase
+    public record GroupDeleteAnnouncementPack : PackBase
     {
         /// <summary>
         /// 群号
@@ -2065,31 +2065,6 @@ namespace ColoryrSDK
             data[^1] = index;
             return data;
         }
-        /// <summary>
-        /// 构建消息队列物图片包
-        /// </summary>
-        /// <param name="qq">运行的qq号</param>
-        /// <param name="id">发送给的id</param>
-        /// <param name="fid">发送给的fid</param>
-        /// <param name="type">消息类型</param>
-        /// <param name="img">图片BASE64流</param>
-        /// <returns>构建好的包</returns>
-        public static byte[] BuildBuffImage(long qq, long id, long fid, int type, string img, bool send)
-        {
-            string temp = "";
-            if (id != 0)
-            {
-                temp += $"id={id}&";
-            }
-            if (fid != 0)
-            {
-                temp += $"fid={fid}&";
-            }
-            temp += $"qq={qq}&img={img}&type={type}&send={send}";
-            byte[] data = Encoding.UTF8.GetBytes(temp + " ");
-            data[^1] = 97;
-            return data;
-        }
     }
 
     public record RobotConfig
@@ -2155,7 +2130,7 @@ namespace ColoryrSDK
 
     public static class RobotSDK
     {
-        public static readonly Dictionary<int, Type> PackType = new()
+        public static readonly Dictionary<byte, Type> PackType = new()
         {
             { 1, typeof(BeforeImageUploadPack) },
             { 2, typeof(BotAvatarChangedPack) },
@@ -2213,13 +2188,13 @@ namespace ColoryrSDK
             { 54, typeof(SendFriendMessagePack) },
             { 55, typeof(GetPack) },
             { 56, typeof(GetPack) },
-            { 57, typeof(GetGroupMemberInfoPack) },
-            { 58, typeof(GetGroupSettingPack) },
+            { 57, typeof(GroupGetMemberInfoPack) },
+            { 58, typeof(GroupGetSettingPack) },
             { 59, typeof(EventCallPack) },
             //60-63无
-            { 64, typeof(GroupDeleteMemberPack) },
-            { 65, typeof(GroupMemberMutePack) },
-            { 66, typeof(GroupMemberUnmutePack) },
+            { 64, typeof(GroupKickMemberPack) },
+            { 65, typeof(GroupMuteMemberPack) },
+            { 66, typeof(GroupUnmuteMemberPack) },
             { 67, typeof(GroupMuteAllPack) },
             { 68, typeof(GroupUnmuteAllPack) },
             { 69, typeof(GroupSetMemberCard) },
@@ -2258,13 +2233,13 @@ namespace ColoryrSDK
             { 102, typeof(GroupMoveFilePack) },
             { 103, typeof(GroupRenameFilePack) },
             { 104, typeof(GroupAddDirPack) },
-            { 105, typeof(GroupRemoveDirPack) },
+            { 105, typeof(GroupDeleteDirPack) },
             { 106, typeof(GroupRenameDirPack) },
             { 107, typeof(GroupDownloadFilePack) },
             { 108, typeof(GroupSetAdminPack) },
             { 109, typeof(GroupGetAnnouncementsPack) },
-            { 110, typeof(GroupSetAnnouncementPack) },
-            { 111, typeof(GroupRemoveAnnouncementPack) },
+            { 110, typeof(GroupAddAnnouncementPack) },
+            { 111, typeof(GroupDeleteAnnouncementPack) },
             { 112, typeof(SendFriendSoundFilePack) },
             { 113, typeof(GroupDisbandPack) }
         };
@@ -2305,7 +2280,7 @@ namespace ColoryrSDK
         private StartPack PackStart;
         private RobotConfig Config;
 
-        private partial void CallTop(byte index, string data);
+        private partial bool CallTop(byte index, string data);
 
         /// <summary>
         /// 第一次连接检查
@@ -2353,7 +2328,8 @@ namespace ColoryrSDK
                         {
                             if (task.Index == 60)
                                 continue;
-                            CallTop(task.Index, task.Data);
+                            if (CallTop(task.Index, task.Data))
+                                continue;
                             if (RobotSDK.PackType.TryGetValue(task.Index, out var type))
                             {
                                 RobotCallEvent.Invoke(task.Index, JsonConvert.DeserializeObject(task.Data, type));
@@ -2475,6 +2451,10 @@ namespace ColoryrSDK
             LogOut("机器人已连接");
             IsConnect = true;
         }
+        /// <summary>
+        /// 添加数据包
+        /// </summary>
+        /// <param name="data">数据包</param>
         public void AddTask(byte[] data)
         {
             QueueSend.Add(data);
@@ -2486,6 +2466,9 @@ namespace ColoryrSDK
             var data = BuildPack.Build(new object(), 127);
             Socket.Send(data);
         }
+        /// <summary>
+        /// 停止机器人
+        /// </summary>
         public void Stop()
         {
             LogOut("机器人正在断开");

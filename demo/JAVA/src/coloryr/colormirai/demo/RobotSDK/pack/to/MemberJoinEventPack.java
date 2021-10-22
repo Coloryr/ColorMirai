@@ -20,4 +20,3 @@ public class MemberJoinEventPack extends PackBase {
         this.name = name;
     }
 }
-

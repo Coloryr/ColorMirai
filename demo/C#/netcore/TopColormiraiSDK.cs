@@ -31,84 +31,108 @@ namespace ColoryrSDK
         private readonly Dictionary<QQFriend, Action<FriendInfoPack>> GetFriendInfoMap = new();
         private readonly Dictionary<QQGroup, Action<GroupFilesPack>> GetGroupFilesMap = new();
         private readonly Dictionary<QQGroup, Action<GroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
-        private partial void CallTop(byte index, string data)
+        private partial bool CallTop(byte index, string data)
         {
-            if (index == 55)
+            switch (index)
             {
-                var pack = JsonConvert.DeserializeObject<ListGroupPack>(data);
-                if (GetGroupsMap.TryGetValue(pack.qq, out var action))
-                {
-                    GetGroupsMap.Remove(pack.qq);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 56)
-            {
-                var pack = JsonConvert.DeserializeObject<ListFriendPack>(data);
-                if (GetFriendsMap.TryGetValue(pack.qq, out var action))
-                {
-                    GetFriendsMap.Remove(pack.qq);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 57)
-            {
-                var pack = JsonConvert.DeserializeObject<ListMemberPack>(data);
-                var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
-                if (GetMembersMap.TryGetValue(key, out var action))
-                {
-                    GetMembersMap.Remove(key);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 90)
-            {
-                var pack = JsonConvert.DeserializeObject<ReImagePack>(data);
-                if (GetImageUrlMap.TryGetValue(pack.uuid, out var action))
-                {
-                    GetImageUrlMap.Remove(pack.uuid);
-                    action.Invoke(pack.url);
-                }
-            }
-            else if (index == 91)
-            {
-                var pack = JsonConvert.DeserializeObject<MemberInfoPack>(data);
-                var key = new QQMember() { QQ = pack.qq, Group = pack.id, Member = pack.fid };
-                if (GetMemberInfoMap.TryGetValue(key, out var action))
-                {
-                    GetMemberInfoMap.Remove(key);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 92)
-            {
-                var pack = JsonConvert.DeserializeObject<FriendInfoPack>(data);
-                var key = new QQFriend() { QQ = pack.qq, Friend = pack.id };
-                if (GetFriendInfoMap.TryGetValue(key, out var action))
-                {
-                    GetFriendInfoMap.Remove(key);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 101)
-            {
-                var pack = JsonConvert.DeserializeObject<GroupFilesPack>(data);
-                var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
-                if (GetGroupFilesMap.TryGetValue(key, out var action))
-                {
-                    GetGroupFilesMap.Remove(key);
-                    action.Invoke(pack);
-                }
-            }
-            else if (index == 109)
-            {
-                var pack = JsonConvert.DeserializeObject<GroupAnnouncementsPack>(data);
-                var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
-                if (GetGroupAnnouncementsMap.TryGetValue(key, out var action))
-                {
-                    GetGroupAnnouncementsMap.Remove(key);
-                    action.Invoke(pack);
-                }
+                case 55:
+                    {
+                        var pack = JsonConvert.DeserializeObject<ListGroupPack>(data);
+                        if (GetGroupsMap.TryGetValue(pack.qq, out var action))
+                        {
+                            GetGroupsMap.Remove(pack.qq);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 56:
+                    {
+                        var pack = JsonConvert.DeserializeObject<ListFriendPack>(data);
+                        if (GetFriendsMap.TryGetValue(pack.qq, out var action))
+                        {
+                            GetFriendsMap.Remove(pack.qq);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 57:
+                    {
+                        var pack = JsonConvert.DeserializeObject<ListMemberPack>(data);
+                        var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                        if (GetMembersMap.TryGetValue(key, out var action))
+                        {
+                            GetMembersMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 58:
+                    {
+                        var pack = JsonConvert.DeserializeObject<GroupSettingPack>(data);
+                        var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                        if (GetGroupSettingMap.TryGetValue(key, out var action))
+                        {
+                            GetGroupSettingMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 90:
+                    {
+                        var pack = JsonConvert.DeserializeObject<ReImagePack>(data);
+                        if (GetImageUrlMap.TryGetValue(pack.uuid, out var action))
+                        {
+                            GetImageUrlMap.Remove(pack.uuid);
+                            action.Invoke(pack.url);
+                        }
+                        return true;
+                    }
+                case 91:
+                    {
+                        var pack = JsonConvert.DeserializeObject<MemberInfoPack>(data);
+                        var key = new QQMember() { QQ = pack.qq, Group = pack.id, Member = pack.fid };
+                        if (GetMemberInfoMap.TryGetValue(key, out var action))
+                        {
+                            GetMemberInfoMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 92:
+                    {
+                        var pack = JsonConvert.DeserializeObject<FriendInfoPack>(data);
+                        var key = new QQFriend() { QQ = pack.qq, Friend = pack.id };
+                        if (GetFriendInfoMap.TryGetValue(key, out var action))
+                        {
+                            GetFriendInfoMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 101:
+                    {
+                        var pack = JsonConvert.DeserializeObject<GroupFilesPack>(data);
+                        var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                        if (GetGroupFilesMap.TryGetValue(key, out var action))
+                        {
+                            GetGroupFilesMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                case 109:
+                    {
+                        var pack = JsonConvert.DeserializeObject<GroupAnnouncementsPack>(data);
+                        var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                        if (GetGroupAnnouncementsMap.TryGetValue(key, out var action))
+                        {
+                            GetGroupAnnouncementsMap.Remove(key);
+                            action.Invoke(pack);
+                        }
+                        return true;
+                    }
+                default:
+                    return false;
             }
         }
         /// <summary>
@@ -149,7 +173,7 @@ namespace ColoryrSDK
         {
             var key = new QQGroup() { QQ = qq, Group = group };
             GetMembersMap.Add(key, res);
-            var data = BuildPack.Build(new GetGroupMemberInfoPack()
+            var data = BuildPack.Build(new GroupGetMemberInfoPack()
             {
                 qq = qq,
                 id = group
@@ -166,7 +190,7 @@ namespace ColoryrSDK
         {
             var key = new QQGroup() { QQ = qq, Group = group };
             GetGroupSettingMap.Add(key, res);
-            var data = BuildPack.Build(new GetGroupSettingPack()
+            var data = BuildPack.Build(new GroupGetSettingPack()
             {
                 qq = qq,
                 id = group
@@ -300,7 +324,7 @@ namespace ColoryrSDK
         /// <param name="member">群员</param>
         public void GroupDeleteMember(long qq, long group, long member)
         {
-            var data = BuildPack.Build(new GroupDeleteMemberPack()
+            var data = BuildPack.Build(new GroupKickMemberPack()
             {
                 qq = qq,
                 id = group,
@@ -317,7 +341,7 @@ namespace ColoryrSDK
         /// <param name="member">群员</param>
         public void GroupMemberMute(long qq, long group, long member, int time)
         {
-            var data = BuildPack.Build(new GroupMemberMutePack()
+            var data = BuildPack.Build(new GroupMuteMemberPack()
             {
                 qq = qq,
                 id = group,
@@ -335,7 +359,7 @@ namespace ColoryrSDK
         /// <param name="member">群员</param>
         public void GroupMemberUnmute(long qq, long group, long member)
         {
-            var data = BuildPack.Build(new GroupMemberUnmutePack()
+            var data = BuildPack.Build(new GroupUnmuteMemberPack()
             {
                 qq = qq,
                 id = group,
@@ -834,7 +858,7 @@ namespace ColoryrSDK
         /// <param name="dir">文件夹名字</param>
         public void GroupRemoveDir(long qq, long group, string dir)
         {
-            var data = BuildPack.Build(new GroupRemoveDirPack()
+            var data = BuildPack.Build(new GroupDeleteDirPack()
             {
                 qq = qq,
                 id = group,
@@ -925,7 +949,7 @@ namespace ColoryrSDK
             bool sendToNewMember, bool isPinned, bool showEditCard,
             bool showPopup, bool requireConfirmation, string text)
         {
-            var data = BuildPack.Build(new GroupSetAnnouncementPack()
+            var data = BuildPack.Build(new GroupAddAnnouncementPack()
             {
                 qq = qq,
                 id = group,
@@ -948,7 +972,7 @@ namespace ColoryrSDK
         /// <param name="fid">公告ID</param>
         public void GroupRemoveAnnouncement(long qq, long  group, string fid)
         {
-            var data = BuildPack.Build(new GroupRemoveAnnouncementPack()
+            var data = BuildPack.Build(new GroupDeleteAnnouncementPack()
             {
                 qq = qq,
                 id = group,
