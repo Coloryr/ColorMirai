@@ -198,6 +198,22 @@ namespace ColoryrSDK
             AddTask(data);
         }
         /// <summary>
+        /// 54 [插件]发送好友消息
+        /// </summary>
+        /// <param name="qq">qq号</param>
+        /// <param name="friend">好友QQ号</param>
+        /// <param name="message">消息</param>
+        public void SendFriendMessage(long qq, long friend, List<string> message)
+        {
+            var data = BuildPack.Build(new SendFriendMessagePack()
+            {
+                qq = qq,
+                id = friend,
+                message = message
+            }, 54);
+            AddTask(data);
+        }
+        /// <summary>
         /// 52 [插件]发送群消息
         /// </summary>
         /// <param name="qq">qq号</param>
@@ -339,7 +355,8 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
         /// <param name="member">群员</param>
-        public void GroupMemberMute(long qq, long group, long member, int time)
+        /// <param name="time">禁言时间</param>
+        public void GroupMuteMember(long qq, long group, long member, int time)
         {
             var data = BuildPack.Build(new GroupMuteMemberPack()
             {
@@ -357,7 +374,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
         /// <param name="member">群员</param>
-        public void GroupMemberUnmute(long qq, long group, long member)
+        public void GroupUnmuteMember(long qq, long group, long member)
         {
             var data = BuildPack.Build(new GroupUnmuteMemberPack()
             {
@@ -510,7 +527,7 @@ namespace ColoryrSDK
         /// <param name="file">文件位置</param>
         public void SendGroupSoundFile(long qq, long group, string file)
         {
-            var data = BuildPack.Build(new SendFriendImageFilePack()
+            var data = BuildPack.Build(new SendGroupSoundFilePack()
             {
                 qq = qq,
                 id = group,
@@ -573,6 +590,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
         /// <param name="member">群员</param>
+        /// <param name="res">返回回调</param>
         public void GetMemberInfo(long qq, long group, long member, Action<MemberInfoPack> res)
         {
             var key = new QQMember() { QQ = qq, Group = group, Member = member };
@@ -653,7 +671,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
         /// <param name="mid">消息ID</param>
-        public void GroupSetEssenceMessage(long qq, long group, long mid)
+        public void GroupSetEssenceMessage(long qq, long group, int mid)
         {
             var data = BuildPack.Build(new GroupSetEssenceMessagePack()
             {
@@ -670,6 +688,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="id">发送目标</param>
         /// <param name="fid">发送目标</param>
+        /// <param name="type">发送目标</param>
         /// <param name="file">图片文件位置</param>
         /// <param name="message">消息内容</param>
         /// <param name="send">是否发送</param>

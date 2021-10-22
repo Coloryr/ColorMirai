@@ -1685,7 +1685,7 @@ namespace ColoryrSDK
         /// <summary>
         /// 消息ID
         /// </summary>
-        public long mid { get; set; }
+        public int mid { get; set; }
     }
     /// <summary>
     /// 95 [插件]消息队列
