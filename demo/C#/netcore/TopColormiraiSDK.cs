@@ -688,7 +688,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="id">发送目标</param>
         /// <param name="fid">发送目标</param>
-        /// <param name="type">发送目标</param>
+        /// <param name="type">发送目标类型</param>
         /// <param name="file">图片文件位置</param>
         /// <param name="message">消息内容</param>
         /// <param name="send">是否发送</param>

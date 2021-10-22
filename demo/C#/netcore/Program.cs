@@ -10,27 +10,21 @@ void Message(byte type, object data)
         case 46:
             {
                 var pack = data as NewFriendRequestEventPack;
-                var temp = BuildPack.Build(new EventCallPack
-                {
-                    eventid = pack.eventid,
-                    dofun = 0,
-                }, 59);
-                robot.AddTask(temp);
+                robot.NewFriendRequestCall(pack.qq, pack.eventid, Robot.FriendCallType.accept);
                 break;
             }
         case 49:
             {
                 var pack = data as GroupMessageEventPack;
-                var temp = BuildPack.Build(new SendGroupMessagePack
+                Console.WriteLine($"id = {pack.id}");
+                Console.WriteLine($"fid = {pack.fid}");
+                Console.WriteLine($"message = ");
+                foreach (var item in pack.message)
                 {
-                    qq = robot.QQs[0],
-                    id = pack.id,
-                    message = new()
-                    {
-                        $"{pack.fid} 你发送了消息 {pack.message[^1]}"
-                    }
-                }, 52);
-                robot.AddTask(temp);
+                    Console.WriteLine(item);
+                }
+                Console.WriteLine();
+                robot.SendGroupMessage(pack.qq, pack.id, new() { $"{pack.fid} 你发送了消息 {pack.message[^1]}" });
                 break;
             }
         case 50:
@@ -44,7 +38,6 @@ void Message(byte type, object data)
 
 void Log(LogType type, string data)
 {
-
     Console.WriteLine($"日志:{type} {data}");
 }
 
@@ -101,5 +94,8 @@ while (true)
             break;
         case "members":
             break;
+        case "stop":
+            robot.Stop();
+            return;
     }
 }

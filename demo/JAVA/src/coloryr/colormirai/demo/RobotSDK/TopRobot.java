@@ -1,15 +1,11 @@
 package coloryr.colormirai.demo.RobotSDK;
 
 import coloryr.colormirai.demo.RobotSDK.api.*;
-import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
-import coloryr.colormirai.demo.RobotSDK.enums.GroupCallType;
-import coloryr.colormirai.demo.RobotSDK.enums.MusicKind;
-import coloryr.colormirai.demo.RobotSDK.enums.SendToType;
+import coloryr.colormirai.demo.RobotSDK.enums.*;
 import coloryr.colormirai.demo.RobotSDK.pack.from.*;
 import coloryr.colormirai.demo.RobotSDK.pack.re.*;
 import com.alibaba.fastjson.JSON;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -777,12 +773,39 @@ public class TopRobot extends BaseRobot {
         addTask(data);
     }
 
-    public void SendGroupPrivateDice(long qq_, long group_, long member_,int dice_) {
-        byte[] data = BuildPack.Build(new SendGroupDicePack() {{
+    /**
+     * 98 [插件]发送群私聊骰子
+     *
+     * @param qq_     qq号
+     * @param group_  群号
+     * @param member_ 群成员
+     * @param dice_   点数
+     */
+    public void SendGroupPrivateDice(long qq_, long group_, long member_, int dice_) {
+        byte[] data = BuildPack.Build(new SendGroupPrivateDicePack() {{
             this.qq = qq_;
             this.id = group_;
+            this.fid = member_;
             this.dice = dice_;
-        }}, 97);
+        }}, 98);
+        addTask(data);
+    }
+
+    /**
+     * 99 [插件]上传群文件
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param file_  文件路径
+     * @param name_  群文件名称
+     */
+    public void GroupAddFilePack(long qq_, long group_, String file_, String name_) {
+        byte[] data = BuildPack.Build(new GroupAddFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.file = file_;
+            this.name = name_;
+        }}, 99);
         addTask(data);
     }
 }
