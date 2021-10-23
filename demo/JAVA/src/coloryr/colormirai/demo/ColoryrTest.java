@@ -1,18 +1,14 @@
 package coloryr.colormirai.demo;
 
-import coloryr.colormirai.demo.RobotSDK.BuildPack;
-import coloryr.colormirai.demo.RobotSDK.BaseRobot;
 import coloryr.colormirai.demo.RobotSDK.RobotConfig;
 import coloryr.colormirai.demo.RobotSDK.TopRobot;
 import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
 import coloryr.colormirai.demo.RobotSDK.enums.LogType;
 import coloryr.colormirai.demo.RobotSDK.enums.StateType;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import coloryr.colormirai.demo.RobotSDK.pack.from.SendGroupMessagePack;
 import coloryr.colormirai.demo.RobotSDK.pack.re.FriendInfoPack;
 import coloryr.colormirai.demo.RobotSDK.pack.to.GroupMessageEventPack;
 import coloryr.colormirai.demo.RobotSDK.pack.to.NewFriendRequestEventPack;
-import com.alibaba.fastjson.JSON;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -22,10 +18,9 @@ public class ColoryrTest {
 
     private static void messgae(byte type, PackBase data) {
         switch (type) {
-            case 46:
-            {
-                NewFriendRequestEventPack pack  = (NewFriendRequestEventPack) data;
-                robot.NewFriendRequestCall(pack.qq, pack.eventid, FriendCallType.accept);
+            case 46: {
+                NewFriendRequestEventPack pack = (NewFriendRequestEventPack) data;
+                robot.newFriendRequestCall(pack.qq, pack.eventid, FriendCallType.accept);
                 break;
             }
             case 49:
@@ -37,7 +32,7 @@ public class ColoryrTest {
                     System.out.println(item);
                 }
                 System.out.println();
-                robot.SendGroupMessage(pack.qq, pack.id, new ArrayList<String>(){{
+                robot.sendGroupMessage(pack.qq, pack.id, new ArrayList<String>() {{
                     this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
                 }});
                 break;
@@ -90,7 +85,7 @@ public class ColoryrTest {
                 }
                 try {
                     long qq = Long.parseLong(args[1]);
-                    robot.GetFriends(qq, (res) -> {
+                    robot.getFriends(qq, (res) -> {
                         System.out.println(res.qq + "的好友：");
                         for (FriendInfoPack item : res.friends) {
                             System.out.println(item.id + " " + item.remark);

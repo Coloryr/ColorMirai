@@ -7,7 +7,8 @@ import java.nio.charset.StandardCharsets;
 public class BuildPack {
     /**
      * 构建一个包
-     * @param data 对象
+     *
+     * @param data  对象
      * @param index 包ID
      * @return 构建好的包
      */
@@ -20,10 +21,11 @@ public class BuildPack {
 
     /**
      * 构建一个图片发送包
-     * @param qq 运行qq
-     * @param id 发给群的号码
-     * @param fid 发给朋友的qq号
-     * @param img 图片BASE64流
+     *
+     * @param qq    运行qq
+     * @param id    发给群的号码
+     * @param fid   发给朋友的qq号
+     * @param img   图片BASE64流
      * @param index 包ID
      * @return 构建好的包
      */
@@ -43,8 +45,9 @@ public class BuildPack {
 
     /**
      * 构建一个发送语音的包
-     * @param qq 运行的qq号
-     * @param id 发送给的id
+     *
+     * @param qq    运行的qq号
+     * @param id    发送给的id
      * @param sound 音频BASE64
      * @param index 包ID
      * @return 构建好的包

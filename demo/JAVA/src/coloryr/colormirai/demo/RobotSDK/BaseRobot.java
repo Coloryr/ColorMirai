@@ -60,13 +60,13 @@ public class BaseRobot {
     private RobotConfig config;
     private int times = 0;
 
-    protected boolean CallTop(byte index, String data)
-    {
+    protected boolean callTop(byte index, String data) {
         return false;
     }
 
     /**
      * 设置配置
+     *
      * @param config 机器人配置
      */
     public void Set(RobotConfig config) {
@@ -102,14 +102,12 @@ public class BaseRobot {
                     if (task != null) {
                         if (task.index == 60)
                             continue;
-                        if(CallTop(task.index, task.data))
+                        if (callTop(task.index, task.data))
                             continue;
                         if (RobotSDK.PackType.containsKey(task.index)) {
                             Class<? extends PackBase> class1 = RobotSDK.PackType.get(task.index);
                             robotCallEvent.CallAction(task.index, JSON.parseObject(task.data, class1));
-                        }
-                        else
-                        {
+                        } else {
                             LogError("不认识的数据包" + task.index);
                         }
                     }
@@ -144,12 +142,11 @@ public class BaseRobot {
                         byte type = data[data.length - 1];
                         data[data.length - 1] = 0;
                         queueRead.add(new RobotTask(type, new String(data, StandardCharsets.UTF_8)));
-                    } else if (config.Check && time >= 20)
-                    {
+                    } else if (config.Check && time >= 20) {
                         time = 0;
                         byte[] temp = BuildPack.Build(new Object(), 60);
                         addTask(temp);
-                    } else if ((data = queueSend.poll())!=null) {
+                    } else if ((data = queueSend.poll()) != null) {
                         socket.getOutputStream().write(data);
                         socket.getOutputStream().flush();
                     }
@@ -249,6 +246,7 @@ public class BaseRobot {
 
     /**
      * 添加数据包
+     *
      * @param data 数据包
      */
     public void addTask(byte[] data) {

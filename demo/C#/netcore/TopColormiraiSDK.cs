@@ -785,7 +785,7 @@ namespace ColoryrSDK
         /// </summary>
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
-        /// <param name="name">群文件ID</param>
+        /// <param name="fid">群文件ID</param>
         public void GroupDeleteFile(long qq, long group, string fid)
         {
             var data = BuildPack.Build(new GroupDeleteFilePack()
@@ -802,6 +802,7 @@ namespace ColoryrSDK
         /// </summary>
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
+        /// <param name="res">回调</param>
         public void GroupGetFiles(long qq, long group, Action<GroupFilesPack> res)
         {
             var key = new QQGroup() { QQ = qq, Group = group };
@@ -947,6 +948,7 @@ namespace ColoryrSDK
         /// </summary>
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
+        /// <param name="res">回调</param>
         public void GroupGetAnnouncements(long qq, long group, Action<GroupAnnouncementsPack> res)
         {
             var key = new QQGroup() { QQ = qq, Group = group };
@@ -964,9 +966,16 @@ namespace ColoryrSDK
         /// </summary>
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
-        public void GroupSetAnnouncement(long qq, long group, string imageFile,
-            bool sendToNewMember, bool isPinned, bool showEditCard,
-            bool showPopup, bool requireConfirmation, string text)
+        /// <param name="imageFile">图片路径</param>
+        /// <param name="sendToNewMember">发送给新群员</param>
+        /// <param name="isPinned">顶置</param>
+        /// <param name="showEditCard">显示能够引导群成员修改昵称的窗口</param>
+        /// <param name="showPopup">使用弹窗</param>
+        /// <param name="requireConfirmation">需要群成员确认</param>
+        /// <param name="text">公告内容</param>
+        public void GroupAddAnnouncement(long qq, long group, string imageFile, string text,
+            bool sendToNewMember = false, bool isPinned = false, bool showEditCard = false,
+            bool showPopup = false, bool requireConfirmation = false)
         {
             var data = BuildPack.Build(new GroupAddAnnouncementPack()
             {
@@ -989,7 +998,7 @@ namespace ColoryrSDK
         /// <param name="qq">qq号</param>
         /// <param name="group">群号</param>
         /// <param name="fid">公告ID</param>
-        public void GroupRemoveAnnouncement(long qq, long  group, string fid)
+        public void GroupRemoveAnnouncement(long qq, long group, string fid)
         {
             var data = BuildPack.Build(new GroupDeleteAnnouncementPack()
             {

@@ -1,7 +1,10 @@
 package coloryr.colormirai.demo.RobotSDK;
 
 import coloryr.colormirai.demo.RobotSDK.api.*;
-import coloryr.colormirai.demo.RobotSDK.enums.*;
+import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
+import coloryr.colormirai.demo.RobotSDK.enums.GroupCallType;
+import coloryr.colormirai.demo.RobotSDK.enums.MusicKind;
+import coloryr.colormirai.demo.RobotSDK.enums.SendToType;
 import coloryr.colormirai.demo.RobotSDK.pack.from.*;
 import coloryr.colormirai.demo.RobotSDK.pack.re.*;
 import com.alibaba.fastjson.JSON;
@@ -59,31 +62,31 @@ class QQFriend {
 }
 
 public class TopRobot extends BaseRobot {
-    private final Map<Long, IListFriend> GetFriendsMap = new HashMap<>();
-    private final Map<QQGroup, IListMember> GetMembersMap = new HashMap<>();
-    private final Map<QQGroup, IGroupSetting> GetGroupSettingMap = new HashMap<>();
-    private final Map<Long, IListGroup> GetGroupsMap = new HashMap<>();
-    private final Map<String, IImageUrls> GetImageUrlMap = new HashMap<>();
-    private final Map<QQMember, IMemberInfo> GetMemberInfoMap = new HashMap<>();
-    private final Map<QQFriend, IFriendInfo> GetFriendInfoMap = new HashMap<>();
-    private final Map<QQGroup, IGroupFiles> GetGroupFilesMap = new HashMap<>();
-    private final Map<QQGroup, IGroupAnnouncements> GetGroupAnnouncementsMap = new HashMap<>();
+    private final Map<Long, IListFriend> getFriendsMap = new HashMap<>();
+    private final Map<QQGroup, IListMember> getMembersMap = new HashMap<>();
+    private final Map<QQGroup, IGroupSetting> getGroupSettingMap = new HashMap<>();
+    private final Map<Long, IListGroup> getGroupsMap = new HashMap<>();
+    private final Map<String, IImageUrls> getImageUrlMap = new HashMap<>();
+    private final Map<QQMember, IMemberInfo> getMemberInfoMap = new HashMap<>();
+    private final Map<QQFriend, IFriendInfo> getFriendInfoMap = new HashMap<>();
+    private final Map<QQGroup, IGroupFiles> getGroupFilesMap = new HashMap<>();
+    private final Map<QQGroup, IGroupAnnouncements> getGroupAnnouncementsMap = new HashMap<>();
 
     @Override
-    protected boolean CallTop(byte index, String data) {
+    protected boolean callTop(byte index, String data) {
         switch (index) {
             case 55: {
                 ListGroupPack pack = JSON.parseObject(data, ListGroupPack.class);
-                if (GetGroupsMap.containsKey(pack.qq)) {
-                    IListGroup action = GetGroupsMap.remove(pack.qq);
+                if (getGroupsMap.containsKey(pack.qq)) {
+                    IListGroup action = getGroupsMap.remove(pack.qq);
                     action.res(pack);
                 }
                 return true;
             }
             case 56: {
                 ListFriendPack pack = JSON.parseObject(data, ListFriendPack.class);
-                if (GetFriendsMap.containsKey(pack.qq)) {
-                    IListFriend action = GetFriendsMap.remove(pack.qq);
+                if (getFriendsMap.containsKey(pack.qq)) {
+                    IListFriend action = getFriendsMap.remove(pack.qq);
                     action.res(pack);
                 }
                 return true;
@@ -94,8 +97,8 @@ public class TopRobot extends BaseRobot {
                     qq = pack.qq;
                     group = pack.id;
                 }};
-                if (GetMembersMap.containsKey(key)) {
-                    IListMember action = GetMembersMap.remove(key);
+                if (getMembersMap.containsKey(key)) {
+                    IListMember action = getMembersMap.remove(key);
                     action.res(pack);
                 }
                 return true;
@@ -106,16 +109,16 @@ public class TopRobot extends BaseRobot {
                     qq = pack.qq;
                     group = pack.id;
                 }};
-                if (GetGroupSettingMap.containsKey(key)) {
-                    IGroupSetting action = GetGroupSettingMap.remove(key);
+                if (getGroupSettingMap.containsKey(key)) {
+                    IGroupSetting action = getGroupSettingMap.remove(key);
                     action.res(pack);
                 }
                 return true;
             }
             case 90: {
                 ReImagePack pack = JSON.parseObject(data, ReImagePack.class);
-                if (GetImageUrlMap.containsKey(pack.uuid)) {
-                    IImageUrls action = GetImageUrlMap.remove(pack.uuid);
+                if (getImageUrlMap.containsKey(pack.uuid)) {
+                    IImageUrls action = getImageUrlMap.remove(pack.uuid);
                     action.res(pack.url);
                 }
                 return true;
@@ -127,8 +130,8 @@ public class TopRobot extends BaseRobot {
                     group = pack.id;
                     member = pack.fid;
                 }};
-                if (GetMemberInfoMap.containsKey(key)) {
-                    IMemberInfo action = GetMemberInfoMap.remove(key);
+                if (getMemberInfoMap.containsKey(key)) {
+                    IMemberInfo action = getMemberInfoMap.remove(key);
                     action.res(pack);
                 }
                 return true;
@@ -139,8 +142,8 @@ public class TopRobot extends BaseRobot {
                     qq = pack.qq;
                     friend = pack.id;
                 }};
-                if (GetFriendInfoMap.containsKey(key)) {
-                    IFriendInfo action = GetFriendInfoMap.remove(key);
+                if (getFriendInfoMap.containsKey(key)) {
+                    IFriendInfo action = getFriendInfoMap.remove(key);
                     action.res(pack);
                 }
                 return true;
@@ -151,8 +154,8 @@ public class TopRobot extends BaseRobot {
                     qq = pack.qq;
                     group = pack.id;
                 }};
-                if (GetGroupFilesMap.containsKey(key)) {
-                    IGroupFiles action = GetGroupFilesMap.remove(key);
+                if (getGroupFilesMap.containsKey(key)) {
+                    IGroupFiles action = getGroupFilesMap.remove(key);
                     action.res(pack);
                 }
                 return true;
@@ -163,8 +166,8 @@ public class TopRobot extends BaseRobot {
                     qq = pack.qq;
                     group = pack.id;
                 }};
-                if (GetGroupAnnouncementsMap.containsKey(key)) {
-                    IGroupAnnouncements action = GetGroupAnnouncementsMap.remove(key);
+                if (getGroupAnnouncementsMap.containsKey(key)) {
+                    IGroupAnnouncements action = getGroupAnnouncementsMap.remove(key);
                     action.res(pack);
                 }
                 return true;
@@ -180,8 +183,8 @@ public class TopRobot extends BaseRobot {
      * @param qq_ qq号
      * @param res 获取成功后回调
      */
-    public void GetGroups(long qq_, IListGroup res) {
-        GetGroupsMap.put(qq_, res);
+    public void getGroups(long qq_, IListGroup res) {
+        getGroupsMap.put(qq_, res);
         byte[] data = BuildPack.Build(new GetPack() {{
             this.qq = qq_;
         }}, 55);
@@ -194,8 +197,8 @@ public class TopRobot extends BaseRobot {
      * @param qq_ qq号
      * @param res 获取成功后回调
      */
-    public void GetFriends(long qq_, IListFriend res) {
-        GetFriendsMap.put(qq_, res);
+    public void getFriends(long qq_, IListFriend res) {
+        getFriendsMap.put(qq_, res);
         byte[] data = BuildPack.Build(new GetPack() {{
             this.qq = qq_;
         }}, 56);
@@ -209,12 +212,12 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param res    获取成功后回调
      */
-    public void GetMembers(long qq_, long group_, IListMember res) {
+    public void getMembers(long qq_, long group_, IListMember res) {
         QQGroup key = new QQGroup() {{
             this.qq = qq_;
             this.group = group_;
         }};
-        GetMembersMap.put(key, res);
+        getMembersMap.put(key, res);
         byte[] data = BuildPack.Build(new GroupGetMemberInfoPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -229,12 +232,12 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param res    获取成功后回调
      */
-    public void GetGroupSetting(long qq_, long group_, IGroupSetting res) {
+    public void getGroupSetting(long qq_, long group_, IGroupSetting res) {
         QQGroup key = new QQGroup() {{
             this.qq = qq_;
             this.group = group_;
         }};
-        GetGroupSettingMap.put(key, res);
+        getGroupSettingMap.put(key, res);
         byte[] data = BuildPack.Build(new GroupGetSettingPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -249,7 +252,7 @@ public class TopRobot extends BaseRobot {
      * @param group_   群号
      * @param message_ 消息
      */
-    public void SendGroupMessage(long qq_, long group_, List<String> message_) {
+    public void sendGroupMessage(long qq_, long group_, List<String> message_) {
         byte[] data = BuildPack.Build(new SendGroupMessagePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -266,7 +269,7 @@ public class TopRobot extends BaseRobot {
      * @param member_  群员
      * @param message_ 消息
      */
-    public void SendGroupTempMessage(long qq_, long group_, long member_, List<String> message_) {
+    public void sendGroupTempMessage(long qq_, long group_, long member_, List<String> message_) {
         byte[] data = BuildPack.Build(new SendGroupPrivateMessagePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -283,7 +286,7 @@ public class TopRobot extends BaseRobot {
      * @param friend_  好友QQ号
      * @param message_ 消息
      */
-    public void SendFriendMessage(long qq_, long friend_, List<String> message_) {
+    public void sendFriendMessage(long qq_, long friend_, List<String> message_) {
         byte[] data = BuildPack.Build(new SendFriendMessagePack() {{
             this.qq = qq_;
             this.id = friend_;
@@ -300,7 +303,7 @@ public class TopRobot extends BaseRobot {
      * @param dofun_   操作方式
      * @param arg_     附加参数
      */
-    public void EventCall(long qq_, long eventid_, int dofun_, List<Object> arg_) {
+    public void eventCall(long qq_, long eventid_, int dofun_, List<Object> arg_) {
         byte[] data = BuildPack.Build(new EventCallPack() {{
             this.qq = qq_;
             this.eventid = eventid_;
@@ -317,8 +320,8 @@ public class TopRobot extends BaseRobot {
      * @param eventid_ 事件ID
      * @param type     操作类型
      */
-    public void MemberJoinRequestCall(long qq_, long eventid_, GroupCallType type) {
-        this.MemberJoinRequestCall(qq_, eventid_, type, false, "");
+    public void memberJoinRequestCall(long qq_, long eventid_, GroupCallType type) {
+        this.memberJoinRequestCall(qq_, eventid_, type, false, "");
     }
 
     /**
@@ -329,8 +332,8 @@ public class TopRobot extends BaseRobot {
      * @param type      操作类型
      * @param blackList 是否加入黑名单
      */
-    public void MemberJoinRequestCall(long qq_, long eventid_, GroupCallType type, boolean blackList) {
-        this.MemberJoinRequestCall(qq_, eventid_, type, blackList, "");
+    public void memberJoinRequestCall(long qq_, long eventid_, GroupCallType type, boolean blackList) {
+        this.memberJoinRequestCall(qq_, eventid_, type, blackList, "");
     }
 
     /**
@@ -341,8 +344,8 @@ public class TopRobot extends BaseRobot {
      * @param type     操作类型
      * @param message  拒绝理由
      */
-    public void MemberJoinRequestCall(long qq_, long eventid_, GroupCallType type, String message) {
-        this.MemberJoinRequestCall(qq_, eventid_, type, false, message);
+    public void memberJoinRequestCall(long qq_, long eventid_, GroupCallType type, String message) {
+        this.memberJoinRequestCall(qq_, eventid_, type, false, message);
     }
 
     /**
@@ -354,8 +357,8 @@ public class TopRobot extends BaseRobot {
      * @param blackList 是否加入黑名单
      * @param message   拒绝理由
      */
-    public void MemberJoinRequestCall(long qq_, long eventid_, GroupCallType type, boolean blackList, String message) {
-        EventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
+    public void memberJoinRequestCall(long qq_, long eventid_, GroupCallType type, boolean blackList, String message) {
+        eventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
             this.add(blackList);
             this.add(message);
         }});
@@ -368,8 +371,8 @@ public class TopRobot extends BaseRobot {
      * @param eventid_ 事件ID
      * @param type     操作类型
      */
-    public void NewFriendRequestCall(long qq_, long eventid_, FriendCallType type) {
-        EventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
+    public void newFriendRequestCall(long qq_, long eventid_, FriendCallType type) {
+        eventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
             this.add(false);
         }});
     }
@@ -383,7 +386,7 @@ public class TopRobot extends BaseRobot {
      * @param blackList 是否加入黑名单
      */
     public void NewFriendRequestCall(long qq_, long eventid_, FriendCallType type, boolean blackList) {
-        EventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
+        eventCall(qq_, eventid_, type.ordinal(), new ArrayList<Object>() {{
             this.add(blackList);
         }});
     }
@@ -395,7 +398,7 @@ public class TopRobot extends BaseRobot {
      * @param group_  群号
      * @param member_ 群员
      */
-    public void GroupDeleteMember(long qq_, long group_, long member_) {
+    public void groupDeleteMember(long qq_, long group_, long member_) {
         byte[] data = BuildPack.Build(new GroupKickMemberPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -412,7 +415,7 @@ public class TopRobot extends BaseRobot {
      * @param member_ 群员
      * @param time_   禁言时间
      */
-    public void GroupMuteMember(long qq_, long group_, long member_, int time_) {
+    public void groupMuteMember(long qq_, long group_, long member_, int time_) {
         byte[] data = BuildPack.Build(new GroupMuteMemberPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -429,7 +432,7 @@ public class TopRobot extends BaseRobot {
      * @param group_  群号
      * @param member_ 群员
      */
-    public void GroupUnmuteMember(long qq_, long group_, long member_) {
+    public void groupUnmuteMember(long qq_, long group_, long member_) {
         byte[] data = BuildPack.Build(new GroupUnmuteMemberPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -444,7 +447,7 @@ public class TopRobot extends BaseRobot {
      * @param qq_    qq号
      * @param group_ 群号
      */
-    public void GroupMuteAll(long qq_, long group_) {
+    public void groupMuteAll(long qq_, long group_) {
         byte[] data = BuildPack.Build(new GroupMuteAllPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -458,7 +461,7 @@ public class TopRobot extends BaseRobot {
      * @param qq_    qq号
      * @param group_ 群号
      */
-    public void GroupUnmuteAll(long qq_, long group_) {
+    public void groupUnmuteAll(long qq_, long group_) {
         byte[] data = BuildPack.Build(new GroupUnmuteAllPack() {{
             this.qq = qq_;
             this.id = group_;
@@ -474,7 +477,7 @@ public class TopRobot extends BaseRobot {
      * @param member_ 群员
      * @param card_   群名片
      */
-    public void GroupSetMember(long qq_, long group_, long member_, String card_) {
+    public void groupSetMember(long qq_, long group_, long member_, String card_) {
         byte[] data = BuildPack.Build(new GroupSetMemberCard() {{
             this.qq = qq_;
             this.id = group_;
@@ -491,7 +494,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param name_  群名字
      */
-    public void GroupSetName(long qq_, long group_, String name_) {
+    public void groupSetName(long qq_, long group_, String name_) {
         byte[] data = BuildPack.Build(new GroupSetNamePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -506,7 +509,7 @@ public class TopRobot extends BaseRobot {
      * @param qq_ qq号
      * @param id_ 消息ID
      */
-    public void ReCallMessage(long qq_, int id_) {
+    public void reCallMessage(long qq_, int id_) {
         byte[] data = BuildPack.Build(new ReCallMessagePack() {{
             this.qq = qq_;
             this.id = id_;
@@ -521,7 +524,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param file_  文件位置
      */
-    public void SendGroupImageFile(long qq_, long group_, String file_) {
+    public void sendGroupImageFile(long qq_, long group_, String file_) {
         byte[] data = BuildPack.Build(new SendGroupImageFilePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -538,7 +541,7 @@ public class TopRobot extends BaseRobot {
      * @param member_ 群员
      * @param file_   文件位置
      */
-    public void SendGroupPrivateImageFile(long qq_, long group_, long member_, String file_) {
+    public void sendGroupPrivateImageFile(long qq_, long group_, long member_, String file_) {
         byte[] data = BuildPack.Build(new SendGroupPrivateImageFilePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -555,7 +558,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 好友QQ号
      * @param file_  文件位置
      */
-    public void SendFriendImageFile(long qq_, long group_, String file_) {
+    public void sendFriendImageFile(long qq_, long group_, String file_) {
         byte[] data = BuildPack.Build(new SendFriendImageFilePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -571,7 +574,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param file_  文件位置
      */
-    public void SendGroupSoundFile(long qq_, long group_, String file_) {
+    public void sendGroupSoundFile(long qq_, long group_, String file_) {
         byte[] data = BuildPack.Build(new SendGroupSoundFilePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -586,7 +589,7 @@ public class TopRobot extends BaseRobot {
      * @param qq_     qq号
      * @param friend_ 好友QQ号
      */
-    public void SendFriendNudge(long qq_, long friend_) {
+    public void sendFriendNudge(long qq_, long friend_) {
         byte[] data = BuildPack.Build(new SendFriendNudgePack() {{
             this.qq = qq_;
             this.id = friend_;
@@ -601,7 +604,7 @@ public class TopRobot extends BaseRobot {
      * @param group_  群号
      * @param member_ 群员
      */
-    public void SendGroupMemberNudge(long qq_, long group_, long member_) {
+    public void sendGroupMemberNudge(long qq_, long group_, long member_) {
         byte[] data = BuildPack.Build(new SendGroupMemberNudgePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -617,8 +620,8 @@ public class TopRobot extends BaseRobot {
      * @param uuid_ 图片UUID
      * @param res   返回回调
      */
-    public void GetImageUrls(long qq_, String uuid_, IImageUrls res) {
-        GetImageUrlMap.put(uuid_, res);
+    public void getImageUrls(long qq_, String uuid_, IImageUrls res) {
+        getImageUrlMap.put(uuid_, res);
         byte[] data = BuildPack.Build(new GetImageUrlPack() {{
             this.qq = qq_;
             this.uuid = uuid_;
@@ -634,13 +637,13 @@ public class TopRobot extends BaseRobot {
      * @param member_ 群员
      * @param res     返回回调
      */
-    public void GetMemberInfo(long qq_, long group_, long member_, IMemberInfo res) {
+    public void getMemberInfo(long qq_, long group_, long member_, IMemberInfo res) {
         QQMember key = new QQMember() {{
             this.qq = qq_;
             this.member = member_;
             this.group = group_;
         }};
-        GetMemberInfoMap.put(key, res);
+        getMemberInfoMap.put(key, res);
         byte[] data = BuildPack.Build(new GetMemberInfo() {{
             this.qq = qq_;
             this.id = group_;
@@ -656,12 +659,12 @@ public class TopRobot extends BaseRobot {
      * @param friend_ 群号
      * @param res     返回回调
      */
-    public void GetFriendInfo(long qq_, long friend_, IFriendInfo res) {
+    public void getFriendInfo(long qq_, long friend_, IFriendInfo res) {
         QQFriend key = new QQFriend() {{
             this.qq = qq_;
             this.friend = friend_;
         }};
-        GetFriendInfoMap.put(key, res);
+        getFriendInfoMap.put(key, res);
         byte[] data = BuildPack.Build(new GetFriendInfoPack() {{
             this.qq = qq_;
             this.id = friend_;
@@ -683,7 +686,7 @@ public class TopRobot extends BaseRobot {
      * @param pictureUrl_ 图片Url
      * @param musicUrl_   音乐Url
      */
-    public void SendMusicShare(long qq_, long id_, long fid_, MusicKind kind_,
+    public void sendMusicShare(long qq_, long id_, long fid_, MusicKind kind_,
                                SendToType type_, String title_, String summary_,
                                String jumpUrl_, String pictureUrl_, String musicUrl_) {
         byte[] data = BuildPack.Build(new SendMusicSharePack() {{
@@ -708,7 +711,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param mid_   消息ID
      */
-    public void GroupSetEssenceMessage(long qq_, long group_, int mid_) {
+    public void groupSetEssenceMessage(long qq_, long group_, int mid_) {
         byte[] data = BuildPack.Build(new GroupSetEssenceMessagePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -728,7 +731,7 @@ public class TopRobot extends BaseRobot {
      * @param message_ 消息内容
      * @param send_    是否发送
      */
-    public void MessageBuff(long qq_, long id_, long fid_, SendToType type_, String file, List<String> message_, boolean send_) {
+    public void messageBuff(long qq_, long id_, long fid_, SendToType type_, String file, List<String> message_, boolean send_) {
         byte[] data = BuildPack.Build(new MessageBuffPack() {{
             this.qq = qq_;
             this.id = id_;
@@ -748,7 +751,7 @@ public class TopRobot extends BaseRobot {
      * @param friend_ 好友QQ号
      * @param dice_   点数
      */
-    public void SendFriendDice(long qq_, long friend_, int dice_) {
+    public void sendFriendDice(long qq_, long friend_, int dice_) {
         byte[] data = BuildPack.Build(new SendFriendDicePack() {{
             this.qq = qq_;
             this.id = friend_;
@@ -764,7 +767,7 @@ public class TopRobot extends BaseRobot {
      * @param group_ 群号
      * @param dice_  点数
      */
-    public void SendGroupDice(long qq_, long group_, int dice_) {
+    public void sendGroupDice(long qq_, long group_, int dice_) {
         byte[] data = BuildPack.Build(new SendGroupDicePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -781,7 +784,7 @@ public class TopRobot extends BaseRobot {
      * @param member_ 群成员
      * @param dice_   点数
      */
-    public void SendGroupPrivateDice(long qq_, long group_, long member_, int dice_) {
+    public void sendGroupPrivateDice(long qq_, long group_, long member_, int dice_) {
         byte[] data = BuildPack.Build(new SendGroupPrivateDicePack() {{
             this.qq = qq_;
             this.id = group_;
@@ -799,13 +802,253 @@ public class TopRobot extends BaseRobot {
      * @param file_  文件路径
      * @param name_  群文件名称
      */
-    public void GroupAddFilePack(long qq_, long group_, String file_, String name_) {
+    public void groupAddFilePack(long qq_, long group_, String file_, String name_) {
         byte[] data = BuildPack.Build(new GroupAddFilePack() {{
             this.qq = qq_;
             this.id = group_;
             this.file = file_;
             this.name = name_;
         }}, 99);
+        addTask(data);
+    }
+
+    /**
+     * 100 [插件]删除群文件
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param fid_   群文件ID
+     */
+    public void groupDeleteFile(long qq_, long group_, String fid_) {
+        byte[] data = BuildPack.Build(new GroupDeleteFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = fid_;
+        }}, 100);
+        addTask(data);
+    }
+
+    /**
+     * 101 [插件]获取群文件
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param res    回调
+     */
+    public void groupGetFiles(long qq_, long group_, IGroupFiles res) {
+        QQGroup key = new QQGroup() {{
+            this.qq = qq_;
+            this.group = group_;
+        }};
+        getGroupFilesMap.put(key, res);
+        byte[] data = BuildPack.Build(new GroupGetFilesPack() {{
+            this.qq = qq_;
+            this.id = group_;
+        }}, 101);
+        addTask(data);
+    }
+
+    /**
+     * 102 [插件]移动群文件
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param fid_   文件ID
+     * @param dir_   新的路径
+     */
+    public void groupMoveFile(long qq_, long group_, String fid_, String dir_) {
+        byte[] data = BuildPack.Build(new GroupMoveFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = fid_;
+            this.dir = dir_;
+        }}, 102);
+        addTask(data);
+    }
+
+    /**
+     * 103 [插件]重命名群文件
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param fid_   文件ID
+     * @param name_  新文件名
+     */
+    public void groupRemoveFile(long qq_, long group_, String fid_, String name_) {
+        byte[] data = BuildPack.Build(new GroupRenameFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = fid_;
+            this.now = name_;
+        }}, 103);
+        addTask(data);
+    }
+
+    /**
+     * 104 [插件]创新群文件文件夹
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param dir_   文件夹名字
+     */
+    public void groupAddDir(long qq_, long group_, String dir_) {
+        byte[] data = BuildPack.Build(new GroupAddDirPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.dir = dir_;
+        }}, 104);
+        addTask(data);
+    }
+
+    /**
+     * 105 [插件]删除群文件文件夹
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param dir_   文件夹名字
+     */
+    public void groupRemoveDir(long qq_, long group_, String dir_) {
+        byte[] data = BuildPack.Build(new GroupDeleteDirPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.dir = dir_;
+        }}, 105);
+        addTask(data);
+    }
+
+    /**
+     * 106 [插件]重命名群文件文件夹
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param old_   旧的名字
+     * @param now_   新的名字
+     */
+    public void groupRenameDir(long qq_, long group_, String old_, String now_) {
+        byte[] data = BuildPack.Build(new GroupRenameDirPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.old = old_;
+            this.now = now_;
+        }}, 106);
+        addTask(data);
+    }
+
+    /**
+     * 107 [插件]下载群文件到指定位置
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param fid_   文件ID
+     * @param file_  下载到的位置
+     */
+    public void groupDownloadFile(long qq_, long group_, String fid_, String file_) {
+        byte[] data = BuildPack.Build(new GroupDownloadFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = fid_;
+            this.dir = file_;
+        }}, 107);
+        addTask(data);
+    }
+
+    /**
+     * 108 [插件]设置取消管理员
+     *
+     * @param qq_     qq号
+     * @param group_  群号
+     * @param member_ 群成员QQ号
+     * @param set_    是否设置
+     */
+    public void groupSetAdmin(long qq_, long group_, long member_, boolean set_) {
+        byte[] data = BuildPack.Build(new GroupSetAdminPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = member_;
+            this.type = set_;
+        }}, 108);
+        addTask(data);
+    }
+
+    /**
+     * 109 [插件]获取群公告
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param res    回调
+     */
+    public void groupGetAnnouncements(long qq_, long group_, IGroupAnnouncements res) {
+        QQGroup key = new QQGroup() {{
+            this.qq = qq_;
+            this.group = group_;
+        }};
+        getGroupAnnouncementsMap.put(key, res);
+        byte[] data = BuildPack.Build(new GroupGetAnnouncementsPack() {{
+            this.qq = qq_;
+            this.id = group_;
+        }}, 109);
+        addTask(data);
+    }
+
+    /**
+     * 110 [插件]设置群公告
+     *
+     * @param qq_                  qq号
+     * @param group_               群号
+     * @param imageFile_           图片路径
+     * @param sendToNewMember_     发送给新群员
+     * @param isPinned_            顶置
+     * @param showEditCard_        显示能够引导群成员修改昵称的窗口
+     * @param showPopup_           使用弹窗
+     * @param requireConfirmation_ 需要群成员确认
+     * @param text_                公告内容
+     */
+    public void groupAddAnnouncement(long qq_, long group_, String imageFile_, boolean sendToNewMember_,
+                                     boolean isPinned_, boolean showEditCard_, boolean showPopup_,
+                                     boolean requireConfirmation_, String text_) {
+        byte[] data = BuildPack.Build(new GroupAddAnnouncementPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.imageFile = imageFile_;
+            this.sendToNewMember = sendToNewMember_;
+            this.isPinned = isPinned_;
+            this.showEditCard = showEditCard_;
+            this.showPopup = showPopup_;
+            this.requireConfirmation = requireConfirmation_;
+            this.text = text_;
+        }}, 110);
+        addTask(data);
+    }
+
+    /**
+     * 111 [插件]删除群公告
+     *
+     * @param qq_    qq号
+     * @param group_ 群号
+     * @param fid_   公告ID
+     */
+    public void groupRemoveAnnouncement(long qq_, long group_, String fid_) {
+        byte[] data = BuildPack.Build(new GroupDeleteAnnouncementPack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.fid = fid_;
+        }}, 111);
+        addTask(data);
+    }
+
+    /**
+     * 112 [插件]发送好友语言文件
+     *
+     * @param qq_    qq号
+     * @param group_ 好友QQ号
+     * @param file_  文件路径
+     */
+    public void sendFriendSoundFile(long qq_, long group_, String file_) {
+        byte[] data = BuildPack.Build(new SendFriendSoundFilePack() {{
+            this.qq = qq_;
+            this.id = group_;
+            this.file = file_;
+        }}, 112);
         addTask(data);
     }
 }
