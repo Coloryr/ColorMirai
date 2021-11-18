@@ -479,6 +479,16 @@ public class ThePlugin {
                             SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
                             BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
                         }
+                        //114 [插件]设置允许群员邀请好友入群的状态
+                        case 114: {
+                            GroupSetAllowMemberInvitePack pack = JSON.parseObject(task.data, GroupSetAllowMemberInvitePack.class);
+                            BotGroupDo.setAllowMemberInvite(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                        }
+                        //115 [插件]设置允许匿名聊天
+                        case 115: {
+                            GroupSetAnonymousChatEnabledPack pack = JSON.parseObject(task.data, GroupSetAnonymousChatEnabledPack.class);
+                            BotGroupDo.setAnonymousChatEnabled(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                        }
                         //127 [插件]断开连接
                         case 127: {
                             close();

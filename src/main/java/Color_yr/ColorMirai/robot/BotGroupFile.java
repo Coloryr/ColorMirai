@@ -6,14 +6,16 @@ import Color_yr.ColorMirai.plugin.mirai_http_api.Utils;
 import Color_yr.ColorMirai.plugin.socket.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.message.data.FileMessage;
-import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.contact.PermissionDeniedException;
+import net.mamoe.mirai.contact.file.AbsoluteFile;
+import net.mamoe.mirai.contact.file.AbsoluteFileFolder;
+import net.mamoe.mirai.contact.file.AbsoluteFolder;
+import net.mamoe.mirai.contact.file.RemoteFiles;
 import net.mamoe.mirai.utils.ExternalResource;
 import net.mamoe.mirai.utils.RemoteFile;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class BotGroupFile {
@@ -29,21 +31,13 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(name);
+            RemoteFiles remoteFile = group.getFiles();
             FileInputStream stream = new FileInputStream(file.substring(1));
-            ExternalResource tempfile = ExternalResource.create(stream);
-            FileMessage message = remoteFile.upload(tempfile);
-            MessageSource source = group.sendMessage(message).getSource();
+            ExternalResource tempfile = ExternalResource.create(stream).toAutoCloseable();
+            remoteFile.uploadNewFile(name, tempfile);
             stream.close();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
-            }
-            tempfile.close();
+        } catch (PermissionDeniedException e) {
+            ColorMiraiMain.logger.error("上传群文件失败，只允许管理员上传");
         } catch (Exception e) {
             ColorMiraiMain.logger.error("上传群文件失败", e);
         }
@@ -61,12 +55,13 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolveById(name);
-            if (remoteFile == null) {
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFile file = group.getFiles().getRoot().resolveFileById(name);
+            if (file == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 不存在");
                 return;
             }
-            remoteFile.delete();
+            file.delete();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("删除群文件失败", e);
         }
@@ -84,23 +79,17 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return null;
             }
+            group.getFiles().getRoot().refreshed();
             List<GroupFileInfo> fileList = new ArrayList<>();
-            RemoteFile remoteFile = group.getFilesRoot();
-            Iterator<RemoteFile> list = remoteFile.listFilesIterator(false);
-            while (list.hasNext()) {
-                RemoteFile temp = list.next();
-                if (!temp.isFile()) {
-                    Iterator<RemoteFile> list1 = temp.listFilesIterator(false);
-                    while (list1.hasNext()) {
-                        RemoteFile temp1 = list1.next();
-                        GroupFileInfo info = get(temp1);
-                        fileList.add(info);
-                    }
-                } else {
-                    GroupFileInfo info = get(temp);
-                    fileList.add(info);
-                }
-            }
+            RemoteFiles remoteFile = group.getFiles();
+            remoteFile.getRoot().filesStream().forEach(str -> {
+                GroupFileInfo info = get(str);
+                fileList.add(info);
+            });
+            remoteFile.getRoot().foldersStream().forEach(item -> item.filesStream().forEach(item1 -> {
+                GroupFileInfo info = get(item1);
+                fileList.add(info);
+            }));
             return fileList;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("获取群文件列表失败", e);
@@ -108,27 +97,22 @@ public class BotGroupFile {
         return null;
     }
 
-    private static GroupFileInfo get(RemoteFile file) {
+    private static GroupFileInfo get(AbsoluteFile file) {
         if (file == null)
             return null;
         GroupFileInfo info = new GroupFileInfo();
+        info.expiryTime = file.getExpiryTime();
+        info.size = file.getSize();
+        info.sha1 = Utils.toUHexString(file.getSha1());
+        info.md5 = Utils.toUHexString(file.getMd5());
         info.id = file.getId();
         info.name = file.getName();
-        info.path = file.getPath();
-        info.parent = get(file.getParent());
+        info.absolutePath = file.getAbsolutePath();
         info.isFile = file.isFile();
-        info.isDirectory = file.isDirectory();
-        info.length = file.length();
-        RemoteFile.FileInfo fileInfo = file.getInfo();
-        if (fileInfo != null) {
-            info.downloadTimes = fileInfo.getDownloadTimes();
-            info.uploaderId = fileInfo.getUploaderId();
-            info.uploadTime = fileInfo.getUploadTime();
-            info.lastModifyTime = fileInfo.getLastModifyTime();
-            info.sha1 = Utils.toUHexString(fileInfo.getSha1());
-            info.md5 = Utils.toUHexString(fileInfo.getMd5());
-        }
-
+        info.isFolder = file.isFolder();
+        info.uploadTime = file.getUploadTime();
+        info.lastModifyTime = file.getLastModifiedTime();
+        info.uploaderId = file.getUploaderId();
         return info;
     }
 
@@ -144,13 +128,17 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolveById(fid);
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(fid);
             if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
                 return;
             }
-            RemoteFile moveTo = group.getFilesRoot().resolve(dir);
-            remoteFile.moveTo(moveTo);
+            AbsoluteFolder dir1 = group.getFiles().getRoot().resolveFolder(dir);
+            if (dir1 == null) {
+                dir1 = group.getFiles().getRoot().createFolder(dir);
+            }
+            remoteFile.moveTo(dir1);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("群文件移动失败", e);
         }
@@ -168,7 +156,8 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolveById(fid);
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(fid);
             if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
                 return;
@@ -191,17 +180,8 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(dir);
-
-            if (remoteFile.exists()) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件夹：" + dir + " 已存在");
-                return;
-            }
-            if (remoteFile.isFile()) {
-                ColorMiraiMain.logger.warn("不能对文件:" + dir + " 进行创造群文件夹操作");
-                return;
-            }
-            remoteFile.mkdir();
+            group.getFiles().getRoot().refreshed();
+            group.getFiles().getRoot().createFolder(dir);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("群文件夹创建失败", e);
         }
@@ -219,9 +199,9 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(dir);
-
-            if (!remoteFile.exists()) {
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFolder remoteFile = group.getFiles().getRoot().resolveFolder(dir);
+            if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件夹：" + dir + " 不存在");
                 return;
             }
@@ -247,9 +227,10 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(old);
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFolder remoteFile = group.getFiles().getRoot().resolveFolder(old);
 
-            if (!remoteFile.exists()) {
+            if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件夹：" + old + " 不存在");
                 return;
             }
@@ -275,9 +256,10 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            RemoteFile remoteFile = group.getFilesRoot().resolve(name);
+            group.getFiles().getRoot().refreshed();
+            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(name);
 
-            if (!remoteFile.exists()) {
+            if (remoteFile == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 不存在");
                 return;
             }
@@ -285,13 +267,12 @@ public class BotGroupFile {
                 ColorMiraiMain.logger.warn(name + " 不是文件");
                 return;
             }
-            RemoteFile.DownloadInfo info = remoteFile.getDownloadInfo();
-            if (info == null) {
+            String url = remoteFile.getUrl();
+            if (url == null) {
                 ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 信息获取失败");
                 return;
             }
-            String url = info.getUrl();
-            DownloadUtils.addTask(url, info.getFilename(), dir);
+            DownloadUtils.addTask(url, remoteFile.getName(), dir);
             ColorMiraiMain.logger.info("添加下载群：" + id + " 文件：" + name + " 任务");
         } catch (Exception e) {
             ColorMiraiMain.logger.error("群文件夹创建失败", e);

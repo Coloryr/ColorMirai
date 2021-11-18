@@ -294,4 +294,48 @@ public class BotGroupDo {
             ColorMiraiMain.logger.error("删除群公告失败", e);
         }
     }
+
+    public static void setAnonymousChatEnabled(long qq, long id, boolean enable) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            if (group.getBotPermission() == MemberPermission.MEMBER) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "权限不足");
+                return;
+            }
+            group.getSettings().setAnonymousChatEnabled(enable);
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("删除群公告失败", e);
+        }
+    }
+
+    public static void setAllowMemberInvite(long qq, long id, boolean enable) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            if (group.getBotPermission() == MemberPermission.MEMBER) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "权限不足");
+                return;
+            }
+            group.getSettings().setAllowMemberInvite(enable);
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("删除群公告失败", e);
+        }
+    }
 }

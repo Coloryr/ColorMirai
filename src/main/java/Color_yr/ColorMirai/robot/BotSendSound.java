@@ -5,6 +5,7 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.spi.AudioToSilkService;
 import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.FileInputStream;

@@ -41,7 +41,7 @@ pause
   "Pack":true,
   "QQs": [
     {
-      "Info": "info.json",
+      "Info": "device.json",
       "LoginType": "ANDROID_PHONE",
       "Password": "请填写你的密码",
       "QQ": 0
@@ -73,12 +73,11 @@ pause
     - 安卓 `ANDROID_PHONE`
     - 手表 `ANDROID_WATCH`
     - 平板 `ANDROID_PAD`
+    - iPad `IPAD`
+    - MacOS `MACOS`
 - `escapeSelf`：是否跳过自己机器人的信息
 - `ReadEncoding`：读数据包编码
 - `SendEncoding`：发送数据包编码
-- `SocketType`：插件连接方式
-    - Socket [0]
-    - WebSocket [1]
 - `AutoReconnect`：自动重连
 - `HighwayUpload`：上传通道数
 - `authKey`：mriai-http-api密钥

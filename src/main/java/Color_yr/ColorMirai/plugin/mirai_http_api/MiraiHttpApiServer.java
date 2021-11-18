@@ -80,7 +80,7 @@ public class MiraiHttpApiServer implements HttpHandler {
             server.createContext("/all", new WebsocketRouteModule());
             server.createContext("/sendNudge", new SendNudge());
             server.createContext("/botProfile", new BotProfile());
-            server.createContext("friendProfile", new FriendProfile());
+            server.createContext("/friendProfile", new FriendProfile());
             server.createContext("/memberProfile", new MemberProfile());
             server.createContext("/file/list", new FileList());
             server.createContext("/file/info", new FileInfo());
