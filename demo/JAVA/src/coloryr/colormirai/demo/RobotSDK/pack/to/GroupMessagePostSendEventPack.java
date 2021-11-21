@@ -1,10 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.message.data.MessageSource;
-import net.mamoe.mirai.message.data.SingleMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -19,18 +16,4 @@ public class GroupMessagePostSendEventPack extends PackBase {
     public boolean res;
     public List<String> message;
     public String error;
-
-    public GroupMessagePostSendEventPack(long qq, long id, boolean res, MessageSource message, String error) {
-        this.error = error;
-        this.id = id;
-        this.qq = qq;
-        this.message = new ArrayList<>();
-        if (message != null) {
-            this.message.add(message.toString());
-            for (SingleMessage item : message.getOriginalMessage()) {
-                this.message.add(item.toString());
-            }
-        }
-        this.res = res;
-    }
 }

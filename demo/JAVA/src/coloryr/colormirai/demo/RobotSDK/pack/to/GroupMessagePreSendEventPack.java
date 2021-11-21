@@ -1,9 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.message.data.Message;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -14,12 +12,4 @@ message:消息
 public class GroupMessagePreSendEventPack extends PackBase {
     public long id;
     public List<String> message;
-
-    public GroupMessagePreSendEventPack(long qq, long id, Message message) {
-        this.id = id;
-        this.qq = qq;
-        this.message = new ArrayList<>();
-        this.message.add(message.toString());
-        this.message.add(message.contentToString());
-    }
 }

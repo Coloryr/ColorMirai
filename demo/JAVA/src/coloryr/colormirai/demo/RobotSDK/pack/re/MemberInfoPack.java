@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.re;
 
+import coloryr.colormirai.demo.RobotSDK.enums.MemberPermission;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.contact.MemberPermission;
 
 /*
 91 [插件]获取群成员信息

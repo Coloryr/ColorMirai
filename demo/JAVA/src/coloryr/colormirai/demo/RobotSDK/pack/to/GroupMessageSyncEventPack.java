@@ -1,10 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.SingleMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -17,15 +14,4 @@ public class GroupMessageSyncEventPack extends PackBase {
     public long id;
     public int time;
     public List<String> message;
-
-    public GroupMessageSyncEventPack(long qq, long id, int time, MessageChain message) {
-        this.qq = qq;
-        this.id = id;
-        this.time = time;
-        this.message = new ArrayList<>();
-        for (SingleMessage item : message) {
-            this.message.add(item.toString());
-        }
-        this.message.add(message.contentToString());
-    }
 }

@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
+import coloryr.colormirai.demo.RobotSDK.enums.MemberPermission;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.contact.MemberPermission;
 
 /*
 41 [机器人]成员权限改变（事件）

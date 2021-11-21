@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.RobotSDK.pack.to;
 
+import coloryr.colormirai.demo.RobotSDK.enums.MemberPermission;
 import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import net.mamoe.mirai.contact.MemberPermission;
 
 /*
 3 [机器人]在群里的权限被改变. 操作人一定是群主（事件）
