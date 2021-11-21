@@ -59,9 +59,11 @@ public long id { get; set; }
 ### [6 [机器人]成功加入了一个新群（机器人被一个群内的成员直接邀请加入了群）（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/BotJoinGroupEventBPack.java)
 
 ```
+public long id { get; set; }
 public long fid { get; set; }
 ```
 
+- `id`：群号
 - `fid`：邀请人QQ
 
 ### [7 [机器人]主动退出一个群（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/BotLeaveEventAPack.java)
@@ -148,9 +150,11 @@ public long fid { get; set; }
 
 ```
 public long id { get; set; }
+public string nick { get; set; }
 ```
 
 - `id`：好友QQ号
+- `nick`：昵称
 
 ### [19 [机器人]好友头像修改（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/FriendAvatarChangedEventPack.java)
 
@@ -183,6 +187,148 @@ public string error { get; set; }
 - `id`：好友QQ号
 - `res`：是否成功发送
 - `error`：错误消息
+- 
+### [22 [机器人]在发送好友消息前广播（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/FriendMessagePreSendEventPack.java)
+
+```
+public List<string> message { get; set; }
+public long id { get; set; }
+```
+
+- `message`：消息
+- `id`：好友QQ号
+
+### [23 [机器人]好友昵称改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/FriendRemarkChangeEventPack.java)
+
+```
+public long id { get; set; }
+public string old { get; set; }
+public string now { get; set; }
+```
+
+- `id`：好友QQ号
+- `old`：旧的昵称
+- `now`：新的昵称
+
+### [24 [机器人]群 "匿名聊天" 功能状态改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupAllowAnonymousChatEventPack.java)
+
+```
+public long id { get; set; }
+public long fid { get; set; }
+public bool old { get; set; }
+public bool now { get; set; }
+```
+
+- `id`：群号
+- `fid`：好友QQ号
+- `old`：旧的状态
+- `now`：新的状态
+
+### [25 [机器人]群 "坦白说" 功能状态改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupAllowConfessTalkEventPack.java)
+
+```
+public long id { get; set; }
+public bool old { get; set; }
+public bool now { get; set; }
+```
+
+- `id`：群号
+- `old`：旧的状态
+- `now`：新的状态
+
+### [26 [机器人]群 "允许群员邀请好友加群" 功能状态改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupAllowMemberInviteEventPack.java)
+
+```
+public long id { get; set; }
+public long fid { get; set; }
+public bool old { get; set; }
+public bool now { get; set; }
+```
+
+- `id`：群号
+- `fid`：执行人QQ号
+- `old`：旧的状态
+- `now`：新的状态
+
+### [27 [机器人]入群公告改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupEntranceAnnouncementChangeEventPack.java)
+
+```
+public long id { get; set; }
+public long fid { get; set; }
+public string old { get; set; }
+public string now { get; set; }
+```
+
+- `id`：群号
+- `fid`：执行人QQ号
+- `old`：旧的状态
+- `now`：新的状态
+
+### [28 [机器人]在群消息发送后广播（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupMessagePostSendEventPack.java)
+
+```
+public long id { get; set; }
+public bool res { get; set; }
+public List<string> message { get; set; }
+public string error { get; set; }
+```
+
+- `id`：群号
+- `res`：是否发送成功
+- `message`：发送的消息
+- `error`：错误消息
+
+### [28 [机器人]在群消息发送后广播（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupMessagePostSendEventPack.java)
+
+```
+public long id { get; set; }
+public bool res { get; set; }
+public List<string> message { get; set; }
+public string error { get; set; }
+```
+
+- `id`：群号
+- `res`：是否发送成功
+- `message`：发送的消息
+- `error`：错误消息
+
+### [29 [机器人]在发送群消息前广播（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupMessagePreSendEventPack.java)
+
+```
+public long id { get; set; }
+public List<string> message { get; set; }
+```
+
+- `id`：群号
+- `message`：消息
+
+### [30 [机器人]群 "全员禁言" 功能状态改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupMuteAllEventPack.java)
+
+```
+public long id { get; set; }
+public long fid { get; set; }
+public bool old { get; set; }
+public bool now { get; set; }
+```
+
+- `id`：群号
+- `fid`：执行人QQ号
+- `old`：旧的状态
+- `now`：新的状态
+
+### [31 [机器人]群名改变（事件）](../src/main/java/Color_yr/ColorMirai/Pack/ToPlugin/GroupNameChangeEventPack.java)
+
+```
+public long id { get; set; }
+public long fid { get; set; }
+public string old { get; set; }
+public string now { get; set; }
+```
+
+- `id`：群号
+- `fid`：执行人QQ号
+- `old`：旧的名字
+- `now`：新的名字
 
 ## 插件发送给机器人
 
