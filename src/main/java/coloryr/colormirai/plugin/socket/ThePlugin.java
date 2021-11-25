@@ -255,7 +255,7 @@ public class ThePlugin {
                         //75 [插件]从本地文件加载图片发送到群
                         case 75: {
                             SendGroupImageFilePack pack = JSON.parseObject(task.data, SendGroupImageFilePack.class);
-                            BotSendImage.sendGroupImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                            BotSendImage.sendGroupImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //76 [插件]从本地文件加载图片发送到群私聊
@@ -267,13 +267,13 @@ public class ThePlugin {
                         //77 [插件]从本地文件加载图片发送到朋友
                         case 77: {
                             SendFriendImageFilePack pack = JSON.parseObject(task.data, SendFriendImageFilePack.class);
-                            BotSendImage.sendFriendImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                            BotSendImage.sendFriendImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //78 [插件]从本地文件加载语音发送到群
                         case 78: {
                             SendGroupSoundFilePack pack = JSON.parseObject(task.data, SendGroupSoundFilePack.class);
-                            BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                            BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //83 [插件]发送私聊戳一戳
@@ -477,7 +477,7 @@ public class ThePlugin {
                         //112 [插件]发送好友语言文件
                         case 112: {
                             SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
-                            BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file);
+                            BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                         }
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {

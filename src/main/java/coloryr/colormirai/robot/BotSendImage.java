@@ -6,11 +6,14 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.MessageReceipt;
+import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BotSendImage {
 
@@ -43,31 +46,41 @@ public class BotSendImage {
         }
     }
 
-    public static void sendGroupImageFile(long qq, long id, String file) {
+    public static void sendGroupImageFile(long qq, long id, String file, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
+            Image image = null;
+            if (ids == null) {
+                ids = new ArrayList<>();
             }
-            FileInputStream stream = new FileInputStream(file);
-            ExternalResource image = ExternalResource.create(stream);
-            MessageReceipt message = group.sendMessage(group.uploadImage(image));
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = qq;
-            int[] temp = obj.source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                obj.id = temp[0];
+            if (id != 0) {
+                ids.add(id);
             }
-            BotStart.addMessage(qq, obj.id, obj);
-            image.close();
-            stream.close();
+            for (long item: ids)
+            {
+                Group group = bot.getGroup(item);
+                if (group == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+                    continue;
+                }
+                if(image == null)
+                {
+                    image = BotUpload.upImage(bot, file);
+                }
+                MessageReceipt message = group.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群图片失败", e);
         }
@@ -141,61 +154,78 @@ public class BotSendImage {
         }
     }
 
-    public static void sendFriendImage(long qq, long id, String img) {
+    public static void sendFriendImage(long qq, long id, String img, List<Long> ids) {
         if (!BotStart.getBots().containsKey(qq)) {
             ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return;
         }
         Bot bot = BotStart.getBots().get(qq);
+        Image image = null;
+        if (ids == null) {
+            ids = new ArrayList<>();
+        }
+        if (id != 0) {
+            ids.add(id);
+        }
         try {
-            Friend friend = bot.getFriend(id);
-            if (friend == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + id);
-                return;
+            for (long item : ids) {
+                Friend friend = bot.getFriend(item);
+                if (friend == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + id);
+                    return;
+                }
+                if (image == null) {
+                    image = BotUpload.upImage(bot, img);
+                }
+                MessageReceipt message = friend.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
             }
-            InputStream stream = new ByteArrayInputStream(ColorMiraiMain.decoder.decode(img));
-            ExternalResource image = ExternalResource.create(stream);
-            MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = qq;
-            int[] temp = obj.source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                obj.id = temp[0];
-            }
-            BotStart.addMessage(qq, obj.id, obj);
-            image.close();
-            stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友失败", e);
         }
     }
 
-    public static void sendFriendImageFile(long qq, long id, String file) {
+    public static void sendFriendImageFile(long qq, long id, String file, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            Friend friend = bot.getFriend(id);
-            if (friend == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + id);
-                return;
+            Image image = null;
+            if (ids == null) {
+                ids = new ArrayList<>();
             }
-            FileInputStream stream = new FileInputStream(file);
-            ExternalResource image = ExternalResource.create(stream);
-            MessageReceipt message = friend.sendMessage(friend.uploadImage(image));
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = qq;
-            int[] temp = obj.source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                obj.id = temp[0];
+            if (id != 0) {
+                ids.add(id);
             }
-            BotStart.addMessage(qq, obj.id, obj);
-            image.close();
-            stream.close();
+            for (long item : ids) {
+                Friend friend = bot.getFriend(item);
+                if (friend == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在朋友:" + item);
+                    return;
+                }
+                if (image == null) {
+                    image = BotUpload.upImage(bot, file);
+                }
+
+                MessageReceipt message = friend.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友失败", e);
         }
