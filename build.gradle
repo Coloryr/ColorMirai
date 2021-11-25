@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.7.1'
+version '3.7.2'
 
 repositories {
     mavenCentral()
@@ -20,11 +20,9 @@ dependencies {
     compile 'org.java-websocket:Java-WebSocket:1.5.2'
     compile "commons-fileupload:commons-fileupload:1.4"
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
-//    compile fileTree(dir:'lib',include:['silk4j-1.2-dev.jar'])
 
-    api "net.mamoe:mirai-core-api:2.8.1"
-    runtimeOnly "net.mamoe:mirai-core:2.8.1"
-    //runtimeOnly("net.mamoe:mirai-login-solver-selenium:1.0-dev-16")
+    api "net.mamoe:mirai-core-api:2.9.0-M1"
+    runtimeOnly "net.mamoe:mirai-core:2.9.0-M1"
 
 }
 tasks.withType(JavaCompile) {

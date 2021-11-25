@@ -441,15 +441,23 @@ public class BotEvent extends SimpleListenerHost {
     public void onImageUploadEventA(ImageUploadEvent.Succeed event) {
         if (PluginUtils.havePlugin())
             return;
-        long id,fid;
+        long id = 0, fid = 0;
         Contact contact = event.getTarget();
-        if (event.getTarget() instanceof Group)
-        {
+        if (event.getTarget() instanceof Group) {
+            id = event.getTarget().getId();
+        } else if (event.getTarget() instanceof Member) {
+            Member member = (Member) event.getTarget();
+            id = member.getGroup().getId();
+            fid = member.getId();
+        } else if (event.getTarget() instanceof TempUser) {
+            TempUser tempUser = (TempUser) event.getTarget();
+            id = tempUser.getId();
+        } else if (event.getTarget() instanceof Friend) {
             id = event.getTarget().getId();
         }
         String uuid = event.getImage().getImageId();
         long qq = event.getBot().getId();
-        ImageUploadEventAPack pack = new ImageUploadEventAPack(qq, id,fid, uuid);
+        ImageUploadEventAPack pack = new ImageUploadEventAPack(qq, id, fid, uuid);
         BotStart.addTask(new SendPackObj(32, JSON.toJSONString(pack), 0, id, qq));
     }
 
