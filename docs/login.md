@@ -2,6 +2,16 @@
 
 [返回](../README.md)
 
+## 新新版方法（小白必看）
+1. 下载并在你的**手机**上安装`MiraiAndroid`
+```
+https://install.appcenter.ms/users/mzdluo123/apps/miraiandroid/distribution_groups/release
+```
+不能装在任何模拟器上
+2. 在`MiraiAndroid`登录需要的QQ号并完成验证过程
+3. 导出`device.json`
+4. 替换原来的`device.json`
+
 ## 新版本方法
 https://mirai.mamoe.net/topic/223/%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95%E7%9A%84%E4%B8%B4%E6%97%B6%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88
 
