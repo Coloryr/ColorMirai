@@ -1,14 +1,14 @@
 package coloryr.colormirai.demo;
 
-import coloryr.colormirai.demo.RobotSDK.RobotConfig;
-import coloryr.colormirai.demo.RobotSDK.TopRobot;
-import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
-import coloryr.colormirai.demo.RobotSDK.enums.LogType;
-import coloryr.colormirai.demo.RobotSDK.enums.StateType;
-import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import coloryr.colormirai.demo.RobotSDK.pack.re.FriendInfoPack;
-import coloryr.colormirai.demo.RobotSDK.pack.to.GroupMessageEventPack;
-import coloryr.colormirai.demo.RobotSDK.pack.to.NewFriendRequestEventPack;
+import coloryr.colormirai.demo.sdk.RobotConfig;
+import coloryr.colormirai.demo.sdk.TopRobot;
+import coloryr.colormirai.demo.sdk.enums.FriendCallType;
+import coloryr.colormirai.demo.sdk.enums.LogType;
+import coloryr.colormirai.demo.sdk.enums.StateType;
+import coloryr.colormirai.demo.sdk.pack.PackBase;
+import coloryr.colormirai.demo.sdk.pack.re.FriendInfoPack;
+import coloryr.colormirai.demo.sdk.pack.to.GroupMessageEventPack;
+import coloryr.colormirai.demo.sdk.pack.to.NewFriendRequestEventPack;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -20,7 +20,7 @@ public class ColoryrTest {
         switch (type) {
             case 46: {
                 NewFriendRequestEventPack pack = (NewFriendRequestEventPack) data;
-                robot.newFriendRequestCall(pack.qq, pack.eventid, FriendCallType.accept);
+                robot.newFriendRequestCall(pack.qq, pack.eventid, FriendCallType.ACCEPT);
                 break;
             }
             case 49:
@@ -50,33 +50,33 @@ public class ColoryrTest {
     public static void main(String[] arg) {
         robot = new TopRobot();
         RobotConfig Config = new RobotConfig() {{
-            Name = "Demo";
-            IP = "127.0.0.1";
-            Port = 23333;
-            Pack = new ArrayList<Integer>() {{
+            name = "Demo";
+            ip = "127.0.0.1";
+            port = 23333;
+            pack = new ArrayList<Integer>() {{
                 this.add(46);
                 this.add(49);
                 this.add(50);
                 this.add(51);
             }};
-            Groups = null;
-            QQs = null;
-            RunQQ = 0;
-            Time = 10000;
-            Check = true;
-            CallAction = ColoryrTest::messgae;
-            LogAction = ColoryrTest::log;
-            StateAction = ColoryrTest::state;
+            groups = null;
+            qqs = null;
+            runQQ = 0;
+            time = 10000;
+            check = true;
+            callAction = ColoryrTest::messgae;
+            logAction = ColoryrTest::log;
+            stateAction = ColoryrTest::state;
         }};
 
-        robot.Set(Config);
-        robot.Start();
+        robot.set(Config);
+        robot.start();
         Scanner scanner = new Scanner(System.in);
         while (true) {
             String data = scanner.nextLine();
             String[] args = data.split(" ");
             if (args[0].equals("stop")) {
-                robot.Stop();
+                robot.stop();
                 return;
             } else if (args[0].equals("friends")) {
                 if (arg.length != 2) {
