@@ -1,4 +1,4 @@
-package coloryr.colormirai.event;
+package coloryr.colormirai.robot.event;
 
 import coloryr.colormirai.plugin.socket.pack.PackBase;
 import net.mamoe.mirai.event.events.BotEvent;

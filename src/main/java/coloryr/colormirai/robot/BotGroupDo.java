@@ -12,7 +12,7 @@ import java.io.File;
 import java.util.List;
 
 public class BotGroupDo {
-    public static void DeleteGroupMember(long qq, long id, long fid, boolean black) {
+    public static void deleteGroupMember(long qq, long id, long fid, boolean black) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -35,7 +35,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void MuteGroupMember(long qq, long id, long fid, int time) {
+    public static void muteGroupMember(long qq, long id, long fid, int time) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -58,7 +58,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void UnmuteGroupMember(long qq, long id, long fid) {
+    public static void unmuteGroupMember(long qq, long id, long fid) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -81,7 +81,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void GroupMuteAll(long qq, long id) {
+    public static void groupMuteAll(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -99,7 +99,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void GroupUnmuteAll(long qq, long id) {
+    public static void groupUnmuteAll(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -117,7 +117,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void SetGroupMemberCard(long qq, long id, long fid, String card) {
+    public static void setGroupMemberCard(long qq, long id, long fid, String card) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -140,7 +140,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void SetGroupName(long qq, long id, String name) {
+    public static void setGroupName(long qq, long id, String name) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);

@@ -1,24 +1,24 @@
-package coloryr.colormirai.plugin.mirai_http_api;
+package coloryr.colormirai.plugin.one_bot;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.plugin.mirai_http_api.context.botModule.DeleteFriend;
-import coloryr.colormirai.plugin.mirai_http_api.context.fileModule.FileInfo;
-import coloryr.colormirai.plugin.mirai_http_api.context.fileModule.FileList;
 import coloryr.colormirai.plugin.mirai_http_api.context.SendNudge;
 import coloryr.colormirai.plugin.mirai_http_api.context.WebsocketRouteModule;
 import coloryr.colormirai.plugin.mirai_http_api.context.authModule.Auth;
 import coloryr.colormirai.plugin.mirai_http_api.context.authModule.Release;
 import coloryr.colormirai.plugin.mirai_http_api.context.authModule.Verify;
+import coloryr.colormirai.plugin.mirai_http_api.context.botModule.DeleteFriend;
 import coloryr.colormirai.plugin.mirai_http_api.context.configRouteModule.About;
 import coloryr.colormirai.plugin.mirai_http_api.context.configRouteModule.Config;
 import coloryr.colormirai.plugin.mirai_http_api.context.eventRouteModule.BotInvitedJoinGroupRequestEvent;
 import coloryr.colormirai.plugin.mirai_http_api.context.eventRouteModule.MemberJoinRequestEvent;
 import coloryr.colormirai.plugin.mirai_http_api.context.eventRouteModule.NewFriendRequestEvent;
+import coloryr.colormirai.plugin.mirai_http_api.context.fileModule.FileInfo;
+import coloryr.colormirai.plugin.mirai_http_api.context.fileModule.FileList;
 import coloryr.colormirai.plugin.mirai_http_api.context.fileRouteModule.*;
+import coloryr.colormirai.plugin.mirai_http_api.context.groupManageModule.*;
 import coloryr.colormirai.plugin.mirai_http_api.context.infoModule.*;
 import coloryr.colormirai.plugin.mirai_http_api.context.messageModule.*;
 import coloryr.colormirai.plugin.mirai_http_api.obj.file.GroupFileInfo;
-import coloryr.colormirai.plugin.mirai_http_api.context.groupManageModule.*;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
@@ -26,13 +26,11 @@ import com.sun.net.httpserver.HttpServer;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
-public class MiraiHttpApiServer implements HttpHandler {
+public class OneBotServer implements HttpHandler {
     private HttpServer server;
 
     public boolean pluginServerStart() {
         try {
-            SessionManager.start();
-
             server = HttpServer.create(new InetSocketAddress(ColorMiraiMain.config.miraiHttpApiPort), 10);
             server.createContext("/verify", new Auth());
             server.createContext("/bind", new Verify());
@@ -93,16 +91,15 @@ public class MiraiHttpApiServer implements HttpHandler {
 
             server.setExecutor(null);
             server.start();
-            ColorMiraiMain.logger.info("mirai-http-api已启动:" + ColorMiraiMain.config.miraiHttpApiPort);
+            ColorMiraiMain.logger.info("one-bot已启动:" + ColorMiraiMain.config.miraiHttpApiPort);
         } catch (IOException e) {
-            ColorMiraiMain.logger.error("mirai-http-api启动错误", e);
+            ColorMiraiMain.logger.error("one-bot启动错误", e);
             return false;
         }
         return true;
     }
 
     public void pluginServerStop() {
-        SessionManager.stop();
         if (server != null) {
             server.stop(0);
         }
@@ -110,7 +107,7 @@ public class MiraiHttpApiServer implements HttpHandler {
 
     @Override
     public void handle(HttpExchange t) throws IOException {
-        t.getResponseHeaders().set("Location", "https://github.com/Coloryr/ColorMirai/blob/main/docs/http.md");
+        t.getResponseHeaders().set("Location", "https://github.com/Coloryr/ColorMirai/blob/main/docs/onebot.md");
         t.sendResponseHeaders(301, 0);
         t.close();
     }

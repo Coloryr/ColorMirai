@@ -15,18 +15,18 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class PluginWebSocketServer {
 
-    public static Map<WebSocket, List<String>> WebSocketData = new ConcurrentHashMap<>();
-    private WebSocketServer SocketServer;
+    public static Map<WebSocket, List<String>> websocketsData = new ConcurrentHashMap<>();
+    private WebSocketServer websocketServer;
 
     public static RePackObj read(WebSocket webSocket) {
         try {
-            if (WebSocketData.containsKey(webSocket)) {
-                List<String> list = WebSocketData.get(webSocket);
+            if (websocketsData.containsKey(webSocket)) {
+                List<String> list = websocketsData.get(webSocket);
                 if (list.size() != 0) {
                     String data = list.remove(0);
                     if (data == null)
                         return null;
-                    byte[] temp = data.getBytes(ColorMiraiMain.ReadCharset);
+                    byte[] temp = data.getBytes(ColorMiraiMain.readCharset);
                     return new RePackObj(temp[temp.length - 1], data.substring(0, data.length() - 1));
                 }
                 return null;
@@ -43,7 +43,7 @@ public class PluginWebSocketServer {
         try {
             if (!socket.isOpen())
                 return true;
-            socket.send(new String(data, ColorMiraiMain.SendCharset));
+            socket.send(new String(data, ColorMiraiMain.sendCharset));
             return false;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("插件通信出现问题", e);
@@ -52,26 +52,26 @@ public class PluginWebSocketServer {
     }
 
     public boolean pluginServerStart() {
-        SocketServer = new WebSocketServer(new InetSocketAddress(ColorMiraiMain.Config.WebSocketPort)) {
+        websocketServer = new WebSocketServer(new InetSocketAddress(ColorMiraiMain.config.webSocketPort)) {
             @Override
             public void onOpen(WebSocket conn, ClientHandshake handshake) {
                 List<String> list = new ArrayList<>();
-                WebSocketData.put(conn, list);
+                websocketsData.put(conn, list);
                 PluginUtils.addPlugin(conn);
             }
 
             @Override
             public void onClose(WebSocket conn, int code, String reason, boolean remote) {
-                if (WebSocketData.containsKey(conn)) {
-                    WebSocketData.get(conn).clear();
-                    WebSocketData.remove(conn);
+                if (websocketsData.containsKey(conn)) {
+                    websocketsData.get(conn).clear();
+                    websocketsData.remove(conn);
                 }
             }
 
             @Override
             public void onMessage(WebSocket conn, String message) {
-                if (WebSocketData.containsKey(conn)) {
-                    WebSocketData.get(conn).add(message);
+                if (websocketsData.containsKey(conn)) {
+                    websocketsData.get(conn).add(message);
                 }
             }
 
@@ -82,11 +82,11 @@ public class PluginWebSocketServer {
 
             @Override
             public void onStart() {
-                ColorMiraiMain.logger.info("WebSocket已启动:" + ColorMiraiMain.Config.WebSocketPort);
+                ColorMiraiMain.logger.info("WebSocket已启动:" + ColorMiraiMain.config.webSocketPort);
             }
         };
         try {
-            SocketServer.start();
+            websocketServer.start();
             return true;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("WebSocket初始化失败", e);
@@ -96,7 +96,7 @@ public class PluginWebSocketServer {
 
     public void pluginServerStop() {
         try {
-            SocketServer.stop();
+            websocketServer.stop();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("WebSocket关闭失败", e);
         }

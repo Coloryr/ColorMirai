@@ -16,12 +16,12 @@ public class SessionManager {
     private static int saveCount;
 
     public static Authed get(String key) {
-        ColorMiraiMain.Sessions.allSession.get(key).reset();
+        ColorMiraiMain.sessions.allSession.get(key).reset();
         return allAuthed.get(key);
     }
 
     public static void create(String key, long qq) {
-        Session session = ColorMiraiMain.Sessions.allSession.get(key);
+        Session session = ColorMiraiMain.sessions.allSession.get(key);
         session.isAuth = true;
         session.qq = qq;
         Authed authed;
@@ -31,7 +31,7 @@ public class SessionManager {
         }
         authed = new Authed(qq);
         allAuthed.put(key, authed);
-        ConfigRead.SaveSession();
+        ConfigRead.saveSession();
     }
 
     public static void close(String key) {
@@ -41,9 +41,9 @@ public class SessionManager {
             allAuthed.remove(key);
         }
         if (haveKey(key)) {
-            ColorMiraiMain.Sessions.allSession.remove(key);
+            ColorMiraiMain.sessions.allSession.remove(key);
         }
-        ConfigRead.SaveSession();
+        ConfigRead.saveSession();
     }
 
     public static Session createTempSession() {
@@ -51,17 +51,17 @@ public class SessionManager {
         String temp;
         do {
             temp = generateRandomSessionKey();
-        } while (ColorMiraiMain.Sessions.allSession.containsKey(temp));
+        } while (ColorMiraiMain.sessions.allSession.containsKey(temp));
         session.isAuth = false;
         session.key = temp;
         session.qq = 0;
-        session.time = ColorMiraiMain.Config.authTime;
-        ColorMiraiMain.Sessions.allSession.put(temp, session);
+        session.time = ColorMiraiMain.config.authTime;
+        ColorMiraiMain.sessions.allSession.put(temp, session);
         return session;
     }
 
     public static void start() {
-        for (Session session : ColorMiraiMain.Sessions.allSession.values()) {
+        for (Session session : ColorMiraiMain.sessions.allSession.values()) {
             if (!session.isAuth) {
                 continue;
             }
@@ -83,7 +83,7 @@ public class SessionManager {
     private static void tick() {
         while (isRun) {
             try {
-                Iterator<Session> list = ColorMiraiMain.Sessions.allSession.values().iterator();
+                Iterator<Session> list = ColorMiraiMain.sessions.allSession.values().iterator();
                 while (list.hasNext()) {
                     Session item = list.next();
                     if (item.time > 0) {
@@ -100,7 +100,7 @@ public class SessionManager {
                 saveCount++;
                 if (saveCount == 59) {
                     saveCount = 0;
-                    ConfigRead.SaveSession();
+                    ConfigRead.saveSession();
                 }
                 Thread.sleep(1000);
             } catch (Exception e) {
@@ -110,7 +110,7 @@ public class SessionManager {
     }
 
     public static boolean haveKey(String key) {
-        return ColorMiraiMain.Sessions.allSession.containsKey(key);
+        return ColorMiraiMain.sessions.allSession.containsKey(key);
     }
 
     private static String generateRandomSessionKey() {

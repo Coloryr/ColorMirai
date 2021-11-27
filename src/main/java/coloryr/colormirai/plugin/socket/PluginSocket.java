@@ -8,48 +8,48 @@ import java.net.Socket;
 import java.net.SocketException;
 
 public class PluginSocket {
-    private final ISend Send;
-    private final IRead Read;
-    private final Socket Socket;
-    private final WebSocket WebSocket;
+    private final ISend send;
+    private final IRead read;
+    private final Socket socket;
+    private final WebSocket websocket;
 
     public PluginSocket(Socket socket) {
-        this.Socket = socket;
-        this.WebSocket = null;
-        Send = (data) -> PluginSocketServer.send(data, Socket);
-        Read = () -> PluginSocketServer.read(Socket);
+        this.socket = socket;
+        this.websocket = null;
+        send = (data) -> PluginSocketServer.send(data, this.socket);
+        read = () -> PluginSocketServer.read(this.socket);
         try {
-            this.Socket.setTcpNoDelay(true);
+            this.socket.setTcpNoDelay(true);
         } catch (SocketException e) {
             e.printStackTrace();
         }
     }
 
     public PluginSocket(WebSocket socket) {
-        this.WebSocket = socket;
-        this.Socket = null;
-        Send = (data) -> PluginWebSocketServer.send(data, WebSocket);
-        Read = () -> PluginWebSocketServer.read(WebSocket);
+        this.websocket = socket;
+        this.socket = null;
+        send = (data) -> PluginWebSocketServer.send(data, websocket);
+        read = () -> PluginWebSocketServer.read(websocket);
     }
 
     public boolean send(byte[] data) {
-        return Send.send(data);
+        return send.send(data);
     }
 
     public RePackObj Read() {
-        return Read.read();
+        return read.read();
     }
 
     public void close() {
-        if (this.Socket != null) {
+        if (this.socket != null) {
             try {
-                Socket.close();
+                socket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        if (this.WebSocket != null) {
-            this.WebSocket.close();
+        if (this.websocket != null) {
+            this.websocket.close();
         }
     }
 }

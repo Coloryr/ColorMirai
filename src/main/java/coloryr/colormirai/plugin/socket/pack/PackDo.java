@@ -128,9 +128,9 @@ import java.util.Map;
 127 [插件]断开连接
 */
 public class PackDo {
-    public static byte[] BuildPack(Object data, int index) {
+    public static byte[] buildPack(Object data, int index) {
         String str = JSON.toJSONString(data) + " ";
-        byte[] temp = str.getBytes(ColorMiraiMain.SendCharset);
+        byte[] temp = str.getBytes(ColorMiraiMain.sendCharset);
         temp[temp.length - 1] = (byte) index;
         return temp;
     }

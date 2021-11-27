@@ -9,21 +9,21 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class ConfigRead {
-    private static File ConfigFile;
-    private static File SessionFile;
+    private static File configFile;
+    private static File sessionFile;
 
-    public static boolean ReadStart(String local) {
+    public static boolean readStart(String local) {
         try {
-            ConfigFile = new File(local + "MainConfig.json");
-            SessionFile = new File(local + "Session.json");
-            if (!ConfigFile.exists()) {
-                ConfigFile.createNewFile();
-                ColorMiraiMain.Config = new ConfigObj();
-                Save();
+            configFile = new File(local + "config.json");
+            sessionFile = new File(local + "session.json");
+            if (!configFile.exists()) {
+                configFile.createNewFile();
+                ColorMiraiMain.config = new ConfigObj();
+                save();
                 return true;
             } else {
                 InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(ConfigFile), StandardCharsets.UTF_8);
+                        new FileInputStream(configFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
                 char[] buf = new char[4096];
                 int length;
@@ -31,23 +31,23 @@ public class ConfigRead {
                 while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
-                ColorMiraiMain.Config = JSON.parseObject(data.toString(), ConfigObj.class);
-                if (ColorMiraiMain.Config.QQs == null) {
-                    ColorMiraiMain.Config = new ConfigObj();
-                    Save();
+                ColorMiraiMain.config = JSON.parseObject(data.toString(), ConfigObj.class);
+                if (ColorMiraiMain.config.qqList == null) {
+                    ColorMiraiMain.config = new ConfigObj();
+                    save();
                 }
                 bf.close();
                 reader.close();
             }
 
-            if (!SessionFile.exists()) {
-                SessionFile.createNewFile();
-                ColorMiraiMain.Sessions = new SessionObj();
-                SaveSession();
+            if (!sessionFile.exists()) {
+                sessionFile.createNewFile();
+                ColorMiraiMain.sessions = new SessionObj();
+                saveSession();
                 return true;
             } else {
                 InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(SessionFile), StandardCharsets.UTF_8);
+                        new FileInputStream(sessionFile), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
                 char[] buf = new char[4096];
                 int length;
@@ -55,32 +55,32 @@ public class ConfigRead {
                 while ((length = bf.read(buf)) != -1) {
                     data.append(new String(buf, 0, length));
                 }
-                ColorMiraiMain.Sessions = JSON.parseObject(data.toString(), SessionObj.class);
-                if (ColorMiraiMain.Sessions == null || ColorMiraiMain.Sessions.allSession == null) {
-                    ColorMiraiMain.Sessions = new SessionObj();
-                    SaveSession();
+                ColorMiraiMain.sessions = JSON.parseObject(data.toString(), SessionObj.class);
+                if (ColorMiraiMain.sessions == null || ColorMiraiMain.sessions.allSession == null) {
+                    ColorMiraiMain.sessions = new SessionObj();
+                    saveSession();
                 }
                 bf.close();
                 reader.close();
             }
 
-            if (ColorMiraiMain.Config.ReadEncoding == null || ColorMiraiMain.Config.ReadEncoding.isEmpty()) {
-                ColorMiraiMain.ReadCharset = StandardCharsets.UTF_8;
+            if (ColorMiraiMain.config.readEncoding == null || ColorMiraiMain.config.readEncoding.isEmpty()) {
+                ColorMiraiMain.readCharset = StandardCharsets.UTF_8;
             } else {
                 try {
-                    ColorMiraiMain.ReadCharset = Charset.forName(ColorMiraiMain.Config.ReadEncoding);
+                    ColorMiraiMain.readCharset = Charset.forName(ColorMiraiMain.config.readEncoding);
                 } catch (Exception e) {
-                    ColorMiraiMain.ReadCharset = StandardCharsets.UTF_8;
+                    ColorMiraiMain.readCharset = StandardCharsets.UTF_8;
                 }
             }
 
-            if (ColorMiraiMain.Config.SendEncoding == null || ColorMiraiMain.Config.SendEncoding.isEmpty()) {
-                ColorMiraiMain.SendCharset = StandardCharsets.UTF_8;
+            if (ColorMiraiMain.config.sendEncoding == null || ColorMiraiMain.config.sendEncoding.isEmpty()) {
+                ColorMiraiMain.sendCharset = StandardCharsets.UTF_8;
             } else {
                 try {
-                    ColorMiraiMain.SendCharset = Charset.forName(ColorMiraiMain.Config.SendEncoding);
+                    ColorMiraiMain.sendCharset = Charset.forName(ColorMiraiMain.config.sendEncoding);
                 } catch (Exception e) {
-                    ColorMiraiMain.SendCharset = StandardCharsets.UTF_8;
+                    ColorMiraiMain.sendCharset = StandardCharsets.UTF_8;
                 }
             }
 
@@ -90,12 +90,12 @@ public class ConfigRead {
         return false;
     }
 
-    public static void Save() {
+    public static void save() {
         try {
-            FileOutputStream out = new FileOutputStream(ConfigFile);
+            FileOutputStream out = new FileOutputStream(configFile);
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
-            write.write(JSON.toJSONString(ColorMiraiMain.Config, SerializerFeature.PrettyFormat));
+            write.write(JSON.toJSONString(ColorMiraiMain.config, SerializerFeature.PrettyFormat));
             write.close();
             out.close();
         } catch (Exception e) {
@@ -104,12 +104,12 @@ public class ConfigRead {
         }
     }
 
-    public static void SaveSession() {
+    public static void saveSession() {
         try {
-            FileOutputStream out = new FileOutputStream(SessionFile);
+            FileOutputStream out = new FileOutputStream(sessionFile);
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
-            write.write(JSON.toJSONString(ColorMiraiMain.Sessions, SerializerFeature.PrettyFormat));
+            write.write(JSON.toJSONString(ColorMiraiMain.sessions, SerializerFeature.PrettyFormat));
             write.close();
             out.close();
         } catch (Exception e) {

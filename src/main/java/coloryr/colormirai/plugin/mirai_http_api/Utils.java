@@ -35,7 +35,7 @@ public class Utils {
     }
 
     public static boolean checkKey(String key) {
-        return key.equals(ColorMiraiMain.Config.authKey);
+        return key.equals(ColorMiraiMain.config.authKey);
     }
 
     public static String getFace(int id) {

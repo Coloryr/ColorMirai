@@ -188,7 +188,7 @@ public class BotGetData {
         }
     }
 
-    public static String GetImg(long qq, String uuid) {
+    public static String getImg(long qq, String uuid) {
         if (!BotStart.getBots().containsKey(qq)) {
             ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return null;

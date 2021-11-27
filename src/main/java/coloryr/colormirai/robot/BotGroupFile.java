@@ -1,7 +1,7 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.plugin.download.DownloadUtils;
+import coloryr.colormirai.download.DownloadUtils;
 import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.socket.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;

@@ -3,11 +3,11 @@ package coloryr.colormirai;
 import coloryr.colormirai.config.ConfigObj;
 import coloryr.colormirai.config.ConfigRead;
 import coloryr.colormirai.config.SessionObj;
+import coloryr.colormirai.plugin.one_bot.OneBotServer;
 import coloryr.colormirai.plugin.socket.PluginUtils;
 import coloryr.colormirai.plugin.socket.ThePlugin;
-import coloryr.colormirai.plugin.download.DownloadUtils;
+import coloryr.colormirai.download.DownloadUtils;
 import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpApiServer;
-import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
 import coloryr.colormirai.plugin.socket.PluginSocketServer;
 import coloryr.colormirai.plugin.socket.PluginWebSocketServer;
 import coloryr.colormirai.robot.BotStart;
@@ -24,25 +24,26 @@ public class ColorMiraiMain {
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static final Base64.Decoder decoder = Base64.getDecoder();
     public static final Random random = new Random();
-    public static String RunDir;
+    public static String runDir;
     public static String tempDir;
-    public static ConfigObj Config;
-    public static SessionObj Sessions;
-    public static Charset SendCharset;
-    public static Charset ReadCharset;
-    private static PluginWebSocketServer WebSocket;
-    private static PluginSocketServer Socket;
-    private static MiraiHttpApiServer Http;
+    public static ConfigObj config;
+    public static SessionObj sessions;
+    public static Charset sendCharset;
+    public static Charset readCharset;
+    private static PluginWebSocketServer webSocket;
+    private static PluginSocketServer socket;
+    private static MiraiHttpApiServer httpApiServer;
+    private static OneBotServer oneBotServer;
 
     public static void main(String[] args) {
-        RunDir = System.getProperty("user.dir") + "/";
-        tempDir = RunDir + "temp/";
+        runDir = System.getProperty("user.dir") + "/";
+        tempDir = runDir + "temp/";
         File dir = new File(tempDir);
         if (!dir.exists()) {
             dir.mkdir();
         }
         logger.info("正在启动");
-        if (ConfigRead.ReadStart(RunDir)) {
+        if (ConfigRead.readStart(runDir)) {
             logger.info("请修改配置文件后重新启动");
             return;
         }
@@ -50,34 +51,37 @@ public class ColorMiraiMain {
         PluginUtils.init();
         DownloadUtils.start();
 
-        if (!BotStart.Start()) {
+        if (!BotStart.start()) {
             logger.error("机器人启动失败");
             return;
         }
 
-        SessionManager.start();
-
         logger.info("初始化完成");
 
-        WebSocket = new PluginWebSocketServer();
-        Socket = new PluginSocketServer();
-        Http = new MiraiHttpApiServer();
+        webSocket = new PluginWebSocketServer();
+        socket = new PluginSocketServer();
+        httpApiServer = new MiraiHttpApiServer();
+        oneBotServer = new OneBotServer();
 
-        if (!Socket.pluginServerStart()) {
+        if (!socket.pluginServerStart()) {
             logger.error("socket启动失败");
             return;
         }
 
-        if (!WebSocket.pluginServerStart()) {
+        if (!webSocket.pluginServerStart()) {
             logger.error("websocket启动失败");
             return;
         }
-        if (!Http.pluginServerStart()) {
+        if (!httpApiServer.pluginServerStart()) {
+            logger.error("mirai-http-api启动失败");
+            return;
+        }
+        if (!oneBotServer.pluginServerStart()) {
             logger.error("mirai-http-api启动失败");
             return;
         }
 
-        if (Config.noInput) {
+        if (config.noInput) {
             return;
         }
 
@@ -124,10 +128,10 @@ public class ColorMiraiMain {
 
     public static void stop() {
         DownloadUtils.stop();
-        SessionManager.stop();
-        Socket.pluginServerStop();
-        WebSocket.pluginServerStop();
-        Http.pluginServerStop();
+        socket.pluginServerStop();
+        webSocket.pluginServerStop();
+        httpApiServer.pluginServerStop();
+        oneBotServer.pluginServerStop();
         BotStart.stop();
         System.exit(0);
     }

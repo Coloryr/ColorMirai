@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BotSendSound {
-    public static void SendGroupSound(long qq, long id, String sound) {
+    public static void sendGroupSound(long qq, long id, String sound) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -41,7 +41,7 @@ public class BotSendSound {
         }
     }
 
-    public static void SendGroupSoundFile(long qq, long id, String file, List<Long> ids) {
+    public static void sendGroupSoundFile(long qq, long id, String file, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -79,7 +79,7 @@ public class BotSendSound {
         }
     }
 
-    public static void SendFriendFile(long qq, long id, String file, List<Long> ids) {
+    public static void sendFriendFile(long qq, long id, String file, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);

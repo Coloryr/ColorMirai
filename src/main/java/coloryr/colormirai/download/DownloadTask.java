@@ -1,4 +1,4 @@
-package coloryr.colormirai.plugin.download;
+package coloryr.colormirai.download;
 
 public class DownloadTask {
     public String url;

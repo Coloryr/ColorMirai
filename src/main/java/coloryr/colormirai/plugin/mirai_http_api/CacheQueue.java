@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CacheQueue extends LinkedHashMap<Integer, OnlineMessageSource> {
-    private int cacheSize = ColorMiraiMain.Config.cacheSize;
+    private int cacheSize = ColorMiraiMain.config.cacheSize;
 
     @Override
     public boolean removeEldestEntry(Map.Entry<Integer, OnlineMessageSource> eldest) {

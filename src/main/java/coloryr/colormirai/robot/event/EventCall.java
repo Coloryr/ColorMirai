@@ -1,4 +1,4 @@
-package coloryr.colormirai.event;
+package coloryr.colormirai.robot.event;
 
 import coloryr.colormirai.ColorMiraiMain;
 import net.mamoe.mirai.event.events.BotInvitedJoinGroupRequestEvent;
@@ -11,22 +11,22 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventCall {
-    private static final Map<Long, EventBase> EventsDo = new ConcurrentHashMap<>();
-    private static final Random Random = new Random();
+    private static final Map<Long, EventBase> eventsDo = new ConcurrentHashMap<>();
+    private static final Random random = new Random();
 
-    public static long AddEvent(EventBase event) {
+    public static long addEvent(EventBase event) {
         long a = event.id;
-        while (EventsDo.containsKey(a)) {
-            a = Random.nextLong();
+        while (eventsDo.containsKey(a)) {
+            a = random.nextLong();
         }
-        EventsDo.put(a, event);
+        eventsDo.put(a, event);
         return a;
     }
 
-    public static void DoEvent(long qq, long id, int dofun, List<Object> arg) {
-        if (EventsDo.containsKey(id)) {
+    public static void doEvent(long qq, long id, int dofun, List<Object> arg) {
+        if (eventsDo.containsKey(id)) {
             try {
-                EventBase task = EventsDo.remove(id);
+                EventBase task = eventsDo.remove(id);
                 if (task.qq != qq)
                     return;
                 switch (task.type) {

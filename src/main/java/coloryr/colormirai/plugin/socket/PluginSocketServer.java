@@ -9,8 +9,8 @@ import java.net.Socket;
 
 public class PluginSocketServer {
 
-    private ServerSocket ServerSocket;
-    private Thread ServerThread;
+    private ServerSocket serverSocket;
+    private Thread serverThread;
     private boolean isStart;
 
     public static RePackObj read(Socket socket) {
@@ -22,11 +22,11 @@ public class PluginSocketServer {
             if (socket.getInputStream().available() != 0) {
                 while ((len = socket.getInputStream().read(bytes)) != -1) {
                     if (len == 8192)
-                        sb.append(new String(bytes, 0, len, ColorMiraiMain.ReadCharset));
+                        sb.append(new String(bytes, 0, len, ColorMiraiMain.readCharset));
                     else {
                         index = bytes[len - 1];
                         bytes[len - 1] = 0;
-                        sb.append(new String(bytes, 0, len - 1, ColorMiraiMain.ReadCharset));
+                        sb.append(new String(bytes, 0, len - 1, ColorMiraiMain.readCharset));
                         break;
                     }
                 }
@@ -58,13 +58,13 @@ public class PluginSocketServer {
 
     public boolean pluginServerStart() {
         try {
-            ServerSocket = new ServerSocket(ColorMiraiMain.Config.SocketPort);
-            ColorMiraiMain.logger.info("Socket已启动:" + ColorMiraiMain.Config.SocketPort);
+            serverSocket = new ServerSocket(ColorMiraiMain.config.socketPort);
+            ColorMiraiMain.logger.info("Socket已启动:" + ColorMiraiMain.config.socketPort);
             isStart = true;
-            ServerThread = new Thread(() -> {
+            serverThread = new Thread(() -> {
                 while (isStart) {
                     try {
-                        Socket socket = ServerSocket.accept();
+                        Socket socket = serverSocket.accept();
                         ColorMiraiMain.logger.info("有插件连接");
                         PluginUtils.addPlugin(socket);
                     } catch (IOException e) {
@@ -74,7 +74,7 @@ public class PluginSocketServer {
                     }
                 }
             });
-            ServerThread.start();
+            serverThread.start();
             return true;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("Socket启动失败", e);
@@ -83,13 +83,13 @@ public class PluginSocketServer {
     }
 
     public void pluginServerStop() {
-        if (ServerThread != null && ServerThread.isAlive()) {
+        if (serverThread != null && serverThread.isAlive()) {
             isStart = false;
             try {
-                if (ServerSocket != null) {
-                    ServerSocket.close();
+                if (serverSocket != null) {
+                    serverSocket.close();
                 }
-                ServerThread.join();
+                serverThread.join();
             } catch (Exception e) {
                 ColorMiraiMain.logger.error("关闭出现错误", e);
             }

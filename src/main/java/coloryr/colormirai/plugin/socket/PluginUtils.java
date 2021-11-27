@@ -14,19 +14,19 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class PluginUtils {
-    private static final Map<String, ThePlugin> PluginList = new ConcurrentHashMap<>();
+    private static final Map<String, ThePlugin> pluginList = new ConcurrentHashMap<>();
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
 
     public static Collection<ThePlugin> getAll() {
-        return PluginList.values();
+        return pluginList.values();
     }
 
     public static boolean havePlugin(String name) {
-        return PluginList.containsKey(name);
+        return pluginList.containsKey(name);
     }
 
     public static boolean havePlugin() {
-        return PluginList.isEmpty();
+        return pluginList.isEmpty();
     }
 
     public static void addPlugin(Socket socket) {
@@ -38,28 +38,28 @@ public class PluginUtils {
     }
 
     public static void addPlugin(String name, ThePlugin plugin) {
-        if (PluginList.containsKey(name)) {
-            ThePlugin temp = PluginList.get(name);
+        if (pluginList.containsKey(name)) {
+            ThePlugin temp = pluginList.get(name);
             temp.close();
         }
-        PluginList.put(name, plugin);
+        pluginList.put(name, plugin);
         ColorMiraiMain.logger.info("插件[" + name + "]已连接");
     }
 
     public static void removePlugin(String name) {
-        PluginList.remove(name);
+        pluginList.remove(name);
         ColorMiraiMain.logger.info("插件[" + name + "]已断开");
     }
 
     public static void init() {
-        if (ColorMiraiMain.Config.Pack) {
+        if (ColorMiraiMain.config.pack) {
             service.scheduleAtFixedRate(() -> BotStart.addTask(new SendPackObj(60, "{}", 0, 0, 0)),
                     0, 30, TimeUnit.SECONDS);
         }
     }
 
     public static void Stop() {
-        for (Map.Entry<String, ThePlugin> item : PluginList.entrySet()) {
+        for (Map.Entry<String, ThePlugin> item : pluginList.entrySet()) {
             item.getValue().close();
         }
     }

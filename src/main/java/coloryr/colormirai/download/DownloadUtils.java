@@ -1,4 +1,4 @@
-package coloryr.colormirai.plugin.download;
+package coloryr.colormirai.download;
 
 import coloryr.colormirai.ColorMiraiMain;
 
@@ -16,7 +16,7 @@ public class DownloadUtils {
     private static Thread downThread;
     private static boolean isRun;
 
-    private static void Task() {
+    private static void run() {
         HttpURLConnection connection = null;
         InputStream is = null;
         int bytesum = 0;
@@ -73,7 +73,7 @@ public class DownloadUtils {
     }
 
     public static void start() {
-        downThread = new Thread(DownloadUtils::Task);
+        downThread = new Thread(DownloadUtils::run);
         isRun = true;
         downThread.start();
     }

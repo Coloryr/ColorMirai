@@ -13,6 +13,6 @@ public class Session {
     }
 
     public void reset() {
-        time = ColorMiraiMain.Config.authTime;
+        time = ColorMiraiMain.config.authTime;
     }
 }

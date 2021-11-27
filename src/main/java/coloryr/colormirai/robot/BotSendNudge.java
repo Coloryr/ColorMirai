@@ -7,7 +7,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
 
 public class BotSendNudge {
-    public static void SendNudge(long qq, long id) {
+    public static void sendNudge(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -25,7 +25,7 @@ public class BotSendNudge {
         }
     }
 
-    public static void SendNudge(long qq, long id, long fid) {
+    public static void sendNudge(long qq, long id, long fid) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);

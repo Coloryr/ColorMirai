@@ -9,7 +9,7 @@ import net.mamoe.mirai.message.data.MusicKind;
 import net.mamoe.mirai.message.data.MusicShare;
 
 public class BotSendMusicShare {
-    public static void SendMusicShare(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+    public static void sendMusicShare(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
         MusicKind kind;
         if (type == 1) {
             kind = MusicKind.NeteaseCloudMusic;
@@ -39,7 +39,7 @@ public class BotSendMusicShare {
         friend.sendMessage(music);
     }
 
-    public static void SendMusicShareGroup(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+    public static void sendMusicShareGroup(long qq, long id, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
         MusicKind kind;
         if (type == 1) {
             kind = MusicKind.NeteaseCloudMusic;
@@ -69,7 +69,7 @@ public class BotSendMusicShare {
         group.sendMessage(music);
     }
 
-    public static void SendMusicShareMember(long qq, long id, long fid, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
+    public static void sendMusicShareMember(long qq, long id, long fid, int type, String title, String summary, String jumpUrl, String pictureUrl, String musicUrl) {
         MusicKind kind;
         if (type == 1) {
             kind = MusicKind.NeteaseCloudMusic;

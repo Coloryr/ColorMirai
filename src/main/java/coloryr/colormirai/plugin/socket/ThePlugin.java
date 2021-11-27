@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.socket;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.event.EventCall;
+import coloryr.colormirai.robot.event.EventCall;
 import coloryr.colormirai.plugin.socket.pack.PackDo;
 import coloryr.colormirai.plugin.socket.obj.BuffObj;
 import coloryr.colormirai.plugin.socket.obj.RePackObj;
@@ -30,21 +30,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ThePlugin {
-    private final PluginSocket Socket;
-    private final List<RePackObj> Tasks = new CopyOnWriteArrayList<>();
-    private final List<Long> Groups = new CopyOnWriteArrayList<>();
-    private final List<Long> QQs = new CopyOnWriteArrayList<>();
-    private final Map<String, BuffObj> MessageBuff = new ConcurrentHashMap<>();
+    private final PluginSocket socket;
+    private final List<RePackObj> tasks = new CopyOnWriteArrayList<>();
+    private final List<Long> groups = new CopyOnWriteArrayList<>();
+    private final List<Long> qqList = new CopyOnWriteArrayList<>();
+    private final Map<String, BuffObj> messageBuff = new ConcurrentHashMap<>();
 
     private final Thread doRead;
 
     private String name;
     private long runQQ;
-    private List<Integer> Events = null;
+    private List<Integer> events = null;
     private boolean isRun;
 
     public ThePlugin(PluginSocket Socket) {
-        this.Socket = Socket;
+        this.socket = Socket;
         doRead = new Thread(this::startRead);
         new Thread(this::start).start();
     }
@@ -54,10 +54,10 @@ public class ThePlugin {
     }
 
     public String getReg() {
-        if (Events.size() == 0)
+        if (events.size() == 0)
             return "无";
         StringBuilder stringBuilder = new StringBuilder();
-        for (int item : Events) {
+        for (int item : events) {
             stringBuilder.append(item).append(",");
         }
         String data = stringBuilder.toString();
@@ -67,8 +67,8 @@ public class ThePlugin {
     private void startRead() {
         while (isRun) {
             try {
-                if (!Tasks.isEmpty()) {
-                    RePackObj task = Tasks.remove(0);
+                if (!tasks.isEmpty()) {
+                    RePackObj task = tasks.remove(0);
                     switch (task.index) {
                         //52 [插件]发送群消息
                         case 52: {
@@ -97,7 +97,7 @@ public class ThePlugin {
                             ListGroupPack pack31 = new ListGroupPack();
                             pack31.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack31.groups = data;
-                            if (Socket.send(PackDo.BuildPack(pack31, 55)))
+                            if (socket.send(PackDo.buildPack(pack31, 55)))
                                 close();
                             break;
                         }
@@ -110,7 +110,7 @@ public class ThePlugin {
                             ListFriendPack pack1 = new ListFriendPack();
                             pack1.friends = data;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
-                            if (Socket.send(PackDo.BuildPack(pack1, 56)))
+                            if (socket.send(PackDo.buildPack(pack1, 56)))
                                 close();
                             break;
                         }
@@ -123,7 +123,7 @@ public class ThePlugin {
                             ListMemberPack pack1 = new ListMemberPack();
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.members = data;
-                            if (Socket.send(PackDo.BuildPack(pack1, 57)))
+                            if (socket.send(PackDo.buildPack(pack1, 57)))
                                 close();
                             break;
                         }
@@ -137,14 +137,14 @@ public class ThePlugin {
                             pack1.setting = data;
                             pack1.id = pack.id;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
-                            if (Socket.send(PackDo.BuildPack(data, 58)))
+                            if (socket.send(PackDo.buildPack(data, 58)))
                                 close();
                             break;
                         }
                         //59 [插件]回应事件
                         case 59: {
                             EventCallPack pack = JSON.parseObject(task.data, EventCallPack.class);
-                            EventCall.DoEvent(runQQ == 0 ? pack.qq : runQQ, pack.eventid, pack.dofun, pack.arg);
+                            EventCall.doEvent(runQQ == 0 ? pack.qq : runQQ, pack.eventid, pack.dofun, pack.arg);
                             break;
                         }
                         //61 [插件]发送图片到群
@@ -183,7 +183,7 @@ public class ThePlugin {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
-                                    BotSendImage.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"));
+                                    BotSendImage.sendFriendImage(runQQ == 0 ? qq : runQQ, id, formdata.get("img"), null);
                                 } catch (Exception e) {
                                     ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
@@ -193,49 +193,49 @@ public class ThePlugin {
                         //64 [插件]删除群员
                         case 64: {
                             GroupKickMemberPack pack = JSON.parseObject(task.data, GroupKickMemberPack.class);
-                            BotGroupDo.DeleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.black);
+                            BotGroupDo.deleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.black);
                             break;
                         }
                         //65 [插件]禁言群员
                         case 65: {
                             GroupMuteMemberPack pack = JSON.parseObject(task.data, GroupMuteMemberPack.class);
-                            BotGroupDo.MuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
+                            BotGroupDo.muteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
                             GroupUnmuteMemberPack pack = JSON.parseObject(task.data, GroupUnmuteMemberPack.class);
-                            BotGroupDo.UnmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.unmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //67 [插件]开启全员禁言
                         case 67: {
                             GroupMuteAllPack pack = JSON.parseObject(task.data, GroupMuteAllPack.class);
-                            BotGroupDo.GroupMuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupMuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //68 [插件]关闭全员禁言
                         case 68: {
                             GroupUnmuteAllPack pack = JSON.parseObject(task.data, GroupUnmuteAllPack.class);
-                            BotGroupDo.GroupUnmuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupUnmuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //69 [插件]设置群名片
                         case 69: {
                             GroupSetMemberCard pack = JSON.parseObject(task.data, GroupSetMemberCard.class);
-                            BotGroupDo.SetGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
+                            BotGroupDo.setGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
                         }
                         //70 [插件]设置群名
                         case 70: {
                             GroupSetNamePack pack = JSON.parseObject(task.data, GroupSetNamePack.class);
-                            BotGroupDo.SetGroupName(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            BotGroupDo.setGroupName(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
                         //71 [插件]撤回消息
                         case 71: {
                             ReCallMessagePack pack = JSON.parseObject(task.data, ReCallMessagePack.class);
-                            BotStart.ReCall(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotStart.reCall(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //74 [插件]发送语音到群
@@ -245,7 +245,7 @@ public class ThePlugin {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
-                                    BotSendSound.SendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata.get("sound"));
+                                    BotSendSound.sendGroupSound(runQQ == 0 ? qq : runQQ, id, formdata.get("sound"));
                                 } catch (Exception e) {
                                     ColorMiraiMain.logger.error("解析发生错误", e);
                                 }
@@ -273,32 +273,32 @@ public class ThePlugin {
                         //78 [插件]从本地文件加载语音发送到群
                         case 78: {
                             SendGroupSoundFilePack pack = JSON.parseObject(task.data, SendGroupSoundFilePack.class);
-                            BotSendSound.SendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendSound.sendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //83 [插件]发送私聊戳一戳
                         case 83: {
                             SendFriendNudgePack pack = JSON.parseObject(task.data, SendFriendNudgePack.class);
-                            BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotSendNudge.sendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
                             SendGroupMemberNudgePack pack = JSON.parseObject(task.data, SendGroupMemberNudgePack.class);
-                            BotSendNudge.SendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotSendNudge.sendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //90 [插件]获取图片Url
                         case 90: {
                             GetImageUrlPack pack = JSON.parseObject(task.data, GetImageUrlPack.class);
-                            String data4 = BotGetData.GetImg(runQQ == 0 ? pack.qq : runQQ, pack.uuid);
+                            String data4 = BotGetData.getImg(runQQ == 0 ? pack.qq : runQQ, pack.uuid);
                             if (data4 == null)
                                 break;
                             ReImagePack pack1 = new ReImagePack();
                             pack1.uuid = pack.uuid;
                             pack1.url = data4;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
-                            if (Socket.send(PackDo.BuildPack(pack1, 90)))
+                            if (socket.send(PackDo.buildPack(pack1, 90)))
                                 close();
                             break;
                         }
@@ -311,7 +311,7 @@ public class ThePlugin {
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.fid = pack.fid;
-                            if (Socket.send(PackDo.BuildPack(pack1, 91)))
+                            if (socket.send(PackDo.buildPack(pack1, 91)))
                                 close();
                             break;
                         }
@@ -322,7 +322,7 @@ public class ThePlugin {
                             if (pack1 == null)
                                 break;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
-                            if (Socket.send(PackDo.BuildPack(pack1, 92)))
+                            if (socket.send(PackDo.buildPack(pack1, 92)))
                                 close();
                             break;
                         }
@@ -330,11 +330,11 @@ public class ThePlugin {
                         case 93: {
                             SendMusicSharePack pack = JSON.parseObject(task.data, SendMusicSharePack.class);
                             if (pack.type1 == 0) {
-                                BotSendMusicShare.SendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             } else if (pack.type1 == 1) {
-                                BotSendMusicShare.SendMusicShareGroup(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendMusicShareGroup(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             } else if (pack.type1 == 2) {
-                                BotSendMusicShare.SendMusicShareMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendMusicShareMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             }
                             break;
                         }
@@ -386,7 +386,7 @@ public class ThePlugin {
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.files = data;
-                            if (Socket.send(PackDo.BuildPack(pack1, 101)))
+                            if (socket.send(PackDo.buildPack(pack1, 101)))
                                 close();
                             break;
                         }
@@ -460,7 +460,7 @@ public class ThePlugin {
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.list = list;
-                            if (Socket.send(PackDo.BuildPack(pack1, 109)))
+                            if (socket.send(PackDo.buildPack(pack1, 109)))
                                 close();
                             break;
                         }
@@ -477,7 +477,7 @@ public class ThePlugin {
                         //112 [插件]发送好友语言文件
                         case 112: {
                             SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
-                            BotSendSound.SendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendSound.sendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                         }
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {
@@ -517,31 +517,31 @@ public class ThePlugin {
     private void start() {
         RePackObj pack;
         try {
-            while ((pack = Socket.Read()) == null) {
+            while ((pack = socket.Read()) == null) {
                 Thread.sleep(10);
             }
             StartPack StartPack = JSON.parseObject(pack.data, StartPack.class);
             if (StartPack.Name != null && StartPack.Reg != null) {
                 name = StartPack.Name;
-                Events = StartPack.Reg;
+                events = StartPack.Reg;
                 if (StartPack.Groups != null) {
-                    Groups.addAll(StartPack.Groups);
+                    groups.addAll(StartPack.Groups);
                 }
                 if (StartPack.QQs != null) {
-                    QQs.addAll(StartPack.QQs);
+                    qqList.addAll(StartPack.QQs);
                 }
                 if (StartPack.RunQQ != 0 && !BotStart.getBotsKey().contains(StartPack.RunQQ)) {
                     ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
-                    Socket.close();
+                    socket.close();
                     return;
                 }
                 runQQ = StartPack.RunQQ;
                 PluginUtils.addPlugin(name, this);
                 String data = JSON.toJSONString(BotStart.getBotsKey());
-                Socket.send(data.getBytes(ColorMiraiMain.SendCharset));
+                socket.send(data.getBytes(ColorMiraiMain.sendCharset));
             } else {
                 ColorMiraiMain.logger.warn("插件连接初始化失败");
-                Socket.close();
+                socket.close();
                 return;
             }
         } catch (Exception e) {
@@ -552,9 +552,9 @@ public class ThePlugin {
         doRead.start();
         while (isRun) {
             try {
-                pack = Socket.Read();
+                pack = socket.Read();
                 if (pack != null) {
-                    Tasks.add(pack);
+                    tasks.add(pack);
                 }
                 Thread.sleep(10);
             } catch (Exception e) {
@@ -608,7 +608,7 @@ public class ThePlugin {
             if (temp.id == 0) {
                 return;
             }
-            item = MessageBuff.get("F:" + temp.id);
+            item = messageBuff.get("F:" + temp.id);
             if (item == null) {
                 item = new BuffObj();
                 Friend contact = bot.getFriend(temp.id);
@@ -624,7 +624,7 @@ public class ThePlugin {
             if (temp.id == 0) {
                 return;
             }
-            item = MessageBuff.get("G:" + temp.id);
+            item = messageBuff.get("G:" + temp.id);
             if (item == null) {
                 item = new BuffObj();
                 Group contact = bot.getGroup(temp.id);
@@ -640,7 +640,7 @@ public class ThePlugin {
             if (temp.id == 0 || temp.fid == 0) {
                 return;
             }
-            item = MessageBuff.get("G:" + temp.id + "F:" + temp.id);
+            item = messageBuff.get("G:" + temp.id + "F:" + temp.id);
             if (item == null) {
                 item = new BuffObj();
                 Group group = bot.getGroup(temp.id);
@@ -690,11 +690,11 @@ public class ThePlugin {
             BotStart.addMessage(temp.qq, obj.id, obj);
         } else {
             if (temp.type == 0) {
-                MessageBuff.put("F:" + temp.id, item);
+                messageBuff.put("F:" + temp.id, item);
             } else if (temp.type == 1) {
-                MessageBuff.put("G:" + temp.id, item);
+                messageBuff.put("G:" + temp.id, item);
             } else if (temp.type == 2) {
-                MessageBuff.put("G:" + temp.id + "F:" + temp.id, item);
+                messageBuff.put("G:" + temp.id + "F:" + temp.id, item);
             }
         }
     }
@@ -702,12 +702,12 @@ public class ThePlugin {
     public void callEvent(SendPackObj task, byte[] data) {
         if (runQQ != 0 && task.runqq != runQQ)
             return;
-        if (Groups.size() != 0 && task.group != 0 && !Groups.contains(task.group))
+        if (groups.size() != 0 && task.group != 0 && !groups.contains(task.group))
             return;
-        if (QQs.size() != 0 && task.qq != 0 && !QQs.contains(task.qq))
+        if (qqList.size() != 0 && task.qq != 0 && !qqList.contains(task.qq))
             return;
-        if (Events.contains((int) task.index) || task.index == 60) {
-            if (Socket.send(data))
+        if (events.contains((int) task.index) || task.index == 60) {
+            if (socket.send(data))
                 close();
         }
     }
@@ -715,7 +715,7 @@ public class ThePlugin {
     public void close() {
         try {
             isRun = false;
-            Socket.close();
+            socket.close();
             PluginUtils.removePlugin(name);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("插件断开失败", e);

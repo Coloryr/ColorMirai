@@ -1,8 +1,8 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.event.EventBase;
-import coloryr.colormirai.event.EventCall;
+import coloryr.colormirai.robot.event.EventBase;
+import coloryr.colormirai.robot.event.EventCall;
 import coloryr.colormirai.plugin.socket.PluginUtils;
 import coloryr.colormirai.plugin.socket.obj.SendPackObj;
 import coloryr.colormirai.plugin.socket.pack.to.*;
@@ -61,7 +61,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroupId();
         long qq = event.getBot().getId();
         long fid = event.getInvitorId();
-        long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 4, event));
+        long eventid = EventCall.addEvent(new EventBase(qq, event.getEventId(), 4, event));
         BotInvitedJoinGroupRequestEventPack pack = new BotInvitedJoinGroupRequestEventPack(qq, id, fid, eventid);
         BotStart.addTask(new SendPackObj(4, JSON.toJSONString(pack), fid, id, qq));
     }
@@ -536,7 +536,7 @@ public class BotEvent extends SimpleListenerHost {
         } else {
             qid = temp.getId();
         }
-        long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 37, event));
+        long eventid = EventCall.addEvent(new EventBase(qq, event.getEventId(), 37, event));
         MemberJoinRequestEventPack pack = new MemberJoinRequestEventPack(qq, id, fid, message, eventid, qid);
         BotStart.addTask(new SendPackObj(37, JSON.toJSONString(pack), fid, id, qq));
     }
@@ -670,7 +670,7 @@ public class BotEvent extends SimpleListenerHost {
         long fid = event.getFromId();
         String message = event.getMessage();
         long qq = event.getBot().getId();
-        long eventid = EventCall.AddEvent(new EventBase(qq, event.getEventId(), 46, event));
+        long eventid = EventCall.addEvent(new EventBase(qq, event.getEventId(), 46, event));
         NewFriendRequestEventPack pack = new NewFriendRequestEventPack(qq, id, fid, message, eventid);
         BotStart.addTask(new SendPackObj(46, JSON.toJSONString(pack), fid, id, qq));
     }
@@ -716,7 +716,7 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getSubject().getId();
         long fid = event.getSender().getId();
-        if (ColorMiraiMain.Config.escapeSelf && BotStart.getBots().containsKey(fid))
+        if (ColorMiraiMain.config.escapeSelf && BotStart.getBots().containsKey(fid))
             return;
         MessageChain message = event.getMessage();
         MessageSaveObj call = new MessageSaveObj();

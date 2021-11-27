@@ -4,36 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConfigObj {
-    public List<QQsObj> QQs;
-    public boolean Pack;
-    public int SocketPort;
-    public int WebSocketPort;
-    public int HttpPort;
+    public List<QQsObj> qqList;
+    public boolean pack;
+    public int socketPort;
+    public int webSocketPort;
+    public int miraiHttpApiPort;
+    public int oneBotPort;
     public boolean escapeSelf;
-    public long MaxList;
-    public String SendEncoding;
-    public String ReadEncoding;
-    public boolean AutoReconnect;
-    public int HighwayUpload;
+    public long maxList;
+    public String sendEncoding;
+    public String readEncoding;
+    public boolean autoReconnect;
+    public int highwayUpload;
     public String authKey;
     public long authTime;
     public int cacheSize;
     public boolean noInput;
 
     public ConfigObj() {
-        QQs = new ArrayList<QQsObj>() {{
+        qqList = new ArrayList<QQsObj>() {{
             add(new QQsObj());
         }};
-        Pack = true;
+        pack = true;
         escapeSelf = true;
-        SocketPort = 23333;
-        WebSocketPort = 23334;
-        HttpPort = 23335;
-        MaxList = 100000;
-        SendEncoding = "UTF-8";
-        ReadEncoding = "UTF-8";
-        AutoReconnect = true;
-        HighwayUpload = 10;
+        socketPort = 23333;
+        webSocketPort = 23334;
+        miraiHttpApiPort = 23335;
+        oneBotPort = 23336;
+        maxList = 100000;
+        sendEncoding = "UTF-8";
+        readEncoding = "UTF-8";
+        autoReconnect = true;
+        highwayUpload = 10;
         authKey = "123456789";
         authTime = 1800;
         cacheSize = 100;
