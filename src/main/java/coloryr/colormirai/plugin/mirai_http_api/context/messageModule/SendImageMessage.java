@@ -1,11 +1,12 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.SendImageDTO;
 import coloryr.colormirai.robot.BotStart;
+import coloryr.colormirai.robot.BotUpload;
 import coloryr.colormirai.robot.MessageSaveObj;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,7 +19,6 @@ import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageUtils;
-import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,7 +64,7 @@ public class SendImageMessage implements HttpHandler {
                     contact = group;
             } else {
                 response = JSONObject.toJSONString(StateCode.NoOperateSupport);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
 
@@ -73,16 +73,13 @@ public class SendImageMessage implements HttpHandler {
             } else {
                 MessageChain message = MessageUtils.newChain();
                 List<Image> list = new ArrayList<>();
-                List<ExternalResource> resources = new ArrayList<>();
                 for (String item : obj.urls) {
-                    byte[] temp = Utils.getBytes(item);
+                    byte[] temp = Utils.getUrlBytes(item);
                     if (temp == null)
                         continue;
-                    ExternalResource image = ExternalResource.create(temp);
-                    Image image1 = contact.uploadImage(image);
+                    Image image1 = BotUpload.upImage(authed.bot, temp);
                     list.add(image1);
                     message.add(image1);
-                    resources.add(image);
                 }
                 if (message.isEmpty()) {
                     response = JSONObject.toJSONString(StateCode.MessageNull);
@@ -98,15 +95,8 @@ public class SendImageMessage implements HttpHandler {
                     }});
                     response = JSONObject.toJSONString(list);
                 }
-                resources.forEach((item) -> {
-                    try {
-                        item.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                });
             }
         }
-        Utils.send(t, response);
+        coloryr.colormirai.Utils.send(t, response);
     }
 }

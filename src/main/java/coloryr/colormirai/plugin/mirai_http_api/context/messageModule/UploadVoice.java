@@ -1,17 +1,18 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.context.SimpleRequestContext;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.UploadVoiceRetDTO;
+import coloryr.colormirai.robot.BotUpload;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.message.data.Voice;
-import net.mamoe.mirai.utils.ExternalResource;
+import net.mamoe.mirai.message.data.Audio;
+import net.mamoe.mirai.message.data.OnlineAudio;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -27,7 +28,7 @@ import java.util.Optional;
 public class UploadVoice implements HttpHandler {
     public void handle(HttpExchange t) throws IOException {
         InputStream inputStream = t.getRequestBody();
-        byte[] imgdata = null;
+        byte[] sounddata = null;
         String type = "";
         String sessionKey = "";
         SimpleRequestContext simpleRequestContext = new SimpleRequestContext(StandardCharsets.UTF_8, inputStream, t.getRequestHeaders().get("Content-type").get(0));
@@ -45,7 +46,7 @@ public class UploadVoice implements HttpHandler {
                         type = item.getString();
                     }
                 } else {
-                    imgdata = item.get();
+                    sounddata = item.get();
                 }
             }
         } catch (FileUploadException e) {
@@ -58,13 +59,12 @@ public class UploadVoice implements HttpHandler {
             response = JSONObject.toJSONString(StateCode.NotVerifySession);
         } else {
             Authed authed = SessionManager.get(sessionKey);
-            if (imgdata == null) {
+            if (sounddata == null) {
                 response = JSONObject.toJSONString(StateCode.Null);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
             Group contact = null;
-            ExternalResource resource = ExternalResource.create(imgdata);
 
             if (type.equals("group")) {
                 Optional<Group> list = authed.bot.getGroups().stream().findFirst();
@@ -72,27 +72,26 @@ public class UploadVoice implements HttpHandler {
                     contact = list.get();
             } else {
                 response = JSONObject.toJSONString(StateCode.NoOperateSupport);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
 
             if (contact == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
-                Voice voice = contact.uploadVoice(resource);
-                File file = Utils.saveFile(imgdata);
+                Audio audio = BotUpload.upAudio(authed.bot, sounddata);
+                File file = Utils.saveFile(sounddata);
                 if (file == null) {
                     response = JSONObject.toJSONString(StateCode.Error);
                 } else {
                     response = JSONObject.toJSONString(new UploadVoiceRetDTO() {{
-                        this.voiceId = voice.getFileName();
-                        this.url = voice.getUrl();
+                        this.voiceId = audio.getFilename();
+                        this.url = audio instanceof OnlineAudio ? ((OnlineAudio) audio).getUrlForDownload() : null;
                         this.path = file.getAbsolutePath();
                     }});
                 }
             }
-            resource.close();
         }
-        Utils.send(t, response);
+        coloryr.colormirai.Utils.send(t, response);
     }
 }

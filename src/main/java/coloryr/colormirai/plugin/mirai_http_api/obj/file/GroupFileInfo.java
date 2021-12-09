@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.mirai_http_api.obj.file;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.context.infoModule.BaseInfo;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import net.mamoe.mirai.contact.Group;

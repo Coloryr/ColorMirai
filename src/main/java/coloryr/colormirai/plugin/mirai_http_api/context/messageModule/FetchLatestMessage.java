@@ -1,6 +1,7 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
+import coloryr.colormirai.plugin.mirai_http_api.context.GetBaseMessage;
 import coloryr.colormirai.plugin.mirai_http_api.obj.EventDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.result.EventListRestfulResult;
 

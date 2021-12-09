@@ -16,7 +16,7 @@ public class ConfigObj {
     public String readEncoding;
     public boolean autoReconnect;
     public int highwayUpload;
-    public String authKey;
+    public String miraiHttpAuthKey;
     public long authTime;
     public int cacheSize;
     public boolean noInput;
@@ -36,7 +36,7 @@ public class ConfigObj {
         readEncoding = "UTF-8";
         autoReconnect = true;
         highwayUpload = 10;
-        authKey = "123456789";
+        miraiHttpAuthKey = "123456789";
         authTime = 1800;
         cacheSize = 100;
         noInput = false;

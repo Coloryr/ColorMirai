@@ -1,7 +1,8 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
+import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpUtils;
+import coloryr.colormirai.plugin.mirai_http_api.context.PostBaseMessage;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.MessageDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.SendDTO;
@@ -32,7 +33,7 @@ public class SendFriendMessage extends PostBaseMessage {
             return StateCode.NoElement;
         }
 
-        MessageReceipt<Contact> receipt = Utils.sendMessage(quoteReply, MessageDTO.toMessageChain(friend, parameters.messageChain), friend);
+        MessageReceipt<Contact> receipt = MiraiHttpUtils.sendMessage(quoteReply, MessageDTO.toMessageChain(friend, parameters.messageChain), friend);
         authed.cacheQueue.add(receipt.getSource());
         int id = receipt.getSource().getIds()[0];
         BotStart.addMessage(bot.getId(), id, new MessageSaveObj() {{

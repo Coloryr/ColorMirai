@@ -1,8 +1,8 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.EssenceDTO;
 import com.alibaba.fastjson.JSONObject;
@@ -28,7 +28,7 @@ public class SetEssence implements HttpHandler {
             OnlineMessageSource messageSource = authed.cacheQueue.get(obj.target);
             if (messageSource == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
             Group group = authed.bot.getGroup(messageSource.getTarget().getId());

@@ -1,14 +1,16 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.fileModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
-import coloryr.colormirai.plugin.mirai_http_api.context.messageModule.GetBaseMessage;
+import coloryr.colormirai.plugin.mirai_http_api.context.GetBaseMessage;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.file.RemoteFileDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.file.RemoteFileItem;
 import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.utils.RemoteFile;
+import net.mamoe.mirai.contact.file.AbsoluteFile;
+import net.mamoe.mirai.contact.file.RemoteFiles;
 
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 public class FileInfo extends GetBaseMessage {
     @Override
@@ -38,19 +40,20 @@ public class FileInfo extends GetBaseMessage {
             if (group1 == null) {
                 return StateCode.NoElement;
             }
-            RemoteFile file = group1.getFilesRoot();
+            RemoteFiles files = group1.getFiles();
             RemoteFileItem list = new RemoteFileItem();
+            AbsoluteFile file = null;
             if (path != null) {
-                file = file.resolve(path);
+                file = files.getRoot().resolveFilesStream(path).findFirst().get();
             } else if (!id.isEmpty()) {
-                file = file.resolveById(id);
+                file = files.getRoot().resolveFileById(id, true);
             }
             RemoteFileDTO dto = FileUtils.get(file, withDownloadInfo);
             if (dto == null)
                 return StateCode.Error;
             list.data = dto;
             return list;
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | NoSuchElementException e) {
             return StateCode.NoElement;
         }
     }

@@ -1,8 +1,8 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.download.DownloadUtils;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.socket.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
@@ -10,9 +10,7 @@ import net.mamoe.mirai.contact.PermissionDeniedException;
 import net.mamoe.mirai.contact.file.AbsoluteFile;
 import net.mamoe.mirai.contact.file.AbsoluteFolder;
 import net.mamoe.mirai.contact.file.RemoteFiles;
-import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,10 +28,7 @@ public class BotGroupFile {
                 return;
             }
             RemoteFiles remoteFile = group.getFiles();
-            FileInputStream stream = new FileInputStream(file.substring(1));
-            ExternalResource tempfile = ExternalResource.create(stream).toAutoCloseable();
-            remoteFile.uploadNewFile(name, tempfile);
-            stream.close();
+            remoteFile.uploadNewFile(name, BotUpload.up(file.substring(1)));
         } catch (PermissionDeniedException e) {
             ColorMiraiMain.logger.error("上传群文件失败，只允许管理员上传");
         } catch (Exception e) {

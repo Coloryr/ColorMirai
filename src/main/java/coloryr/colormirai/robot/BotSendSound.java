@@ -6,9 +6,7 @@ import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Audio;
-import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,13 +18,13 @@ public class BotSendSound {
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            ExternalResource voice = ExternalResource.create(ColorMiraiMain.decoder.decode(sound));
             Group group = bot.getGroup(id);
             if (group == null) {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            MessageReceipt<Group> message = group.sendMessage(group.uploadAudio(voice));
+            Audio audio = BotUpload.upAudio(bot, ColorMiraiMain.decoder.decode(sound));
+            MessageReceipt<Group> message = group.sendMessage(audio);
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -35,7 +33,6 @@ public class BotSendSound {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
-            voice.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
         }
@@ -63,6 +60,8 @@ public class BotSendSound {
                 }
                 if (audio == null) {
                     audio = BotUpload.upAudio(bot, file);
+                    if (audio == null)
+                        throw new Exception("声音为空");
                 }
                 MessageReceipt<Group> message = group.sendMessage(audio);
                 MessageSaveObj obj = new MessageSaveObj();
@@ -101,9 +100,11 @@ public class BotSendSound {
                 }
                 if (audio == null) {
                     audio = BotUpload.upAudio(bot, file);
+                    if (audio == null)
+                        throw new Exception("声音为空");
                 }
 
-                MessageReceipt message = friend.sendMessage(audio);
+                MessageReceipt<Friend> message = friend.sendMessage(audio);
                 MessageSaveObj obj = new MessageSaveObj();
                 obj.source = message.getSource();
                 obj.sourceQQ = qq;

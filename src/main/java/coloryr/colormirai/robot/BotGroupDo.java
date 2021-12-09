@@ -6,7 +6,6 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.announcement.*;
-import net.mamoe.mirai.utils.ExternalResource;
 
 import java.io.File;
 import java.util.List;
@@ -245,9 +244,7 @@ public class BotGroupDo {
                     ColorMiraiMain.logger.warn("不存在图片:" + image);
                     return;
                 }
-                ExternalResource resource = ExternalResource.create(file);
-                image1 = announcements.uploadImage(resource);
-                resource.close();
+                image1 = announcements.uploadImage(BotUpload.up(file));
             }
             AnnouncementParametersBuilder builder = new AnnouncementParametersBuilder();
             if (image1 != null) {

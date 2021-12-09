@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.mirai_http_api.context.groupManageModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
+import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpUtils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.group.GroupConfigDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.group.GroupDetailDTO;
@@ -23,11 +23,11 @@ public class GroupConfig implements HttpHandler {
         if (t.getRequestMethod().equals("GET")) {
             URI requestedUri = t.getRequestURI();
             String query = requestedUri.getRawQuery();
-            Map<String, String> parameters = Utils.queryToMap(query);
+            Map<String, String> parameters = MiraiHttpUtils.queryToMap(query);
             String response;
             if (!parameters.containsKey("sessionKey")) {
                 response = JSONObject.toJSONString(StateCode.IllegalSession);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
             String key = parameters.get("sessionKey");
@@ -50,7 +50,7 @@ public class GroupConfig implements HttpHandler {
                     response = JSONObject.toJSONString(StateCode.NoOperateSupport);
                 }
             }
-            Utils.send(t, response);
+            coloryr.colormirai.Utils.send(t, response);
         } else {
             InputStream inputStream = t.getRequestBody();
             GroupConfigDTO obj = JSONObject.parseObject(inputStream, GroupConfigDTO.class);
@@ -78,7 +78,7 @@ public class GroupConfig implements HttpHandler {
                     response = JSONObject.toJSONString(StateCode.Success);
                 }
             }
-            Utils.send(t, response);
+            coloryr.colormirai.Utils.send(t, response);
         }
     }
 }

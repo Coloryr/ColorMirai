@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.infoModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
-import coloryr.colormirai.plugin.mirai_http_api.context.messageModule.GetBaseMessage;
+import coloryr.colormirai.plugin.mirai_http_api.context.GetBaseMessage;
 
 import java.util.Map;
 

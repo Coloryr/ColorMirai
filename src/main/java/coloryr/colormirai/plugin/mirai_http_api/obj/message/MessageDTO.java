@@ -1,11 +1,13 @@
 package coloryr.colormirai.plugin.mirai_http_api.obj.message;
 
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
+import coloryr.colormirai.Utils;
+import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpUtils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.DTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.EventDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.IgnoreEventDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.contact.MemberDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.contact.QQDTO;
+import coloryr.colormirai.robot.BotUpload;
 import com.alibaba.fastjson.annotation.JSONType;
 import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Group;
@@ -14,9 +16,7 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.GroupTempMessageEvent;
 import net.mamoe.mirai.event.events.MessageEvent;
 import net.mamoe.mirai.message.data.*;
-import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -89,7 +89,7 @@ public class MessageDTO implements DTO {
                 return new Face(item.faceId);
             }
             if (item.name != null && !item.name.isEmpty()) {
-                return new Face(Utils.getFace(item.name));
+                return new Face(MiraiHttpUtils.getFace(item.name));
             }
             return new Face(255);
         } else if (message instanceof PlainDTO) {
@@ -100,30 +100,16 @@ public class MessageDTO implements DTO {
             if (item.imageId != null && !item.imageId.isEmpty())
                 return Image.fromId(item.imageId);
             if (item.url != null && !item.url.isEmpty()) {
-                byte[] temp = Utils.getBytes(item.url);
+                byte[] temp = Utils.getUrlBytes(item.url);
                 if (temp == null)
                     return null;
-                ExternalResource image = ExternalResource.create(temp);
-                Image image1 = contact.uploadImage(image);
-                try {
-                    image.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return image1;
+                return BotUpload.upImage(contact.getBot(), temp);
             }
             if (item.path != null && !item.path.isEmpty()) {
-                byte[] temp = Utils.getBytesFile(item.url);
+                byte[] temp = Utils.getFileBytes(item.url);
                 if (temp == null)
                     return null;
-                ExternalResource image = ExternalResource.create(temp);
-                Image image1 = contact.uploadImage(image);
-                try {
-                    image.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return image1;
+                return BotUpload.upImage(contact.getBot(), temp);
             }
             return null;
         } else if (message instanceof FlashImageDTO) {
@@ -131,30 +117,16 @@ public class MessageDTO implements DTO {
             if (item.imageId != null && !item.imageId.isEmpty())
                 return new FlashImage(Image.fromId(item.imageId));
             if (item.url != null && !item.url.isEmpty()) {
-                byte[] temp = Utils.getBytes(item.url);
+                byte[] temp = Utils.getUrlBytes(item.url);
                 if (temp == null)
                     return null;
-                ExternalResource image = ExternalResource.create(temp);
-                FlashImage image1 = new FlashImage(contact.uploadImage(image));
-                try {
-                    image.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return image1;
+                return new FlashImage(BotUpload.upImage(contact.getBot(), temp));
             }
             if (item.path != null && !item.path.isEmpty()) {
-                byte[] temp = Utils.getBytesFile(item.url);
+                byte[] temp = Utils.getFileBytes(item.url);
                 if (temp == null)
                     return null;
-                ExternalResource image = ExternalResource.create(temp);
-                FlashImage image1 = new FlashImage(contact.uploadImage(image));
-                try {
-                    image.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return image1;
+                return new FlashImage(BotUpload.upImage(contact.getBot(), temp));
             }
             return null;
         } else if (message instanceof ForwardMessageDTO) {
@@ -186,33 +158,19 @@ public class MessageDTO implements DTO {
                     String temp = item.voiceId;
                     if (index != -1)
                         temp = item.voiceId.substring(0, index);
-                    return new Voice(item.voiceId, Utils.hexToByteArray(temp), 0, 0, "");
+                    return BotUpload.upAudio(group.getBot(), Utils.hexToByteArray(temp));
                 }
                 if (item.url != null && !item.url.isEmpty()) {
-                    byte[] temp = Utils.getBytes(item.url);
+                    byte[] temp = Utils.getUrlBytes(item.url);
                     if (temp == null)
                         return null;
-                    ExternalResource voice = ExternalResource.create(temp);
-                    OfflineAudio audio = group.uploadAudio(voice);
-                    try {
-                        voice.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return audio;
+                    return BotUpload.upAudio(contact.getBot(), temp);
                 }
                 if (item.path != null && !item.path.isEmpty()) {
-                    byte[] temp = Utils.getBytesFile(item.path);
+                    byte[] temp = Utils.getFileBytes(item.path);
                     if (temp == null)
                         return null;
-                    ExternalResource voice = ExternalResource.create(temp);
-                    OfflineAudio audio = group.uploadAudio(voice);
-                    try {
-                        voice.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    return audio;
+                    return BotUpload.upAudio(contact.getBot(), temp);
                 }
             } else
                 return null;
@@ -234,7 +192,7 @@ public class MessageDTO implements DTO {
             }
         } else if (message instanceof PokeMessageDTO) {
             PokeMessageDTO item = (PokeMessageDTO) message;
-            return Utils.getPoke(item.name);
+            return MiraiHttpUtils.getPoke(item.name);
         }
         return null;
     }
@@ -250,7 +208,7 @@ public class MessageDTO implements DTO {
             return new AtAllDTO(0);
         } else if (item instanceof Face) {
             Face item1 = (Face) item;
-            return new FaceDTO(item1.getId(), Utils.getFace(item1.getId()));
+            return new FaceDTO(item1.getId(), MiraiHttpUtils.getFace(item1.getId()));
         } else if (item instanceof PlainText) {
             PlainText item1 = (PlainText) item;
             return new PlainDTO(item1.getContent());
@@ -260,9 +218,9 @@ public class MessageDTO implements DTO {
         } else if (item instanceof FlashImage) {
             FlashImage item1 = (FlashImage) item;
             return new FlashImageDTO(item1.getImage().getImageId(), Image.queryUrl(item1.getImage()), "");
-        } else if (item instanceof Voice) {
-            Voice item1 = (Voice) item;
-            return new VoiceDTO(item1.getFileName(), item1.getUrl(), "");
+        } else if (item instanceof OnlineAudio) {
+            OnlineAudio item1 = (OnlineAudio) item;
+            return new VoiceDTO(item1.getFilename(), item1.getUrlForDownload(), "");
         } else if (item instanceof ServiceMessage) {
             ServiceMessage item1 = (ServiceMessage) item;
             return new XmlDTO(item1.getContent());
@@ -299,7 +257,7 @@ public class MessageDTO implements DTO {
             return new QuoteDTO(source.getIds().length == 0 ? 0 : source.getIds()[0], source.getFromId(), source.getTargetId(), groupid, list);
         } else if (item instanceof PokeMessage) {
             PokeMessage item1 = (PokeMessage) item;
-            return new PokeMessageDTO(Utils.getPoke(item1.getId()));
+            return new PokeMessageDTO(MiraiHttpUtils.getPoke(item1.getId()));
         } else {
             return new UnknownMessageDTO();
         }

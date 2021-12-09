@@ -1,11 +1,12 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.context.SimpleRequestContext;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.UploadImageRetDTO;
+import coloryr.colormirai.robot.BotUpload;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -13,7 +14,6 @@ import net.mamoe.mirai.contact.Contact;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.utils.ExternalResource;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -62,11 +62,10 @@ public class UploadImage implements HttpHandler {
             Authed authed = SessionManager.get(sessionKey);
             if (imgdata == null) {
                 response = JSONObject.toJSONString(StateCode.Null);
-                Utils.send(t, response);
+                coloryr.colormirai.Utils.send(t, response);
                 return;
             }
             Contact contact = null;
-            ExternalResource resource = ExternalResource.create(imgdata);
 
             if (type.equals("group")) {
                 Optional<Group> list = authed.bot.getGroups().stream().findFirst();
@@ -81,7 +80,7 @@ public class UploadImage implements HttpHandler {
             if (contact == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
-                Image image = contact.uploadImage(resource);
+                Image image = BotUpload.upImage(authed.bot, imgdata);
                 File file = Utils.saveFile(imgdata);
                 if (file == null) {
                     response = JSONObject.toJSONString(StateCode.Error);
@@ -93,8 +92,7 @@ public class UploadImage implements HttpHandler {
                     }});
                 }
             }
-            resource.close();
         }
-        Utils.send(t, response);
+        coloryr.colormirai.Utils.send(t, response);
     }
 }

@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.authModule;
 
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
+import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpUtils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.auth.AuthDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.auth.AuthRetDTO;
@@ -17,12 +17,12 @@ public class Auth implements HttpHandler {
         InputStream inputStream = t.getRequestBody();
         AuthDTO obj = JSONObject.parseObject(inputStream, AuthDTO.class);
         String response;
-        if (!Utils.checkKey(obj.verifyKey)) {
+        if (!MiraiHttpUtils.checkKey(obj.verifyKey)) {
             response = JSONObject.toJSONString(StateCode.AuthKeyFail);
         } else {
             AuthRetDTO obj1 = new AuthRetDTO(0, SessionManager.createTempSession().key);
             response = JSONObject.toJSONString(obj1);
         }
-        Utils.send(t, response);
+        coloryr.colormirai.Utils.send(t, response);
     }
 }

@@ -7,11 +7,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Image;
-import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +26,7 @@ public class BotSendImage {
                 ColorMiraiMain.logger.error("没有群：" + id);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(img)));
-            MessageReceipt message = group.sendMessage(group.uploadImage(image));
+            MessageReceipt<Group> message = group.sendMessage(BotUpload.upImage(bot, ColorMiraiMain.decoder.decode(img)));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -40,7 +35,6 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
-            image.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群图片失败", e);
         }
@@ -60,18 +54,19 @@ public class BotSendImage {
             if (id != 0) {
                 ids.add(id);
             }
-            for (long item: ids)
-            {
+            for (long item : ids) {
                 Group group = bot.getGroup(item);
                 if (group == null) {
                     ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                     continue;
                 }
-                if(image == null)
-                {
+                if (image == null) {
                     image = BotUpload.upImage(bot, file);
+                    if (image == null)
+                        throw new Exception();
                 }
-                MessageReceipt message = group.sendMessage(image);
+
+                MessageReceipt<Group> message = group.sendMessage(image);
                 MessageSaveObj obj = new MessageSaveObj();
                 obj.source = message.getSource();
                 obj.sourceQQ = qq;
@@ -86,7 +81,7 @@ public class BotSendImage {
         }
     }
 
-    public static void sendGroupPrivateImage(long qq, long id, long fid, String img) {
+    public static void sendGroupPrivateImage(long qq, long id, long fid, String file) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -103,8 +98,11 @@ public class BotSendImage {
                 ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
                 return;
             }
-            ExternalResource image = ExternalResource.create(new ByteArrayInputStream(ColorMiraiMain.decoder.decode(img)));
-            MessageReceipt message = member.sendMessage(member.uploadImage(image));
+            Image image = BotUpload.upImage(bot, file);
+            if (image == null)
+                throw new Exception("图片为空");
+
+            MessageReceipt<Member> message = member.sendMessage(image);
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -113,7 +111,6 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
-            image.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送私聊图片失败", e);
         }
@@ -136,9 +133,11 @@ public class BotSendImage {
                 ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
                 return;
             }
-            FileInputStream stream = new FileInputStream(file);
-            ExternalResource image = ExternalResource.create(stream);
-            MessageReceipt message = member.sendMessage(member.uploadImage(image));
+            Image image = BotUpload.upImage(bot, file);
+            if (image == null)
+                throw new Exception("图片为空");
+
+            MessageReceipt<Member> message = member.sendMessage(image);
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -147,8 +146,6 @@ public class BotSendImage {
                 obj.id = temp[0];
             }
             BotStart.addMessage(qq, obj.id, obj);
-            image.close();
-            stream.close();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送私聊图片失败", e);
         }
@@ -176,8 +173,10 @@ public class BotSendImage {
                 }
                 if (image == null) {
                     image = BotUpload.upImage(bot, img);
+                    if (image == null)
+                        throw new Exception("图片为空");
                 }
-                MessageReceipt message = friend.sendMessage(image);
+                MessageReceipt<Friend> message = friend.sendMessage(image);
                 MessageSaveObj obj = new MessageSaveObj();
                 obj.source = message.getSource();
                 obj.sourceQQ = qq;
@@ -214,9 +213,11 @@ public class BotSendImage {
                 }
                 if (image == null) {
                     image = BotUpload.upImage(bot, file);
+                    if (image == null)
+                        throw new Exception("图片为空");
                 }
 
-                MessageReceipt message = friend.sendMessage(image);
+                MessageReceipt<Friend> message = friend.sendMessage(image);
                 MessageSaveObj obj = new MessageSaveObj();
                 obj.source = message.getSource();
                 obj.sourceQQ = qq;

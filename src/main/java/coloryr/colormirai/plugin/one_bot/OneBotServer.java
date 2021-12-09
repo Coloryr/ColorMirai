@@ -31,7 +31,7 @@ public class OneBotServer implements HttpHandler {
 
     public boolean pluginServerStart() {
         try {
-            server = HttpServer.create(new InetSocketAddress(ColorMiraiMain.config.miraiHttpApiPort), 10);
+            server = HttpServer.create(new InetSocketAddress(ColorMiraiMain.config.oneBotPort), 10);
             server.createContext("/verify", new Auth());
             server.createContext("/bind", new Verify());
             server.createContext("/release", new Release());

@@ -11,18 +11,13 @@ import coloryr.colormirai.plugin.socket.pack.re.*;
 import coloryr.colormirai.robot.*;
 import com.alibaba.fastjson.JSON;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.Friend;
-import net.mamoe.mirai.contact.Group;
-import net.mamoe.mirai.contact.GroupSettings;
-import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.contact.announcement.OnlineAnnouncement;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.code.MiraiCode;
+import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageUtils;
-import net.mamoe.mirai.utils.ExternalResource;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -668,18 +663,12 @@ public class ThePlugin {
             }
         }
         if (temp.imgurl != null && !temp.imgurl.isEmpty()) {
-            try {
-                FileInputStream stream = new FileInputStream(temp.imgurl);
-                ExternalResource image = ExternalResource.createAutoCloseable(ExternalResource.create(stream));
-                item.message = item.message.plus(item.contact.uploadImage(image));
-                stream.close();
-            } catch (IOException e) {
-                ColorMiraiMain.logger.error("消息队列添加图片失败", e);
-                e.printStackTrace();
-            }
+            Image image = BotUpload.upImage(bot, temp.imgurl);
+            if (image != null)
+                item.message = item.message.plus(image);
         }
         if (temp.send) {
-            MessageReceipt message = item.contact.sendMessage(item.message);
+            MessageReceipt<Contact> message = item.contact.sendMessage(item.message);
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = temp.qq;

@@ -1,8 +1,8 @@
-package coloryr.colormirai.plugin.mirai_http_api.context.messageModule;
+package coloryr.colormirai.plugin.mirai_http_api.context;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.Authed;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.message.SendDTO;
 import com.alibaba.fastjson.JSONObject;

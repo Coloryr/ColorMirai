@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.authModule;
 
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.SessionManager;
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import coloryr.colormirai.plugin.mirai_http_api.obj.auth.BindDTO;
 import coloryr.colormirai.robot.BotStart;

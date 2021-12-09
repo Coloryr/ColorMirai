@@ -1,6 +1,6 @@
 package coloryr.colormirai.plugin.mirai_http_api.context.configRouteModule;
 
-import coloryr.colormirai.plugin.mirai_http_api.Utils;
+import coloryr.colormirai.Utils;
 import coloryr.colormirai.plugin.mirai_http_api.obj.StateCode;
 import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
