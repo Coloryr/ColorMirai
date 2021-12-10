@@ -11,6 +11,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.file.AbsoluteFolder;
+import net.mamoe.mirai.contact.file.RemoteFiles;
 import net.mamoe.mirai.utils.RemoteFile;
 
 import java.io.IOException;
@@ -38,16 +40,11 @@ public class GroupMkdir implements HttpHandler {
             if (group == null) {
                 response = JSONObject.toJSONString(StateCode.NoElement);
             } else {
-                RemoteFile remoteFile = group.getFilesRoot();
-                if (remoteFile.isDirectory()) {
-                    response = JSONObject.toJSONString(StateCode.Exists);
-                } else {
-                    remoteFile = remoteFile.resolve(obj.directoryName);
-                    boolean res = remoteFile.mkdir();
-                    RemoteFileItem item = new RemoteFileItem();
-                    item.data = FileUtils.get(remoteFile, false);
-                    response = JSONObject.toJSONString(item);
-                }
+                RemoteFiles remoteFile = group.getFiles();
+                AbsoluteFolder res = remoteFile.getRoot().createFolder(obj.directoryName);
+                RemoteFileItem item = new RemoteFileItem();
+                item.data = FileUtils.get(res);
+                response = JSONObject.toJSONString(item);
             }
         }
         Utils.send(t, response);

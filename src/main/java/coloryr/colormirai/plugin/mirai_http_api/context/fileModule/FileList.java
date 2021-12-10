@@ -57,18 +57,17 @@ public class FileList extends GetBaseMessage {
             }
             RemoteFiles files = group1.getFiles();
             RemoteFileList list = new RemoteFileList();
-            AbsoluteFile file  = null;
+            AbsoluteFile file;
             if (path != null) {
-                file = files.getRoot().resolveFilesStream(path).findFirst().get();
                 List<AbsoluteFileFolder> files1 = files.getRoot().childrenStream().skip(offset).limit(size).collect(Collectors.toList());
-                for (RemoteFile item : files) {
-                    RemoteFileDTO dto = FileUtils.get(item, withDownloadInfo);
+                for (AbsoluteFileFolder item : files1) {
+                    RemoteFileDTO dto = FileUtils.get(item);
                     if (dto == null)
                         return StateCode.Error;
                     list.data.add(dto);
                 }
             } else if (!id.isEmpty()) {
-                file = file.resolveById(id);
+                file = files.getRoot().resolveFileById(id);
                 RemoteFileDTO dto = FileUtils.get(file, withDownloadInfo);
                 if (dto == null)
                     return StateCode.Error;

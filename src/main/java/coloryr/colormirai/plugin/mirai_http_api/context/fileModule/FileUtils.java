@@ -6,6 +6,7 @@ import coloryr.colormirai.plugin.mirai_http_api.obj.file.DownloadInfoDTO;
 import coloryr.colormirai.plugin.mirai_http_api.obj.file.RemoteFileDTO;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.file.AbsoluteFile;
+import net.mamoe.mirai.contact.file.AbsoluteFileFolder;
 import net.mamoe.mirai.contact.file.AbsoluteFolder;
 import net.mamoe.mirai.utils.RemoteFile;
 
@@ -21,6 +22,23 @@ public class FileUtils {
         if (top != null) {
             dto.parent = get(top);
         }
+        if (!(item.getContact() instanceof Group)) {
+            return null;
+        }
+        dto.contact = new GroupDTO((Group) item.getContact());
+        dto.isFile = item.isFile();
+        dto.isDictionary = !item.isFile();
+        dto.isDirectory = !item.isFile();
+        return dto;
+    }
+
+    public static RemoteFileDTO get(AbsoluteFileFolder item) {
+        if (item == null)
+            return null;
+        RemoteFileDTO dto = new RemoteFileDTO();
+        dto.name = item.getName();
+        dto.id = item.getId();
+        dto.path = item.getAbsolutePath();
         if (!(item.getContact() instanceof Group)) {
             return null;
         }
