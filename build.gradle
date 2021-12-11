@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'Color_yr.ColorMirai'
-version '3.7.3'
+version '3.8.0'
 
 repositories {
     mavenCentral()
@@ -22,6 +22,8 @@ dependencies {
     compile "commons-fileupload:commons-fileupload:1.4"
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
 
+    compile "net.mamoe:mirai-console:2.9.0-M1" // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.8.2'
     api "net.mamoe:mirai-core-api:2.9.0-M1"
     runtimeOnly "net.mamoe:mirai-core:2.9.0-M1"
 

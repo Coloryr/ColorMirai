@@ -3,14 +3,14 @@ package coloryr.colormirai;
 import coloryr.colormirai.config.ConfigObj;
 import coloryr.colormirai.config.ConfigRead;
 import coloryr.colormirai.config.SessionObj;
-import coloryr.colormirai.plugin.one_bot.OneBotServer;
 import coloryr.colormirai.plugin.socket.PluginUtils;
 import coloryr.colormirai.plugin.socket.ThePlugin;
 import coloryr.colormirai.download.DownloadUtils;
-import coloryr.colormirai.plugin.mirai_http_api.MiraiHttpApiServer;
 import coloryr.colormirai.plugin.socket.PluginSocketServer;
 import coloryr.colormirai.plugin.socket.PluginWebSocketServer;
 import coloryr.colormirai.robot.BotStart;
+import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
+import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,8 +32,6 @@ public class ColorMiraiMain {
     public static Charset readCharset;
     private static PluginWebSocketServer webSocket;
     private static PluginSocketServer socket;
-    private static MiraiHttpApiServer httpApiServer;
-    private static OneBotServer oneBotServer;
 
     public static void main(String[] args) {
         runDir = System.getProperty("user.dir") + "/";
@@ -60,8 +58,6 @@ public class ColorMiraiMain {
 
         webSocket = new PluginWebSocketServer();
         socket = new PluginSocketServer();
-        httpApiServer = new MiraiHttpApiServer();
-        oneBotServer = new OneBotServer();
 
         if (!socket.pluginServerStart()) {
             logger.error("socket启动失败");
@@ -72,14 +68,8 @@ public class ColorMiraiMain {
             logger.error("websocket启动失败");
             return;
         }
-        if (!httpApiServer.pluginServerStart()) {
-            logger.error("mirai-http-api启动失败");
-            return;
-        }
-        if (!oneBotServer.pluginServerStart()) {
-            logger.error("mirai-http-api启动失败");
-            return;
-        }
+        MiraiConsoleImplementationTerminal terminal = new MiraiConsoleImplementationTerminal();
+        MiraiConsoleTerminalLoader.INSTANCE.startAsDaemon(terminal);
 
         if (config.noInput) {
             return;
@@ -130,8 +120,6 @@ public class ColorMiraiMain {
         DownloadUtils.stop();
         socket.pluginServerStop();
         webSocket.pluginServerStop();
-        httpApiServer.pluginServerStop();
-        oneBotServer.pluginServerStop();
         BotStart.stop();
         System.exit(0);
     }
