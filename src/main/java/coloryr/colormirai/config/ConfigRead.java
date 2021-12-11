@@ -10,12 +10,10 @@ import java.nio.charset.StandardCharsets;
 
 public class ConfigRead {
     private static File configFile;
-    private static File sessionFile;
 
     public static boolean readStart(String local) {
         try {
             configFile = new File(local + "config.json");
-            sessionFile = new File(local + "session.json");
             if (!configFile.exists()) {
                 configFile.createNewFile();
                 ColorMiraiMain.config = new ConfigObj();
@@ -35,30 +33,6 @@ public class ConfigRead {
                 if (ColorMiraiMain.config.qqList == null) {
                     ColorMiraiMain.config = new ConfigObj();
                     save();
-                }
-                bf.close();
-                reader.close();
-            }
-
-            if (!sessionFile.exists()) {
-                sessionFile.createNewFile();
-                ColorMiraiMain.sessions = new SessionObj();
-                saveSession();
-                return true;
-            } else {
-                InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(sessionFile), StandardCharsets.UTF_8);
-                BufferedReader bf = new BufferedReader(reader);
-                char[] buf = new char[4096];
-                int length;
-                StringBuilder data = new StringBuilder();
-                while ((length = bf.read(buf)) != -1) {
-                    data.append(new String(buf, 0, length));
-                }
-                ColorMiraiMain.sessions = JSON.parseObject(data.toString(), SessionObj.class);
-                if (ColorMiraiMain.sessions == null || ColorMiraiMain.sessions.allSession == null) {
-                    ColorMiraiMain.sessions = new SessionObj();
-                    saveSession();
                 }
                 bf.close();
                 reader.close();
@@ -96,20 +70,6 @@ public class ConfigRead {
             OutputStreamWriter write = new OutputStreamWriter(
                     out, StandardCharsets.UTF_8);
             write.write(JSON.toJSONString(ColorMiraiMain.config, SerializerFeature.PrettyFormat));
-            write.close();
-            out.close();
-        } catch (Exception e) {
-            ColorMiraiMain.logger.error("配置文件保存失败", e);
-            e.printStackTrace();
-        }
-    }
-
-    public static void saveSession() {
-        try {
-            FileOutputStream out = new FileOutputStream(sessionFile);
-            OutputStreamWriter write = new OutputStreamWriter(
-                    out, StandardCharsets.UTF_8);
-            write.write(JSON.toJSONString(ColorMiraiMain.sessions, SerializerFeature.PrettyFormat));
             write.close();
             out.close();
         } catch (Exception e) {
