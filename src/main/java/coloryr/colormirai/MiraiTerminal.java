@@ -10,32 +10,30 @@ import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Paths;
-
 public class MiraiTerminal extends MiraiConsoleImplementationTerminal implements CoroutineScope {
 
     @NotNull
     @Override
     public PluginDataStorage getConfigStorageForBuiltIns() {
-        return MultiFilePluginDataStorage.create(Paths.get(ColorMiraiMain.runDir, "plugin_config"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_config"));
     }
 
     @NotNull
     @Override
     public PluginDataStorage getConfigStorageForJvmPluginLoader() {
-        return MultiFilePluginDataStorage.create(Paths.get(ColorMiraiMain.runDir, "plugin_config"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_config"));
     }
 
     @NotNull
     @Override
     public PluginDataStorage getDataStorageForBuiltIns() {
-        return MultiFilePluginDataStorage.create(Paths.get(ColorMiraiMain.runDir, "plugin_data"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_data"));
     }
 
     @NotNull
     @Override
     public PluginDataStorage getDataStorageForJvmPluginLoader() {
-        return MultiFilePluginDataStorage.create(Paths.get(ColorMiraiMain.runDir, "plugin_config"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_data"));
     }
 
     @NotNull

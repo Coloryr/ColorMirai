@@ -53,7 +53,8 @@ fun startupConsoleThread() {
                 continue
             }
             try {
-                if (next.startsWith("/login") || next.startsWith("/autologin")) {
+                if (next.toLowerCase().startsWith("/login") || next.toLowerCase().startsWith("/autologin")) {
+                    ColorMiraiMain.logger.warn("不能使用这个指令")
                     continue
                 }
                 if (next.equals("/stop")) {

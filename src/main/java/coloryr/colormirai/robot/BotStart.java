@@ -30,8 +30,8 @@ public class BotStart {
                 fileBasedDeviceInfo(ColorMiraiMain.runDir + item.info);
                 setProtocol(item.loginType);
                 setHighwayUploadCoroutineCount(ColorMiraiMain.config.highwayUpload);
-                redirectNetworkLogToDirectory(new File(ColorMiraiMain.runDir + "/BotNetWork"));
-                redirectBotLogToDirectory(new File(ColorMiraiMain.runDir + "/BotLog"));
+                redirectNetworkLogToDirectory(new File(ColorMiraiMain.runDir + "/botnetwork"));
+                redirectBotLogToDirectory(new File(ColorMiraiMain.runDir + "/botlog"));
                 setAutoReconnectOnForceOffline(ColorMiraiMain.config.autoReconnect);
             }});
             try {
