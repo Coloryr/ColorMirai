@@ -7,7 +7,7 @@ import coloryr.colormirai.plugin.socket.pack.PackBase;
  */
 public class FriendAvatarChangedEventPack extends PackBase {
     /**
-     *      *
+     * *
      */
     public String url;
     /**

@@ -1,35 +1,16 @@
 package coloryr.colormirai;
 
-import kotlin.Lazy;
-import kotlin.LazyKt;
-import kotlin.coroutines.CoroutineContext;
-import kotlin.jvm.functions.Function2;
-import kotlinx.coroutines.CoroutineExceptionHandler;
-import kotlinx.coroutines.CoroutineName;
 import kotlinx.coroutines.CoroutineScope;
 import net.mamoe.mirai.console.MiraiConsoleFrontEndDescription;
-import net.mamoe.mirai.console.MiraiConsoleImplementation;
 import net.mamoe.mirai.console.data.MultiFilePluginDataStorage;
-import net.mamoe.mirai.console.data.PluginData;
-import net.mamoe.mirai.console.data.PluginDataHolder;
 import net.mamoe.mirai.console.data.PluginDataStorage;
 import net.mamoe.mirai.console.terminal.MiraiConsoleImplementationTerminal;
-import net.mamoe.mirai.console.terminal.MiraiConsoleTerminalLoader;
-import net.mamoe.mirai.console.util.ConsoleInput;
-import net.mamoe.mirai.console.util.NamedSupervisorJob;
 import net.mamoe.mirai.console.util.SemVersion;
-import net.mamoe.mirai.message.data.Message;
-import net.mamoe.mirai.utils.BotConfiguration;
-import net.mamoe.mirai.utils.LoginSolver;
 import net.mamoe.mirai.utils.MiraiLogger;
-import net.mamoe.mirai.utils.StandardCharImageLoginSolver;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MiraiTerminal extends MiraiConsoleImplementationTerminal implements CoroutineScope {
 
@@ -43,22 +24,6 @@ public class MiraiTerminal extends MiraiConsoleImplementationTerminal implements
     @Override
     public PluginDataStorage getConfigStorageForJvmPluginLoader() {
         return MultiFilePluginDataStorage.create(Paths.get(ColorMiraiMain.runDir, "plugin_config"));
-    }
-
-    @NotNull
-    @Override
-    public ConsoleInput getConsoleInput() {
-        return (JConsoleInput) s -> {
-            if(s.startsWith("color"))
-                return ColorMiraiMain.command(s);
-            if (s.startsWith("stop"))
-                ColorMiraiMain.stop();
-            if (s.startsWith("autoLogin"))
-                return "不能使用该指令";
-            if (s.startsWith("login"))
-                return "不能使用该指令";
-            return super.getConsoleInput().requestInput(s);
-        };
     }
 
     @NotNull
