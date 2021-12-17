@@ -53,7 +53,8 @@ fun startupConsoleThread() {
                 continue
             }
             try {
-                if (next.toLowerCase().startsWith("/login") || next.toLowerCase().startsWith("/autologin")) {
+                val next1 = next.toLowerCase();
+                if (next1.startsWith("/login") || next1.startsWith("/autologin") || next1.startsWith("/logout")) {
                     ColorMiraiMain.logger.warn("不能使用这个指令")
                     continue
                 }
