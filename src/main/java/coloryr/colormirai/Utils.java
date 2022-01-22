@@ -1,24 +1,12 @@
 package coloryr.colormirai;
 
-import com.sun.net.httpserver.HttpExchange;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
 public class Utils {
-
-    public static void send(HttpExchange t, String data) throws IOException {
-        OutputStream outputStream = t.getResponseBody();
-        byte[] res = data.getBytes(StandardCharsets.UTF_8);
-        t.sendResponseHeaders(200, res.length);
-        outputStream.write(res);
-        t.close();
-    }
-
     public static byte[] getUrlBytes(String url) {
         try {
             URL url1 = new URL(url);
