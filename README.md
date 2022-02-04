@@ -21,6 +21,7 @@
 [GitHubPush](https://github.com/Coloryr/GitHubPush)  
 [BotBiliBili](https://github.com/Coloryr/BotBiliBili)  
 [McPing](https://github.com/Coloryr/McPing)
+[BotBattlefield](https://github.com/Coloryr/BotBattlefield)
 
 ## 使用ColorMirai的项目
 
