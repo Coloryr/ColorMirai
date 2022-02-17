@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.4.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
 }
 
 group 'Color_yr.ColorMirai'
-version '3.8.3'
+version '3.8.4'
 
 repositories {
     mavenCentral()
@@ -31,10 +31,10 @@ dependencies {
     compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     compile 'org.jline:jline:3.20.0'
 
-    compile 'net.mamoe:mirai-console:2.9.2' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.9.2'
-    api 'net.mamoe:mirai-core-api:2.9.2'
-    runtimeOnly "net.mamoe:mirai-core:2.9.2"
+    compile 'net.mamoe:mirai-console:2.10.0' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.10.0'
+    api 'net.mamoe:mirai-core-api:2.10.0'
+    runtimeOnly "net.mamoe:mirai-core:2.10.0"
 
 }
 tasks.withType(JavaCompile) {

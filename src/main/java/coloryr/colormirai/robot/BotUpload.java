@@ -16,11 +16,13 @@ public class BotUpload {
         try {
             FileInputStream stream = new FileInputStream(file);
             resource = ExternalResource.create(stream).toAutoCloseable();
+            Image image = bot.getAsFriend().uploadImage(resource);
+            stream.close();
+            return image;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return bot.getAsFriend().uploadImage(resource);
     }
 
     public static Image upImage(Bot bot, InputStream stream) {
@@ -50,11 +52,13 @@ public class BotUpload {
         try {
             FileInputStream stream = new FileInputStream(file);
             resource = ExternalResource.create(stream).toAutoCloseable();
+            Audio audio = bot.getAsFriend().uploadAudio(resource);
+            stream.close();
+            return audio;
         } catch (IOException e) {
             e.printStackTrace();
             return null;
         }
-        return bot.getAsFriend().uploadAudio(resource);
     }
 
     public static Image upImage(Bot bot, byte[] file) {
@@ -85,6 +89,7 @@ public class BotUpload {
         ExternalResource resource;
         FileInputStream stream = new FileInputStream(file);
         resource = ExternalResource.create(stream).toAutoCloseable();
+        stream.close();
         return resource;
     }
 }
