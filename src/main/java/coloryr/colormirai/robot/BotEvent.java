@@ -12,7 +12,6 @@ import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
-import net.mamoe.mirai.event.events.StrangerMessageEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
@@ -979,8 +978,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //122 [机器人]在发送陌生人消息前广播（事件）
     @EventHandler
-    public void onStrangerMessagePreSendEvent(StrangerMessagePreSendEvent event)
-    {
+    public void onStrangerMessagePreSendEvent(StrangerMessagePreSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
         Message message = event.getMessage();
@@ -992,8 +990,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //123 [机器人]在陌生人消息发送后广播（事件）
     @EventHandler
-    public void onStrangerMessagePostSendEvent(StrangerMessagePostSendEvent event)
-    {
+    public void onStrangerMessagePostSendEvent(StrangerMessagePostSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getTarget().getId();
@@ -1013,8 +1010,7 @@ public class BotEvent extends SimpleListenerHost {
 
     //124 [机器人]陌生人关系改变（事件）
     @EventHandler
-    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Deleted event)
-    {
+    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Deleted event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getStranger().getId();
@@ -1022,9 +1018,9 @@ public class BotEvent extends SimpleListenerHost {
         StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 0);
         BotStart.addTask(new SendPackObj(124, JSON.toJSONString(pack), id, 0, qq));
     }
+
     @EventHandler
-    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Friended event)
-    {
+    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Friended event) {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getStranger().getId();

@@ -64,6 +64,9 @@ public class ThePlugin {
             try {
                 if (!tasks.isEmpty()) {
                     RePackObj task = tasks.remove(0);
+                    if (ColorMiraiMain.config.debug) {
+                        ColorMiraiMain.logger.info("收到数据包：[" + task.index + "]" + task.data + "");
+                    }
                     switch (task.index) {
                         //52 [插件]发送群消息
                         case 52: {
@@ -463,51 +466,61 @@ public class ThePlugin {
                         case 110: {
                             GroupAddAnnouncementPack pack = JSON.parseObject(task.data, GroupAddAnnouncementPack.class);
                             BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
+                            break;
                         }
                         //111 [插件]删除群公告
                         case 111: {
                             GroupDeleteAnnouncementPack pack = JSON.parseObject(task.data, GroupDeleteAnnouncementPack.class);
                             BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            break;
                         }
                         //112 [插件]发送好友语言文件
                         case 112: {
                             SendFriendSoundFilePack pack = JSON.parseObject(task.data, SendFriendSoundFilePack.class);
                             BotSendSound.sendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            break;
                         }
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {
                             GroupSetAllowMemberInvitePack pack = JSON.parseObject(task.data, GroupSetAllowMemberInvitePack.class);
                             BotGroupDo.setAllowMemberInvite(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            break;
                         }
                         //115 [插件]设置允许匿名聊天
                         case 115: {
                             GroupSetAnonymousChatEnabledPack pack = JSON.parseObject(task.data, GroupSetAnonymousChatEnabledPack.class);
                             BotGroupDo.setAnonymousChatEnabled(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            break;
                         }
                         //117 [插件]发送陌生人消息
                         case 117: {
                             SendStrangerMessagePack pack = JSON.parseObject(task.data, SendStrangerMessagePack.class);
                             BotSendMessage.sendStrangerMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
+                            break;
                         }
                         //118 [插件]从本地文件加载图片发送到陌生人
                         case 118: {
                             SendStrangerImageFilePack pack = JSON.parseObject(task.data, SendStrangerImageFilePack.class);
                             BotSendImage.sendStrangerImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            break;
                         }
                         //119 [插件]发送陌生人骰子
                         case 119: {
                             SendStrangerDicePack pack = JSON.parseObject(task.data, SendStrangerDicePack.class);
                             BotSendDice.sendStrangerDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
+                            break;
                         }
                         //120 [插件]发送陌生人戳一戳
                         case 120: {
                             SendStrangerNudgePack pack = JSON.parseObject(task.data, SendStrangerNudgePack.class);
                             BotSendNudge.sendStrangerNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            break;
                         }
                         //121 [插件]从本地文件加载语音发送到陌生人
                         case 121: {
                             SendStrangerSoundFilePack pack = JSON.parseObject(task.data, SendStrangerSoundFilePack.class);
                             BotSendSound.sendStrangerFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            break;
                         }
                         //127 [插件]断开连接
                         case 127: {

@@ -1,10 +1,6 @@
 package coloryr.colormirai.plugin.socket.pack.to;
 
-import coloryr.colormirai.plugin.socket.pack.PackBase;
 import net.mamoe.mirai.message.data.Message;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 122 [机器人]在发送陌生人消息前广播（事件）
