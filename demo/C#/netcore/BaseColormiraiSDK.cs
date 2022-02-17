@@ -2359,7 +2359,7 @@ public partial class RobotSDK
         { 121, typeof(SendStrangerSoundFilePack) },
         { 122, typeof(StrangerMessagePreSendEventPack) },
         { 123, typeof(StrangerMessagePostSendEventPack) },
-        { 123, typeof(StrangerRelationChangePack) }
+        { 124, typeof(StrangerRelationChangePack) }
     };
 }
 
