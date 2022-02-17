@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using ASocket = System.Net.Sockets.Socket;
 //请用net6运行
 //并安装Newtonsoft.Json
 namespace ColoryrSDK;
@@ -2088,6 +2089,34 @@ public record SendStrangerSoundFilePack : SendFriendSoundFilePack
 { 
     
 }
+/// <summary>
+/// 122 [机器人]在发送陌生人消息前广播（事件）
+/// </summary>
+public record StrangerMessagePreSendEventPack : FriendMessagePreSendEventPack
+{
+
+}
+/// <summary>
+/// 123 [机器人]在陌生人消息发送后广播（事件）
+/// </summary>
+public record StrangerMessagePostSendEventPack : FriendMessagePostSendEventPack
+{
+
+}
+/// <summary>
+/// 124 [机器人]陌生人关系改变（事件）
+/// </summary>
+public record StrangerRelationChangePack : PackBase
+{
+    /// <summary>
+    /// QQ号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 方式
+    /// </summary>
+    public int type { get; set; }
+}
 
 public static class BuildPack
 {
@@ -2327,7 +2356,10 @@ public partial class RobotSDK
         { 118, typeof(SendStrangerImageFilePack) },
         { 119, typeof(SendStrangerDicePack) },
         { 120, typeof(SendStrangerNudgePack) },
-        { 121, typeof(SendStrangerSoundFilePack) }
+        { 121, typeof(SendStrangerSoundFilePack) },
+        { 122, typeof(StrangerMessagePreSendEventPack) },
+        { 123, typeof(StrangerMessagePostSendEventPack) },
+        { 123, typeof(StrangerRelationChangePack) }
     };
 }
 
@@ -2358,7 +2390,7 @@ public partial class RobotSDK
     private RobotLog RobotLogEvent;
     private RobotState RobotStateEvent;
 
-    private Socket Socket;
+    private ASocket Socket;
     private Thread ReadThread;
     private Thread DoThread;
     private ConcurrentBag<RobotTask> QueueRead;
@@ -2515,7 +2547,7 @@ public partial class RobotSDK
 
         RobotStateEvent.Invoke(StateType.Connecting);
 
-        Socket = new Socket(SocketType.Stream, ProtocolType.Tcp);
+        Socket = new(SocketType.Stream, ProtocolType.Tcp);
         Socket.Connect(Config.IP, Config.Port);
 
         var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(PackStart) + " ");

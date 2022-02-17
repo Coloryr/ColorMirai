@@ -977,6 +977,62 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(116, JSON.toJSONString(pack), id, 0, qq));
     }
 
+    //122 [机器人]在发送陌生人消息前广播（事件）
+    @EventHandler
+    public void onStrangerMessagePreSendEvent(StrangerMessagePreSendEvent event)
+    {
+        if (PluginUtils.havePlugin())
+            return;
+        Message message = event.getMessage();
+        long id = event.getTarget().getId();
+        long qq = event.getBot().getId();
+        StrangerMessagePreSendEventPack pack = new StrangerMessagePreSendEventPack(qq, message, id);
+        BotStart.addTask(new SendPackObj(122, JSON.toJSONString(pack), id, 0, qq));
+    }
+
+    //123 [机器人]在陌生人消息发送后广播（事件）
+    @EventHandler
+    public void onStrangerMessagePostSendEvent(StrangerMessagePostSendEvent event)
+    {
+        if (PluginUtils.havePlugin())
+            return;
+        long id = event.getTarget().getId();
+        boolean res = event.getReceipt() != null;
+        MessageSource message = null;
+        if (res) {
+            message = event.getReceipt().getSource();
+        }
+        String error = "";
+        if (event.getException() != null) {
+            error = event.getException().getMessage();
+        }
+        long qq = event.getBot().getId();
+        StrangerMessagePostSendEventPack pack = new StrangerMessagePostSendEventPack(qq, message, id, res, error);
+        BotStart.addTask(new SendPackObj(123, JSON.toJSONString(pack), id, 0, qq));
+    }
+
+    //124 [机器人]陌生人关系改变（事件）
+    @EventHandler
+    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Deleted event)
+    {
+        if (PluginUtils.havePlugin())
+            return;
+        long id = event.getStranger().getId();
+        long qq = event.getBot().getId();
+        StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 0);
+        BotStart.addTask(new SendPackObj(124, JSON.toJSONString(pack), id, 0, qq));
+    }
+    @EventHandler
+    public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Friended event)
+    {
+        if (PluginUtils.havePlugin())
+            return;
+        long id = event.getStranger().getId();
+        long qq = event.getBot().getId();
+        StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 1);
+        BotStart.addTask(new SendPackObj(124, JSON.toJSONString(pack), id, 0, qq));
+    }
+
     //处理在处理事件中发生的未捕获异常
     @Override
     public void handleException(@NotNull CoroutineContext context, @NotNull Throwable exception) {
