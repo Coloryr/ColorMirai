@@ -274,13 +274,13 @@ public class ThePlugin {
                         //83 [插件]发送私聊戳一戳
                         case 83: {
                             SendFriendNudgePack pack = JSON.parseObject(task.data, SendFriendNudgePack.class);
-                            BotSendNudge.sendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotSendNudge.sendFriendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
                             SendGroupMemberNudgePack pack = JSON.parseObject(task.data, SendGroupMemberNudgePack.class);
-                            BotSendNudge.sendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotSendNudge.sendGroupNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //90 [插件]获取图片Url
@@ -325,7 +325,7 @@ public class ThePlugin {
                         case 93: {
                             SendMusicSharePack pack = JSON.parseObject(task.data, SendMusicSharePack.class);
                             if (pack.type1 == 0) {
-                                BotSendMusicShare.sendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendFriendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             } else if (pack.type1 == 1) {
                                 BotSendMusicShare.sendMusicShareGroup(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
                             } else if (pack.type1 == 2) {
@@ -483,6 +483,31 @@ public class ThePlugin {
                         case 115: {
                             GroupSetAnonymousChatEnabledPack pack = JSON.parseObject(task.data, GroupSetAnonymousChatEnabledPack.class);
                             BotGroupDo.setAnonymousChatEnabled(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                        }
+                        //117 [插件]发送陌生人消息
+                        case 117: {
+                            SendStrangerMessagePack pack = JSON.parseObject(task.data, SendStrangerMessagePack.class);
+                            BotSendMessage.sendStrangerMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
+                        }
+                        //118 [插件]从本地文件加载图片发送到陌生人
+                        case 118: {
+                            SendStrangerImageFilePack pack = JSON.parseObject(task.data, SendStrangerImageFilePack.class);
+                            BotSendImage.sendStrangerImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                        }
+                        //119 [插件]发送陌生人骰子
+                        case 119: {
+                            SendStrangerDicePack pack = JSON.parseObject(task.data, SendStrangerDicePack.class);
+                            BotSendDice.sendStrangerDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
+                        }
+                        //120 [插件]发送陌生人戳一戳
+                        case 120: {
+                            SendStrangerNudgePack pack = JSON.parseObject(task.data, SendStrangerNudgePack.class);
+                            BotSendNudge.sendStrangerNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                        }
+                        //121 [插件]从本地文件加载语音发送到陌生人
+                        case 121: {
+                            SendStrangerSoundFilePack pack = JSON.parseObject(task.data, SendStrangerSoundFilePack.class);
+                            BotSendSound.sendStrangerFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                         }
                         //127 [插件]断开连接
                         case 127: {

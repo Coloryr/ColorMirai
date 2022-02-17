@@ -1,7 +1,7 @@
 ﻿using ColoryrSDK;
 using System;
 
-Robot robot = new();
+RobotSDK robot = new();
 
 void Message(byte type, object data)
 {
@@ -10,7 +10,7 @@ void Message(byte type, object data)
         case 46:
             {
                 var pack = data as NewFriendRequestEventPack;
-                robot.NewFriendRequestCall(pack.qq, pack.eventid, Robot.FriendCallType.accept);
+                robot.NewFriendRequestCall(pack.qq, pack.eventid, RobotSDK.FriendCallType.accept);
                 break;
             }
         case 49:
@@ -33,6 +33,9 @@ void Message(byte type, object data)
         case 51:
 
             break;
+        case 116:
+
+            break;
     }
 }
 
@@ -51,7 +54,7 @@ RobotConfig config = new()
     IP = "127.0.0.1",
     Port = 23333,
     Name = "test",
-    Pack = new() { 46, 49, 50, 51 },
+    Pack = new() { 46, 49, 50, 51, 116 },
     RunQQ = 0,
     Time = 10000,
     CallAction = Message,

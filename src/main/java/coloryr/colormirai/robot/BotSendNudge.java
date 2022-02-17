@@ -5,9 +5,10 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.contact.Stranger;
 
 public class BotSendNudge {
-    public static void sendNudge(long qq, long id) {
+    public static void sendFriendNudge(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -25,7 +26,25 @@ public class BotSendNudge {
         }
     }
 
-    public static void sendNudge(long qq, long id, long fid) {
+    public static void sendStrangerNudge(long qq, long id) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Stranger stranger = bot.getStranger(id);
+            if (stranger == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在陌生人:" + id);
+                return;
+            }
+            stranger.nudge().sendTo(stranger);
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("发送陌生人戳一戳失败", e);
+        }
+    }
+
+    public static void sendGroupNudge(long qq, long id, long fid) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);

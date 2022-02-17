@@ -5,6 +5,7 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
+import net.mamoe.mirai.contact.Stranger;
 import net.mamoe.mirai.message.data.Dice;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
@@ -93,6 +94,33 @@ public class BotSendDice {
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友骰子失败", e);
+        }
+    }
+
+    public static void sendStrangerDice(long qq, long fid, int dice) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            MessageChain messageChain = MessageUtils.newChain(dice == -1 ? Dice.random() : new Dice(dice));
+            Stranger stranger = bot.getStranger(fid);
+            if (stranger == null) {
+                ColorMiraiMain.logger.warn("机器人" + qq + "不存在陌生人:" + fid);
+                return;
+            }
+            MessageSource source = stranger.sendMessage(messageChain).getSource();
+            int[] temp = source.getIds();
+            if (temp.length != 0 && temp[0] != -1) {
+                MessageSaveObj call = new MessageSaveObj();
+                call.source = source;
+                call.time = 120;
+                call.id = temp[0];
+                BotStart.addMessage(qq, call.id, call);
+            }
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("发送陌生人骰子失败", e);
         }
     }
 }

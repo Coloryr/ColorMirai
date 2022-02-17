@@ -12,6 +12,7 @@ import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.SimpleListenerHost;
 import net.mamoe.mirai.event.events.*;
+import net.mamoe.mirai.event.events.StrangerMessageEvent;
 import net.mamoe.mirai.message.data.Message;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
@@ -954,6 +955,26 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         GroupDisbandPack pack = new GroupDisbandPack(qq, id);
         BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
+    }
+
+    //116 [机器人]收到陌生人消息（事件）
+    @EventHandler
+    public void onStrangerMessageEvent(StrangerMessageEvent event) {
+        if (PluginUtils.havePlugin())
+            return;
+        long id = event.getSender().getId();
+        MessageChain message = event.getMessage();
+        MessageSaveObj call = new MessageSaveObj();
+        call.sourceQQ = event.getBot().getId();
+        call.source = event.getSource();
+        call.time = -1;
+        call.id = call.source.getIds()[0];
+        int time = event.getTime();
+        long qq = event.getBot().getId();
+        String name = event.getSenderName();
+        BotStart.addMessage(qq, call.id, call);
+        StrangerMessageEventPack pack = new StrangerMessageEventPack(qq, id, message, time, name);
+        BotStart.addTask(new SendPackObj(116, JSON.toJSONString(pack), id, 0, qq));
     }
 
     //处理在处理事件中发生的未捕获异常

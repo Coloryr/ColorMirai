@@ -5,6 +5,7 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.Member;
+import net.mamoe.mirai.contact.Stranger;
 import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.data.Image;
 
@@ -229,6 +230,87 @@ public class BotSendImage {
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友失败", e);
+        }
+    }
+
+    public static void sendStrangerImage(long qq, long id, String img, List<Long> ids) {
+        if (!BotStart.getBots().containsKey(qq)) {
+            ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            return;
+        }
+        Bot bot = BotStart.getBots().get(qq);
+        Image image = null;
+        if (ids == null) {
+            ids = new ArrayList<>();
+        }
+        if (id != 0) {
+            ids.add(id);
+        }
+        try {
+            for (long item : ids) {
+                Stranger stranger = bot.getStranger(item);
+                if (stranger == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在陌生人:" + id);
+                    return;
+                }
+                if (image == null) {
+                    image = BotUpload.upImage(bot, img);
+                    if (image == null)
+                        throw new Exception("图片为空");
+                }
+                MessageReceipt<Stranger> message = stranger.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("发送陌生人失败", e);
+        }
+    }
+
+    public static void sendStrangerImageFile(long qq, long id, String file, List<Long> ids) {
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Image image = null;
+            if (ids == null) {
+                ids = new ArrayList<>();
+            }
+            if (id != 0) {
+                ids.add(id);
+            }
+            for (long item : ids) {
+                Stranger stranger = bot.getStranger(item);
+                if (stranger == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在陌生人:" + item);
+                    return;
+                }
+                if (image == null) {
+                    image = BotUpload.upImage(bot, file);
+                    if (image == null)
+                        throw new Exception("图片为空");
+                }
+
+                MessageReceipt<Stranger> message = stranger.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("发送陌生人失败", e);
         }
     }
 }
