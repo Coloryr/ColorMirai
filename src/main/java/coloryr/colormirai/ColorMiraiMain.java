@@ -18,7 +18,7 @@ import java.nio.charset.Charset;
 import java.util.Base64;
 
 public class ColorMiraiMain {
-    public static final String version = "3.8.0";
+    public static final String version = "3.8.6";
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static final Base64.Decoder decoder = Base64.getDecoder();
     public static String runDir;
