@@ -9,12 +9,12 @@
    请务必用openjdk启动  
    请务必用openjdk启动
 
-如果没有openjdk，群文件有openjdk15，下载安装之后新建一个`.cmd`，在里面输入
+如果没有openjdk，群文件有openjdk17，下载安装之后新建一个`.cmd`，使用JAVA启动，例如在里面输入
 ```Cmd
-"C:\Program Files\AdoptOpenJDK\jdk-15.0.2.7-hotspot\bin\java.exe" -Xmx1024M -jar ColorMirai-3.x.x-SNAPSHOT-all.jar
+"C:\Program Files\AdoptOpenJDK\jdk-17\bin\java.exe" -Xmx1024M -jar ColorMirai-3.x.x-SNAPSHOT-all.jar
 pause
 ```
-- `jdk-15.0.2.7-hotspot`要根据你安装的版本修改  
+- `jdk版本`要根据你安装的版本修改  
   `ColorMirai-3.x.x-SNAPSHOT-all`也根据你运行的版本修改
 
 如果你的系统环境变量默认是openjdk，则cmd内容是下面
@@ -23,14 +23,14 @@ java -Xmx1024M -jar ColorMirai-3.X-SNAPSHOT-all.jar
 pause
 ```
 
-首次启动后, 会生成四个日志文件夹和`info.json`、`MainConfig.json`两个配置文件
+首次启动后, 会生成四个日志文件夹和`device.json`、`config.json`两个配置文件
 
-- `info.json`是设备名称，不需要特别设置
-- `MainConfig.json`是配置文件
+- `device.json`是设备名称，不需要特别设置
+- `config.json`是配置文件
 
 2. 默认配置
 
-`MainConfig.json`
+`config.json`
 
 ```Json5
 {

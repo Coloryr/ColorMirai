@@ -6,7 +6,7 @@
 
 1. 准备工作  
    下载[Visual Studio](https://visualstudio.microsoft.com/zh-hans/vs/)  
-   下载[net5](https://dotnet.microsoft.com/download/dotnet/5.0) 安装SDK  
+   下载[net5](https://dotnet.microsoft.com/download/dotnet/6.0) 安装SDK  
    打开[demo代码](../demo/C%23)
 
 2. 开始编写代码  
