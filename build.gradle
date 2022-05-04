@@ -4,8 +4,8 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.6.0'
 }
 
-group 'Color_yr.ColorMirai'
-version '3.8.6'
+group 'coloryr.colormirai'
+version '3.8.7'
 
 repositories {
     mavenCentral()
@@ -22,19 +22,19 @@ compileKotlin {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
-    compile 'org.apache.logging.log4j:log4j-api:2.17.1'
-    compile 'org.apache.logging.log4j:log4j-core:2.17.1'
+    compile 'org.apache.logging.log4j:log4j-api:2.17.2'
+    compile 'org.apache.logging.log4j:log4j-core:2.17.2'
 
-    compile 'com.alibaba:fastjson:1.2.79'
-    compile 'org.java-websocket:Java-WebSocket:1.5.2'
+    compile 'com.alibaba:fastjson:2.0.1'
+    compile 'org.java-websocket:Java-WebSocket:1.5.3'
     compile "commons-fileupload:commons-fileupload:1.4"
     compile 'javax.servlet:javax.servlet-api:4.0.1'
     compile 'org.jline:jline:3.21.0'
 
-    compile 'net.mamoe:mirai-console:2.11.0-M1' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.11.0-M1'
-    api 'net.mamoe:mirai-core-api:2.11.0-M1'
-    runtimeOnly "net.mamoe:mirai-core:2.11.0-M1"
+    compile 'net.mamoe:mirai-console:2.11.0-RC' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.11.0-RC'
+    api 'net.mamoe:mirai-core-api:2.11.0-RC'
+    runtimeOnly "net.mamoe:mirai-core:2.11.0-RC"
 
 }
 tasks.withType(JavaCompile) {
