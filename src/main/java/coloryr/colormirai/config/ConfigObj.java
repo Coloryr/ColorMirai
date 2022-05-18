@@ -7,6 +7,8 @@ public class ConfigObj {
     public List<QQsObj> qqList;
     public boolean pack;
     public int socketPort;
+
+    public int nettyPort;
     public int webSocketPort;
     public boolean escapeSelf;
     public long maxList;
@@ -28,6 +30,7 @@ public class ConfigObj {
         escapeSelf = true;
         socketPort = 23333;
         webSocketPort = 23334;
+        nettyPort = 23335;
         maxList = 100000;
         sendEncoding = "UTF-8";
         readEncoding = "UTF-8";

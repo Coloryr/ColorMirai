@@ -1,6 +1,6 @@
 package coloryr.colormirai.robot.event;
 
-import coloryr.colormirai.plugin.socket.pack.PackBase;
+import coloryr.colormirai.plugin.pack.PackBase;
 import net.mamoe.mirai.event.events.BotEvent;
 
 public class EventBase extends PackBase {

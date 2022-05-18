@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'coloryr.colormirai'
-version '3.8.7'
+version '3.9.0'
 
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.17.2'
     compile 'org.apache.logging.log4j:log4j-core:2.17.2'
 
-    compile 'com.alibaba:fastjson:2.0.1'
+    compile 'com.alibaba:fastjson:2.0.3'
     compile 'org.java-websocket:Java-WebSocket:1.5.3'
     compile "commons-fileupload:commons-fileupload:1.4"
     compile 'javax.servlet:javax.servlet-api:4.0.1'
@@ -33,6 +33,7 @@ dependencies {
 
     compile 'net.mamoe:mirai-console:2.11.0-RC' // 后端
     compile 'net.mamoe:mirai-console-terminal:2.11.0-RC'
+    compile 'io.netty:netty-all:4.1.77.Final'
     api 'net.mamoe:mirai-core-api:2.11.0-RC'
     runtimeOnly "net.mamoe:mirai-core:2.11.0-RC"
 

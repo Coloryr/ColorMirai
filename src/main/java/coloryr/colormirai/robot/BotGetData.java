@@ -1,9 +1,9 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.plugin.socket.pack.re.FriendInfoPack;
-import coloryr.colormirai.plugin.socket.pack.re.GroupInfo;
-import coloryr.colormirai.plugin.socket.pack.re.MemberInfoPack;
+import coloryr.colormirai.plugin.pack.re.FriendInfoPack;
+import coloryr.colormirai.plugin.pack.re.GroupInfo;
+import coloryr.colormirai.plugin.pack.re.MemberInfoPack;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.Mirai;
 import net.mamoe.mirai.contact.Friend;

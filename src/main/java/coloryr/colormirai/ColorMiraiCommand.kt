@@ -1,6 +1,6 @@
 package coloryr.colormirai
 
-import coloryr.colormirai.plugin.socket.PluginUtils
+import coloryr.colormirai.plugin.PluginUtils
 import net.mamoe.mirai.console.command.Command
 import net.mamoe.mirai.console.command.CompositeCommand
 import net.mamoe.mirai.console.command.ConsoleCommandOwner

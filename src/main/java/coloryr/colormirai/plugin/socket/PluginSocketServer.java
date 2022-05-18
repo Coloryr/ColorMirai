@@ -1,7 +1,7 @@
 package coloryr.colormirai.plugin.socket;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.plugin.socket.obj.RePackObj;
+import coloryr.colormirai.plugin.PluginUtils;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,9 +9,9 @@ import java.net.Socket;
 
 public class PluginSocketServer {
 
-    private ServerSocket serverSocket;
-    private Thread serverThread;
-    private boolean isStart;
+    private static ServerSocket serverSocket;
+    private static Thread serverThread;
+    private static boolean isStart;
 
     public static RePackObj read(Socket socket) {
         try {
@@ -56,7 +56,7 @@ public class PluginSocketServer {
         }
     }
 
-    public boolean pluginServerStart() {
+    public static void start() {
         try {
             serverSocket = new ServerSocket(ColorMiraiMain.config.socketPort);
             ColorMiraiMain.logger.info("Socket已启动:" + ColorMiraiMain.config.socketPort);
@@ -75,14 +75,12 @@ public class PluginSocketServer {
                 }
             });
             serverThread.start();
-            return true;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("Socket启动失败", e);
-            return false;
         }
     }
 
-    public void pluginServerStop() {
+    public static void stop() {
         if (serverThread != null && serverThread.isAlive()) {
             isStart = false;
             try {

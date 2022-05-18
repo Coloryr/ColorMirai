@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BotSendImage {
 
-    public static void sendGroupImage(long qq, long id, String img) {
+    public static void sendGroupImage(long qq, long id, byte[] img) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -27,7 +27,7 @@ public class BotSendImage {
                 ColorMiraiMain.logger.error("没有群：" + id);
                 return;
             }
-            MessageReceipt<Group> message = group.sendMessage(BotUpload.upImage(bot, ColorMiraiMain.decoder.decode(img)));
+            MessageReceipt<Group> message = group.sendMessage(BotUpload.upImage(bot, img));
             MessageSaveObj obj = new MessageSaveObj();
             obj.source = message.getSource();
             obj.sourceQQ = qq;
@@ -82,7 +82,7 @@ public class BotSendImage {
         }
     }
 
-    public static void sendGroupPrivateImage(long qq, long id, long fid, String file) {
+    public static void sendGroupPrivateImage(long qq, long id, long fid, byte[] file) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -100,8 +100,6 @@ public class BotSendImage {
                 return;
             }
             Image image = BotUpload.upImage(bot, file);
-            if (image == null)
-                throw new Exception("图片为空");
 
             MessageReceipt<Member> message = member.sendMessage(image);
             MessageSaveObj obj = new MessageSaveObj();
@@ -152,7 +150,7 @@ public class BotSendImage {
         }
     }
 
-    public static void sendFriendImage(long qq, long id, String img, List<Long> ids) {
+    public static void sendFriendImage(long qq, long id, byte[] img, List<Long> ids) {
         if (!BotStart.getBots().containsKey(qq)) {
             ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
             return;
@@ -174,8 +172,6 @@ public class BotSendImage {
                 }
                 if (image == null) {
                     image = BotUpload.upImage(bot, img);
-                    if (image == null)
-                        throw new Exception("图片为空");
                 }
                 MessageReceipt<Friend> message = friend.sendMessage(image);
                 MessageSaveObj obj = new MessageSaveObj();

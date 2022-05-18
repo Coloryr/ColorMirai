@@ -12,28 +12,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BotSendSound {
-    public static void sendGroupSound(long qq, long id, String sound) {
+    public static void sendGroupSound(long qq, long id, byte[] sound, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
+            if (ids == null) {
+                ids = new ArrayList<>();
             }
-            Audio audio = BotUpload.upAudio(bot, ColorMiraiMain.decoder.decode(sound));
-            MessageReceipt<Group> message = group.sendMessage(audio);
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = qq;
-            int[] temp = obj.source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                obj.id = temp[0];
+            if (!ids.contains(id)) {
+                ids.add(id);
             }
-            BotStart.addMessage(qq, obj.id, obj);
+            Audio audio = BotUpload.upAudio(bot, sound);
+            for (long item : ids) {
+                Group group = bot.getGroup(item);
+                if (group == null) {
+                    ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + item);
+                    return;
+                }
+
+                MessageReceipt<Group> message = group.sendMessage(audio);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
         }
@@ -159,5 +168,9 @@ public class BotSendSound {
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人语音失败", e);
         }
+    }
+
+    public static void sendFriend(long qq, long id, byte[] data, List<Long> ids) {
+
     }
 }

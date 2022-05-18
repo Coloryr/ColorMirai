@@ -3,7 +3,7 @@ package coloryr.colormirai.robot;
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.Utils;
 import coloryr.colormirai.download.DownloadUtils;
-import coloryr.colormirai.plugin.socket.pack.re.GroupFileInfo;
+import coloryr.colormirai.plugin.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.PermissionDeniedException;

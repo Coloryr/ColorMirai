@@ -2,9 +2,9 @@ package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.config.QQsObj;
-import coloryr.colormirai.plugin.socket.PluginUtils;
-import coloryr.colormirai.plugin.socket.ThePlugin;
-import coloryr.colormirai.plugin.socket.obj.SendPackObj;
+import coloryr.colormirai.plugin.PluginUtils;
+import coloryr.colormirai.plugin.ThePlugin;
+import coloryr.colormirai.plugin.obj.SendPackObj;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.Mirai;
@@ -97,11 +97,8 @@ public class BotStart {
         service1.scheduleAtFixedRate(() -> {
             if (!tasks.isEmpty()) {
                 SendPackObj task = tasks.remove(0);
-                task.data += " ";
-                byte[] temp = task.data.getBytes(ColorMiraiMain.sendCharset);
-                temp[temp.length - 1] = task.index;
                 for (ThePlugin item : PluginUtils.getAll()) {
-                    item.callEvent(task, temp);
+                    item.callEvent(task, task.data, task.index);
                 }
             }
         }, 0, 100, TimeUnit.MICROSECONDS);
