@@ -27,7 +27,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getTarget().getId();
         long qq = event.getBot().getId();
         BeforeImageUploadPack pack = new BeforeImageUploadPack(qq, name, id);
-        BotStart.addTask(new SendPackObj(1, JSON.toJSONString(pack), 0, 0, qq));
+        BotStart.addTask(new SendPackObj(1, pack, 0, 0, qq));
     }
 
     //2 [机器人]头像被修改（通过其他客户端修改了头像）（事件）
@@ -37,7 +37,7 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long qq = event.getBot().getId();
         BotAvatarChangedPack pack = new BotAvatarChangedPack(qq);
-        BotStart.addTask(new SendPackObj(2, JSON.toJSONString(pack), 0, 0, qq));
+        BotStart.addTask(new SendPackObj(2, pack, 0, 0, qq));
     }
 
     //3 [机器人]在群里的权限被改变. 操作人一定是群主（事件）
@@ -50,7 +50,7 @@ public class BotEvent extends SimpleListenerHost {
         MemberPermission now = event.getNew();
         MemberPermission old = event.getOrigin();
         BotGroupPermissionChangePack pack = new BotGroupPermissionChangePack(qq, now, old, id);
-        BotStart.addTask(new SendPackObj(3, JSON.toJSONString(pack), 0, id, qq));
+        BotStart.addTask(new SendPackObj(3, pack, 0, id, qq));
     }
 
     //4 [机器人]被邀请加入一个群（事件）

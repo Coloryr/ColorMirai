@@ -65,7 +65,7 @@ public class SocketThread implements IPluginSocket {
                 plugin.setRunQQ(StartPack.RunQQ);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
                 String data = JSON.toJSONString(BotStart.getBotsKey());
-                send(data.getBytes(ColorMiraiMain.sendCharset));
+                send(PackDo.buildPack(data, 0));
             } else {
                 ColorMiraiMain.logger.warn("插件连接初始化失败");
                 socket.close();

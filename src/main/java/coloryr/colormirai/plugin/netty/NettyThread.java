@@ -5,7 +5,10 @@ import coloryr.colormirai.plugin.IPluginSocket;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
+import coloryr.colormirai.plugin.pack.from.GetImageUrlPack;
 import coloryr.colormirai.plugin.pack.from.StartPack;
+import coloryr.colormirai.plugin.pack.re.*;
+import coloryr.colormirai.plugin.pack.to.BeforeImageUploadPack;
 import coloryr.colormirai.robot.BotStart;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -399,6 +402,61 @@ public class NettyThread implements IPluginSocket {
 
     @Override
     public boolean send(Object data, int index) {
+        try {
+            ByteBuf buff;
+            switch (index) {
+                case 1:
+                    buff = PackEncode.beforeImageUploadPack((BeforeImageUploadPack)data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 2:
+                    buff =  BotAvatarChangedPack
+                    break;
+                case 55:
+                    buff = PackEncode.listGroupPack((ListGroupPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 56:
+                    buff = PackEncode.listFriendPack((ListFriendPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 57:
+                    buff = PackEncode.listMemberPack((ListMemberPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 58:
+                    buff = PackEncode.groupSettingPack((GroupSettingPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 60:
+                    buff = PackEncode.testPack();
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 90:
+                    buff = PackEncode.getImageUrlPack((GetImageUrlPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 91:
+                    buff = PackEncode.memberInfoPack((MemberInfoPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 92:
+                    buff = PackEncode.friendInfoPack((FriendInfoPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 101:
+                    buff = PackEncode.groupFilesPack((GroupFilesPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+                case 109:
+                    buff = PackEncode.groupAnnouncementsPack((GroupAnnouncementsPack) data);
+                    context.writeAndFlush(buff).sync();
+                    break;
+            }
+            return true;
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("数据发送发生错误", e);
+        }
         return false;
     }
 

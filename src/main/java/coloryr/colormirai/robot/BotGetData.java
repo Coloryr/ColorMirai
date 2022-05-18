@@ -74,6 +74,7 @@ public class BotGetData {
             List<FriendInfoPack> list = new ArrayList<>();
             for (Friend item : bot.getFriends()) {
                 FriendInfoPack info = new FriendInfoPack();
+                info.userProfile = item.queryProfile();
                 info.id = item.getId();
                 info.img = item.getAvatarUrl();
                 info.remark = item.getRemark();

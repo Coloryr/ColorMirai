@@ -4,15 +4,23 @@ import coloryr.colormirai.plugin.pack.PackBase;
 import net.mamoe.mirai.data.UserProfile;
 
 /*
-92 [插件]获取朋友信息
-id:QQ号
-img:头像图片
-remark:好友备注
-userProfile:用户详细资料
+ * 92 [插件]获取朋友信息
  */
 public class FriendInfoPack extends PackBase {
+    /*
+     * QQ号
+     */
     public long id;
+    /*
+     * 头像图片
+     */
     public String img;
+    /*
+     * 好友备注
+     */
     public String remark;
+    /*
+     * 用户详细资料
+     */
     public UserProfile userProfile;
 }

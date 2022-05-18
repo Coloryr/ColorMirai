@@ -7,13 +7,13 @@ import coloryr.colormirai.plugin.pack.PackBase;
  */
 public class BeforeImageUploadPack extends PackBase {
     /***
-     * 图片UUID
-     */
-    public String name;
-    /***
      * 发送给的号码
      */
     public long id;
+    /***
+     * 图片UUID
+     */
+    public String name;
 
     public BeforeImageUploadPack(long qq, String name, long id) {
         this.qq = qq;
