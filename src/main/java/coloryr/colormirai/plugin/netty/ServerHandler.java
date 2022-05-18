@@ -1,23 +1,19 @@
 package coloryr.colormirai.plugin.netty;
 
 import coloryr.colormirai.plugin.PluginUtils;
-import coloryr.colormirai.plugin.ThePlugin;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.CharsetUtil;
 
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     public static final Map<ChannelHandlerContext, NettyThread> contexts = new ConcurrentHashMap<>();
+
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) {
-        contexts.put(ctx,  PluginUtils.addPlugin(ctx));
+        contexts.put(ctx, PluginUtils.addPlugin(ctx));
     }
 
     @Override
@@ -30,7 +26,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelUnregistered(ChannelHandlerContext ctx){
+    public void channelUnregistered(ChannelHandlerContext ctx) {
 
     }
 

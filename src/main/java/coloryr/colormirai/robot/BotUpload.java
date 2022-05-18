@@ -5,7 +5,6 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.Audio;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.utils.ExternalResource;
-import okhttp3.OkHttpClient;
 
 import java.io.*;
 
@@ -16,7 +15,7 @@ public class BotUpload {
             Image image;
             if (file.startsWith("http")) {
                 byte[] data = Utils.getUrlBytes(file);
-                if(data == null)
+                if (data == null)
                     return null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(data);
                 resource = ExternalResource.create(stream).toAutoCloseable();
@@ -63,13 +62,13 @@ public class BotUpload {
             Audio audio;
             if (file.startsWith("http")) {
                 byte[] data = Utils.getUrlBytes(file);
-                if(data == null)
+                if (data == null)
                     return null;
                 ByteArrayInputStream stream = new ByteArrayInputStream(data);
                 resource = ExternalResource.create(stream).toAutoCloseable();
                 audio = bot.getAsFriend().uploadAudio(resource);
                 stream.close();
-            }else {
+            } else {
                 FileInputStream stream = new FileInputStream(file);
                 resource = ExternalResource.create(stream).toAutoCloseable();
                 audio = bot.getAsFriend().uploadAudio(resource);

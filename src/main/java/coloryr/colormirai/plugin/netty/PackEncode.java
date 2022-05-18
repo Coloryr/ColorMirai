@@ -10,7 +10,7 @@ public class PackEncode {
     public static ByteBuf startPack(List<Long> botsKey) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeInt(botsKey.size());
-        for (long item : botsKey){
+        for (long item : botsKey) {
             buf.writeLong(item);
         }
         return buf;

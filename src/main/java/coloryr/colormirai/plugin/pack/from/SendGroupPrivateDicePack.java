@@ -3,13 +3,19 @@ package coloryr.colormirai.plugin.pack.from;
 import coloryr.colormirai.plugin.pack.PackBase;
 
 /*
-98 [插件]发送群私聊骰子
-id:群号
-fid:群员QQ号
-dice:点数
+ * 98 [插件]发送群私聊骰子
  */
 public class SendGroupPrivateDicePack extends PackBase {
+    /*
+     * 群号
+     */
     public long id;
+    /*
+     * 群员QQ号
+     */
     public long fid;
+    /*
+     * 点数
+     */
     public int dice;
 }

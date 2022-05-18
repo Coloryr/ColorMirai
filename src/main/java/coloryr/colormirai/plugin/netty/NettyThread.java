@@ -5,9 +5,8 @@ import coloryr.colormirai.plugin.IPluginSocket;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
-import coloryr.colormirai.plugin.pack.from.*;
+import coloryr.colormirai.plugin.pack.from.StartPack;
 import coloryr.colormirai.robot.BotStart;
-import com.alibaba.fastjson.JSON;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 
@@ -20,14 +19,15 @@ public class NettyThread implements IPluginSocket {
     private final Thread socketThread;
 
     private final Queue<ByteBuf> list = new ConcurrentLinkedDeque<>();
-    public NettyThread(ChannelHandlerContext context){
+
+    public NettyThread(ChannelHandlerContext context) {
         this.context = context;
         socketThread = new Thread(this::start, "NettyThread");
     }
 
     private RePackObj read() {
         ByteBuf buff = list.poll();
-        if(buff == null)
+        if (buff == null)
             return null;
         return new RePackObj(buff.readByte(), buff);
     }
@@ -37,11 +37,9 @@ public class NettyThread implements IPluginSocket {
     }
 
     private void send(ByteBuf data) {
-        try{
+        try {
             context.writeAndFlush(data).sync();
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             ColorMiraiMain.logger.error("插件数据发送失败", e);
         }
     }
@@ -229,149 +227,149 @@ public class NettyThread implements IPluginSocket {
                         }
                         //91 [插件]获取群成员信息
                         case 91: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GetMemberInfoPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.getMemberInfo(task.data), task.index));
                             break;
                         }
                         //92 [插件]获取朋友信息
                         case 92: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GetFriendInfoPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.getFriendInfoPack(task.data), task.index));
                             break;
                         }
                         //93 [插件]发送音乐分享
                         case 93: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendMusicSharePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendMusicSharePack(task.data), task.index));
                             break;
                         }
                         //94 [插件]设置群精华消息
                         case 94: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetEssenceMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetEssenceMessagePack(task.data), task.index));
                             break;
                         }
                         //95 [插件]消息队列
                         case 95: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, MessageBuffPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.messageBuffPack(task.data), task.index));
                             break;
                         }
                         //96 [插件]发送朋友骰子
                         case 96: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendDicePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendDicePack(task.data), task.index));
                         }
                         //97 [插件]发送群骰子
                         case 97: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupDicePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupDicePack(task.data), task.index));
                         }
                         //98 [插件]发送群私聊骰子
                         case 98: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupPrivateDicePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupPrivateDicePack(task.data), task.index));
                         }
                         //99 [插件]上传群文件
                         case 99: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupAddFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupAddFilePack(task.data), task.index));
                             break;
                         }
                         //100 [插件]删除群文件
                         case 100: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupDeleteFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupDeleteFilePack(task.data), task.index));
                             break;
                         }
                         //101 [插件]获取群文件
                         case 101: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupGetFilesPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupGetFilesPack(task.data), task.index));
                             break;
                         }
                         //102 [插件]移动群文件
                         case 102: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupMoveFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupMoveFilePack(task.data), task.index));
                             break;
                         }
                         //103 [插件]重命名群文件
                         case 103: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupRenameFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupRenameFilePack(task.data), task.index));
                             break;
                         }
                         //104 [插件]创新群文件文件夹
                         case 104: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupAddDirPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupAddDirPack(task.data), task.index));
                             break;
                         }
                         //105 [插件]删除群文件文件夹
                         case 105: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupDeleteDirPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupDeleteDirPack(task.data), task.index));
                             break;
                         }
                         //106 [插件]重命名群文件文件夹
                         case 106: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupRenameDirPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupRenameDirPack(task.data), task.index));
                             break;
                         }
                         //107 [插件]下载群文件到指定位置
                         case 107: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupDownloadFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupDownloadFilePack(task.data), task.index));
                             break;
                         }
                         //108 [插件]设置取消管理员
                         case 108: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetAdminPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetAdminPack(task.data), task.index));
                             break;
                         }
                         //109 [插件]获取群公告
                         case 109: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupGetAnnouncementsPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupGetAnnouncementsPack(task.data), task.index));
                             break;
                         }
                         //110 [插件]设置群公告
                         case 110: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupAddAnnouncementPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupAddAnnouncementPack(task.data), task.index));
                             break;
                         }
                         //111 [插件]删除群公告
                         case 111: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupDeleteAnnouncementPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupDeleteAnnouncementPack(task.data), task.index));
                             break;
                         }
                         //112 [插件]发送好友语言文件
                         case 112: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendSoundFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendSoundFilePack(task.data), task.index));
                             break;
                         }
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetAllowMemberInvitePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetAllowMemberInvitePack(task.data), task.index));
                             break;
                         }
                         //115 [插件]设置允许匿名聊天
                         case 115: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetAnonymousChatEnabledPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetAnonymousChatEnabledPack(task.data), task.index));
                             break;
                         }
                         //117 [插件]发送陌生人消息
                         case 117: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendStrangerMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendStrangerMessagePack(task.data), task.index));
                             break;
                         }
                         //118 [插件]从本地文件加载图片发送到陌生人
                         case 118: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendStrangerImageFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendStrangerImageFilePack(task.data), task.index));
                             break;
                         }
                         //119 [插件]发送陌生人骰子
                         case 119: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendStrangerDicePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendStrangerDicePack(task.data), task.index));
                             break;
                         }
                         //120 [插件]发送陌生人戳一戳
                         case 120: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendStrangerNudgePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendStrangerNudgePack(task.data), task.index));
                             break;
                         }
                         //121 [插件]从本地文件加载语音发送到陌生人
                         case 121: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendStrangerSoundFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendStrangerSoundFilePack(task.data), task.index));
                             break;
                         }
                         //126 [插件]发送好友语音
                         case 126: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendSoundPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendSoundPack(task.data), task.index));
                             break;
                         }
                         //127 [插件]断开连接

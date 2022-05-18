@@ -5,20 +5,35 @@ import coloryr.colormirai.plugin.pack.PackBase;
 import java.util.List;
 
 /*
-95 [插件]消息队列
-send:是否发送
-text:消息内容
-imgurl:图片路径
-type:发送对象类型
-id:发送目标
-fid:发送目标
+ * 95 [插件]消息队列
  */
 public class MessageBuffPack extends PackBase {
-    public boolean send;
-    public List<String> text;
-    public String imgurl;
-    public byte[] imgData;
-    public int type;
+    /*
+     * 发送目标
+     */
     public long id;
+    /*
+     * 发送目标
+     */
     public long fid;
+    /*
+     * 是否发送
+     */
+    public boolean send;
+    /*
+     * 消息内容
+     */
+    public List<String> text;
+    /*
+     * 图片路径
+     */
+    public String imgurl;
+    /*
+     * 图片数据
+     */
+    public byte[] imgData;
+    /*
+     * 发送对象类型
+     */
+    public int type;
 }
