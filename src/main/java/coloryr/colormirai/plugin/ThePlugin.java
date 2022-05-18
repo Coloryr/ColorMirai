@@ -55,7 +55,7 @@ public class ThePlugin {
 
     public void setName(String name) {
         this.name = name;
-        doRead.setName("Plugin[" + name + "]Thread");
+        doRead.setName("Plugin[" + name + "]MessageThread");
     }
 
     public void setRun(boolean run) {
@@ -172,7 +172,7 @@ public class ThePlugin {
                             pack1.setting = data;
                             pack1.id = pack.id;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
-                            if (socket.send(data, 58))
+                            if (socket.send(pack1, 58))
                                 close();
                             break;
                         }
@@ -232,7 +232,7 @@ public class ThePlugin {
                         }
                         //69 [插件]设置群名片
                         case 69: {
-                            GroupSetMemberCard pack = (GroupSetMemberCard) task.pack;
+                            GroupSetMemberCardPack pack = (GroupSetMemberCardPack) task.pack;
                             BotGroupDo.setGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
                         }
@@ -306,7 +306,7 @@ public class ThePlugin {
                         }
                         //91 [插件]获取群成员信息
                         case 91: {
-                            GetMemberInfo pack = (GetMemberInfo) task.pack;
+                            GetMemberInfoPack pack = (GetMemberInfoPack) task.pack;
                             MemberInfoPack pack1 = BotGetData.getMemberInfo(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             if (pack1 == null)
                                 break;

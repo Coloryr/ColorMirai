@@ -2,12 +2,10 @@ package coloryr.colormirai.plugin.pack.from;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-import java.util.List;
-
 /*
- * 53 [插件]发送私聊消息
+ * 69 [插件]设置群名片
  */
-public class SendGroupPrivateMessagePack extends PackBase {
+public class GroupSetMemberCardPack extends PackBase {
     /*
      * 群号
      */
@@ -17,7 +15,7 @@ public class SendGroupPrivateMessagePack extends PackBase {
      */
     public long fid;
     /*
-     * 消息
+     * 新的群名片
      */
-    public List<String> message;
+    public String card;
 }

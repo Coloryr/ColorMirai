@@ -5,7 +5,7 @@ import coloryr.colormirai.plugin.pack.PackBase;
 /**
  * 91 [插件]获取群成员信息
  */
-public class GetMemberInfo extends PackBase {
+public class GetMemberInfoPack extends PackBase {
     /**
      * 群号
      */

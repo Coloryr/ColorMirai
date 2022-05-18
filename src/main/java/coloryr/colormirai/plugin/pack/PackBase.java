@@ -136,5 +136,8 @@ package coloryr.colormirai.plugin.pack;
 传输底包，机器人QQ号
  */
 public abstract class PackBase {
+    /*
+     * 运行QQ号
+     */
     public long qq;
 }

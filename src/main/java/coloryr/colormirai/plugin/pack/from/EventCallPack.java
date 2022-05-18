@@ -19,5 +19,5 @@ public class EventCallPack extends PackBase {
     /**
      * 附带参数
      */
-    public List<Object> arg;
+    public List<String> arg;
 }

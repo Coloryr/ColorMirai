@@ -1,10 +1,12 @@
 package coloryr.colormirai.plugin;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.plugin.netty.NettyThread;
 import coloryr.colormirai.plugin.obj.SendPackObj;
 import coloryr.colormirai.plugin.socket.SocketThread;
 import coloryr.colormirai.plugin.websocket.WebSocketThread;
 import coloryr.colormirai.robot.BotStart;
+import io.netty.channel.ChannelHandlerContext;
 import org.java_websocket.WebSocket;
 
 import java.net.Socket;
@@ -34,6 +36,12 @@ public class PluginUtils {
     public static void addPlugin(Socket socket) {
         SocketThread thread = new SocketThread(socket);
         thread.setPlugin(new ThePlugin(thread));
+    }
+
+    public static NettyThread addPlugin(ChannelHandlerContext context) {
+        NettyThread thread = new NettyThread(context);
+        thread.setPlugin(new ThePlugin(thread));
+        return thread;
     }
 
     public static void addPlugin(WebSocket socket) {

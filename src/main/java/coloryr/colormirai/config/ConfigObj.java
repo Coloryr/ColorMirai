@@ -21,6 +21,7 @@ public class ConfigObj {
     public int cacheSize;
     public boolean noInput;
     public boolean debug;
+    public int maxNettyPackSize;
 
     public ConfigObj() {
         qqList = new ArrayList<QQsObj>() {{
@@ -41,5 +42,6 @@ public class ConfigObj {
         cacheSize = 100;
         noInput = false;
         debug = false;
+        maxNettyPackSize = 500;
     }
 }

@@ -23,7 +23,7 @@ public class EventCall {
         return a;
     }
 
-    public static void doEvent(long qq, long id, int dofun, List<Object> arg) {
+    public static void doEvent(long qq, long id, int dofun, List<String> arg) {
         if (eventsDo.containsKey(id)) {
             try {
                 EventBase task = eventsDo.remove(id);
@@ -44,9 +44,9 @@ public class EventCall {
                         if (dofun == 0) {
                             event.accept();
                         } else if (dofun == 1) {
-                            event.reject((Boolean) arg.get(0), (String) arg.get(1));
+                            event.reject(arg.get(0).equalsIgnoreCase("true"), arg.get(1));
                         } else if (dofun == 2) {
-                            event.ignore((Boolean) arg.get(0));
+                            event.ignore(arg.get(0).equalsIgnoreCase("true"));
                         }
                         break;
                     }
@@ -55,7 +55,7 @@ public class EventCall {
                         if (dofun == 0) {
                             event.accept();
                         } else if (dofun == 1) {
-                            event.reject((Boolean) arg.get(0));
+                            event.reject(arg.get(0).equalsIgnoreCase("true"));
                         }
                         break;
                     }

@@ -111,11 +111,8 @@ public class WebSocketThread implements IPluginSocket {
                             break;
                         }
                         //55 [插件]获取群列表
-                        case 55: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(GetPack.class), task.index));
-                            break;
-                        }
                         //56 [插件]获取好友列表
+                        case 55:
                         case 56: {
                             plugin.addPack(new PluginPack(object.toJavaObject(GetPack.class), task.index));
                             break;
@@ -177,7 +174,7 @@ public class WebSocketThread implements IPluginSocket {
                         }
                         //69 [插件]设置群名片
                         case 69: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(GroupSetMemberCard.class), task.index));
+                            plugin.addPack(new PluginPack(object.toJavaObject(GroupSetMemberCardPack.class), task.index));
                             break;
                         }
                         //70 [插件]设置群名
@@ -232,7 +229,7 @@ public class WebSocketThread implements IPluginSocket {
                         }
                         //91 [插件]获取群成员信息
                         case 91: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(GetMemberInfo.class), task.index));
+                            plugin.addPack(new PluginPack(object.toJavaObject(GetMemberInfoPack.class), task.index));
                             break;
                         }
                         //92 [插件]获取朋友信息

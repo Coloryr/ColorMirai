@@ -1,4 +1,4 @@
-package coloryr.colormirai.plugin.socket;
+package coloryr.colormirai.plugin.netty;
 
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.plugin.IPluginSocket;
@@ -8,31 +8,42 @@ import coloryr.colormirai.plugin.obj.PluginPack;
 import coloryr.colormirai.plugin.pack.from.*;
 import coloryr.colormirai.robot.BotStart;
 import com.alibaba.fastjson.JSON;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 
-import java.net.Socket;
-import java.util.Base64;
-import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedDeque;
 
-public class SocketThread implements IPluginSocket {
+public class NettyThread implements IPluginSocket {
     private ThePlugin plugin;
-    private final Socket socket;
+    private final ChannelHandlerContext context;
     private final Thread socketThread;
 
-    public SocketThread(Socket socket) {
-        this.socket = socket;
-        socketThread = new Thread(this::start, "SocketThread");
-    }
-
-    public void setPlugin(ThePlugin plugin) {
-        this.plugin = plugin;
+    private final Queue<ByteBuf> list = new ConcurrentLinkedDeque<>();
+    public NettyThread(ChannelHandlerContext context){
+        this.context = context;
+        socketThread = new Thread(this::start, "NettyThread");
     }
 
     private RePackObj read() {
-        return PluginSocketServer.read(this.socket);
+        ByteBuf buff = list.poll();
+        if(buff == null)
+            return null;
+        return new RePackObj(buff.readByte(), buff);
     }
 
-    private void send(byte[] data) {
-        PluginSocketServer.send(data, socket);
+    public void add(ByteBuf byteBuf) {
+        list.add(byteBuf);
+    }
+
+    private void send(ByteBuf data) {
+        try{
+            context.writeAndFlush(data).sync();
+        }
+        catch (Exception e)
+        {
+            ColorMiraiMain.logger.error("插件数据发送失败", e);
+        }
     }
 
     private void start() {
@@ -43,12 +54,12 @@ public class SocketThread implements IPluginSocket {
             }
             if (task.index != 0) {
                 ColorMiraiMain.logger.warn("插件连接初始化失败，首个数据包不是初始化包");
-                socket.close();
+                context.close();
                 return;
             }
-            StartPack StartPack = JSON.parseObject(task.data, StartPack.class);
+            StartPack StartPack = PackDecode.startPack(task.data);
             if (StartPack.Name != null && StartPack.Reg != null) {
-                socketThread.setName("Plugin[" + StartPack.Name + "]SocketThread");
+                socketThread.setName("Plugin[" + StartPack.Name + "]NettyThread");
                 plugin.setName(StartPack.Name);
                 plugin.setEvents(StartPack.Reg);
                 if (StartPack.Groups != null) {
@@ -59,16 +70,15 @@ public class SocketThread implements IPluginSocket {
                 }
                 if (StartPack.RunQQ != 0 && !BotStart.getBotsKey().contains(StartPack.RunQQ)) {
                     ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
-                    socket.close();
+                    context.close();
                     return;
                 }
                 plugin.setRunQQ(StartPack.RunQQ);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
-                String data = JSON.toJSONString(BotStart.getBotsKey());
-                send(data.getBytes(ColorMiraiMain.sendCharset));
+                send(PackEncode.startPack(BotStart.getBotsKey()));
             } else {
                 ColorMiraiMain.logger.warn("插件连接初始化失败");
-                socket.close();
+                context.close();
                 return;
             }
         } catch (Exception e) {
@@ -87,188 +97,134 @@ public class SocketThread implements IPluginSocket {
                     switch (task.index) {
                         //52 [插件]发送群消息
                         case 52: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupMessagePack(task.data), task.index));
                             break;
                         }
                         //53 [插件]发送私聊消息
                         case 53: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupPrivateMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupPrivateMessagePack(task.data), task.index));
                             break;
                         }
                         //54 [插件]发送好友消息
                         case 54: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendMessagePack(task.data), task.index));
                             break;
                         }
                         //55 [插件]获取群列表
                         //56 [插件]获取好友列表
                         case 55:
                         case 56: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GetPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.getPack(task.data), task.index));
                             break;
                         }
                         //57 [插件]获取群成员
                         case 57: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupGetMemberInfoPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupGetMemberInfoPack(task.data), task.index));
                             break;
                         }
                         //58 [插件]获取群设置
                         case 58: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupGetSettingPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupGetSettingPack(task.data), task.index));
                             break;
                         }
                         //59 [插件]回应事件
                         case 59: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, EventCallPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.eventCallPack(task.data), task.index));
                             break;
                         }
                         //61 [插件]发送图片到群
                         case 61: {
-                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
-                            if (formdata.containsKey("id") && formdata.containsKey("img") && formdata.containsKey("qq")) {
-                                try {
-                                    long id = Long.parseLong(formdata.get("id"));
-                                    long qq = Long.parseLong(formdata.get("qq"));
-                                    SendGroupImagePack pack = new SendGroupImagePack();
-                                    pack.qq = qq;
-                                    pack.id = id;
-                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
-                                    plugin.addPack(new PluginPack(pack, task.index));
-                                } catch (Exception e) {
-                                    ColorMiraiMain.logger.error("解析发生错误", e);
-                                }
-                            }
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupImagePack(task.data), task.index));
                             break;
                         }
                         //62 [插件]发送图片到私聊
                         case 62: {
-                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
-                            if (formdata.containsKey("id") && formdata.containsKey("fid") && formdata.containsKey("img") && formdata.containsKey("qq")) {
-                                try {
-                                    long id = Long.parseLong(formdata.get("id"));
-                                    long fid = Long.parseLong(formdata.get("fid"));
-                                    long qq = Long.parseLong(formdata.get("qq"));
-                                    SendGroupPrivateImagePack pack = new SendGroupPrivateImagePack();
-                                    pack.qq = qq;
-                                    pack.id = id;
-                                    pack.fid = fid;
-                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
-                                    plugin.addPack(new PluginPack(pack, task.index));
-                                } catch (Exception e) {
-                                    ColorMiraiMain.logger.error("解析发生错误", e);
-                                }
-                            }
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupPrivateImagePack(task.data), task.index));
                             break;
                         }
                         //63 [插件]发送图片到朋友
                         case 63: {
-                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
-                            if (formdata.containsKey("id") && formdata.containsKey("img")) {
-                                try {
-                                    long id = Long.parseLong(formdata.get("id"));
-                                    long qq = Long.parseLong(formdata.get("qq"));
-                                    SendFriendImagePack pack = new SendFriendImagePack();
-                                    pack.qq = qq;
-                                    pack.id = id;
-                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
-                                    plugin.addPack(new PluginPack(pack, task.index));
-                                } catch (Exception e) {
-                                    ColorMiraiMain.logger.error("解析发生错误", e);
-                                }
-                            }
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendImagePack(task.data), task.index));
                             break;
                         }
                         //64 [插件]删除群员
                         case 64: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupKickMemberPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupKickMemberPack(task.data), task.index));
                             break;
                         }
                         //65 [插件]禁言群员
                         case 65: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupMuteMemberPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupMuteMemberPack(task.data), task.index));
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupUnmuteMemberPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupUnmuteMemberPack(task.data), task.index));
                             break;
                         }
                         //67 [插件]开启全员禁言
                         case 67: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupMuteAllPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupMuteAllPack(task.data), task.index));
                             break;
                         }
                         //68 [插件]关闭全员禁言
                         case 68: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupUnmuteAllPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupUnmuteAllPack(task.data), task.index));
                             break;
                         }
                         //69 [插件]设置群名片
                         case 69: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetMemberCardPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetMemberCard(task.data), task.index));
                             break;
                         }
                         //70 [插件]设置群名
                         case 70: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GroupSetNamePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetNamePack(task.data), task.index));
                             break;
                         }
                         //71 [插件]撤回消息
                         case 71: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, ReCallMessagePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.reCallMessagePack(task.data), task.index));
                             break;
                         }
                         //74 [插件]发送语音到群
                         case 74: {
-                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
-                            if (formdata.containsKey("id") && formdata.containsKey("sound") && formdata.containsKey("qq")) {
-                                try {
-                                    long id = Long.parseLong(formdata.get("id"));
-                                    long qq = Long.parseLong(formdata.get("qq"));
-                                    SendGroupSoundPack pack = new SendGroupSoundPack();
-                                    pack.qq = qq;
-                                    pack.id = id;
-                                    pack.data = Base64.getDecoder().decode(formdata.get("sound"));
-                                    plugin.addPack(new PluginPack(pack, task.index));
-                                } catch (Exception e) {
-                                    ColorMiraiMain.logger.error("解析发生错误", e);
-                                }
-                            }
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupSoundPack(task.data), task.index));
                             break;
                         }
                         //75 [插件]从本地文件加载图片发送到群
                         case 75: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupImageFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupImageFilePack(task.data), task.index));
                             break;
                         }
                         //76 [插件]从本地文件加载图片发送到群私聊
                         case 76: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupPrivateImageFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupPrivateImageFilePack(task.data), task.index));
                             break;
                         }
                         //77 [插件]从本地文件加载图片发送到朋友
                         case 77: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendImageFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendImageFilePack(task.data), task.index));
                             break;
                         }
                         //78 [插件]从本地文件加载语音发送到群
                         case 78: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupSoundFilePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupSoundFilePack(task.data), task.index));
                             break;
                         }
                         //83 [插件]发送私聊戳一戳
                         case 83: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendNudgePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendFriendNudgePack(task.data), task.index));
                             break;
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendGroupMemberNudgePack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.sendGroupMemberNudgePack(task.data), task.index));
                             break;
                         }
                         //90 [插件]获取图片Url
                         case 90: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, GetImageUrlPack.class), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.getImageUrlPack(task.data), task.index));
                             break;
                         }
                         //91 [插件]获取群成员信息
@@ -445,16 +401,16 @@ public class SocketThread implements IPluginSocket {
 
     @Override
     public boolean send(Object data, int index) {
-        byte[] temp = PackDo.buildPack(data, index);
-        return PluginSocketServer.send(temp, socket);
+        return false;
+    }
+
+    @Override
+    public void setPlugin(ThePlugin plugin) {
+        this.plugin = plugin;
     }
 
     @Override
     public void close() {
-        try {
-            socket.close();
-        } catch (Exception e) {
-            ColorMiraiMain.logger.error("socket关闭发生意外", e);
-        }
+        context.close();
     }
 }

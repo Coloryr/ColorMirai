@@ -38,7 +38,7 @@ public class PluginNettyServer {
                             //给pipeline管道设置处理器
                             socketChannel.pipeline()
                                     .addLast(new LengthFieldPrepender(4))
-                                    .addLast(new LengthFieldBasedFrameDecoder(1024 * 500, 0, 4, 0, 4))
+                                    .addLast(new LengthFieldBasedFrameDecoder(1024 * ColorMiraiMain.config.maxNettyPackSize, 0, 4, 0, 4))
                                     .addLast(new ServerHandler());
                         }
                     });//给workerGroup的EventLoop对应的管道设置处理器
