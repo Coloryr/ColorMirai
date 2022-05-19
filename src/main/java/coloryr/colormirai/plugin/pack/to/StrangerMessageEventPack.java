@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.pack.to;
 
 import net.mamoe.mirai.message.data.MessageChain;
 
-/*
+/**
  * 116 [机器人]收到陌生人消息（事件）
  */
 public class StrangerMessageEventPack extends FriendMessageEventPack {

@@ -7,19 +7,29 @@ import net.mamoe.mirai.message.data.SingleMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-88 [机器人]其他客户端发送消息给 Bot（事件）
-appId:设备ID
-platform:设备类型
-deviceName:设备名字
-deviceKind:设备类型
-message:信息
+/**
+ * 88 [机器人]其他客户端发送消息给 Bot（事件）
  */
 public class OtherClientMessageEventPack extends PackBase {
+    /**
+     * 设备ID
+     */
     public int appId;
+    /**
+     * 设备类型
+     */
     public String platform;
+    /**
+     * 设备名字
+     */
     public String deviceName;
+    /**
+     * 设备类型
+     */
     public String deviceKind;
+    /**
+     * 信息
+     */
     public List<String> message;
 
     public OtherClientMessageEventPack(long qq, int appId, String platform, String deviceName, String deviceKind, MessageChain messages) {

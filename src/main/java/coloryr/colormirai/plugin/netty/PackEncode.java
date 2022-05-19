@@ -747,4 +747,84 @@ public class PackEncode {
         writeString(buf, pack.deviceKind);
         return buf;
     }
+
+    public static ByteBuf otherClientOfflineEventPack(OtherClientOfflineEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(87);
+        buf.writeLong(pack.qq);
+        buf.writeInt(pack.appId);
+        writeString(buf, pack.platform);
+        writeString(buf, pack.deviceName);
+        writeString(buf, pack.deviceKind);
+        return buf;
+    }
+
+    public static ByteBuf otherClientMessageEventPack(OtherClientMessageEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(88);
+        buf.writeLong(pack.qq);
+        buf.writeInt(pack.appId);
+        writeString(buf, pack.platform);
+        writeString(buf, pack.deviceName);
+        writeString(buf, pack.deviceKind);
+        writeStringList(buf, pack.message);
+        return buf;
+    }
+
+    public static ByteBuf groupMessageSyncEventPack(GroupMessageSyncEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(89);
+        buf.writeLong(pack.qq);
+        buf.writeInt(pack.time);
+        writeStringList(buf, pack.message);
+        return buf;
+    }
+
+    public static ByteBuf groupDisbandPack(GroupDisbandPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(113);
+        buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
+        return buf;
+    }
+
+    public static ByteBuf strangerMessageEventPack(StrangerMessageEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(116);
+        buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
+        writeString(buf, pack.name);
+        writeStringList(buf, pack.message);
+        buf.writeInt(pack.time);
+        return buf;
+    }
+
+    public static ByteBuf strangerMessagePreSendEventPack(StrangerMessagePreSendEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(122);
+        buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
+        writeStringList(buf, pack.message);
+        return buf;
+    }
+
+    public static ByteBuf strangerMessagePostSendEventPack(StrangerMessagePostSendEventPack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(123);
+        buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
+        buf.writeBoolean(pack.res);
+        writeStringList(buf, pack.message);
+        writeString(buf, pack.error);
+        return buf;
+    }
+
+    public static ByteBuf strangerRelationChangePack(StrangerRelationChangePack pack, int index){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeByte(index);
+        buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
+        buf.writeInt(pack.type);
+        return buf;
+    }
 }

@@ -28,6 +28,10 @@ public class NettyThread implements IPluginSocket {
         socketThread = new Thread(this::start, "NettyThread");
     }
 
+    public ThePlugin getPlugin() {
+        return plugin;
+    }
+
     private RePackObj read() {
         ByteBuf buff = list.poll();
         if (buff == null)
@@ -597,6 +601,15 @@ public class NettyThread implements IPluginSocket {
                 case 86:
                     buff = PackEncode.otherClientOnlineEventPack((OtherClientOnlineEventPack) data);
                     break;
+                case 87:
+                    buff = PackEncode.otherClientOfflineEventPack((OtherClientOfflineEventPack) data);
+                    break;
+                case 88:
+                    buff = PackEncode.otherClientMessageEventPack((OtherClientMessageEventPack) data);
+                    break;
+                case 89:
+                    buff = PackEncode.groupMessageSyncEventPack((GroupMessageSyncEventPack) data);
+                    break;
                 case 90:
                     buff = PackEncode.getImageUrlPack((GetImageUrlPack) data);
                     break;
@@ -611,6 +624,24 @@ public class NettyThread implements IPluginSocket {
                     break;
                 case 109:
                     buff = PackEncode.groupAnnouncementsPack((GroupAnnouncementsPack) data);
+                    break;
+                case 113:
+                    buff = PackEncode.groupDisbandPack((GroupDisbandPack) data);
+                    break;
+                case 116:
+                    buff = PackEncode.strangerMessageEventPack((StrangerMessageEventPack) data);
+                    break;
+                case 122:
+                    buff = PackEncode.strangerMessagePreSendEventPack((StrangerMessagePreSendEventPack) data);
+                    break;
+                case 123:
+                    buff = PackEncode.strangerMessagePostSendEventPack((StrangerMessagePostSendEventPack) data);
+                    break;
+                case 124:
+                    buff = PackEncode.strangerRelationChangePack((StrangerRelationChangePack) data, 124);
+                    break;
+                case 125:
+                    buff = PackEncode.strangerRelationChangePack((StrangerRelationChangePack) data, 125);
                     break;
             }
             if(buff!=null){

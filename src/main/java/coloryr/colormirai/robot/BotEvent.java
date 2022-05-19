@@ -908,7 +908,7 @@ public class BotEvent extends SimpleListenerHost {
         String deviceKind = event.getClient().getInfo().getDeviceKind();
         long qq = event.getBot().getId();
         OtherClientOfflineEventPack pack = new OtherClientOfflineEventPack(qq, appId, platform, deviceName, deviceKind);
-        BotStart.addTask(new SendPackObj(87, JSON.toJSONString(pack), qq, 0, qq));
+        BotStart.addTask(new SendPackObj(87, pack, qq, 0, qq));
     }
 
     //88 [机器人]其他客户端发送消息给 Bot（事件）
@@ -929,7 +929,7 @@ public class BotEvent extends SimpleListenerHost {
         MessageChain message = event.getMessage();
         long qq = event.getBot().getId();
         OtherClientMessageEventPack pack = new OtherClientMessageEventPack(qq, appId, platform, deviceName, deviceKind, message);
-        BotStart.addTask(new SendPackObj(88, JSON.toJSONString(pack), qq, 0, qq));
+        BotStart.addTask(new SendPackObj(88, pack, qq, 0, qq));
     }
 
     //89 [机器人]其他客户端发送群消息（事件）
@@ -942,7 +942,7 @@ public class BotEvent extends SimpleListenerHost {
         MessageChain message = event.getMessage();
         long qq = event.getBot().getId();
         GroupMessageSyncEventPack pack = new GroupMessageSyncEventPack(qq, id, time, message);
-        BotStart.addTask(new SendPackObj(89, JSON.toJSONString(pack), qq, 0, qq));
+        BotStart.addTask(new SendPackObj(89, pack, qq, 0, qq));
     }
 
     //113 [机器人]群解散消息（事件）
@@ -953,7 +953,7 @@ public class BotEvent extends SimpleListenerHost {
         long qq = event.getBot().getId();
         long id = event.getGroup().getId();
         GroupDisbandPack pack = new GroupDisbandPack(qq, id);
-        BotStart.addTask(new SendPackObj(98, JSON.toJSONString(pack), 0, id, qq));
+        BotStart.addTask(new SendPackObj(98, pack, 0, id, qq));
     }
 
     //116 [机器人]收到陌生人消息（事件）
@@ -973,7 +973,7 @@ public class BotEvent extends SimpleListenerHost {
         String name = event.getSenderName();
         BotStart.addMessage(qq, call.id, call);
         StrangerMessageEventPack pack = new StrangerMessageEventPack(qq, id, message, time, name);
-        BotStart.addTask(new SendPackObj(116, JSON.toJSONString(pack), id, 0, qq));
+        BotStart.addTask(new SendPackObj(116, pack, id, 0, qq));
     }
 
     //122 [机器人]在发送陌生人消息前广播（事件）
@@ -985,7 +985,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getTarget().getId();
         long qq = event.getBot().getId();
         StrangerMessagePreSendEventPack pack = new StrangerMessagePreSendEventPack(qq, message, id);
-        BotStart.addTask(new SendPackObj(122, JSON.toJSONString(pack), id, 0, qq));
+        BotStart.addTask(new SendPackObj(122, pack, id, 0, qq));
     }
 
     //123 [机器人]在陌生人消息发送后广播（事件）
@@ -1005,7 +1005,7 @@ public class BotEvent extends SimpleListenerHost {
         }
         long qq = event.getBot().getId();
         StrangerMessagePostSendEventPack pack = new StrangerMessagePostSendEventPack(qq, message, id, res, error);
-        BotStart.addTask(new SendPackObj(123, JSON.toJSONString(pack), id, 0, qq));
+        BotStart.addTask(new SendPackObj(123, pack, id, 0, qq));
     }
 
     //124 [机器人]陌生人关系改变（事件）
@@ -1016,7 +1016,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getStranger().getId();
         long qq = event.getBot().getId();
         StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 0);
-        BotStart.addTask(new SendPackObj(124, JSON.toJSONString(pack), id, 0, qq));
+        BotStart.addTask(new SendPackObj(124, pack, id, 0, qq));
     }
 
     @EventHandler
@@ -1026,7 +1026,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getStranger().getId();
         long qq = event.getBot().getId();
         StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 1);
-        BotStart.addTask(new SendPackObj(124, JSON.toJSONString(pack), id, 0, qq));
+        BotStart.addTask(new SendPackObj(124, pack, id, 0, qq));
     }
 
     //处理在处理事件中发生的未捕获异常

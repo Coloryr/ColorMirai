@@ -27,7 +27,10 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) {
-
+        if(contexts.containsKey(ctx)){
+            NettyThread thread = contexts.remove(ctx);
+            PluginUtils.removePlugin(thread.getPlugin().getName());
+        }
     }
 
     @Override
