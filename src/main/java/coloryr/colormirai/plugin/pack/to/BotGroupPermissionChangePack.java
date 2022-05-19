@@ -8,17 +8,17 @@ import net.mamoe.mirai.contact.MemberPermission;
  */
 public class BotGroupPermissionChangePack extends PackBase {
     /***
-     * 当前权限
+     * 群号
      */
-    public MemberPermission now;
+    public long id;
     /***
      * 旧的权限
      */
     public MemberPermission old;
     /***
-     * 群号
+     * 当前权限
      */
-    public long id;
+    public MemberPermission now;
 
     public BotGroupPermissionChangePack(long qq, MemberPermission now, MemberPermission old, long id) {
         this.qq = qq;

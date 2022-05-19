@@ -11,13 +11,13 @@ public class FriendRemarkChangeEventPack extends PackBase {
      */
     public long id;
     /**
-     * 新的昵称
-     */
-    public String now;
-    /**
      * 旧的昵称
      */
     public String old;
+    /**
+     * 新的昵称
+     */
+    public String now;
 
     public FriendRemarkChangeEventPack(long qq, long id, String old, String name) {
         this.id = id;

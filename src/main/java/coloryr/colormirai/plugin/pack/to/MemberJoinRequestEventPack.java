@@ -3,19 +3,29 @@ package coloryr.colormirai.plugin.pack.to;
 import coloryr.colormirai.plugin.pack.PackBase;
 
 /*
-37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）
-eventid:事件ID
-id:群号
-fid:进群人
-message:入群消息
-qif:邀请人ID
+ * 37 [机器人]一个账号请求加入群事件, [Bot] 在此群中是管理员或群主.（事件）
  */
 public class MemberJoinRequestEventPack extends PackBase {
-    public long eventid;
+    /*
+     * 群号
+     */
     public long id;
+    /*
+     * 进群人
+     */
     public long fid;
+    /*
+     * 邀请人ID
+     */
     public long qif;
+    /*
+     * 入群消息
+     */
     public String message;
+    /*
+     * 事件ID
+     */
+    public long eventid;
 
     public MemberJoinRequestEventPack(long qq, long id, long fid, String message, long eventid, long qif) {
         this.eventid = eventid;

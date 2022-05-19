@@ -8,7 +8,7 @@ import coloryr.colormirai.plugin.obj.PluginPack;
 import coloryr.colormirai.plugin.pack.from.GetImageUrlPack;
 import coloryr.colormirai.plugin.pack.from.StartPack;
 import coloryr.colormirai.plugin.pack.re.*;
-import coloryr.colormirai.plugin.pack.to.BeforeImageUploadPack;
+import coloryr.colormirai.plugin.pack.to.*;
 import coloryr.colormirai.robot.BotStart;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -403,57 +403,220 @@ public class NettyThread implements IPluginSocket {
     @Override
     public boolean send(Object data, int index) {
         try {
-            ByteBuf buff;
+            ByteBuf buff = null;
             switch (index) {
                 case 1:
                     buff = PackEncode.beforeImageUploadPack((BeforeImageUploadPack)data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 2:
-                    buff =  BotAvatarChangedPack
+                    buff = PackEncode.botAvatarChangedPack((BotAvatarChangedPack)data);
+                    break;
+                case 3:
+                    buff = PackEncode.botGroupPermissionChangePack((BotGroupPermissionChangePack)data);
+                    break;
+                case 4:
+                    buff = PackEncode.botInvitedJoinGroupRequestEventPack((BotInvitedJoinGroupRequestEventPack)data);
+                    break;
+                case 5:
+                    buff = PackEncode.botJoinGroupEventAPack((BotJoinGroupEventAPack)data);
+                    break;
+                case 6:
+                    buff = PackEncode.botJoinGroupEventBPack((BotJoinGroupEventBPack)data);
+                    break;
+                case 7:
+                    buff = PackEncode.botLeaveEventAPack((BotLeaveEventAPack)data);
+                    break;
+                case 8:
+                    buff = PackEncode.botLeaveEventBPack((BotLeaveEventBPack)data);
+                    break;
+                case 9:
+                    buff = PackEncode.botMuteEventPack((BotMuteEventPack)data);
+                    break;
+                case 10:
+                    buff = PackEncode.botOfflineEventAPack((BotOfflineEventAPack)data, 10);
+                    break;
+                case 11:
+                    buff = PackEncode.botOfflineEventBPack((BotOfflineEventBPack)data);
+                    break;
+                case 12:
+                    buff = PackEncode.botOfflineEventAPack((BotOfflineEventAPack)data, 12);
+                    break;
+                case 13:
+                    buff = PackEncode.botOfflineEventAPack((BotOfflineEventAPack)data, 13);
+                    break;
+                case 14:
+                    buff = PackEncode.botOfflineEventCPack((BotOfflineEventCPack)data);
+                    break;
+                case 15:
+                    buff = PackEncode.botOnlineEventPack((BotOnlineEventPack)data);
+                    break;
+                case 16:
+                    buff = PackEncode.botReloginEventPack((BotReloginEventPack)data);
+                    break;
+                case 17:
+                    buff = PackEncode.botUnmuteEventPack((BotUnmuteEventPack)data);
+                    break;
+                case 18:
+                    buff = PackEncode.friendAddEventPack((FriendAddEventPack)data);
+                    break;
+                case 19:
+                    buff = PackEncode.friendAvatarChangedEventPack((FriendAvatarChangedEventPack)data);
+                    break;
+                case 20:
+                    buff = PackEncode.friendDeleteEventPack((FriendDeleteEventPack)data);
+                    break;
+                case 21:
+                    buff = PackEncode.friendMessagePostSendEventPack((FriendMessagePostSendEventPack)data);
+                    break;
+                case 22:
+                    buff = PackEncode.friendMessagePreSendEventPack((FriendMessagePreSendEventPack)data);
+                    break;
+                case 23:
+                    buff = PackEncode.friendRemarkChangeEventPack((FriendRemarkChangeEventPack)data);
+                    break;
+                case 24:
+                    buff = PackEncode.groupAllowAnonymousChatEventPack((GroupAllowAnonymousChatEventPack)data);
+                    break;
+                case 25:
+                    buff = PackEncode.groupAllowConfessTalkEventPack((GroupAllowConfessTalkEventPack)data);
+                    break;
+                case 26:
+                    buff = PackEncode.groupAllowMemberInviteEventPack((GroupAllowMemberInviteEventPack)data);
+                    break;
+                case 27:
+                    buff = PackEncode.groupEntranceAnnouncementChangeEventPack((GroupEntranceAnnouncementChangeEventPack)data);
+                    break;
+                case 28:
+                    buff = PackEncode.groupMessagePostSendEventPack((GroupMessagePostSendEventPack)data);
+                    break;
+                case 29:
+                    buff = PackEncode.groupMessagePreSendEventPack((GroupMessagePreSendEventPack)data);
+                    break;
+                case 30:
+                    buff = PackEncode.groupMuteAllEventPack((GroupMuteAllEventPack)data);
+                    break;
+                case 31:
+                    buff = PackEncode.groupNameChangeEventPack((GroupNameChangeEventPack)data);
+                    break;
+                case 32:
+                    buff = PackEncode.imageUploadEventAPack((ImageUploadEventAPack)data);
+                    break;
+                case 33:
+                    buff = PackEncode.imageUploadEventBPack((ImageUploadEventBPack)data);
+                    break;
+                case 34:
+                    buff = PackEncode.memberCardChangeEventPack((MemberCardChangeEventPack)data);
+                    break;
+                case 35:
+                    buff = PackEncode.inviteMemberJoinEventPack((InviteMemberJoinEventPack)data);
+                    break;
+                case 36:
+                    buff = PackEncode.memberJoinEventPack((MemberJoinEventPack)data);
+                    break;
+                case 37:
+                    buff = PackEncode.memberJoinRequestEventPack((MemberJoinRequestEventPack)data);
+                    break;
+                case 38:
+                    buff = PackEncode.memberLeaveEventAPack((MemberLeaveEventAPack)data);
+                    break;
+                case 39:
+                    buff = PackEncode.memberLeaveEventBPack((MemberLeaveEventBPack)data);
+                    break;
+                case 40:
+                    buff = PackEncode.memberMuteEventPack((MemberMuteEventPack)data);
+                    break;
+                case 41:
+                    buff = PackEncode.memberPermissionChangeEventPack((MemberPermissionChangeEventPack)data);
+                    break;
+                case 42:
+                    buff = PackEncode.memberSpecialTitleChangeEventPack((MemberSpecialTitleChangeEventPack)data);
+                    break;
+                case 43:
+                    buff = PackEncode.memberUnmuteEventPack((MemberUnmuteEventPack)data);
+                    break;
+                case 44:
+                    buff = PackEncode.messageRecallEventAPack((MessageRecallEventAPack)data);
+                    break;
+                case 45:
+                    buff = PackEncode.messageRecallEventBPack((MessageRecallEventBPack)data);
+                    break;
+                case 46:
+                    buff = PackEncode.newFriendRequestEventPack((NewFriendRequestEventPack)data);
+                    break;
+                case 47:
+                    buff = PackEncode.tempMessagePostSendEventPack((TempMessagePostSendEventPack)data);
+                    break;
+                case 48:
+                    buff = PackEncode.tempMessagePreSendEventPack((TempMessagePreSendEventPack)data);
+                    break;
+                case 49:
+                    buff = PackEncode.groupMessageEventPack((GroupMessageEventPack)data);
+                    break;
+                case 50:
+                    buff = PackEncode.tempMessageEventPack((TempMessageEventPack)data);
+                    break;
+                case 51:
+                    buff = PackEncode.friendMessageEventPack((FriendMessageEventPack)data);
                     break;
                 case 55:
                     buff = PackEncode.listGroupPack((ListGroupPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 56:
                     buff = PackEncode.listFriendPack((ListFriendPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 57:
                     buff = PackEncode.listMemberPack((ListMemberPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 58:
                     buff = PackEncode.groupSettingPack((GroupSettingPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 60:
                     buff = PackEncode.testPack();
-                    context.writeAndFlush(buff).sync();
+                    break;
+                case 72:
+                    buff = PackEncode.friendInputStatusChangedEventPack((FriendInputStatusChangedEventPack) data);
+                    break;
+                case 73:
+                    buff = PackEncode.friendNickChangedEventPack((FriendNickChangedEventPack) data);
+                    break;
+                case 79:
+                    buff = PackEncode.memberJoinRetrieveEventPack((MemberJoinRetrieveEventPack) data);
+                    break;
+                case 80:
+                    buff = PackEncode.botJoinGroupEventRetrieveEventPack((BotJoinGroupEventRetrieveEventPack) data);
+                    break;
+                case 81:
+                    buff = PackEncode.nudgedEventPack((NudgedEventPack) data, 81);
+                    break;
+                case 82:
+                    buff = PackEncode.nudgedEventPack((NudgedEventPack) data, 82);
+                    break;
+                case 85:
+                    buff = PackEncode.groupTalkativeChangePack((GroupTalkativeChangePack) data);
+                    break;
+                case 86:
+                    buff = PackEncode.otherClientOnlineEventPack((OtherClientOnlineEventPack) data);
                     break;
                 case 90:
                     buff = PackEncode.getImageUrlPack((GetImageUrlPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 91:
                     buff = PackEncode.memberInfoPack((MemberInfoPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 92:
                     buff = PackEncode.friendInfoPack((FriendInfoPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 101:
                     buff = PackEncode.groupFilesPack((GroupFilesPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
                 case 109:
                     buff = PackEncode.groupAnnouncementsPack((GroupAnnouncementsPack) data);
-                    context.writeAndFlush(buff).sync();
                     break;
             }
-            return true;
+            if(buff!=null){
+                context.writeAndFlush(buff).sync();
+                return true;
+            }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("数据发送发生错误", e);
         }

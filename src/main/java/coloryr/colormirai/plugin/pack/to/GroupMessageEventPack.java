@@ -8,20 +8,30 @@ import net.mamoe.mirai.message.data.SingleMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-/*
-49 [机器人]收到群消息（事件）
-id:群号
-fid:发送人QQ号
-message:发送的消息
-permission:权限
-name:群名片
+/**
+ * 49 [机器人]收到群消息（事件）
  */
 public class GroupMessageEventPack extends PackBase {
+    /**
+     * 群号
+     */
     public long id;
+    /**
+     * 发送人QQ号
+     */
     public long fid;
-    public MemberPermission permission;
-    public List<String> message;
+    /**
+     * 群名片
+     */
     public String name;
+    /**
+     * 权限
+     */
+    public MemberPermission permission;
+    /**
+     * 发送的消息
+     */
+    public List<String> message;
 
     public GroupMessageEventPack(long qq, long id, long fid, MessageChain message, MemberPermission permission, String name) {
         this.fid = fid;

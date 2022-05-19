@@ -7,13 +7,13 @@ import coloryr.colormirai.plugin.pack.PackBase;
  */
 public class BotJoinGroupEventBPack extends PackBase {
     /***
-     * 邀请人QQ
-     */
-    public long fid;
-    /***
      * 群号
      */
     public long id;
+    /***
+     * 邀请人QQ
+     */
+    public long fid;
 
     public BotJoinGroupEventBPack(long qq, long id, long fid) {
         this.qq = qq;

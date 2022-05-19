@@ -12,10 +12,6 @@ import java.util.List;
  */
 public class FriendMessagePostSendEventPack extends PackBase {
     /**
-     * 消息
-     */
-    public List<String> message;
-    /**
      * 好友QQ号
      */
     public long id;
@@ -23,6 +19,10 @@ public class FriendMessagePostSendEventPack extends PackBase {
      * 是否成功发送
      */
     public boolean res;
+    /**
+     * 消息
+     */
+    public List<String> message;
     /**
      * 错误消息
      */

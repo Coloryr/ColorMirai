@@ -1,13 +1,15 @@
 package coloryr.colormirai.plugin.obj;
 
+import coloryr.colormirai.plugin.pack.PackBase;
+
 public class SendPackObj {
     public byte index;
-    public Object data;
+    public PackBase data;
     public long group;
     public long qq;
     public long runqq;
 
-    public SendPackObj(int index, Object data, long qq, long group, long runqq) {
+    public SendPackObj(int index, PackBase data, long qq, long group, long runqq) {
         this.index = (byte) index;
         this.data = data;
         this.qq = qq;

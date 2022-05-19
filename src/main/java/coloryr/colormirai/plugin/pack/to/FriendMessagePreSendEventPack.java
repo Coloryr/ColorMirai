@@ -11,13 +11,13 @@ import java.util.List;
  */
 public class FriendMessagePreSendEventPack extends PackBase {
     /**
-     * 消息
-     */
-    public List<String> message;
-    /**
      * 好友QQ号
      */
     public long id;
+    /**
+     * 消息
+     */
+    public List<String> message;
 
     public FriendMessagePreSendEventPack(long qq, Message message, long id) {
         this.id = id;

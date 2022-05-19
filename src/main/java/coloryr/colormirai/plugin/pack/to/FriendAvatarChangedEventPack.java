@@ -7,13 +7,13 @@ import coloryr.colormirai.plugin.pack.PackBase;
  */
 public class FriendAvatarChangedEventPack extends PackBase {
     /**
-     * *
-     */
-    public String url;
-    /**
      * 好友QQ号
      */
     public long id;
+    /**
+     * *
+     */
+    public String url;
 
     public FriendAvatarChangedEventPack(long qq, long id, String url) {
         this.id = id;

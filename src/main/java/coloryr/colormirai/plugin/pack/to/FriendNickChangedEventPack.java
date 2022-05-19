@@ -4,13 +4,22 @@ import coloryr.colormirai.plugin.pack.PackBase;
 
 /*
 73 [机器人]好友昵称改变（事件）
-id:好友QQ号
-old:旧的昵称
-now:新的昵称
+id:
+old:
+now:
  */
 public class FriendNickChangedEventPack extends PackBase {
+    /**
+     * 好友QQ号
+     */
     public long id;
+    /**
+     * 旧的昵称
+     */
     public String old;
+    /**
+     * 新的昵称
+     */
     public String now;
 
     public FriendNickChangedEventPack(long qq, long id, String old, String now) {

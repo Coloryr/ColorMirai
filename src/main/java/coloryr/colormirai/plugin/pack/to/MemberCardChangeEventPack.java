@@ -3,16 +3,24 @@ package coloryr.colormirai.plugin.pack.to;
 import coloryr.colormirai.plugin.pack.PackBase;
 
 /*
-34 [机器人]成员群名片改动（事件）
-id:群号
-fid:执行人QQ号
-old:旧的状态
-now:新的状态
+ * 34 [机器人]成员群名片改动（事件）
  */
 public class MemberCardChangeEventPack extends PackBase {
+    /*
+     * 群号
+     */
     public long id;
+    /*
+     * 执行人QQ号
+     */
     public long fid;
+    /*
+     * 旧的状态
+     */
     public String old;
+    /*
+     * 新的状态
+     */
     public String now;
 
     public MemberCardChangeEventPack(long qq, long id, long fid, String old, String now) {
