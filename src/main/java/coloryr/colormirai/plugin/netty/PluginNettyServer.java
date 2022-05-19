@@ -53,7 +53,7 @@ public class PluginNettyServer {
 
     public static void stop() {
         try {
-            channelFuture.channel().closeFuture().sync();
+            channelFuture.channel().close().sync();
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         } catch (Exception e) {

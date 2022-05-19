@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'coloryr.colormirai'
-version '3.9.0'
+version '4.0.0'
 
 repositories {
     mavenCentral()
@@ -30,10 +30,10 @@ dependencies {
     compile "commons-fileupload:commons-fileupload:1.4"
     compile 'javax.servlet:javax.servlet-api:4.0.1'
     compile 'org.jline:jline:3.21.0'
+    compile 'io.netty:netty-all:4.1.77.Final'
 
     compile 'net.mamoe:mirai-console:2.11.0-RC' // 后端
     compile 'net.mamoe:mirai-console-terminal:2.11.0-RC'
-    compile 'io.netty:netty-all:4.1.77.Final'
     api 'net.mamoe:mirai-core-api:2.11.0-RC'
     runtimeOnly "net.mamoe:mirai-core:2.11.0-RC"
 

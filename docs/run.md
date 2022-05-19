@@ -11,15 +11,15 @@
 
 如果没有openjdk，群文件有openjdk17，下载安装之后新建一个`.cmd`，使用JAVA启动，例如在里面输入
 ```Cmd
-"C:\Program Files\AdoptOpenJDK\jdk-17\bin\java.exe" -Xmx1024M -jar ColorMirai-3.x.x-SNAPSHOT-all.jar
+"C:\Program Files\AdoptOpenJDK\jdk-17\bin\java.exe" -Xmx1024M -jar ColorMirai-4.x.x-SNAPSHOT-all.jar
 pause
 ```
 - `jdk版本`要根据你安装的版本修改  
-  `ColorMirai-3.x.x-SNAPSHOT-all`也根据你运行的版本修改
+  `ColorMirai-4.x.x-SNAPSHOT-all`也根据你运行的版本修改
 
 如果你的系统环境变量默认是openjdk，则cmd内容是下面
 ```
-java -Xmx1024M -jar ColorMirai-3.X-SNAPSHOT-all.jar
+java -Xmx1024M -jar ColorMirai-4.X-SNAPSHOT-all.jar
 pause
 ```
 

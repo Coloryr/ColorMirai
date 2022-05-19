@@ -19,9 +19,8 @@ import java.nio.charset.Charset;
 import java.util.Base64;
 
 public class ColorMiraiMain {
-    public static final String version = "3.9.0";
+    public static final String version = "4.0.0";
     public static final Logger logger = LogManager.getLogger("ColorMirai");
-    public static final Base64.Decoder decoder = Base64.getDecoder();
     public static String runDir;
     public static String tempDir;
     public static ConfigObj config;
@@ -68,6 +67,7 @@ public class ColorMiraiMain {
 
     public static void stop() {
         logger.info("正在关闭");
+        PluginUtils.stop();
         DownloadUtils.stop();
         PluginSocketServer.stop();
         PluginWebSocketServer.stop();

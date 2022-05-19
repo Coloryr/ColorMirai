@@ -70,7 +70,7 @@ public class PluginUtils {
         }
     }
 
-    public static void Stop() {
+    public static void stop() {
         for (Map.Entry<String, ThePlugin> item : pluginList.entrySet()) {
             item.getValue().close();
         }
