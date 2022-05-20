@@ -2175,43 +2175,43 @@ public record GroupSetAnonymousChatEnabledPack : PackBase
 /// 116 [机器人]收到陌生人消息（事件）
 /// </summary>
 public record StrangerMessageEventPack : FriendMessageEventPack
-{ 
+{
 
 }
 /// <summary>
 /// 117 [插件]发送陌生人消息
 /// </summary>
 public record SendStrangerMessagePack : SendFriendMessagePack
-{ 
-    
+{
+
 }
 /// <summary>
 /// 118 [插件]从本地文件加载图片发送到陌生人
 /// </summary>
 public record SendStrangerImageFilePack : SendFriendImageFilePack
-{ 
+{
 
 }
 /// <summary>
 /// 119 [插件]发送陌生人骰子
 /// </summary>
 public record SendStrangerDicePack : SendFriendDicePack
-{ 
-    
+{
+
 }
 /// <summary>
 /// 120 [插件]发送陌生人戳一戳
 /// </summary>
 public record SendStrangerNudgePack : SendFriendNudgePack
-{ 
-    
+{
+
 }
 /// <summary>
 /// 121 [插件]从本地文件加载语音发送到陌生人
 /// </summary>
 public record SendStrangerSoundFilePack : SendFriendSoundFilePack
-{ 
-    
+{
+
 }
 /// <summary>
 /// 122 [机器人]在发送陌生人消息前广播（事件）
@@ -2687,7 +2687,8 @@ public partial class RobotSDK
 
         data = new byte[Socket.Available];
         Socket.Receive(data);
-        QQs = JsonConvert.DeserializeObject<List<long>>(Encoding.UTF8.GetString(data));
+        string temp = Encoding.UTF8.GetString(data, 0, data.Length - 1);
+        QQs = JsonConvert.DeserializeObject<List<long>>(temp);
 
         QueueRead.Clear();
         QueueSend.Clear();

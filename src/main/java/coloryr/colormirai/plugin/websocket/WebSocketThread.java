@@ -23,6 +23,7 @@ public class WebSocketThread implements IPluginSocket {
 
     public void setPlugin(ThePlugin plugin) {
         this.plugin = plugin;
+        socketThread.start();
     }
 
     private WebSocketPackObj read() {

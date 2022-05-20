@@ -256,7 +256,7 @@ public partial class RobotSDK
     /// <param name="eventid">事件ID</param>
     /// <param name="dofun">操作方式</param>
     /// <param name="arg">附加参数</param>
-    public void EventCall(long qq, long eventid, int dofun, List<object> arg)
+    public void EventCall(long qq, long eventid, int dofun, List<string> arg)
     {
         var data = BuildPack.Build(new EventCallPack()
         {
@@ -317,7 +317,7 @@ public partial class RobotSDK
     /// <param name="message">拒绝理由</param>
     public void MemberJoinRequestCall(long qq, long eventid, GroupCallType type, bool blackList = false, string message = "")
     {
-        EventCall(qq, eventid, (int)type, new() { blackList, message });
+        EventCall(qq, eventid, (int)type, new() { blackList.ToString().ToLower(), message });
     }
 
     /// <summary>
@@ -329,7 +329,7 @@ public partial class RobotSDK
     /// <param name="blackList">是否加入黑名单</param>
     public void NewFriendRequestCall(long qq, long eventid, FriendCallType type, bool blackList = false)
     {
-        EventCall(qq, eventid, (int)type, new() { blackList });
+        EventCall(qq, eventid, (int)type, new() { blackList.ToString().ToLower() });
     }
 
     /// <summary>

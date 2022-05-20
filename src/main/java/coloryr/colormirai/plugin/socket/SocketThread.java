@@ -25,6 +25,7 @@ public class SocketThread implements IPluginSocket {
 
     public void setPlugin(ThePlugin plugin) {
         this.plugin = plugin;
+        socketThread.start();
     }
 
     private RePackObj read() {
@@ -64,8 +65,7 @@ public class SocketThread implements IPluginSocket {
                 }
                 plugin.setRunQQ(StartPack.runQQ);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
-                String data = JSON.toJSONString(BotStart.getBotsKey());
-                send(PackDo.buildPack(data, 0));
+                send(PackDo.buildPack(BotStart.getBotsKey(), 0));
             } else {
                 ColorMiraiMain.logger.warn("插件连接初始化失败");
                 socket.close();
