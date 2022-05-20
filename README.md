@@ -4,6 +4,8 @@
 
 ```
 注意：目前不能使用stop指令关闭机器人，需要强制杀进程
+
+4.0.0与更低版本的插件完全不兼容
 ```
 
 **官方QQ群**：[571239090](https://qm.qq.com/cgi-bin/qm/qr?k=85m_MZMJ7BbyZ2vZW4wHVZGGvGnIL2As&jump_from=webapi)

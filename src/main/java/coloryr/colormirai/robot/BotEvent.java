@@ -6,7 +6,6 @@ import coloryr.colormirai.plugin.obj.SendPackObj;
 import coloryr.colormirai.plugin.pack.to.*;
 import coloryr.colormirai.robot.event.EventBase;
 import coloryr.colormirai.robot.event.EventCall;
-import com.alibaba.fastjson.JSON;
 import kotlin.coroutines.CoroutineContext;
 import net.mamoe.mirai.contact.*;
 import net.mamoe.mirai.event.EventHandler;

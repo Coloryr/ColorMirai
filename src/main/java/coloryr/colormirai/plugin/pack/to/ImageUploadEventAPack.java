@@ -2,10 +2,8 @@ package coloryr.colormirai.plugin.pack.to;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-/*
-32 [机器人]图片上传成功（事件）
-id:
-uuid:
+/**
+ * 32 [机器人]图片上传成功（事件）
  */
 public class ImageUploadEventAPack extends PackBase {
     /**

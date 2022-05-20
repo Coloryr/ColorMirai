@@ -16,7 +16,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.nio.charset.Charset;
-import java.util.Base64;
 
 public class ColorMiraiMain {
     public static final String version = "4.0.0";

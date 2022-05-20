@@ -369,23 +369,23 @@ public record StartPack
     /// <summary>
     /// 插件名字
     /// </summary>
-    public string Name { get; set; }
+    public string name { get; set; }
     /// <summary>
     /// 监听的包
     /// </summary>
-    public List<byte> Reg { get; set; }
+    public List<byte> reg { get; set; }
     /// <summary>
     /// 监听的群，可以为null
     /// </summary>
-    public List<long> Groups { get; set; }
+    public List<long> groups { get; set; }
     /// <summary>
     /// 监听的QQ号，可以为null
     /// </summary>
-    public List<long> QQs { get; set; }
+    public List<long> qqList { get; set; }
     /// <summary>
     /// 运行的QQ，0为不指定
     /// </summary>
-    public long RunQQ { get; set; }
+    public long runQQ { get; set; }
 }
 /// <summary>
 /// 1 [机器人]图片上传前. 可以阻止上传（事件）
@@ -414,27 +414,23 @@ public record BotAvatarChangedPack : PackBase
 public record BotGroupPermissionChangePack : PackBase
 {
     /// <summary>
-    /// 当前权限
+    /// 群号
     /// </summary>
-    public MemberPermission now { get; set; }
+    public long id { get; set; }
     /// <summary>
     /// 旧的权限
     /// </summary>
     public MemberPermission old { get; set; }
     /// <summary>
-    /// 群号
+    /// 当前权限
     /// </summary>
-    public long id { get; set; }
+    public MemberPermission now { get; set; }
 }
 /// <summary>
 /// 4 [机器人]被邀请加入一个群（事件）
 /// </summary>
 public record BotInvitedJoinGroupRequestEventPack : PackBase
 {
-    /// <summary>
-    /// 事件ID
-    /// </summary>
-    public long eventid { get; set; }
     /// <summary>
     /// 群号
     /// </summary>
@@ -443,6 +439,10 @@ public record BotInvitedJoinGroupRequestEventPack : PackBase
     /// 邀请人QQ号
     /// </summary>
     public long fid { get; set; }
+    /// <summary>
+    /// 事件ID
+    /// </summary>
+    public long eventid { get; set; }
 }
 /// <summary>
 /// 5 [机器人]成功加入了一个新群（不确定. 可能是主动加入）（事件）
@@ -457,8 +457,12 @@ public record BotJoinGroupEventAPack : PackBase
 /// <summary>
 /// 6 [机器人]成功加入了一个新群（机器人被一个群内的成员直接邀请加入了群）（事件）
 /// </summary>
-public record BotJoinGroupEventBPack : BotJoinGroupEventAPack
+public record BotJoinGroupEventBPack : PackBase
 {
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
     /// <summary>
     /// 邀请人QQ
     /// </summary>
@@ -477,8 +481,12 @@ public record BotLeaveEventAPack : PackBase
 /// <summary>
 /// 8 [机器人]被管理员或群主踢出群（事件）
 /// </summary>
-public record BotLeaveEventBPack : BotLeaveEventAPack
+public record BotLeaveEventBPack : PackBase
 {
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
     /// <summary>
     /// 执行人QQ
     /// </summary>
@@ -517,8 +525,12 @@ public record BotOfflineEventAPack : PackBase
 /// <summary>
 /// 11 [机器人]被挤下线（事件）
 /// </summary>
-public record BotOfflineEventBPack : BotOfflineEventAPack
+public record BotOfflineEventBPack : PackBase
 {
+    /// <summary>
+    /// 离线原因
+    /// </summary>
+    public string message { get; set; }
     /// <summary>
     /// 标题
     /// </summary>
@@ -578,13 +590,13 @@ public record FriendAddEventPack : PackBase
 public record FriendAvatarChangedEventPack : PackBase
 {
     /// <summary>
-    /// 图片url
-    /// </summary>
-    public string url { get; set; }
-    /// <summary>
     /// 好友QQ号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 图片url
+    /// </summary>
+    public string url { get; set; }
 }
 /// <summary>
 /// 20 [机器人]好友已被删除（事件）
@@ -602,10 +614,6 @@ public record FriendDeleteEventPack : PackBase
 public record FriendMessagePostSendEventPack : PackBase
 {
     /// <summary>
-    /// 消息
-    /// </summary>
-    public List<string> message { get; set; }
-    /// <summary>
     /// 好友QQ号
     /// </summary>
     public long id { get; set; }
@@ -613,6 +621,10 @@ public record FriendMessagePostSendEventPack : PackBase
     /// 是否成功发送
     /// </summary>
     public bool res { get; set; }
+    /// <summary>
+    /// 消息
+    /// </summary>
+    public List<string> message { get; set; }
     /// <summary>
     /// 错误消息
     /// </summary>
@@ -624,13 +636,13 @@ public record FriendMessagePostSendEventPack : PackBase
 public record FriendMessagePreSendEventPack : PackBase
 {
     /// <summary>
-    /// 消息
-    /// </summary>
-    public List<string> message { get; set; }
-    /// <summary>
     /// 好友QQ号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 消息
+    /// </summary>
+    public List<string> message { get; set; }
 }
 /// <summary>
 /// 23 [机器人]好友昵称改变（事件）
@@ -675,23 +687,64 @@ public record GroupAllowAnonymousChatEventPack : PackBase
 /// <summary>
 /// 25 [机器人]群 "坦白说" 功能状态改变（事件）
 /// </summary>
-public record GroupAllowConfessTalkEventPack : GroupAllowAnonymousChatEventPack
+public record GroupAllowConfessTalkEventPack : PackBase
 {
-
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 旧的状态
+    /// </summary>
+    public bool old { get; set; }
+    /// <summary>
+    /// 新的状态
+    /// </summary>
+    public bool now { get; set; }
 }
 /// <summary>
 /// 26 [机器人]群 "允许群员邀请好友加群" 功能状态改变（事件）
 /// </summary>
-public record GroupAllowMemberInviteEventPack : GroupAllowAnonymousChatEventPack
+public record GroupAllowMemberInviteEventPack : PackBase
 {
-
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 执行人QQ号
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 旧的状态
+    /// </summary>
+    public bool old { get; set; }
+    /// <summary>
+    /// 新的状态
+    /// </summary>
+    public bool now { get; set; }
 }
 /// <summary>
 /// 27 [机器人]入群公告改变（事件）
 /// </summary>
-public record GroupEntranceAnnouncementChangeEventPack : GroupAllowAnonymousChatEventPack
+public record GroupEntranceAnnouncementChangeEventPack : PackBase
 {
-
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 执行人QQ号
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 旧的状态
+    /// </summary>
+    public bool old { get; set; }
+    /// <summary>
+    /// 新的状态
+    /// </summary>
+    public bool now { get; set; }
 }
 /// <summary>
 /// 28 [机器人]在群消息发送后广播（事件）
@@ -790,16 +843,24 @@ public record ImageUploadEventAPack : PackBase
 /// <summary>
 /// 33 [机器人]图片上传失败（事件）
 /// </summary>
-public record ImageUploadEventBPack : ImageUploadEventAPack
+public record ImageUploadEventBPack : PackBase
 {
     /// <summary>
-    /// 错误消息
+    /// 目标ID
     /// </summary>
-    public string error { get; set; }
+    public long id { get; set; }
     /// <summary>
     /// 错误码
     /// </summary>
     public int index { get; set; }
+    /// <summary>
+    /// 资源名
+    /// </summary>
+    public string name { get; set; }
+    /// <summary>
+    /// 错误消息
+    /// </summary>
+    public string error { get; set; }
 }
 /// <summary>
 /// 34 [机器人]成员群名片改动（事件）
@@ -826,8 +887,20 @@ public record MemberCardChangeEventPack : PackBase
 /// <summary>
 /// 35 [机器人]成成员被邀请加入群（事件）
 /// </summary>
-public record InviteMemberJoinEventPack : MemberJoinEventPack
+public record InviteMemberJoinEventPack : PackBase
 {
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 执行人QQ号
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 进群人昵称
+    /// </summary>
+    public string name { get; set; }
     /// <summary>
     /// 邀请人QQ号
     /// </summary>
@@ -861,10 +934,6 @@ public record MemberJoinEventPack : PackBase
 public record MemberJoinRequestEventPack : PackBase
 {
     /// <summary>
-    /// 事件ID
-    /// </summary>
-    public long eventid { get; set; }
-    /// <summary>
     /// 群号
     /// </summary>
     public long id { get; set; }
@@ -880,6 +949,10 @@ public record MemberJoinRequestEventPack : PackBase
     /// 入群消息
     /// </summary>
     public string message { get; set; }
+    /// <summary>
+    /// 事件ID
+    /// </summary>
+    public long eventid { get; set; }
 }
 /// <summary>
 /// 38 [机器人]成员被踢出群（事件）
@@ -1021,6 +1094,18 @@ public record MessageRecallEventAPack : PackBase
 public record MessageRecallEventBPack : PackBase
 {
     /// <summary>
+    /// 好友QQ号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] mid { get; set; }
+    /// <summary>
+    /// 时间
+    /// </summary>
+    public int time { get; set; }
+    /// <summary>
     /// 群员QQ号
     /// </summary>
     public long fid { get; set; }
@@ -1124,8 +1209,28 @@ public record GroupMessageEventPack : PackBase
 /// <summary>
 /// 50 [机器人]收到群临时会话消息（事件）
 /// </summary>
-public record TempMessageEventPack : GroupMessageEventPack
+public record TempMessageEventPack : PackBase
 {
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 发送人QQ号
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 发送人权限
+    /// </summary>
+    public MemberPermission permission { get; set; }
+    /// <summary>
+    /// 发送的消息
+    /// </summary>
+    public List<string> message { get; set; }
+    /// <summary>
+    /// 群名片
+    /// </summary>
+    public string name { get; set; }
     /// <summary>
     /// 时间
     /// </summary>
@@ -1141,6 +1246,10 @@ public record FriendMessageEventPack : PackBase
     /// </summary>
     public long id { get; set; }
     /// <summary>
+    /// 昵称
+    /// </summary>
+    public string name { get; set; }
+    /// <summary>
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
@@ -1148,10 +1257,6 @@ public record FriendMessageEventPack : PackBase
     /// 时间
     /// </summary>
     public int time { get; set; }
-    /// <summary>
-    /// 昵称
-    /// </summary>
-    public string name { get; set; }
 }
 /// <summary>
 /// 52 [插件]发送群消息
@@ -1243,8 +1348,23 @@ public record EventCallPack : PackBase
     /// <summary>
     /// 附带参数
     /// </summary>
-    public List<object> arg { get; set; }
+    public List<string> arg { get; set; }
 }
+/// <summary>
+/// 61 [插件]发送图片到群
+/// </summary>
+public record SendGroupImagePack : PackBase
+{
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 图片数据
+    /// </summary>
+    public byte[] data { get; set; }
+}
+
 /// <summary>
 /// 64 [插件]删除群员
 /// </summary>
@@ -1258,6 +1378,10 @@ public record GroupKickMemberPack : PackBase
     /// 群员QQ号
     /// </summary>
     public long fid { get; set; }
+    /// <summary>
+    /// 黑名单
+    /// </summary>
+    public bool black { get; set; }
 }
 /// <summary>
 /// 65 [插件]禁言群员
@@ -2239,6 +2363,7 @@ public partial class RobotSDK
 {
     public static readonly Dictionary<byte, Type> PackType = new()
     {
+        { 0, typeof(StartPack)},
         { 1, typeof(BeforeImageUploadPack) },
         { 2, typeof(BotAvatarChangedPack) },
         { 3, typeof(BotGroupPermissionChangePack) },
@@ -2420,11 +2545,11 @@ public partial class RobotSDK
 
         PackStart = new()
         {
-            Name = Config.Name,
-            Reg = Config.Pack,
-            Groups = Config.Groups,
-            QQs = Config.QQs,
-            RunQQ = Config.RunQQ
+            name = Config.Name,
+            reg = Config.Pack,
+            groups = Config.Groups,
+            qqList = Config.QQs,
+            runQQ = Config.RunQQ
         };
     }
     /// <summary>

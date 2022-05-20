@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.pack.to;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-/*
+/**
  * 79 [机器人]成员群恢复（事件）
  */
 public class MemberJoinRetrieveEventPack extends PackBase {

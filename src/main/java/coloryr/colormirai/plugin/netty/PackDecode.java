@@ -42,15 +42,15 @@ public class PackDecode {
 
     public static StartPack startPack(ByteBuf buff) {
         StartPack pack = new StartPack();
-        pack.Name = readString(buff);
+        pack.name = readString(buff);
         int length = buff.readInt();
-        pack.Reg = new ArrayList<>();
+        pack.reg = new ArrayList<>();
         for (int a = 0; a < length; a++) {
-            pack.Reg.add(buff.readInt());
+            pack.reg.add(buff.readInt());
         }
-        pack.Groups = readLongList(buff);
-        pack.QQs = readLongList(buff);
-        pack.RunQQ = buff.readLong();
+        pack.groups = readLongList(buff);
+        pack.qqList = readLongList(buff);
+        pack.runQQ = buff.readLong();
         return pack;
     }
 

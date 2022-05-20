@@ -47,22 +47,22 @@ public class SocketThread implements IPluginSocket {
                 return;
             }
             StartPack StartPack = JSON.parseObject(task.data, StartPack.class);
-            if (StartPack.Name != null && StartPack.Reg != null) {
-                socketThread.setName("Plugin[" + StartPack.Name + "]SocketThread");
-                plugin.setName(StartPack.Name);
-                plugin.setEvents(StartPack.Reg);
-                if (StartPack.Groups != null) {
-                    plugin.addGroup(StartPack.Groups);
+            if (StartPack.name != null && StartPack.reg != null) {
+                socketThread.setName("Plugin[" + StartPack.name + "]SocketThread");
+                plugin.setName(StartPack.name);
+                plugin.setEvents(StartPack.reg);
+                if (StartPack.groups != null) {
+                    plugin.addGroup(StartPack.groups);
                 }
-                if (StartPack.QQs != null) {
-                    plugin.addQQs(StartPack.QQs);
+                if (StartPack.qqList != null) {
+                    plugin.addQQs(StartPack.qqList);
                 }
-                if (StartPack.RunQQ != 0 && !BotStart.getBotsKey().contains(StartPack.RunQQ)) {
-                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.RunQQ);
+                if (StartPack.runQQ != 0 && !BotStart.getBotsKey().contains(StartPack.runQQ)) {
+                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.runQQ);
                     socket.close();
                     return;
                 }
-                plugin.setRunQQ(StartPack.RunQQ);
+                plugin.setRunQQ(StartPack.runQQ);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
                 String data = JSON.toJSONString(BotStart.getBotsKey());
                 send(PackDo.buildPack(data, 0));

@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.pack.to;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-/*
+/**
  * 86 [机器人]其他客户端上线（事件）
  */
 public class OtherClientOnlineEventPack extends PackBase {
