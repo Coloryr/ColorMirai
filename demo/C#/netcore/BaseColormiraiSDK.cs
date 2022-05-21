@@ -2392,7 +2392,7 @@ public static class BuildPack
     /// <param name="img">图片BASE64流</param>
     /// <param name="index">包ID</param>
     /// <returns>构建好的包</returns>
-    public static byte[] BuildImage(long qq, long id, long fid, string img, byte index)
+    public static byte[] BuildImage(long qq, long id, long fid, string img, byte index, List<long> ids)
     {
         string temp = "";
         if (id != 0)
@@ -2402,6 +2402,16 @@ public static class BuildPack
         if (fid != 0)
         {
             temp += $"fid={fid}&";
+        }
+        if (ids != null)
+        {
+            string temp1 = "ids=";
+            foreach (var item in ids)
+            {
+                temp1 += $"{item},";
+            }
+            temp1 = temp1[..^1];
+            temp += temp1 + "&";
         }
         temp += $"qq={qq}&img={img}";
         byte[] data = Encoding.UTF8.GetBytes(temp + " ");
@@ -2620,49 +2630,61 @@ public partial class RobotSDK
     };
 }
 
+public interface IColormiraiPipe
+{
+    void AddPack(PackBase pack, byte index);
+    void ReConnect();
+    void SendStop();
+    void Stop();
+    void StartRead();
+}
+
 public partial class RobotSDK
 {
     private record RobotTask
     {
         public byte Index { get; set; }
-        public string Data { get; set; }
+        public object Data { get; set; }
     }
     /// <summary>
     /// 机器人登录的QQ号列表
     /// </summary>
-    public List<long> QQs { get; private set; }
+    public List<long> QQs { get; internal set; }
     /// <summary>
     /// 是否正在运行
     /// </summary>
-    public bool IsRun { get; private set; }
+    public bool IsRun { get; internal set; }
     /// <summary>
     /// 是否连接
     /// </summary>
-    public bool IsConnect { get; private set; }
+    public bool IsConnect { get; internal set; }
 
-    private delegate void RobotCall(byte packid, object data);
-    private delegate void RobotLog(LogType type, string data);
-    private delegate void RobotState(StateType type);
-    private RobotCall RobotCallEvent;
-    private RobotLog RobotLogEvent;
-    private RobotState RobotStateEvent;
+    public delegate void RobotCall(byte packid, object data);
+    public delegate void RobotLog(LogType type, string data);
+    public delegate void RobotState(StateType type);
+    public RobotCall RobotCallEvent { get; private set; }
+    public RobotLog RobotLogEvent { get; private set; }
+    public RobotState RobotStateEvent { get; private set; }
 
-    private ASocket Socket;
-    private Thread ReadThread;
-    private Thread DoThread;
-    private ConcurrentBag<RobotTask> QueueRead;
-    private ConcurrentBag<byte[]> QueueSend;
-    private StartPack PackStart;
-    private RobotConfig Config;
-
-    private partial bool CallTop(byte index, string data);
+    public RobotConfig Config { get; private set; }
+    public StartPack PackStart { get; private set; }
 
     /// <summary>
     /// 第一次连接检查
     /// </summary>
     public bool IsFirst = true;
+    /// <summary>
+    /// 自动重连次数
+    /// </summary>
 
-    private int Times = 0;
+    public int Times = 0;
+
+    private partial bool CallTop(byte index, object data);
+    private Thread DoThread;
+    private ConcurrentBag<RobotTask> QueueRead;
+    
+    private IColormiraiPipe Pipe;
+
     /// <summary>
     /// 设置配置
     /// </summary>
@@ -2689,10 +2711,9 @@ public partial class RobotSDK
     /// </summary>
     public void Start()
     {
-        if (ReadThread?.IsAlive == true)
+        if (DoThread?.IsAlive == true)
             return;
         QueueRead = new();
-        QueueSend = new();
         DoThread = new(() =>
         {
             while (IsRun)
@@ -2705,9 +2726,9 @@ public partial class RobotSDK
                             continue;
                         if (CallTop(task.Index, task.Data))
                             continue;
-                        if (RobotSDK.PackType.TryGetValue(task.Index, out var type))
+                        if (PackType.TryGetValue(task.Index, out var type))
                         {
-                            RobotCallEvent.Invoke(task.Index, JsonConvert.DeserializeObject(task.Data, type));
+                            RobotCallEvent.Invoke(task.Index, Convert.ChangeType(task.Data, type));
                         }
                         else
                         {
@@ -2722,126 +2743,34 @@ public partial class RobotSDK
                 }
             }
         });
-
-        ReadThread = new(() =>
-        {
-            while (!IsRun)
-            {
-                Thread.Sleep(100);
-            }
-            DoThread.Start();
-            int time = 0;
-            while (IsRun)
-            {
-                try
-                {
-                    if (!IsConnect)
-                    {
-                        ReConnect();
-                        IsFirst = false;
-                        Times = 0;
-                        RobotStateEvent.Invoke(StateType.Connect);
-                    }
-                    else if (Socket.Available > 0)
-                    {
-                        var data = new byte[Socket.Available];
-                        Socket.Receive(data);
-                        var type = data[^1];
-                        data[^1] = 0;
-                        QueueRead.Add(new RobotTask
-                        {
-                            Index = type,
-                            Data = Encoding.UTF8.GetString(data)
-                        });
-                    }
-                    else if (Config.Check && time >= 20)
-                    {
-                        time = 0;
-                        var temp = BuildPack.Build(new object(), 60);
-                        AddTask(temp);
-                    }
-                    else if (QueueSend.TryTake(out byte[] Send))
-                    {
-                        Socket.Send(Send);
-                    }
-                    time++;
-                    Thread.Sleep(50);
-                }
-                catch (Exception e)
-                {
-                    IsConnect = false;
-                    RobotStateEvent.Invoke(StateType.Disconnect);
-                    if (IsFirst)
-                    {
-                        IsRun = false;
-                        LogError("机器人连接失败");
-                    }
-                    else
-                    {
-                        Times++;
-                        if (Times == 10)
-                        {
-                            IsRun = false;
-                            LogError("重连失败次数过多");
-                        }
-                        LogError("机器人连接失败");
-                        LogError(e);
-                        IsConnect = false;
-                        LogError($"机器人{Config.Time}毫秒后重连");
-                        Thread.Sleep(Config.Time);
-                        LogError("机器人重连中");
-                    }
-                }
-            }
-        });
-        ReadThread.Start();
         IsRun = true;
+        DoThread.Start();
+        Pipe.StartRead();
     }
-    private void ReConnect()
+
+    /// <summary>
+    /// 添加读取的包
+    /// </summary>
+    /// <param name="pack">解析后的信息</param>
+    /// <param name="index">包ID</param>
+    internal void AddRead(object pack, byte index) 
     {
-        if (Socket != null)
-            Socket.Close();
-
-        RobotStateEvent.Invoke(StateType.Connecting);
-
-        Socket = new(SocketType.Stream, ProtocolType.Tcp);
-        Socket.Connect(Config.IP, Config.Port);
-
-        var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(PackStart) + " ");
-        data[^1] = 0;
-
-        Socket.Send(data);
-
-        while (Socket.Available == 0)
+        QueueRead.Add(new()
         {
-            Thread.Sleep(10);
-        }
-
-        data = new byte[Socket.Available];
-        Socket.Receive(data);
-        string temp = Encoding.UTF8.GetString(data, 0, data.Length - 1);
-        QQs = JsonConvert.DeserializeObject<List<long>>(temp);
-
-        QueueRead.Clear();
-        QueueSend.Clear();
-        LogOut("机器人已连接");
-        IsConnect = true;
+            Data = pack,
+            Index = index
+        });
     }
+
     /// <summary>
     /// 添加数据包
     /// </summary>
     /// <param name="data">数据包</param>
-    public void AddTask(byte[] data)
+    internal void AddTask(PackBase pack, byte index)
     {
-        QueueSend.Add(data);
+        Pipe.AddPack(pack, index);
     }
-    private void SendStop()
-    {
-        if (!IsConnect)
-            return;
-        var data = BuildPack.Build(new object(), 127);
-        Socket.Send(data);
-    }
+    
     /// <summary>
     /// 停止机器人
     /// </summary>
@@ -2849,20 +2778,18 @@ public partial class RobotSDK
     {
         LogOut("机器人正在断开");
         IsRun = false;
-        SendStop();
-        if (Socket != null)
-            Socket.Close();
+        Pipe.Stop();
         LogOut("机器人已断开");
     }
-    private void LogError(Exception e)
+    internal void LogError(Exception e)
     {
         RobotLogEvent.Invoke(LogType.Error, "机器人错误\n" + e.ToString());
     }
-    private void LogError(string a)
+    internal void LogError(string a)
     {
         RobotLogEvent.Invoke(LogType.Error, "机器人错误:" + a);
     }
-    private void LogOut(string a)
+    internal void LogOut(string a)
     {
         RobotLogEvent.Invoke(LogType.Log, a);
     }

@@ -31,13 +31,13 @@ public partial class RobotSDK
     private readonly Dictionary<QQFriend, Action<FriendInfoPack>> GetFriendInfoMap = new();
     private readonly Dictionary<QQGroup, Action<GroupFilesPack>> GetGroupFilesMap = new();
     private readonly Dictionary<QQGroup, Action<GroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
-    private partial bool CallTop(byte index, string data)
+    private partial bool CallTop(byte index, object data)
     {
         switch (index)
         {
             case 55:
                 {
-                    var pack = JsonConvert.DeserializeObject<ListGroupPack>(data);
+                    var pack = data as ListGroupPack;
                     if (GetGroupsMap.TryGetValue(pack.qq, out var action))
                     {
                         GetGroupsMap.Remove(pack.qq);
@@ -47,7 +47,7 @@ public partial class RobotSDK
                 }
             case 56:
                 {
-                    var pack = JsonConvert.DeserializeObject<ListFriendPack>(data);
+                    var pack = data as ListFriendPack;
                     if (GetFriendsMap.TryGetValue(pack.qq, out var action))
                     {
                         GetFriendsMap.Remove(pack.qq);
@@ -57,7 +57,7 @@ public partial class RobotSDK
                 }
             case 57:
                 {
-                    var pack = JsonConvert.DeserializeObject<ListMemberPack>(data);
+                    var pack = data as ListMemberPack;
                     var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
                     if (GetMembersMap.TryGetValue(key, out var action))
                     {
@@ -68,7 +68,7 @@ public partial class RobotSDK
                 }
             case 58:
                 {
-                    var pack = JsonConvert.DeserializeObject<GroupSettingPack>(data);
+                    var pack = data as GroupSettingPack;
                     var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
                     if (GetGroupSettingMap.TryGetValue(key, out var action))
                     {
@@ -79,7 +79,7 @@ public partial class RobotSDK
                 }
             case 90:
                 {
-                    var pack = JsonConvert.DeserializeObject<ReImagePack>(data);
+                    var pack = data as ReImagePack;
                     if (GetImageUrlMap.TryGetValue(pack.uuid, out var action))
                     {
                         GetImageUrlMap.Remove(pack.uuid);
