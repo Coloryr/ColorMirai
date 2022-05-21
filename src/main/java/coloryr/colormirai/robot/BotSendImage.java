@@ -14,7 +14,7 @@ import java.util.List;
 
 public class BotSendImage {
 
-    public static void sendGroupImage(long qq, long id, byte[] img) {
+    public static void sendGroupImage(long qq, long id, byte[] img, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -22,20 +22,30 @@ public class BotSendImage {
             }
 
             Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.error("没有群：" + id);
-                return;
+            if (ids == null) {
+                ids = new ArrayList<>();
             }
-            MessageReceipt<Group> message = group.sendMessage(BotUpload.upImage(bot, img));
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = qq;
-            int[] temp = obj.source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                obj.id = temp[0];
+            if (!ids.contains(id)) {
+                ids.add(id);
             }
-            BotStart.addMessage(qq, obj.id, obj);
+            Image image = BotUpload.upImage(bot, img);
+            for (long item : ids) {
+                Group group = bot.getGroup(item);
+                if (group == null) {
+                    ColorMiraiMain.logger.error("没有群：" + item);
+                    return;
+                }
+                MessageReceipt<Group> message = group.sendMessage(image);
+                MessageSaveObj obj = new MessageSaveObj();
+                obj.source = message.getSource();
+                obj.sourceQQ = qq;
+                int[] temp = obj.source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    obj.id = temp[0];
+                }
+                BotStart.addMessage(qq, obj.id, obj);
+            }
+
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群图片失败", e);
         }

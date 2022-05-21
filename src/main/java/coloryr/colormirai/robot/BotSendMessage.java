@@ -11,20 +11,22 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageSource;
 import net.mamoe.mirai.message.data.MessageUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BotSendMessage {
 
-    public static void sendGroupMessage(long qq, long group, List<String> message) {
+    public static void sendGroupMessage(long qq, long group, List<String> message, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
-            Group group1 = BotStart.getBots().get(qq).getGroup(group);
-            if (group1 == null) {
-                ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
-                return;
+            if (ids == null) {
+                ids = new ArrayList<>();
+            }
+            if (!ids.contains(group)) {
+                ids.add(group);
             }
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
@@ -34,16 +36,26 @@ public class BotSendMessage {
                     messageChain = messageChain.plus(item);
                 }
             }
-            MessageSource source = group1.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.sourceQQ = qq;
-                call.source = source;
-                call.time = 120;
-                call.id = source.getIds()[0];
-                BotStart.addMessage(qq, call.id, call);
+
+            for (long item : ids) {
+                Group group1 = BotStart.getBots().get(qq).getGroup(item);
+                if (group1 == null) {
+                    ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
+                    continue;
+                }
+
+                MessageSource source = group1.sendMessage(messageChain).getSource();
+                int[] temp = source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    MessageSaveObj call = new MessageSaveObj();
+                    call.sourceQQ = qq;
+                    call.source = source;
+                    call.time = 120;
+                    call.id = source.getIds()[0];
+                    BotStart.addMessage(qq, call.id, call);
+                }
             }
+
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群消息失败", e);
         }
@@ -83,30 +95,38 @@ public class BotSendMessage {
         }
     }
 
-    public static void sendFriendMessage(long qq, long fid, List<String> message) {
+    public static void sendFriendMessage(long qq, long fid, List<String> message, List<Long> ids) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return;
             }
             Bot bot = BotStart.getBots().get(qq);
+            if (ids == null) {
+                ids = new ArrayList<>();
+            }
+            if (!ids.contains(fid)) {
+                ids.add(fid);
+            }
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);
             }
-            Friend friend = bot.getFriend(fid);
-            if (friend == null) {
-                ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
-                return;
-            }
-            MessageSource source = friend.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
+            for (long item : ids) {
+                Friend friend = bot.getFriend(item);
+                if (friend == null) {
+                    ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
+                    continue;
+                }
+                MessageSource source = friend.sendMessage(messageChain).getSource();
+                int[] temp = source.getIds();
+                if (temp.length != 0 && temp[0] != -1) {
+                    MessageSaveObj call = new MessageSaveObj();
+                    call.source = source;
+                    call.time = 120;
+                    call.id = temp[0];
+                    BotStart.addMessage(qq, call.id, call);
+                }
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友消息失败", e);

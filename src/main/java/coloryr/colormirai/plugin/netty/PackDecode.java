@@ -59,6 +59,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.message = readStringList(buff);
+        pack.ids = readLongList(buff);
         return pack;
     }
 
@@ -75,6 +76,7 @@ public class PackDecode {
         SendFriendMessagePack pack = new SendFriendMessagePack();
         pack.qq = buff.readLong();
         pack.message = readStringList(buff);
+        pack.ids = readLongList(buff);
         return pack;
     }
 
@@ -112,6 +114,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.data = readBytes(buff);
+        pack.ids = readLongList(buff);
         return pack;
     }
 
@@ -306,11 +309,11 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.fid = buff.readLong();
+        pack.type = buff.readInt();
         pack.send = buff.readBoolean();
         pack.text = readStringList(buff);
         pack.imgurl = readString(buff);
         pack.imgData = readBytes(buff);
-        pack.type = buff.readInt();
         return pack;
     }
 

@@ -424,7 +424,7 @@ public partial class RobotSDK
     /// <param name="card">群名片</param>
     public void GroupSetMember(long qq, long group, long member, string card)
     {
-        var data = BuildPack.Build(new GroupSetMemberCard()
+        var data = BuildPack.Build(new GroupSetMemberCardPack()
         {
             qq = qq,
             id = group,
@@ -596,7 +596,7 @@ public partial class RobotSDK
     {
         var key = new QQMember() { QQ = qq, Group = group, Member = member };
         GetMemberInfoMap.Add(key, res);
-        var data = BuildPack.Build(new GetMemberInfo()
+        var data = BuildPack.Build(new GetMemberInfoPack()
         {
             qq = qq,
             id = group,

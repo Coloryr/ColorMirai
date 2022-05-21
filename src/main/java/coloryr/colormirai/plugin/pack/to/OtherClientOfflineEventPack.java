@@ -11,7 +11,7 @@ public class OtherClientOfflineEventPack extends PackBase {
      */
     public int appId;
     /**
-     * 设备类型
+     * 设备平台
      */
     public String platform;
     /**

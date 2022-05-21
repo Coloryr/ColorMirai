@@ -1007,7 +1007,7 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(123, pack, id, 0, qq));
     }
 
-    //124 [机器人]陌生人关系改变（事件）
+    //124 [机器人]陌生人关系改变->删除（事件）
     @EventHandler
     public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Deleted event) {
         if (PluginUtils.havePlugin())
@@ -1018,6 +1018,7 @@ public class BotEvent extends SimpleListenerHost {
         BotStart.addTask(new SendPackObj(124, pack, id, 0, qq));
     }
 
+    //125 [机器人]陌生人关系改变->朋友（事件）
     @EventHandler
     public void onStrangerRelationChangeEvent(StrangerRelationChangeEvent.Friended event) {
         if (PluginUtils.havePlugin())
@@ -1025,7 +1026,7 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getStranger().getId();
         long qq = event.getBot().getId();
         StrangerRelationChangePack pack = new StrangerRelationChangePack(qq, id, 1);
-        BotStart.addTask(new SendPackObj(124, pack, id, 0, qq));
+        BotStart.addTask(new SendPackObj(125, pack, id, 0, qq));
     }
 
     //处理在处理事件中发生的未捕获异常

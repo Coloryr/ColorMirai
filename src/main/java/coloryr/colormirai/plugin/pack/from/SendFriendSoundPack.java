@@ -13,7 +13,7 @@ public class SendFriendSoundPack extends PackBase {
      */
     public long id;
     /**
-     * 文件路径
+     * 语音内容
      */
     public byte[] data;
     /**

@@ -17,6 +17,10 @@ public class MessageBuffPack extends PackBase {
      */
     public long fid;
     /**
+     * 发送对象类型
+     */
+    public int type;
+    /**
      * 是否发送
      */
     public boolean send;
@@ -32,8 +36,4 @@ public class MessageBuffPack extends PackBase {
      * 图片数据
      */
     public byte[] imgData;
-    /**
-     * 发送对象类型
-     */
-    public int type;
 }

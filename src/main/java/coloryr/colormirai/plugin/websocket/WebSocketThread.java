@@ -6,10 +6,15 @@ import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
 import coloryr.colormirai.plugin.pack.from.*;
+import coloryr.colormirai.plugin.socket.PackDo;
 import coloryr.colormirai.robot.BotStart;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.java_websocket.WebSocket;
+
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Map;
 
 public class WebSocketThread implements IPluginSocket {
     private ThePlugin plugin;
@@ -34,7 +39,7 @@ public class WebSocketThread implements IPluginSocket {
         }
         WebSocketPackObj obj = new WebSocketPackObj();
         obj.index = object.getInteger("index");
-        obj.data = object.getJSONObject("pack");
+        obj.data = object.get("pack");
 
         return obj;
     }
@@ -46,6 +51,7 @@ public class WebSocketThread implements IPluginSocket {
     private void start() {
         WebSocketPackObj task;
         JSONObject object;
+        String object1 = "";
         try {
             while ((task = read()) == null) {
                 Thread.sleep(100);
@@ -91,7 +97,11 @@ public class WebSocketThread implements IPluginSocket {
             try {
                 task = read();
                 if (task != null) {
-                    object = (JSONObject) task.data;
+                    if (task.data instanceof JSONObject) {
+                        object = (JSONObject) task.data;
+                    } else {
+                        object1 = task.data.toString();
+                    }
                     if (ColorMiraiMain.config.debug) {
                         ColorMiraiMain.logger.info("收到数据包：[" + task.index + "]" + task.data + "");
                     }
@@ -135,17 +145,72 @@ public class WebSocketThread implements IPluginSocket {
                         }
                         //61 [插件]发送图片到群
                         case 61: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(SendGroupImagePack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(object1);
+                            if (formdata.containsKey("id") && formdata.containsKey("img") && formdata.containsKey("qq")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    String ids = formdata.get("ids");
+                                    SendGroupImagePack pack = new SendGroupImagePack();
+                                    if (ids != null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //62 [插件]发送图片到私聊
                         case 62: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(SendGroupPrivateImagePack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(object1);
+                            if (formdata.containsKey("id") && formdata.containsKey("fid") && formdata.containsKey("img") && formdata.containsKey("qq")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long fid = Long.parseLong(formdata.get("fid"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    SendGroupPrivateImagePack pack = new SendGroupPrivateImagePack();
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.fid = fid;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //63 [插件]发送图片到朋友
                         case 63: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(SendFriendImagePack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(object1);
+                            if (formdata.containsKey("id") && formdata.containsKey("img")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    SendFriendImagePack pack = new SendFriendImagePack();
+                                    String ids = formdata.get("ids");
+                                    if (ids != null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("img"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //64 [插件]删除群员
@@ -190,7 +255,27 @@ public class WebSocketThread implements IPluginSocket {
                         }
                         //74 [插件]发送语音到群
                         case 74: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(SendGroupSoundPack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(object1);
+                            if (formdata.containsKey("id") && formdata.containsKey("sound") && formdata.containsKey("qq")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    SendGroupSoundPack pack = new SendGroupSoundPack();
+                                    String ids = formdata.get("ids");
+                                    if (ids != null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("sound"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //75 [插件]从文件加载图片发送到群
@@ -372,7 +457,27 @@ public class WebSocketThread implements IPluginSocket {
                         }
                         //126 [插件]发送好友语音
                         case 126: {
-                            plugin.addPack(new PluginPack(object.toJavaObject(SendFriendSoundPack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(object1);
+                            if (formdata.containsKey("id") && formdata.containsKey("sound") && formdata.containsKey("qq")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    SendFriendSoundPack pack = new SendFriendSoundPack();
+                                    String ids = formdata.get("ids");
+                                    if (ids != null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("sound"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //127 [插件]断开连接

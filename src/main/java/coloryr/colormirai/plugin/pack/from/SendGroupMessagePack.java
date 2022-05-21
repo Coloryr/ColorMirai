@@ -16,4 +16,8 @@ public class SendGroupMessagePack extends PackBase {
      * 消息
      */
     public List<String> message;
+    /**
+     * 群列表
+     */
+    public List<Long> ids;
 }

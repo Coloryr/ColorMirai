@@ -10,6 +10,7 @@ import coloryr.colormirai.robot.BotStart;
 import com.alibaba.fastjson.JSON;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Map;
 
@@ -129,7 +130,14 @@ public class SocketThread implements IPluginSocket {
                                 try {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
+                                    String ids = formdata.get("ids");
                                     SendGroupImagePack pack = new SendGroupImagePack();
+                                    if(ids!=null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
                                     pack.qq = qq;
                                     pack.id = id;
                                     pack.data = Base64.getDecoder().decode(formdata.get("img"));
@@ -168,6 +176,13 @@ public class SocketThread implements IPluginSocket {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     SendFriendImagePack pack = new SendFriendImagePack();
+                                    String ids = formdata.get("ids");
+                                    if(ids!=null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
                                     pack.qq = qq;
                                     pack.id = id;
                                     pack.data = Base64.getDecoder().decode(formdata.get("img"));
@@ -226,6 +241,13 @@ public class SocketThread implements IPluginSocket {
                                     long id = Long.parseLong(formdata.get("id"));
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     SendGroupSoundPack pack = new SendGroupSoundPack();
+                                    String ids = formdata.get("ids");
+                                    if(ids!=null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
                                     pack.qq = qq;
                                     pack.id = id;
                                     pack.data = Base64.getDecoder().decode(formdata.get("sound"));
@@ -415,7 +437,27 @@ public class SocketThread implements IPluginSocket {
                         }
                         //126 [插件]发送好友语音
                         case 126: {
-                            plugin.addPack(new PluginPack(JSON.parseObject(task.data, SendFriendSoundPack.class), task.index));
+                            Map<String, String> formdata = PackDo.parseDataFromPack(task.data);
+                            if (formdata.containsKey("id") && formdata.containsKey("sound") && formdata.containsKey("qq")) {
+                                try {
+                                    long id = Long.parseLong(formdata.get("id"));
+                                    long qq = Long.parseLong(formdata.get("qq"));
+                                    SendFriendSoundPack pack = new SendFriendSoundPack();
+                                    String ids = formdata.get("ids");
+                                    if(ids!=null) {
+                                        pack.ids = new ArrayList<>();
+                                        for (String item : ids.split(",")) {
+                                            pack.ids.add(Long.parseLong(item));
+                                        }
+                                    }
+                                    pack.qq = qq;
+                                    pack.id = id;
+                                    pack.data = Base64.getDecoder().decode(formdata.get("sound"));
+                                    plugin.addPack(new PluginPack(pack, task.index));
+                                } catch (Exception e) {
+                                    ColorMiraiMain.logger.error("解析发生错误", e);
+                                }
+                            }
                             break;
                         }
                         //127 [插件]断开连接

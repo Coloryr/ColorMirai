@@ -15,7 +15,7 @@ public class OtherClientOnlineEventPack extends PackBase {
      */
     public String kind;
     /**
-     * 设备类型
+     * 设备平台
      */
     public String platform;
     /**

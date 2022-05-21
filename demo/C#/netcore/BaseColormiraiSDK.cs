@@ -1194,6 +1194,10 @@ public record GroupMessageEventPack : PackBase
     /// </summary>
     public long fid { get; set; }
     /// <summary>
+    /// 群名片
+    /// </summary>
+    public string name { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1201,10 +1205,6 @@ public record GroupMessageEventPack : PackBase
     /// 发送的消息
     /// </summary>
     public List<string> message { get; set; }
-    /// <summary>
-    /// 群名片
-    /// </summary>
-    public string name { get; set; }
 }
 /// <summary>
 /// 50 [机器人]收到群临时会话消息（事件）
@@ -1220,6 +1220,10 @@ public record TempMessageEventPack : PackBase
     /// </summary>
     public long fid { get; set; }
     /// <summary>
+    /// 群名片
+    /// </summary>
+    public string name { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1227,10 +1231,6 @@ public record TempMessageEventPack : PackBase
     /// 发送的消息
     /// </summary>
     public List<string> message { get; set; }
-    /// <summary>
-    /// 群名片
-    /// </summary>
-    public string name { get; set; }
     /// <summary>
     /// 时间
     /// </summary>
@@ -1271,6 +1271,10 @@ public record SendGroupMessagePack : PackBase
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
+    /// <summary>
+    /// 群列表
+    /// </summary>
+    public List<long> ids { get; set; }
 }
 /// <summary>
 /// 53 [插件]发送私聊消息
@@ -1303,6 +1307,10 @@ public record SendFriendMessagePack : PackBase
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
+    /// <summary>
+    /// QQ号组
+    /// </summary>
+    public List<long> ids { get; set; }
 }
 /// <summary>
 /// 55 [插件]获取群列表
@@ -1363,8 +1371,47 @@ public record SendGroupImagePack : PackBase
     /// 图片数据
     /// </summary>
     public byte[] data { get; set; }
+    /// <summary>
+    /// 群号组
+    /// </summary>
+    public List<long> ids { get; set; }
 }
-
+/// <summary>
+/// 62 [插件]发送图片到私聊
+/// </summary>
+public record SendGroupPrivateImagePack : PackBase
+{
+    /// <summary>
+    /// 群号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// QQ号
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 图片数据
+    /// </summary>
+    public byte[] data { get; set; }
+}
+/// <summary>
+/// 63 [插件]发送图片到朋友
+/// </summary>
+public record SendFriendImagePack : PackBase
+{
+    /// <summary>
+    /// QQ号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 图片数据
+    /// </summary>
+    public byte[] data { get; set; }
+    /// <summary>
+    /// QQ号组
+    /// </summary>
+    public List<long> ids { get; set; }
+}
 /// <summary>
 /// 64 [插件]删除群员
 /// </summary>
@@ -1438,7 +1485,7 @@ public record GroupUnmuteAllPack : PackBase
 /// <summary>
 /// 69 [插件]设置群名片
 /// </summary>
-public record GroupSetMemberCard : PackBase
+public record GroupSetMemberCardPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -1510,6 +1557,24 @@ public record FriendNickChangedEventPack : PackBase
     public string now { get; set; }
 }
 /// <summary>
+/// 74 [插件]发送语音到群
+/// </summary>
+public record SendGroupSoundPack : PackBase
+{
+    /// <summary>
+    /// QQ号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 文件内容
+    /// </summary>
+    public byte[] data { get; set; }
+    /// <summary>
+    /// QQ号组
+    /// </summary>
+    public List<long> ids { get; set; }
+}
+/// <summary>
 /// 75 [插件]从本地文件加载图片发送到群
 /// </summary>
 public record SendGroupImageFilePack : PackBase
@@ -1522,6 +1587,10 @@ public record SendGroupImageFilePack : PackBase
     /// 文件路径
     /// </summary>
     public string file { get; set; }
+    /// <summary>
+    /// 群号组
+    /// </summary>
+    public List<long> ids { get; set; }
 }
 /// <summary>
 /// 76 [插件]从本地文件加载图片发送到群私聊
@@ -1572,6 +1641,10 @@ public record SendGroupSoundFilePack : PackBase
     /// 文件路径
     /// </summary>
     public string file { get; set; }
+    /// <summary>
+    /// 群组
+    /// </summary>
+    public List<long> ids { get; set; }
 }
 /// <summary>
 /// 79 [机器人]成员群恢复（事件）
@@ -1658,23 +1731,39 @@ public record GroupTalkativeChangePack : PackBase
     /// </summary>
     public long id { get; set; }
     /// <summary>
-    /// 当前龙王
-    /// </summary>
-    public long now { get; set; }
-    /// <summary>
     /// 先前龙王
     /// </summary>
     public long old { get; set; }
+    /// <summary>
+    /// 当前龙王
+    /// </summary>
+    public long now { get; set; }
 }
 /// <summary>
 /// 86 [机器人]其他客户端上线（事件）
 /// </summary>
-public record OtherClientOnlineEventPack : OtherClientOfflineEventPack
+public record OtherClientOnlineEventPack : PackBase
 {
+    /// <summary>
+    /// 设备Id
+    /// </summary>
+    public int appId { get; set; }
     /// <summary>
     /// 设备类型
     /// </summary>
     public string kind { get; set; }
+    /// <summary>
+    /// 设备平台
+    /// </summary>
+    public string platform { get; set; }
+    /// <summary>
+    /// 设备名字
+    /// </summary>
+    public string deviceName { get; set; }
+    /// <summary>
+    /// 设备类型
+    /// </summary>
+    public string deviceKind { get; set; }
 }
 /// <summary>
 /// 87 [机器人]其他客户端离线（事件）
@@ -1686,7 +1775,7 @@ public record OtherClientOfflineEventPack : PackBase
     /// </summary>
     public int appId { get; set; }
     /// <summary>
-    /// 设备类型
+    /// 设备平台
     /// </summary>
     public string platform { get; set; }
     /// <summary>
@@ -1701,8 +1790,24 @@ public record OtherClientOfflineEventPack : PackBase
 /// <summary>
 /// 88 [机器人]其他客户端发送消息给 Bot（事件）
 /// </summary>
-public record OtherClientMessageEventPack : OtherClientOfflineEventPack
+public record OtherClientMessageEventPack : PackBase
 {
+    /// <summary>
+    /// 设备ID
+    /// </summary>
+    public int appId { get; set; }
+    /// <summary>
+    /// 设备平台
+    /// </summary>
+    public string platform { get; set; }
+    /// <summary>
+    /// 设备名字
+    /// </summary>
+    public string deviceName { get; set; }
+    /// <summary>
+    /// 设备类型
+    /// </summary>
+    public string deviceKind { get; set; }
     /// <summary>
     /// 信息
     /// </summary>
@@ -1739,7 +1844,7 @@ public record GetImageUrlPack : PackBase
 /// <summary>
 /// 91 [插件]获取群成员信息
 /// </summary>
-public record GetMemberInfo : PackBase
+public record GetMemberInfoPack : PackBase
 {
     /// <summary>
     /// 群号
@@ -1822,6 +1927,18 @@ public record GroupSetEssenceMessagePack : PackBase
 public record MessageBuffPack : PackBase
 {
     /// <summary>
+    /// 发送目标
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 发送目标
+    /// </summary>
+    public long fid { get; set; }
+    /// <summary>
+    /// 发送对象类型
+    /// </summary>
+    public int type;
+    /// <summary>
     /// 是否发送
     /// </summary>
     public bool send { get; set; }
@@ -1834,17 +1951,9 @@ public record MessageBuffPack : PackBase
     /// </summary>
     public string imgurl { get; set; }
     /// <summary>
-    /// 发送对象类型
+    /// 图片数据
     /// </summary>
-    public int type;
-    /// <summary>
-    /// 发送目标
-    /// </summary>
-    public long id { get; set; }
-    /// <summary>
-    /// 发送目标
-    /// </summary>
-    public long fid { get; set; }
+    public byte[] imgData { get; set; }
 }
 
 /// <summary>
@@ -2228,7 +2337,8 @@ public record StrangerMessagePostSendEventPack : FriendMessagePostSendEventPack
 
 }
 /// <summary>
-/// 124 [机器人]陌生人关系改变（事件）
+/// 124 [机器人]陌生人关系改变->删除（事件）
+/// 125 [机器人]陌生人关系改变->朋友（事件）
 /// </summary>
 public record StrangerRelationChangePack : PackBase
 {
@@ -2241,7 +2351,24 @@ public record StrangerRelationChangePack : PackBase
     /// </summary>
     public int type { get; set; }
 }
-
+/// <summary>
+/// 126 [插件]发送好友语音
+/// </summary>
+public record SendFriendSoundPack : PackBase
+{
+    /// <summary>
+    /// QQ号
+    /// </summary>
+    public long id { get; set; }
+    /// <summary>
+    /// 语音内容
+    /// </summary>
+    public byte[] data { get; set; }
+    /// <summary>
+    /// QQ号组
+    /// </summary>
+    public List<long> ids { get; set; }
+}
 public static class BuildPack
 {
     /// <summary>
@@ -2423,18 +2550,21 @@ public partial class RobotSDK
         { 57, typeof(GroupGetMemberInfoPack) },
         { 58, typeof(GroupGetSettingPack) },
         { 59, typeof(EventCallPack) },
-        //60-63无
+        //60无
+        { 61, typeof(SendGroupPrivateImagePack) },
+        { 62, typeof(SendGroupPrivateImagePack)},
+        { 63, typeof(SendFriendImagePack)},
         { 64, typeof(GroupKickMemberPack) },
         { 65, typeof(GroupMuteMemberPack) },
         { 66, typeof(GroupUnmuteMemberPack) },
         { 67, typeof(GroupMuteAllPack) },
         { 68, typeof(GroupUnmuteAllPack) },
-        { 69, typeof(GroupSetMemberCard) },
+        { 69, typeof(GroupSetMemberCardPack) },
         { 70, typeof(GroupSetNamePack) },
         { 71, typeof(ReCallMessagePack) },
         { 72, typeof(FriendInputStatusChangedEventPack) },
         { 73, typeof(FriendNickChangedEventPack) },
-        //74无
+        { 74, typeof(SendGroupSoundPack) },
         { 75, typeof(SendGroupImageFilePack) },
         { 76, typeof(SendGroupPrivateImageFilePack) },
         { 77, typeof(SendFriendImageFilePack) },
@@ -2451,7 +2581,7 @@ public partial class RobotSDK
         { 88, typeof(OtherClientMessageEventPack) },
         { 89, typeof(GroupMessageSyncEventPack) },
         { 90, typeof(GetImageUrlPack) },
-        { 91, typeof(GetMemberInfo) },
+        { 91, typeof(GetMemberInfoPack) },
         { 92, typeof(GetFriendInfoPack) },
         { 93, typeof(SendMusicSharePack) },
         { 94, typeof(GroupSetEssenceMessagePack) },
@@ -2484,7 +2614,9 @@ public partial class RobotSDK
         { 121, typeof(SendStrangerSoundFilePack) },
         { 122, typeof(StrangerMessagePreSendEventPack) },
         { 123, typeof(StrangerMessagePostSendEventPack) },
-        { 124, typeof(StrangerRelationChangePack) }
+        { 124, typeof(StrangerRelationChangePack) },
+        { 125, typeof(StrangerRelationChangePack) },
+        { 126, typeof(SendFriendSoundPack) }
     };
 }
 

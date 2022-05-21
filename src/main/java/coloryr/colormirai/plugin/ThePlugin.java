@@ -108,7 +108,7 @@ public class ThePlugin {
                         //52 [插件]发送群消息
                         case 52: {
                             SendGroupMessagePack pack = (SendGroupMessagePack) task.pack;
-                            BotSendMessage.sendGroupMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
+                            BotSendMessage.sendGroupMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
                             break;
                         }
                         //53 [插件]发送私聊消息
@@ -120,7 +120,7 @@ public class ThePlugin {
                         //54 [插件]发送好友消息
                         case 54: {
                             SendFriendMessagePack pack = (SendFriendMessagePack) task.pack;
-                            BotSendMessage.sendFriendMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
+                            BotSendMessage.sendFriendMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
                             break;
                         }
                         //55 [插件]获取群列表
@@ -185,7 +185,7 @@ public class ThePlugin {
                         //61 [插件]发送图片到群
                         case 61: {
                             SendGroupImagePack pack = (SendGroupImagePack) task.pack;
-                            BotSendImage.sendGroupImage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data);
+                            BotSendImage.sendGroupImage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
                             break;
                         }
                         //62 [插件]发送图片到私聊

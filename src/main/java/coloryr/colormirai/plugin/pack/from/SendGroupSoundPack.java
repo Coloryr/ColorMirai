@@ -13,7 +13,7 @@ public class SendGroupSoundPack extends PackBase {
      */
     public long id;
     /**
-     * 文件路径
+     * 文件内容
      */
     public byte[] data;
     /**

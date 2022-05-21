@@ -16,4 +16,8 @@ public class SendFriendMessagePack extends PackBase {
      * 消息
      */
     public List<String> message;
+    /**
+     * QQ号组
+     */
+    public List<Long> ids;
 }
