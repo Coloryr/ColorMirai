@@ -179,7 +179,7 @@ public class NettyThread implements IPluginSocket {
                         }
                         //69 [插件]设置群名片
                         case 69: {
-                            plugin.addPack(new PluginPack(PackDecode.groupSetMemberCard(task.data), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.groupSetMemberCardPack(task.data), task.index));
                             break;
                         }
                         //70 [插件]设置群名
@@ -234,7 +234,7 @@ public class NettyThread implements IPluginSocket {
                         }
                         //91 [插件]获取群成员信息
                         case 91: {
-                            plugin.addPack(new PluginPack(PackDecode.getMemberInfo(task.data), task.index));
+                            plugin.addPack(new PluginPack(PackDecode.getMemberInfoPack(task.data), task.index));
                             break;
                         }
                         //92 [插件]获取朋友信息

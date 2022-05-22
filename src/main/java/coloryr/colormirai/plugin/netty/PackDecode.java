@@ -175,7 +175,7 @@ public class PackDecode {
         return pack;
     }
 
-    public static GroupSetMemberCardPack groupSetMemberCard(ByteBuf buff) {
+    public static GroupSetMemberCardPack groupSetMemberCardPack(ByteBuf buff) {
         GroupSetMemberCardPack pack = new GroupSetMemberCardPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
@@ -202,7 +202,7 @@ public class PackDecode {
     public static SendGroupSoundPack sendGroupSoundPack(ByteBuf buff) {
         SendGroupSoundPack pack = new SendGroupSoundPack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         pack.data = readBytes(buff);
         pack.ids = readLongList(buff);
         return pack;
@@ -211,7 +211,7 @@ public class PackDecode {
     public static SendGroupImageFilePack sendGroupImageFilePack(ByteBuf buff) {
         SendGroupImageFilePack pack = new SendGroupImageFilePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         pack.file = readString(buff);
         pack.ids = readLongList(buff);
         return pack;
@@ -220,8 +220,8 @@ public class PackDecode {
     public static SendGroupPrivateImageFilePack sendGroupPrivateImageFilePack(ByteBuf buff) {
         SendGroupPrivateImageFilePack pack = new SendGroupPrivateImageFilePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
-        pack.fid = buff.readInt();
+        pack.id = buff.readLong();
+        pack.fid = buff.readLong();
         pack.file = readString(buff);
         return pack;
     }
@@ -229,7 +229,7 @@ public class PackDecode {
     public static SendFriendImageFilePack sendFriendImageFilePack(ByteBuf buff) {
         SendFriendImageFilePack pack = new SendFriendImageFilePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         pack.file = readString(buff);
         pack.ids = readLongList(buff);
         return pack;
@@ -238,7 +238,7 @@ public class PackDecode {
     public static SendGroupSoundFilePack sendGroupSoundFilePack(ByteBuf buff) {
         SendGroupSoundFilePack pack = new SendGroupSoundFilePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         pack.file = readString(buff);
         pack.ids = readLongList(buff);
         return pack;
@@ -247,14 +247,14 @@ public class PackDecode {
     public static SendFriendNudgePack sendFriendNudgePack(ByteBuf buff) {
         SendFriendNudgePack pack = new SendFriendNudgePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         return pack;
     }
 
     public static SendGroupMemberNudgePack sendGroupMemberNudgePack(ByteBuf buff) {
         SendGroupMemberNudgePack pack = new SendGroupMemberNudgePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.id = buff.readLong();
         pack.fid = buff.readLong();
         return pack;
     }
@@ -266,7 +266,7 @@ public class PackDecode {
         return pack;
     }
 
-    public static GetMemberInfoPack getMemberInfo(ByteBuf buff) {
+    public static GetMemberInfoPack getMemberInfoPack(ByteBuf buff) {
         GetMemberInfoPack pack = new GetMemberInfoPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();

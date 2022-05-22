@@ -11,10 +11,6 @@ public class MessageRecallEventBPack extends PackBase {
      */
     public long id;
     /**
-     * 消息ID
-     */
-    public int[] mid;
-    /**
      * 时间
      */
     public int time;
@@ -26,6 +22,10 @@ public class MessageRecallEventBPack extends PackBase {
      * 撤回者
      */
     public long oid;
+    /**
+     * 消息ID
+     */
+    public int[] mid;
 
     public MessageRecallEventBPack(long qq, long id, long fid, int[] mid, int time, long oid) {
         this.qq = qq;

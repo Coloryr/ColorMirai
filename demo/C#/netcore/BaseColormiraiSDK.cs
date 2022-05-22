@@ -186,7 +186,7 @@ public enum Sex
 /// </summary>
 public enum MemberPermission
 {
-    MEMBER,
+    MEMBER = 0,
     ADMINISTRATOR,
     OWNER
 }
@@ -200,16 +200,49 @@ public record GroupAnnouncement
     /// 发送者ID
     /// </summary>
     public long senderId;
+    /// <summary>
+    /// 公告ID
+    /// </summary>
     public string fid;
+    /// <summary>
+    /// 有人都已确认
+    /// </summary>
     public bool allConfirmed;
+    /// <summary>
+    /// 为已经确认的成员数量
+    /// </summary>
     public int confirmedMembersCount;
+    /// <summary>
+    /// 公告发出的时间
+    /// </summary>
     public long publicationTime;
+    /// <summary>
+    /// 内容
+    /// </summary>
     public string content;
+    /// <summary>
+    /// 图片
+    /// </summary>
     public string image;
+    /// <summary>
+    /// 是否发送给新成员
+    /// </summary>
     public bool sendToNewMember;
+    /// <summary>
+    /// 置顶
+    /// </summary>
     public bool isPinned;
+    /// <summary>
+    /// 修改昵称
+    /// </summary>
     public bool showEditCard;
+    /// <summary>
+    /// 使用弹窗
+    /// </summary>
     public bool showPopup;
+    /// <summary>
+    /// 需要群成员确认
+    /// </summary>
     public bool requireConfirmation;
 }
 /// <summary>
@@ -228,11 +261,7 @@ public record GroupFileInfo
     /// <summary>
     /// 文件路径
     /// </summary>
-    public string path { get; set; }
-    /// <summary>
-    /// 父层文件信息
-    /// </summary>
-    public GroupFileInfo parent { get; set; }
+    public string absolutePath { get; set; }
     /// <summary>
     /// 是否是文件
     /// </summary>
@@ -240,15 +269,11 @@ public record GroupFileInfo
     /// <summary>
     /// 是否是文件夹
     /// </summary>
-    public bool isDirectory { get; set; }
+    public bool isFolder { get; set; }
     /// <summary>
     /// 文件大小
     /// </summary>
-    public long length { get; set; }
-    /// <summary>
-    /// 下载次数
-    /// </summary>
-    public int downloadTimes { get; set; }
+    public long size { get; set; }
     /// <summary>
     /// 上传者QQ号
     /// </summary>
@@ -261,6 +286,10 @@ public record GroupFileInfo
     /// 上次修改时间
     /// </summary>
     public long lastModifyTime { get; set; }
+    /// <summary>
+    /// 文件到期时间
+    /// </summary>
+    public long expiryTime { get; set; }
     /// <summary>
     /// SHA1
     /// </summary>
@@ -295,6 +324,10 @@ public record UserProfile
     /// 性别
     /// </summary>
     public Sex sex { get; set; }
+    /// <summary>
+    /// 个性签名
+    /// </summary>
+    public string sign { get; set; }
 }
 /// <summary>
 /// 群信息
@@ -577,6 +610,10 @@ public record FriendAddEventPack : PackBase
     /// 好友QQ号
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 昵称
+    /// </summary>
+    public string nick { get; set; }
 }
 /// <summary>
 /// 19 [机器人]好友头像修改（事件）
@@ -829,6 +866,10 @@ public record ImageUploadEventAPack : PackBase
     /// 目标ID
     /// </summary>
     public long id { get; set; }
+    /// <summary>
+    /// 目标ID
+    /// </summary>
+    public long fid { get; set; }
     /// <summary>
     /// 图片ID
     /// </summary>
@@ -1092,10 +1133,6 @@ public record MessageRecallEventBPack : PackBase
     /// </summary>
     public long id { get; set; }
     /// <summary>
-    /// 消息ID
-    /// </summary>
-    public int[] mid { get; set; }
-    /// <summary>
     /// 时间
     /// </summary>
     public int time { get; set; }
@@ -1107,6 +1144,10 @@ public record MessageRecallEventBPack : PackBase
     /// 撤回者
     /// </summary>
     public long oid { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] mid { get; set; }
 }
 /// <summary>
 /// 46 [机器人]一个账号请求添加机器人为好友（事件）
@@ -2693,7 +2734,7 @@ public partial class RobotSDK
     /// 设置链接方式
     /// </summary>
     /// <param name="pipe"></param>
-    public void SetPipe(IColorMiraiPipe pipe) 
+    public void SetPipe(IColorMiraiPipe pipe)
     {
         Pipe = pipe;
     }

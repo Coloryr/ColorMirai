@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using WebSocketSharp;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace ColoryrSDK;
 
@@ -30,7 +30,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
         thread = new(Read);
     }
 
-    private void Read() 
+    private void Read()
     {
         int time = 0;
         while (robot.IsRun)
@@ -100,7 +100,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
         }
     }
 
-    private void OnData(object sender, MessageEventArgs message) 
+    private void OnData(object sender, MessageEventArgs message)
     {
         string temp = null;
         if (message.IsText)
@@ -166,9 +166,9 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
 
     public void SendStop()
     {
-        client.Send(JsonConvert.SerializeObject(new PackTask 
+        client.Send(JsonConvert.SerializeObject(new PackTask
         {
-            index = 60
+            index = 127
         }));
     }
 

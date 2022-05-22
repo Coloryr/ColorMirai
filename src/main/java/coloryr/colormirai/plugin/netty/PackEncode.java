@@ -68,6 +68,7 @@ public class PackEncode {
         buf.writeLong(info.senderId);
         writeString(buf, info.fid);
         buf.writeBoolean(info.allConfirmed);
+        buf.writeInt(info.confirmedMembersCount);
         buf.writeLong(info.publicationTime);
         writeString(buf, info.content);
         writeString(buf, info.image);
@@ -129,6 +130,7 @@ public class PackEncode {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(58);
         buf.writeLong(pack.qq);
+        buf.writeLong(pack.id);
         buf.writeBoolean(pack.setting.isMuteAll());
         buf.writeBoolean(pack.setting.isAllowMemberInvite());
         buf.writeBoolean(pack.setting.isAutoApproveEnabled());
@@ -589,11 +591,11 @@ public class PackEncode {
         buf.writeByte(44);
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
+        buf.writeInt(pack.time);
         buf.writeInt(pack.mid.length);
         for (int item : pack.mid) {
             buf.writeInt(item);
         }
-        buf.writeInt(pack.time);
         return buf;
     }
 
@@ -602,13 +604,13 @@ public class PackEncode {
         buf.writeByte(45);
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
+        buf.writeInt(pack.time);
+        buf.writeLong(pack.fid);
+        buf.writeLong(pack.oid);
         buf.writeInt(pack.mid.length);
         for (int item : pack.mid) {
             buf.writeInt(item);
         }
-        buf.writeInt(pack.time);
-        buf.writeLong(pack.fid);
-        buf.writeLong(pack.oid);
         return buf;
     }
 

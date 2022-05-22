@@ -53,8 +53,8 @@ void State(StateType type)
 
 RobotConfig config = new()
 {
-    IP = "ws://127.0.0.1:23334",
-    Port = 23333,
+    IP = "127.0.0.1",
+    Port = 23335,
     Name = "test",
     Pack = new() { 46, 49, 50, 51, 116 },
     RunQQ = 0,
@@ -65,7 +65,7 @@ RobotConfig config = new()
 };
 
 robot.Set(config);
-robot.SetPipe(new ColorMiraiWebSocket(robot));
+robot.SetPipe(new ColorMiraiNetty(robot));
 robot.Start();
 
 while (!robot.IsConnect) ;

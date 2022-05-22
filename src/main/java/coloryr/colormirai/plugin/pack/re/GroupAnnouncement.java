@@ -37,7 +37,7 @@ public class GroupAnnouncement {
      */
     public boolean sendToNewMember;
     /**
-     * 置顶.
+     * 置顶
      */
     public boolean isPinned;
     /**
