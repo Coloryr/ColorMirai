@@ -626,7 +626,7 @@ public class ThePlugin {
             if (image != null)
                 item.message = item.message.plus(image);
         }
-        if (temp.imgData != null) {
+        if (temp.imgData != null && temp.imgData.length != 0) {
             Image image = BotUpload.upImage(bot, temp.imgData);
             item.message = item.message.plus(image);
         }

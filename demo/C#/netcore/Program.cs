@@ -16,6 +16,8 @@ void Message(byte type, object data)
         case 49:
             {
                 var pack = data as GroupMessageEventPack;
+                if (pack.id != 571239090)
+                    break;
                 Console.WriteLine($"id = {pack.id}");
                 Console.WriteLine($"fid = {pack.fid}");
                 Console.WriteLine($"message = ");
@@ -51,7 +53,7 @@ void State(StateType type)
 
 RobotConfig config = new()
 {
-    IP = "127.0.0.1",
+    IP = "ws://127.0.0.1:23334",
     Port = 23333,
     Name = "test",
     Pack = new() { 46, 49, 50, 51, 116 },
@@ -63,6 +65,7 @@ RobotConfig config = new()
 };
 
 robot.Set(config);
+robot.SetPipe(new ColorMiraiWebSocket(robot));
 robot.Start();
 
 while (!robot.IsConnect) ;

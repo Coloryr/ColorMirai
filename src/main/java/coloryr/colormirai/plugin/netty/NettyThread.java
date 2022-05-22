@@ -73,12 +73,12 @@ public class NettyThread implements IPluginSocket {
                 if (StartPack.qqList != null) {
                     plugin.addQQs(StartPack.qqList);
                 }
-                if (StartPack.runQQ != 0 && !BotStart.getBotsKey().contains(StartPack.runQQ)) {
-                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.runQQ);
+                if (StartPack.qq != 0 && !BotStart.getBotsKey().contains(StartPack.qq)) {
+                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.qq);
                     context.close();
                     return;
                 }
-                plugin.setRunQQ(StartPack.runQQ);
+                plugin.setRunQQ(StartPack.qq);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
                 send(PackEncode.startPack(BotStart.getBotsKey()));
             } else {

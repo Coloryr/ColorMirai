@@ -2,156 +2,184 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ColoryrSDK;
 
-public class ColormiraiSocket : IColormiraiPipe
+public class ColorMiraiSocket : IColorMiraiPipe
 {
-    private ConcurrentBag<byte[]> QueueSend;
-    private Socket Socket;
-    private RobotSDK Robot;
-    private Thread ReadThread;
+    private ConcurrentBag<byte[]> queue;
+    private Socket socket;
+    private RobotSDK robot;
+    private Thread thread;
 
-    public ColormiraiSocket(RobotSDK robot) 
+    public ColorMiraiSocket(RobotSDK robot)
     {
-        Robot = robot;
-        QueueSend = new();
-        ReadThread = new(Read);
+        this.robot = robot;
+        queue = new();
+        thread = new(Read);
     }
 
-    private void Read() 
+    private void Read()
     {
         int time = 0;
-        while (Robot.IsRun)
+        while (robot.IsRun)
         {
             try
             {
-                if (!Robot.IsConnect)
+                if (!robot.IsConnect)
                 {
                     ReConnect();
-                    Robot.IsFirst = false;
-                    Robot.Times = 0;
-                    Robot.RobotStateEvent.Invoke(StateType.Connect);
+                    robot.IsFirst = false;
+                    robot.Times = 0;
+                    robot.RobotStateEvent.Invoke(StateType.Connect);
                 }
-                else if (Socket.Available > 0)
+                else if (socket.Available > 0)
                 {
-                    var data = new byte[Socket.Available];
-                    Socket.Receive(data);
+                    var data = new byte[socket.Available];
+                    socket.Receive(data);
                     data[^1] = 0;
                     var data1 = Encoding.UTF8.GetString(data);
                     byte index = data[^1];
                     if (RobotSDK.PackType.TryGetValue(index, out var type))
                     {
-                        Robot.AddRead(JsonConvert.DeserializeObject(data1, type), index);
+                        robot.AddRead(JsonConvert.DeserializeObject(data1, type), index);
                     }
                 }
-                else if (Robot.Config.Check && time >= 20)
+                else if (robot.Config.Check && time >= 20)
                 {
                     time = 0;
-                    AddPack(null, 60);
+                    AddSend(null, 60);
                 }
-                else if (QueueSend.TryTake(out byte[] Send))
+                else if (queue.TryTake(out byte[] Send))
                 {
-                    Socket.Send(Send);
+                    socket.Send(Send);
                 }
                 time++;
                 Thread.Sleep(50);
             }
             catch (Exception e)
             {
-                Robot.IsConnect = false;
-                Robot.RobotStateEvent.Invoke(StateType.Disconnect);
-                if (Robot.IsFirst)
+                robot.IsConnect = false;
+                robot.RobotStateEvent.Invoke(StateType.Disconnect);
+                if (robot.IsFirst)
                 {
-                    Robot.IsRun = false;
-                    Robot.LogError("机器人连接失败");
+                    robot.IsRun = false;
+                    robot.LogError("机器人连接失败");
                 }
                 else
                 {
-                    Robot.Times++;
-                    if (Robot.Times == 10)
+                    robot.Times++;
+                    if (robot.Times == 10)
                     {
-                        Robot.IsRun = false;
-                        Robot.LogError("重连失败次数过多");
+                        robot.IsRun = false;
+                        robot.LogError("重连失败次数过多");
                     }
-                    Robot.LogError("机器人连接失败");
-                    Robot.LogError(e);
-                    Robot.IsConnect = false;
-                    Robot.LogError($"机器人{Robot.Config.Time}毫秒后重连");
-                    Thread.Sleep(Robot.Config.Time);
-                    Robot.LogError("机器人重连中");
+                    robot.LogError("机器人连接失败");
+                    robot.LogError(e);
+                    robot.IsConnect = false;
+                    robot.LogError($"机器人{robot.Config.Time}毫秒后重连");
+                    Thread.Sleep(robot.Config.Time);
+                    robot.LogError("机器人重连中");
                 }
             }
         }
     }
 
-    public void AddPack(PackBase pack, byte index)
+    public void AddSend(PackBase pack, byte index)
     {
-        byte[] temp = Array.Empty<byte>();
+        byte[] temp;
         if (index == 60)
         {
             temp = BuildPack.Build(new object(), 60);
         }
-        else if (index == 61) 
+        else if (index == 61)
         {
             var pack1 = pack as SendGroupImagePack;
             temp = BuildPack.BuildImage(pack1.qq, pack1.id, 0, Convert.ToBase64String(pack1.data), 61, pack1.ids);
         }
+        else if (index == 62)
+        {
+            var pack1 = pack as SendGroupPrivateImagePack;
+            temp = BuildPack.BuildImage(pack1.qq, pack1.id, pack1.fid, Convert.ToBase64String(pack1.data), 62, null);
+        }
+        else if (index == 63)
+        {
+            var pack1 = pack as SendFriendImagePack;
+            temp = BuildPack.BuildImage(pack1.qq, pack1.id, 0, Convert.ToBase64String(pack1.data), 63, pack1.ids);
+        }
+        else if (index == 74)
+        {
+            var pack1 = pack as SendFriendImagePack;
+            temp = BuildPack.BuildSound(pack1.qq, pack1.id, Convert.ToBase64String(pack1.data), 74, pack1.ids);
+        }
+        else if (index == 95)
+        {
+            var pack1 = pack as MessageBuffPack;
+            pack1.imgData = null;
+            temp = BuildPack.Build(pack1, 95);
+        }
+        else if (index == 126)
+        {
+            var pack1 = pack as SendFriendSoundPack;
+            temp = BuildPack.BuildSound(pack1.qq, pack1.id, Convert.ToBase64String(pack1.data), 126, pack1.ids);
+        }
+        else
+        {
+            temp = BuildPack.Build(pack, index);
+        }
 
-        QueueSend.Add(temp);
+        queue.Add(temp);
     }
 
-    public void StartRead() 
+    public void StartRead()
     {
-        
+        thread.Start();
     }
     public void ReConnect()
     {
-        if (Socket != null)
-            Socket.Close();
+        if (socket != null)
+            socket.Close();
 
-        Robot.RobotStateEvent.Invoke(StateType.Connecting);
+        robot.RobotStateEvent.Invoke(StateType.Connecting);
 
-        Socket = new(SocketType.Stream, ProtocolType.Tcp);
-        Socket.Connect(Robot.Config.IP, Robot.Config.Port);
+        socket = new(SocketType.Stream, ProtocolType.Tcp);
+        socket.Connect(robot.Config.IP, robot.Config.Port);
 
-        var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(Robot.PackStart) + " ");
+        var data = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(robot.PackStart) + " ");
         data[^1] = 0;
 
-        Socket.Send(data);
+        socket.Send(data);
 
-        while (Socket.Available == 0)
+        while (socket.Available == 0)
         {
             Thread.Sleep(10);
         }
 
-        data = new byte[Socket.Available];
-        Socket.Receive(data);
+        data = new byte[socket.Available];
+        socket.Receive(data);
         string temp = Encoding.UTF8.GetString(data, 0, data.Length - 1);
-        Robot.QQs = JsonConvert.DeserializeObject<List<long>>(temp);
+        robot.QQs = JsonConvert.DeserializeObject<List<long>>(temp);
 
-        QueueSend.Clear();
-        Robot.LogOut("机器人已连接");
-        Robot.IsConnect = true;
+        queue.Clear();
+        robot.LogOut("机器人已连接");
+        robot.IsConnect = true;
     }
 
     public void SendStop()
     {
-        if (!Robot.IsConnect)
+        if (!robot.IsConnect)
             return;
         var data = BuildPack.Build(new object(), 127);
-        Socket.Send(data);
+        socket.Send(data);
     }
 
-    public void Stop() 
+    public void Stop()
     {
         SendStop();
-        if (Socket != null)
-            Socket.Close();
+        if (socket != null)
+            socket.Close();
     }
 }

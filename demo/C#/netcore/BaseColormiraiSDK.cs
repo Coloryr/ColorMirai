@@ -2,10 +2,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-using ASocket = System.Net.Sockets.Socket;
 //请用net6运行
 //并安装Newtonsoft.Json
 namespace ColoryrSDK;
@@ -364,7 +362,7 @@ public abstract record PackBase
 /// <summary>
 /// 0 [插件]插件开始连接
 /// </summary>
-public record StartPack
+public record StartPack : PackBase
 {
     /// <summary>
     /// 插件名字
@@ -382,10 +380,6 @@ public record StartPack
     /// 监听的QQ号，可以为null
     /// </summary>
     public List<long> qqList { get; set; }
-    /// <summary>
-    /// 运行的QQ，0为不指定
-    /// </summary>
-    public long runQQ { get; set; }
 }
 /// <summary>
 /// 1 [机器人]图片上传前. 可以阻止上传（事件）
@@ -2426,9 +2420,19 @@ public static class BuildPack
     /// <param name="sound">音频BASE64</param>
     /// <param name="index">包ID</param>
     /// <returns>构建好的包</returns>
-    public static byte[] BuildSound(long qq, long id, string sound, byte index)
+    public static byte[] BuildSound(long qq, long id, string sound, byte index, List<long> ids)
     {
         string temp = $"id={id}&qq={qq}&sound={sound}";
+        if (ids != null)
+        {
+            string temp1 = "ids=";
+            foreach (var item in ids)
+            {
+                temp1 += $"{item},";
+            }
+            temp1 = temp1[..^1];
+            temp += temp1 + "&";
+        }
         byte[] data = Encoding.UTF8.GetBytes(temp + " ");
         data[^1] = index;
         return data;
@@ -2630,9 +2634,9 @@ public partial class RobotSDK
     };
 }
 
-public interface IColormiraiPipe
+public interface IColorMiraiPipe
 {
-    void AddPack(PackBase pack, byte index);
+    void AddSend(PackBase pack, byte index);
     void ReConnect();
     void SendStop();
     void Stop();
@@ -2682,8 +2686,17 @@ public partial class RobotSDK
     private partial bool CallTop(byte index, object data);
     private Thread DoThread;
     private ConcurrentBag<RobotTask> QueueRead;
-    
-    private IColormiraiPipe Pipe;
+
+    private IColorMiraiPipe Pipe;
+
+    /// <summary>
+    /// 设置链接方式
+    /// </summary>
+    /// <param name="pipe"></param>
+    public void SetPipe(IColorMiraiPipe pipe) 
+    {
+        Pipe = pipe;
+    }
 
     /// <summary>
     /// 设置配置
@@ -2703,7 +2716,7 @@ public partial class RobotSDK
             reg = Config.Pack,
             groups = Config.Groups,
             qqList = Config.QQs,
-            runQQ = Config.RunQQ
+            qq = Config.RunQQ
         };
     }
     /// <summary>
@@ -2753,7 +2766,7 @@ public partial class RobotSDK
     /// </summary>
     /// <param name="pack">解析后的信息</param>
     /// <param name="index">包ID</param>
-    internal void AddRead(object pack, byte index) 
+    public void AddRead(object pack, byte index)
     {
         QueueRead.Add(new()
         {
@@ -2766,11 +2779,11 @@ public partial class RobotSDK
     /// 添加数据包
     /// </summary>
     /// <param name="data">数据包</param>
-    internal void AddTask(PackBase pack, byte index)
+    internal void AddSend(PackBase pack, byte index)
     {
-        Pipe.AddPack(pack, index);
+        Pipe.AddSend(pack, index);
     }
-    
+
     /// <summary>
     /// 停止机器人
     /// </summary>

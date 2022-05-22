@@ -59,12 +59,12 @@ public class SocketThread implements IPluginSocket {
                 if (StartPack.qqList != null) {
                     plugin.addQQs(StartPack.qqList);
                 }
-                if (StartPack.runQQ != 0 && !BotStart.getBotsKey().contains(StartPack.runQQ)) {
-                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.runQQ);
+                if (StartPack.qq != 0 && !BotStart.getBotsKey().contains(StartPack.qq)) {
+                    ColorMiraiMain.logger.warn("插件连接失败，没有运行的QQ：" + StartPack.qq);
                     socket.close();
                     return;
                 }
-                plugin.setRunQQ(StartPack.runQQ);
+                plugin.setRunQQ(StartPack.qq);
                 PluginUtils.addPlugin(plugin.getName(), plugin);
                 send(PackDo.buildPack(BotStart.getBotsKey(), 0));
             } else {
@@ -132,7 +132,7 @@ public class SocketThread implements IPluginSocket {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     String ids = formdata.get("ids");
                                     SendGroupImagePack pack = new SendGroupImagePack();
-                                    if(ids!=null) {
+                                    if (ids != null) {
                                         pack.ids = new ArrayList<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
@@ -177,7 +177,7 @@ public class SocketThread implements IPluginSocket {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     SendFriendImagePack pack = new SendFriendImagePack();
                                     String ids = formdata.get("ids");
-                                    if(ids!=null) {
+                                    if (ids != null) {
                                         pack.ids = new ArrayList<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
@@ -242,7 +242,7 @@ public class SocketThread implements IPluginSocket {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     SendGroupSoundPack pack = new SendGroupSoundPack();
                                     String ids = formdata.get("ids");
-                                    if(ids!=null) {
+                                    if (ids != null) {
                                         pack.ids = new ArrayList<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
@@ -444,7 +444,7 @@ public class SocketThread implements IPluginSocket {
                                     long qq = Long.parseLong(formdata.get("qq"));
                                     SendFriendSoundPack pack = new SendFriendSoundPack();
                                     String ids = formdata.get("ids");
-                                    if(ids!=null) {
+                                    if (ids != null) {
                                         pack.ids = new ArrayList<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));

@@ -29,7 +29,7 @@ public class InviteMemberJoinEventPack extends PackBase {
 
     public InviteMemberJoinEventPack(long qq, long id, long fid, String name, long ifid, String iname) {
         this.id = id;
-        this.qq= qq;
+        this.qq = qq;
         this.fid = fid;
         this.name = name;
         this.ifid = ifid;

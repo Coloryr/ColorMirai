@@ -31,6 +31,7 @@ dependencies {
     compile 'javax.servlet:javax.servlet-api:4.0.1'
     compile 'org.jline:jline:3.21.0'
     compile 'io.netty:netty-all:4.1.77.Final'
+    compile 'com.google.code.gson:gson:2.9.0'
 
     compile 'net.mamoe:mirai-console:2.11.0' // 后端
     compile 'net.mamoe:mirai-console-terminal:2.11.0'

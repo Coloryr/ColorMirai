@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace ColoryrSDK;
@@ -89,7 +88,7 @@ public partial class RobotSDK
                 }
             case 91:
                 {
-                    var pack = JsonConvert.DeserializeObject<MemberInfoPack>(data);
+                    var pack = data as MemberInfoPack;
                     var key = new QQMember() { QQ = pack.qq, Group = pack.id, Member = pack.fid };
                     if (GetMemberInfoMap.TryGetValue(key, out var action))
                     {
@@ -100,7 +99,7 @@ public partial class RobotSDK
                 }
             case 92:
                 {
-                    var pack = JsonConvert.DeserializeObject<FriendInfoPack>(data);
+                    var pack = data as FriendInfoPack;
                     var key = new QQFriend() { QQ = pack.qq, Friend = pack.id };
                     if (GetFriendInfoMap.TryGetValue(key, out var action))
                     {
@@ -111,7 +110,7 @@ public partial class RobotSDK
                 }
             case 101:
                 {
-                    var pack = JsonConvert.DeserializeObject<GroupFilesPack>(data);
+                    var pack = data as GroupFilesPack;
                     var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
                     if (GetGroupFilesMap.TryGetValue(key, out var action))
                     {
@@ -122,7 +121,7 @@ public partial class RobotSDK
                 }
             case 109:
                 {
-                    var pack = JsonConvert.DeserializeObject<GroupAnnouncementsPack>(data);
+                    var pack = data as GroupAnnouncementsPack;
                     var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
                     if (GetGroupAnnouncementsMap.TryGetValue(key, out var action))
                     {
@@ -143,11 +142,10 @@ public partial class RobotSDK
     public void GetGroups(long qq, Action<ListGroupPack> res)
     {
         GetGroupsMap.Add(qq, res);
-        var data = BuildPack.Build(new GetPack()
+        AddSend(new GetPack()
         {
             qq = qq
         }, 55);
-        AddTask(data);
     }
     /// <summary>
     /// 56 [插件]获取好友列表
@@ -157,11 +155,10 @@ public partial class RobotSDK
     public void GetFriends(long qq, Action<ListFriendPack> res)
     {
         GetFriendsMap.Add(qq, res);
-        var data = BuildPack.Build(new GetPack()
+        AddSend(new GetPack()
         {
             qq = qq
         }, 56);
-        AddTask(data);
     }
     /// <summary>
     /// 57 [插件]获取群成员
@@ -173,12 +170,11 @@ public partial class RobotSDK
     {
         var key = new QQGroup() { QQ = qq, Group = group };
         GetMembersMap.Add(key, res);
-        var data = BuildPack.Build(new GroupGetMemberInfoPack()
+        AddSend(new GroupGetMemberInfoPack()
         {
             qq = qq,
             id = group
         }, 57);
-        AddTask(data);
     }
     /// <summary>
     /// 58 [插件]获取群设置
@@ -190,12 +186,11 @@ public partial class RobotSDK
     {
         var key = new QQGroup() { QQ = qq, Group = group };
         GetGroupSettingMap.Add(key, res);
-        var data = BuildPack.Build(new GroupGetSettingPack()
+        AddSend(new GroupGetSettingPack()
         {
             qq = qq,
             id = group
         }, 58);
-        AddTask(data);
     }
     /// <summary>
     /// 54 [插件]发送好友消息
@@ -203,15 +198,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="friend">好友QQ号</param>
     /// <param name="message">消息</param>
-    public void SendFriendMessage(long qq, long friend, List<string> message)
+    public void SendFriendMessage(long qq, long friend, List<string> message, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendFriendMessagePack()
+        AddSend(new SendFriendMessagePack()
         {
             qq = qq,
             id = friend,
-            message = message
+            message = message,
+            ids = ids
         }, 54);
-        AddTask(data);
     }
     /// <summary>
     /// 52 [插件]发送群消息
@@ -219,15 +214,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="message">消息</param>
-    public void SendGroupMessage(long qq, long group, List<string> message)
+    public void SendGroupMessage(long qq, long group, List<string> message, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendGroupMessagePack()
+        AddSend(new SendGroupMessagePack()
         {
             qq = qq,
             id = group,
-            message = message
+            message = message,
+            ids = ids
         }, 52);
-        AddTask(data);
     }
 
     /// <summary>
@@ -239,14 +234,13 @@ public partial class RobotSDK
     /// <param name="message">消息</param>
     public void SendGroupTempMessage(long qq, long group, long member, List<string> message)
     {
-        var data = BuildPack.Build(new SendGroupPrivateMessagePack()
+        AddSend(new SendGroupPrivateMessagePack()
         {
             qq = qq,
             id = group,
             fid = member,
             message = message
         }, 53);
-        AddTask(data);
     }
 
     /// <summary>
@@ -258,14 +252,13 @@ public partial class RobotSDK
     /// <param name="arg">附加参数</param>
     public void EventCall(long qq, long eventid, int dofun, List<string> arg)
     {
-        var data = BuildPack.Build(new EventCallPack()
+        AddSend(new EventCallPack()
         {
             qq = qq,
             eventid = eventid,
             dofun = dofun,
             arg = arg
         }, 59);
-        AddTask(data);
     }
 
     public enum GroupCallType
@@ -338,15 +331,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="member">群员</param>
-    public void GroupDeleteMember(long qq, long group, long member)
+    public void GroupDeleteMember(long qq, long group, long member, bool black)
     {
-        var data = BuildPack.Build(new GroupKickMemberPack()
+        AddSend(new GroupKickMemberPack()
         {
             qq = qq,
             id = group,
-            fid = member
+            fid = member,
+            black = black
         }, 64);
-        AddTask(data);
     }
 
     /// <summary>
@@ -358,14 +351,13 @@ public partial class RobotSDK
     /// <param name="time">禁言时间</param>
     public void GroupMuteMember(long qq, long group, long member, int time)
     {
-        var data = BuildPack.Build(new GroupMuteMemberPack()
+        AddSend(new GroupMuteMemberPack()
         {
             qq = qq,
             id = group,
             fid = member,
             time = time
         }, 65);
-        AddTask(data);
     }
 
     /// <summary>
@@ -376,13 +368,12 @@ public partial class RobotSDK
     /// <param name="member">群员</param>
     public void GroupUnmuteMember(long qq, long group, long member)
     {
-        var data = BuildPack.Build(new GroupUnmuteMemberPack()
+        AddSend(new GroupUnmuteMemberPack()
         {
             qq = qq,
             id = group,
             fid = member
         }, 66);
-        AddTask(data);
     }
 
     /// <summary>
@@ -392,12 +383,11 @@ public partial class RobotSDK
     /// <param name="group">群号</param>
     public void GroupMuteAll(long qq, long group)
     {
-        var data = BuildPack.Build(new GroupMuteAllPack()
+        AddSend(new GroupMuteAllPack()
         {
             qq = qq,
             id = group
         }, 67);
-        AddTask(data);
     }
 
     /// <summary>
@@ -407,12 +397,11 @@ public partial class RobotSDK
     /// <param name="group">群号</param>
     public void GroupUnmuteAll(long qq, long group)
     {
-        var data = BuildPack.Build(new GroupUnmuteAllPack()
+        AddSend(new GroupUnmuteAllPack()
         {
             qq = qq,
             id = group
         }, 68);
-        AddTask(data);
     }
 
     /// <summary>
@@ -424,14 +413,13 @@ public partial class RobotSDK
     /// <param name="card">群名片</param>
     public void GroupSetMember(long qq, long group, long member, string card)
     {
-        var data = BuildPack.Build(new GroupSetMemberCardPack()
+        AddSend(new GroupSetMemberCardPack()
         {
             qq = qq,
             id = group,
             fid = member,
             card = card
         }, 69);
-        AddTask(data);
     }
 
     /// <summary>
@@ -442,13 +430,12 @@ public partial class RobotSDK
     /// <param name="name">群名字</param>
     public void GroupSetName(long qq, long group, string name)
     {
-        var data = BuildPack.Build(new GroupSetNamePack()
+        AddSend(new GroupSetNamePack()
         {
             qq = qq,
             id = group,
             name = name
         }, 70);
-        AddTask(data);
     }
 
     /// <summary>
@@ -458,12 +445,11 @@ public partial class RobotSDK
     /// <param name="id">消息ID</param>
     public void ReCallMessage(long qq, int id)
     {
-        var data = BuildPack.Build(new ReCallMessagePack()
+        AddSend(new ReCallMessagePack()
         {
             qq = qq,
             id = id
         }, 71);
-        AddTask(data);
     }
 
     /// <summary>
@@ -472,15 +458,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="file">文件位置</param>
-    public void SendGroupImageFile(long qq, long group, string file)
+    public void SendGroupImageFile(long qq, long group, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendGroupImageFilePack()
+        AddSend(new SendGroupImageFilePack()
         {
             qq = qq,
             id = group,
-            file = file
+            file = file,
+            ids = ids
         }, 75);
-        AddTask(data);
     }
 
     /// <summary>
@@ -492,14 +478,13 @@ public partial class RobotSDK
     /// <param name="file">文件位置</param>
     public void SendGroupPrivateImageFile(long qq, long group, long member, string file)
     {
-        var data = BuildPack.Build(new SendGroupPrivateImageFilePack()
+        AddSend(new SendGroupPrivateImageFilePack()
         {
             qq = qq,
             id = group,
             fid = member,
             file = file
         }, 76);
-        AddTask(data);
     }
 
     /// <summary>
@@ -508,16 +493,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="friend">好友QQ号</param>
     /// <param name="file">文件位置</param>
-    public void SendFriendImageFile(long qq, long friend, string file, List<long> ids)
+    public void SendFriendImageFile(long qq, long friend, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendFriendImageFilePack()
+        AddSend(new SendFriendImageFilePack()
         {
             qq = qq,
             id = friend,
             file = file,
             ids = ids
         }, 77);
-        AddTask(data);
     }
 
     /// <summary>
@@ -526,15 +510,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="file">文件位置</param>
-    public void SendGroupSoundFile(long qq, long group, string file)
+    public void SendGroupSoundFile(long qq, long group, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendGroupSoundFilePack()
+        AddSend(new SendGroupSoundFilePack()
         {
             qq = qq,
             id = group,
-            file = file
+            file = file,
+            ids = ids
         }, 78);
-        AddTask(data);
     }
 
     /// <summary>
@@ -544,12 +528,11 @@ public partial class RobotSDK
     /// <param name="friend">好友QQ号</param>
     public void SendFriendNudge(long qq, long friend)
     {
-        var data = BuildPack.Build(new SendFriendNudgePack()
+        AddSend(new SendFriendNudgePack()
         {
             qq = qq,
             id = friend
         }, 83);
-        AddTask(data);
     }
 
     /// <summary>
@@ -560,13 +543,12 @@ public partial class RobotSDK
     /// <param name="member">群员</param>
     public void SendGroupMemberNudge(long qq, long group, long member)
     {
-        var data = BuildPack.Build(new SendGroupMemberNudgePack()
+        AddSend(new SendGroupMemberNudgePack()
         {
             qq = qq,
             id = group,
             fid = member
         }, 84);
-        AddTask(data);
     }
 
     /// <summary>
@@ -578,12 +560,11 @@ public partial class RobotSDK
     public void GetImageUrls(long qq, string uuid, Action<string> res)
     {
         GetImageUrlMap.Add(uuid, res);
-        var data = BuildPack.Build(new GetImageUrlPack()
+        AddSend(new GetImageUrlPack()
         {
             qq = qq,
             uuid = uuid
         }, 90);
-        AddTask(data);
     }
     /// <summary>
     /// 91 [插件]获取群成员信息
@@ -596,13 +577,12 @@ public partial class RobotSDK
     {
         var key = new QQMember() { QQ = qq, Group = group, Member = member };
         GetMemberInfoMap.Add(key, res);
-        var data = BuildPack.Build(new GetMemberInfoPack()
+        AddSend(new GetMemberInfoPack()
         {
             qq = qq,
             id = group,
             fid = member
         }, 91);
-        AddTask(data);
     }
     /// <summary>
     /// 92 [插件]获取朋友信息
@@ -614,12 +594,11 @@ public partial class RobotSDK
     {
         var key = new QQFriend() { QQ = qq, Friend = friend };
         GetFriendInfoMap.Add(key, res);
-        var data = BuildPack.Build(new GetFriendInfoPack()
+        AddSend(new GetFriendInfoPack()
         {
             qq = qq,
             id = friend
         }, 92);
-        AddTask(data);
     }
 
     public enum MusicKind
@@ -650,7 +629,7 @@ public partial class RobotSDK
         SendToType type, string title, string summary, string jumpUrl,
         string pictureUrl, string musicUrl)
     {
-        var data = BuildPack.Build(new SendMusicSharePack()
+        AddSend(new SendMusicSharePack()
         {
             qq = qq,
             id = id,
@@ -663,7 +642,6 @@ public partial class RobotSDK
             pictureUrl = pictureUrl,
             musicUrl = musicUrl
         }, 93);
-        AddTask(data);
     }
 
     /// <summary>
@@ -674,13 +652,12 @@ public partial class RobotSDK
     /// <param name="mid">消息ID</param>
     public void GroupSetEssenceMessage(long qq, long group, int mid)
     {
-        var data = BuildPack.Build(new GroupSetEssenceMessagePack()
+        AddSend(new GroupSetEssenceMessagePack()
         {
             qq = qq,
             id = group,
             mid = mid
         }, 94);
-        AddTask(data);
     }
 
     /// <summary>
@@ -694,9 +671,9 @@ public partial class RobotSDK
     /// <param name="message">消息内容</param>
     /// <param name="send">是否发送</param>
     public void MessageBuff(long qq, long id, long fid, SendToType type,
-        string file, List<string> message, bool send)
+        string file, List<string> message, bool send, byte[] img = null)
     {
-        var data = BuildPack.Build(new MessageBuffPack()
+        AddSend(new MessageBuffPack()
         {
             qq = qq,
             id = id,
@@ -704,9 +681,9 @@ public partial class RobotSDK
             type = (int)type,
             imgurl = file,
             text = message,
-            send = send
+            send = send,
+            imgData = img
         }, 95);
-        AddTask(data);
     }
 
     /// <summary>
@@ -717,13 +694,12 @@ public partial class RobotSDK
     /// <param name="dice">点数</param>
     public void SendFriendDice(long qq, long friend, int dice)
     {
-        var data = BuildPack.Build(new SendFriendDicePack()
+        AddSend(new SendFriendDicePack()
         {
             qq = qq,
             id = friend,
             dice = dice
         }, 96);
-        AddTask(data);
     }
 
     /// <summary>
@@ -734,13 +710,12 @@ public partial class RobotSDK
     /// <param name="dice">点数</param>
     public void SendGroupDice(long qq, long group, int dice)
     {
-        var data = BuildPack.Build(new SendGroupDicePack()
+        AddSend(new SendGroupDicePack()
         {
             qq = qq,
             id = group,
             dice = dice
         }, 97);
-        AddTask(data);
     }
 
     /// <summary>
@@ -752,14 +727,13 @@ public partial class RobotSDK
     /// <param name="dice">点数</param>
     public void SendGroupPrivateDice(long qq, long group, long member, int dice)
     {
-        var data = BuildPack.Build(new SendGroupPrivateDicePack()
+        AddSend(new SendGroupPrivateDicePack()
         {
             qq = qq,
             id = group,
             fid = member,
             dice = dice
         }, 98);
-        AddTask(data);
     }
 
     /// <summary>
@@ -771,14 +745,13 @@ public partial class RobotSDK
     /// <param name="name">群文件名称</param>
     public void GroupAddFilePack(long qq, long group, string file, string name)
     {
-        var data = BuildPack.Build(new GroupAddFilePack()
+        AddSend(new GroupAddFilePack()
         {
             qq = qq,
             id = group,
             file = file,
             name = name
         }, 99);
-        AddTask(data);
     }
 
     /// <summary>
@@ -789,13 +762,12 @@ public partial class RobotSDK
     /// <param name="fid">群文件ID</param>
     public void GroupDeleteFile(long qq, long group, string fid)
     {
-        var data = BuildPack.Build(new GroupDeleteFilePack()
+        AddSend(new GroupDeleteFilePack()
         {
             qq = qq,
             id = group,
             fid = fid
         }, 100);
-        AddTask(data);
     }
 
     /// <summary>
@@ -808,12 +780,11 @@ public partial class RobotSDK
     {
         var key = new QQGroup() { QQ = qq, Group = group };
         GetGroupFilesMap.Add(key, res);
-        var data = BuildPack.Build(new GroupGetFilesPack()
+        AddSend(new GroupGetFilesPack()
         {
             qq = qq,
             id = group
         }, 101);
-        AddTask(data);
     }
 
     /// <summary>
@@ -825,14 +796,13 @@ public partial class RobotSDK
     /// <param name="dir">新的路径</param>
     public void GroupMoveFile(long qq, long group, string fid, string dir)
     {
-        var data = BuildPack.Build(new GroupMoveFilePack()
+        AddSend(new GroupMoveFilePack()
         {
             qq = qq,
             id = group,
             fid = fid,
             dir = dir
         }, 102);
-        AddTask(data);
     }
 
     /// <summary>
@@ -844,14 +814,13 @@ public partial class RobotSDK
     /// <param name="name">新文件名</param>
     public void GroupRemoveFile(long qq, long group, string fid, string name)
     {
-        var data = BuildPack.Build(new GroupRenameFilePack()
+        AddSend(new GroupRenameFilePack()
         {
             qq = qq,
             id = group,
             fid = fid,
             now = name
         }, 103);
-        AddTask(data);
     }
 
     /// <summary>
@@ -862,13 +831,12 @@ public partial class RobotSDK
     /// <param name="dir">文件夹名字</param>
     public void GroupAddDir(long qq, long group, string dir)
     {
-        var data = BuildPack.Build(new GroupAddDirPack()
+        AddSend(new GroupAddDirPack()
         {
             qq = qq,
             id = group,
             dir = dir
         }, 104);
-        AddTask(data);
     }
 
     /// <summary>
@@ -879,13 +847,12 @@ public partial class RobotSDK
     /// <param name="dir">文件夹名字</param>
     public void GroupRemoveDir(long qq, long group, string dir)
     {
-        var data = BuildPack.Build(new GroupDeleteDirPack()
+        AddSend(new GroupDeleteDirPack()
         {
             qq = qq,
             id = group,
             dir = dir
         }, 105);
-        AddTask(data);
     }
     /// <summary>
     /// 106 [插件]重命名群文件文件夹
@@ -896,14 +863,13 @@ public partial class RobotSDK
     /// <param name="now">新的名字</param>
     public void GroupRenameDir(long qq, long group, string old, string now)
     {
-        var data = BuildPack.Build(new GroupRenameDirPack()
+        AddSend(new GroupRenameDirPack()
         {
             qq = qq,
             id = group,
             old = old,
             now = now
         }, 106);
-        AddTask(data);
     }
 
     /// <summary>
@@ -915,14 +881,13 @@ public partial class RobotSDK
     /// <param name="file">下载到的位置</param>
     public void GroupDownloadFile(long qq, long group, string fid, string file)
     {
-        var data = BuildPack.Build(new GroupDownloadFilePack()
+        AddSend(new GroupDownloadFilePack()
         {
             qq = qq,
             id = group,
             fid = fid,
             dir = file
         }, 107);
-        AddTask(data);
     }
 
     /// <summary>
@@ -934,14 +899,13 @@ public partial class RobotSDK
     /// <param name="set">是否设置</param>
     public void GroupSetAdmin(long qq, long group, long member, bool set)
     {
-        var data = BuildPack.Build(new GroupSetAdminPack()
+        AddSend(new GroupSetAdminPack()
         {
             qq = qq,
             id = group,
             fid = member,
             type = set
         }, 108);
-        AddTask(data);
     }
 
     /// <summary>
@@ -954,12 +918,11 @@ public partial class RobotSDK
     {
         var key = new QQGroup() { QQ = qq, Group = group };
         GetGroupAnnouncementsMap.Add(key, res);
-        var data = BuildPack.Build(new GroupGetAnnouncementsPack()
+        AddSend(new GroupGetAnnouncementsPack()
         {
             qq = qq,
             id = group
         }, 109);
-        AddTask(data);
     }
 
     /// <summary>
@@ -978,7 +941,7 @@ public partial class RobotSDK
         bool sendToNewMember = false, bool isPinned = false, bool showEditCard = false,
         bool showPopup = false, bool requireConfirmation = false)
     {
-        var data = BuildPack.Build(new GroupAddAnnouncementPack()
+        AddSend(new GroupAddAnnouncementPack()
         {
             qq = qq,
             id = group,
@@ -990,7 +953,6 @@ public partial class RobotSDK
             requireConfirmation = requireConfirmation,
             text = text
         }, 110);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1001,13 +963,12 @@ public partial class RobotSDK
     /// <param name="fid">公告ID</param>
     public void GroupRemoveAnnouncement(long qq, long group, string fid)
     {
-        var data = BuildPack.Build(new GroupDeleteAnnouncementPack()
+        AddSend(new GroupDeleteAnnouncementPack()
         {
             qq = qq,
             id = group,
             fid = fid
         }, 111);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1016,16 +977,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="friend">好友QQ号</param>
     /// <param name="file">文件路径</param>
-    public void SendFriendSoundFile(long qq, long friend, string file, List<long> ids)
+    public void SendFriendSoundFile(long qq, long friend, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendFriendSoundFilePack()
+        AddSend(new SendFriendSoundFilePack()
         {
             qq = qq,
             id = friend,
             file = file,
             ids = ids
         }, 112);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1036,13 +996,12 @@ public partial class RobotSDK
     /// <param name="message">消息</param>
     public void SendStrangerMessage(long qq, long stranger, List<string> message)
     {
-        var data = BuildPack.Build(new SendStrangerMessagePack()
+        AddSend(new SendStrangerMessagePack()
         {
             qq = qq,
             id = stranger,
             message = message
         }, 117);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1052,16 +1011,15 @@ public partial class RobotSDK
     /// <param name="stranger">陌生人QQ号</param>
     /// <param name="file">文件路径</param>
     /// <param name="ids">陌生人QQ号组</param>
-    public void SendStrangerImageFile(long qq, long stranger, string file, List<long> ids)
+    public void SendStrangerImageFile(long qq, long stranger, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendStrangerImageFilePack()
+        AddSend(new SendStrangerImageFilePack()
         {
             qq = qq,
             id = stranger,
             file = file,
             ids = ids
         }, 118);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1072,13 +1030,12 @@ public partial class RobotSDK
     /// <param name="dice">点数</param>
     public void SendStrangerDice(long qq, long stranger, int dice)
     {
-        var data = BuildPack.Build(new SendStrangerDicePack()
+        AddSend(new SendStrangerDicePack()
         {
             qq = qq,
             id = stranger,
             dice = dice
         }, 119);
-        AddTask(data);
     }
 
     /// <summary>
@@ -1088,30 +1045,46 @@ public partial class RobotSDK
     /// <param name="stranger">陌生人QQ号</param>
     public void SendStrangerNudge(long qq, long stranger)
     {
-        var data = BuildPack.Build(new SendStrangerNudgePack()
+        AddSend(new SendStrangerNudgePack()
         {
             qq = qq,
             id = stranger
         }, 120);
-        AddTask(data);
     }
 
     /// <summary>
-    /// 
+    /// 121 [插件]从本地文件加载语音发送到陌生人
     /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="stranger">陌生人QQ号</param>
     /// <param name="file">文件路径</param>
     /// <param name="ids">陌生人QQ号组</param>
-    public void SendStrangerSoundFile(long qq, long stranger, string file, List<long> ids) 
+    public void SendStrangerSoundFile(long qq, long stranger, string file, List<long> ids = null)
     {
-        var data = BuildPack.Build(new SendStrangerSoundFilePack()
+        AddSend(new SendStrangerSoundFilePack()
         {
             qq = qq,
             id = stranger,
             file = file,
             ids = ids
         }, 121);
-        AddTask(data);
+    }
+
+    /// <summary>
+    /// 126 [插件]发送好友语音
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="id">QQ号</param>
+    /// <param name="data">语音内容</param>
+    /// <param name="ids">QQ号组</param>
+    public void SendFriendSound(long qq, long id, byte[] data, List<long> ids = null)
+    {
+        AddSend(new SendFriendSoundPack()
+        {
+            qq = qq,
+            id = id,
+            data = data,
+            ids = ids
+        }, 126);
     }
 }

@@ -50,7 +50,7 @@ public class PackDecode {
         }
         pack.groups = readLongList(buff);
         pack.qqList = readLongList(buff);
-        pack.runQQ = buff.readLong();
+        pack.qq = buff.readLong();
         return pack;
     }
 
