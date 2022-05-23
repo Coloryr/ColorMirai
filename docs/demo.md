@@ -90,6 +90,23 @@ var Config = new RobotConfig
 Robot.Set(Config);
 ```
 
+设置通信管道，下列中的任意一个
+```C#
+robot.SetPipe(new ColorMiraiSocket(robot));
+robot.SetPipe(new ColorMiraiWebSocket(robot));
+robot.SetPipe(new ColorMiraiNetty(robot));
+```
+注意：如果使用WebSocket需要将IP设置为`ws://xxxxx`
+
+如果使用`ColorMiraiWebSocket`需要安装`nuget`包`websocketsharp.core`  
+如果使用`ColorMiraiNetty`需要安装`nuget`包
+```
+DotNetty.Buffers
+DotNetty.Codecs
+DotNetty.Common
+DotNetty.Transport
+```
+
 启动机器人
 
 ```C#
@@ -102,7 +119,7 @@ Robot.Start();
 using ColoryrSDK;
 using System;
 
-Robot robot = new();
+RobotSDK robot = new();
 
 void Message(byte type, object data)
 {
@@ -111,12 +128,14 @@ void Message(byte type, object data)
         case 46:
             {
                 var pack = data as NewFriendRequestEventPack;
-                robot.NewFriendRequestCall(pack.qq, pack.eventid, Robot.FriendCallType.accept);
+                robot.NewFriendRequestCall(pack.qq, pack.eventid, RobotSDK.FriendCallType.accept);
                 break;
             }
         case 49:
             {
                 var pack = data as GroupMessageEventPack;
+                if (pack.id != 571239090)
+                    break;
                 Console.WriteLine($"id = {pack.id}");
                 Console.WriteLine($"fid = {pack.fid}");
                 Console.WriteLine($"message = ");
@@ -132,6 +151,9 @@ void Message(byte type, object data)
 
             break;
         case 51:
+
+            break;
+        case 116:
 
             break;
     }
@@ -150,9 +172,9 @@ void State(StateType type)
 RobotConfig config = new()
 {
     IP = "127.0.0.1",
-    Port = 23333,
+    Port = 23335,
     Name = "test",
-    Pack = new() { 46, 49, 50, 51 },
+    Pack = new() { 46, 49, 50, 51, 116 },
     RunQQ = 0,
     Time = 10000,
     CallAction = Message,
@@ -161,6 +183,7 @@ RobotConfig config = new()
 };
 
 robot.Set(config);
+robot.SetPipe(new ColorMiraiNetty(robot));
 robot.Start();
 
 while (!robot.IsConnect) ;
