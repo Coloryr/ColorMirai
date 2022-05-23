@@ -646,12 +646,12 @@ public class NettyThread implements IPluginSocket {
             }
             if (buff != null) {
                 context.writeAndFlush(buff).sync();
-                return true;
             }
+            return false;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("数据发送发生错误", e);
         }
-        return false;
+        return true;
     }
 
     @Override

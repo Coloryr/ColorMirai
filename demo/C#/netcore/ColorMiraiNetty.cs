@@ -952,7 +952,8 @@ internal static class PackEncode
 {
     public static IByteBuffer WriteString(this IByteBuffer buff, string data)
     {
-        buff.WriteInt(data.Length).WriteString(data, Encoding.UTF8);
+        var temp = Encoding.UTF8.GetBytes(data);
+        buff.WriteBytes1(temp);
         return buff;
     }
     public static IByteBuffer WriteStringList(this IByteBuffer buff, List<string> list)
@@ -1622,8 +1623,10 @@ internal static class PackEncode
     }
 }
 
-internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
+internal class ColorMiraiNetty : IColorMiraiPipe
 {
+    public RobotSDK Robot;
+
     private record PackTask
     {
         public PackBase pack;
@@ -1631,7 +1634,7 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
     }
     private ConcurrentBag<PackTask> queue1;
     private ConcurrentBag<IByteBuffer> queue2;
-    private RobotSDK robot;
+    
     private Thread thread;
     private MultithreadEventLoopGroup group;
     private IChannel client;
@@ -1639,7 +1642,7 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
 
     public ColorMiraiNetty(RobotSDK robot)
     {
-        this.robot = robot;
+        Robot = robot;
         queue1 = new();
         queue2 = new();
         thread = new(Read);
@@ -1650,17 +1653,17 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
     private void Read()
     {
         int time = 0;
-        while (robot.IsRun)
+        while (Robot.IsRun)
         {
             try
             {
                 Thread.Sleep(50);
-                if (!robot.IsConnect)
+                if (!Robot.IsConnect)
                 {
                     ReConnect();
-                    robot.IsFirst = false;
-                    robot.Times = 0;
-                    robot.RobotStateEvent.Invoke(StateType.Connect);
+                    Robot.IsFirst = false;
+                    Robot.Times = 0;
+                    Robot.RobotStateEvent.Invoke(StateType.Connect);
                 }
                 else if (queue2.TryTake(out var item))
                 {
@@ -1907,9 +1910,9 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
                             break;
                     }
 
-                    robot.AddRead(pack, index);
+                    Robot.AddRead(pack, index);
                 }
-                else if (robot.Config.Check && time >= 20)
+                else if (Robot.Config.Check && time >= 20)
                 {
                     time = 0;
                     AddSend(null, 60);
@@ -2096,34 +2099,34 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
                     }
                     if (pack != null)
                     {
-                        client.WriteAndFlushAsync(pack).Wait();
+                        client.WriteAndFlushAsync(pack);
                     }
                 }
                 time++;
             }
             catch (Exception e)
             {
-                robot.IsConnect = false;
-                robot.RobotStateEvent.Invoke(StateType.Disconnect);
-                if (robot.IsFirst)
+                Robot.IsConnect = false;
+                Robot.RobotStateEvent.Invoke(StateType.Disconnect);
+                if (Robot.IsFirst)
                 {
-                    robot.IsRun = false;
-                    robot.LogError("机器人连接失败");
+                    Robot.IsRun = false;
+                    Robot.LogError("机器人连接失败");
                 }
                 else
                 {
-                    robot.Times++;
-                    if (robot.Times == 10)
+                    Robot.Times++;
+                    if (Robot.Times == 10)
                     {
-                        robot.IsRun = false;
-                        robot.LogError("重连失败次数过多");
+                        Robot.IsRun = false;
+                        Robot.LogError("重连失败次数过多");
                     }
-                    robot.LogError("机器人连接失败");
-                    robot.LogError(e);
-                    robot.IsConnect = false;
-                    robot.LogError($"机器人{robot.Config.Time}毫秒后重连");
-                    Thread.Sleep(robot.Config.Time);
-                    robot.LogError("机器人重连中");
+                    Robot.LogError("机器人连接失败");
+                    Robot.LogError(e);
+                    Robot.IsConnect = false;
+                    Robot.LogError($"机器人{Robot.Config.Time}毫秒后重连");
+                    Thread.Sleep(Robot.Config.Time);
+                    Robot.LogError("机器人重连中");
                 }
             }
         }
@@ -2138,6 +2141,11 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
         });
     }
 
+    internal void AddReadPack(IByteBuffer pack) 
+    {
+        queue2.Add(pack);
+    }
+
     public void ReConnect()
     {
         if (client != null)
@@ -2148,23 +2156,22 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
 
         queue2.Clear();
 
-        robot.RobotStateEvent.Invoke(StateType.Connecting);
+        Robot.RobotStateEvent.Invoke(StateType.Connecting);
 
         bootstrap = new Bootstrap();
         bootstrap
             .Group(group)
             .Channel<TcpSocketChannel>()
-            .Option(ChannelOption.TcpNodelay, true)
             .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
             {
                 IChannelPipeline pipeline = channel.Pipeline;
                 pipeline.AddLast(new LengthFieldPrepender(4))
                         .AddLast(new LengthFieldBasedFrameDecoder(1024 * 500, 0, 4, 0, 4))
-                        .AddLast(this);
+                        .AddLast(new ClientHandler(this));
             }));
-        client = bootstrap.ConnectAsync(robot.Config.IP, robot.Config.Port).Result;
+        client = bootstrap.ConnectAsync(Robot.Config.IP, Robot.Config.Port).Result;
 
-        var pack = robot.PackStart.ToPack();
+        var pack = Robot.PackStart.ToPack();
 
         client.WriteAndFlushAsync(pack).Wait();
 
@@ -2173,11 +2180,11 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
             Thread.Sleep(10);
         }
 
-        robot.QQs = pack.StartPack();
+        Robot.QQs = pack.StartPack();
 
         queue1.Clear();
-        robot.LogOut("机器人已连接");
-        robot.IsConnect = true;
+        Robot.LogOut("机器人已连接");
+        Robot.IsConnect = true;
     }
 
     public void SendStop()
@@ -2194,23 +2201,38 @@ internal class ColorMiraiNetty : ChannelHandlerAdapter, IColorMiraiPipe
 
     public void Stop()
     {
-        robot.IsConnect = false;
-        robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        Robot.IsConnect = false;
+        Robot.RobotStateEvent.Invoke(StateType.Disconnect);
         client.CloseAsync().Wait();
+    }
+}
+
+internal class ClientHandler : ChannelHandlerAdapter
+{
+    private ColorMiraiNetty netty;
+    internal ClientHandler(ColorMiraiNetty netty)
+    {
+        this.netty = netty;
     }
 
     public override void ChannelRead(IChannelHandlerContext context, object message)
     {
         var byteBuffer = message as IByteBuffer;
-        queue2.Add(byteBuffer);
+        netty.AddReadPack(byteBuffer);
+    }
+
+    public override void ChannelInactive(IChannelHandlerContext context)
+    {
+        netty.Robot.IsConnect = false;
+        netty.Robot.RobotStateEvent.Invoke(StateType.Disconnect);
     }
 
     public override void ChannelReadComplete(IChannelHandlerContext context) => context.Flush();
 
     public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
     {
-        robot.IsConnect = false;
-        robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        netty.Robot.IsConnect = false;
+        netty.Robot.RobotStateEvent.Invoke(StateType.Disconnect);
         context.CloseAsync();
     }
 }

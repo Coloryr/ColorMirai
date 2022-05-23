@@ -46,7 +46,7 @@ public class PluginSocketServer {
     public static boolean send(byte[] data, Socket socket) {
         try {
             if (!socket.isConnected() || socket.isOutputShutdown())
-                return false;
+                return true;
             socket.getOutputStream().write(data);
             socket.getOutputStream().flush();
             return false;

@@ -26,16 +26,20 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelUnregistered(ChannelHandlerContext ctx) {
+    public void channelInactive(ChannelHandlerContext ctx) {
         if (contexts.containsKey(ctx)) {
             NettyThread thread = contexts.remove(ctx);
+            thread.close();
             PluginUtils.removePlugin(thread.getPlugin().getName());
         }
     }
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        //发生异常，关闭通道
-        ctx.close();
+        if (contexts.containsKey(ctx)) {
+            NettyThread thread = contexts.remove(ctx);
+            thread.close();
+            PluginUtils.removePlugin(thread.getPlugin().getName());
+        }
     }
 }
