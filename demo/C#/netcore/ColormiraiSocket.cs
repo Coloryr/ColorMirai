@@ -40,9 +40,9 @@ public class ColorMiraiSocket : IColorMiraiPipe
                 {
                     var data = new byte[socket.Available];
                     socket.Receive(data);
+                    byte index = data[^1];
                     data[^1] = 0;
                     var data1 = Encoding.UTF8.GetString(data);
-                    byte index = data[^1];
                     if (RobotSDK.PackType.TryGetValue(index, out var type))
                     {
                         robot.AddRead(JsonConvert.DeserializeObject(data1, type), index);
