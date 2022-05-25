@@ -28,8 +28,8 @@ import java.util.concurrent.Semaphore;
 public class ThePlugin {
     private final IPluginSocket socket;
     private final Queue<PluginPack> tasks = new ConcurrentLinkedDeque<>();
-    private final List<Long> groups = new CopyOnWriteArrayList<>();
-    private final List<Long> qqList = new CopyOnWriteArrayList<>();
+    private final List<Long> groups = new ArrayList<>();
+    private final List<Long> qqList = new ArrayList<>();
     private final Map<String, BuffObj> messageBuff = new ConcurrentHashMap<>();
 
     private final Thread doRead;
@@ -538,7 +538,6 @@ public class ThePlugin {
                         }
                     }
                 }
-                Thread.sleep(10);
             } catch (Exception e) {
                 if (!isRun)
                     break;

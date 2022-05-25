@@ -37,7 +37,7 @@ public class WebSocketThread implements IPluginSocket {
         String temp = PluginWebSocketServer.read(this.socket);
         if(temp == null)
             return null;
-        JsonObject object = new JsonParser().parse(temp).getAsJsonObject();
+        JsonObject object = JsonParser.parseString(temp).getAsJsonObject();
         if (!object.has("index")) {
             return null;
         }
