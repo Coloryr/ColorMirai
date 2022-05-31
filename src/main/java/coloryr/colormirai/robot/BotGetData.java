@@ -1,9 +1,9 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
-import coloryr.colormirai.plugin.pack.re.FriendInfoPack;
+import coloryr.colormirai.plugin.pack.re.ReFriendInfoPack;
 import coloryr.colormirai.plugin.pack.re.GroupInfo;
-import coloryr.colormirai.plugin.pack.re.MemberInfoPack;
+import coloryr.colormirai.plugin.pack.re.ReMemberInfoPack;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.Mirai;
 import net.mamoe.mirai.contact.Friend;
@@ -40,7 +40,7 @@ public class BotGetData {
         }
     }
 
-    public static FriendInfoPack getFriend(long qq, long id) {
+    public static ReFriendInfoPack getFriend(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -52,7 +52,7 @@ public class BotGetData {
                 ColorMiraiMain.logger.warn("QQ号:" + qq + "不存在朋友:" + id);
                 return null;
             }
-            FriendInfoPack info = new FriendInfoPack();
+            ReFriendInfoPack info = new ReFriendInfoPack();
             info.id = item.getId();
             info.img = item.getAvatarUrl();
             info.remark = item.getRemark();
@@ -64,20 +64,21 @@ public class BotGetData {
         }
     }
 
-    public static List<FriendInfoPack> getFriends(long qq) {
+    public static List<ReFriendInfoPack> getFriends(long qq) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
-            List<FriendInfoPack> list = new ArrayList<>();
+            List<ReFriendInfoPack> list = new ArrayList<>();
             for (Friend item : bot.getFriends()) {
-                FriendInfoPack info = new FriendInfoPack();
+                ReFriendInfoPack info = new ReFriendInfoPack();
                 info.userProfile = item.queryProfile();
                 info.id = item.getId();
                 info.img = item.getAvatarUrl();
                 info.remark = item.getRemark();
+                info.uuid = "";
                 list.add(info);
             }
             return list;
@@ -87,7 +88,7 @@ public class BotGetData {
         }
     }
 
-    public static List<MemberInfoPack> getMembers(long qq, long id) {
+    public static List<ReMemberInfoPack> getMembers(long qq, long id) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -95,14 +96,14 @@ public class BotGetData {
             }
             Bot bot = BotStart.getBots().get(qq);
             if (bot.getGroups().contains(id)) {
-                List<MemberInfoPack> list = new ArrayList<>();
+                List<ReMemberInfoPack> list = new ArrayList<>();
                 Group group1 = bot.getGroup(id);
                 if (group1 == null) {
                     ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                     return null;
                 }
                 for (NormalMember item : group1.getMembers()) {
-                    MemberInfoPack info = new MemberInfoPack();
+                    ReMemberInfoPack info = new ReMemberInfoPack();
                     info.id = item.getId();
                     info.img = item.getAvatarUrl();
                     info.nick = item.getNick();
@@ -113,6 +114,7 @@ public class BotGetData {
                     info.muteTimeRemaining = item.getMuteTimeRemaining();
                     info.joinTimestamp = item.getJoinTimestamp();
                     info.lastSpeakTimestamp = item.getLastSpeakTimestamp();
+                    info.uuid = "";
                     list.add(info);
                 }
                 return list;
@@ -126,7 +128,7 @@ public class BotGetData {
         }
     }
 
-    public static MemberInfoPack getMemberInfo(long qq, long id, long fid) {
+    public static ReMemberInfoPack getMemberInfo(long qq, long id, long fid) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -144,7 +146,7 @@ public class BotGetData {
                     ColorMiraiMain.logger.warn("机器人:" + qq + "群:" + id + "不存在成员：" + fid);
                     return null;
                 }
-                MemberInfoPack info = new MemberInfoPack();
+                ReMemberInfoPack info = new ReMemberInfoPack();
                 info.img = item.getAvatarUrl();
                 info.nick = item.getNick();
                 info.per = item.getPermission();

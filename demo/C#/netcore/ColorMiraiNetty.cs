@@ -8,7 +8,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ColoryrSDK;
 
@@ -38,7 +37,7 @@ internal static class PackDecode
         }
         return list;
     }
-    public static MemberInfoPack ReadMemberInfoPack(this IByteBuffer buff)
+    public static ReMemberInfoPack ReadMemberInfoPack(this IByteBuffer buff)
     {
         return new()
         {
@@ -52,10 +51,11 @@ internal static class PackDecode
             avatarUrl = buff.ReadString(),
             muteTimeRemaining = buff.ReadInt(),
             joinTimestamp = buff.ReadInt(),
-            lastSpeakTimestamp = buff.ReadInt()
+            lastSpeakTimestamp = buff.ReadInt(),
+            uuid = buff.ReadString()
         };
     }
-    public static FriendInfoPack ReadFriendInfoPack(this IByteBuffer buff)
+    public static ReFriendInfoPack ReadFriendInfoPack(this IByteBuffer buff)
     {
         return new()
         {
@@ -70,7 +70,8 @@ internal static class PackDecode
                 qLevel = buff.ReadInt(),
                 sex = (Sex)buff.ReadInt(),
                 sign = buff.ReadString()
-            }
+            },
+            uuid = buff.ReadString()
         };
     }
     public static GroupFileInfo ReadGroupFileInfo(this IByteBuffer buff)
@@ -130,9 +131,9 @@ internal static class PackDecode
         }
         return list;
     }
-    public static ListGroupPack ListGroupPack(this IByteBuffer buff)
+    public static ReListGroupPack ListGroupPack(this IByteBuffer buff)
     {
-        ListGroupPack pack = new()
+        ReListGroupPack pack = new()
         {
             qq = buff.ReadLong(),
             groups = new()
@@ -142,11 +143,12 @@ internal static class PackDecode
         {
             pack.groups.Add(buff.ReadGroupInfo());
         }
+        pack.uuid = buff.ReadString();
         return pack;
     }
-    public static ListFriendPack ListFriendPack(this IByteBuffer buff)
+    public static ReListFriendPack ListFriendPack(this IByteBuffer buff)
     {
-        ListFriendPack pack = new()
+        ReListFriendPack pack = new()
         {
             qq = buff.ReadLong(),
             friends = new()
@@ -156,11 +158,12 @@ internal static class PackDecode
         {
             pack.friends.Add(buff.ReadFriendInfoPack());
         }
+        pack.uuid = buff.ReadString();
         return pack;
     }
-    public static ListMemberPack ListMemberPack(this IByteBuffer buff)
+    public static ReListMemberPack ListMemberPack(this IByteBuffer buff)
     {
-        ListMemberPack pack = new()
+        ReListMemberPack pack = new()
         {
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
@@ -171,11 +174,12 @@ internal static class PackDecode
         {
             pack.members.Add(buff.ReadMemberInfoPack());
         }
+        pack.uuid = buff.ReadString();
         return pack;
     }
-    public static GroupSettingPack GroupSettingPack(this IByteBuffer buff)
+    public static ReGroupSettingPack GroupSettingPack(this IByteBuffer buff)
     {
-        GroupSettingPack pack = new()
+        ReGroupSettingPack pack = new()
         {
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
@@ -185,7 +189,8 @@ internal static class PackDecode
                 isAllowMemberInvite = buff.ReadBoolean(),
                 isAutoApproveEnabled = buff.ReadBoolean(),
                 isAnonymousChatEnabled = buff.ReadBoolean()
-            }
+            },
+            uuid = buff.ReadString()
         };
         return pack;
     }
@@ -198,23 +203,24 @@ internal static class PackDecode
         };
         return pack;
     }
-    public static MemberInfoPack MemberInfoPack(this IByteBuffer buff)
+    public static ReMemberInfoPack MemberInfoPack(this IByteBuffer buff)
     {
         long qq = buff.ReadLong();
         var pack = buff.ReadMemberInfoPack();
         pack.qq = qq;
         return pack;
     }
-    public static FriendInfoPack FriendInfoPack(this IByteBuffer buff)
+    public static ReFriendInfoPack FriendInfoPack(this IByteBuffer buff)
     {
         long qq = buff.ReadLong();
         var pack = buff.ReadFriendInfoPack();
         pack.qq = qq;
+        pack.uuid = buff.ReadString();
         return pack;
     }
-    public static GroupFilesPack GroupFilesPack(this IByteBuffer buff)
+    public static ReGroupFilesPack GroupFilesPack(this IByteBuffer buff)
     {
-        GroupFilesPack pack = new()
+        ReGroupFilesPack pack = new()
         {
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
@@ -225,11 +231,12 @@ internal static class PackDecode
         {
             pack.files.Add(buff.ReadGroupFileInfo());
         }
+        pack.uuid = buff.ReadString();
         return pack;
     }
-    public static GroupAnnouncementsPack GroupAnnouncementsPack(this IByteBuffer buff)
+    public static ReGroupAnnouncementsPack GroupAnnouncementsPack(this IByteBuffer buff)
     {
-        GroupAnnouncementsPack pack = new()
+        ReGroupAnnouncementsPack pack = new()
         {
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
@@ -240,6 +247,7 @@ internal static class PackDecode
         {
             pack.list.Add(buff.ReadGroupAnnouncement());
         }
+        pack.uuid = buff.ReadString();
         return pack;
     }
     public static BeforeImageUploadPack BeforeImageUploadPack(this IByteBuffer buff)
@@ -1040,7 +1048,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GetPack pack, byte index)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(index).WriteLong(pack.qq);
+        buff.WriteByte(index).WriteLong(pack.qq).WriteString(pack.uuid);
 
         return buff;
     }
@@ -1049,7 +1057,8 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(57)
             .WriteLong(pack.qq)
-            .WriteLong(pack.id);
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
 
         return buff;
     }
@@ -1058,7 +1067,8 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(58)
             .WriteLong(pack.qq)
-            .WriteLong(pack.id);
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
 
         return buff;
     }
@@ -1285,7 +1295,8 @@ internal static class PackEncode
         buff.WriteByte(91)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteLong(pack.fid);
+            .WriteLong(pack.fid)
+            .WriteString(pack.uuid);
 
         return buff;
     }
@@ -1294,7 +1305,8 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(92)
             .WriteLong(pack.qq)
-            .WriteLong(pack.id);
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
 
         return buff;
     }
@@ -1398,7 +1410,8 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(101)
             .WriteLong(pack.qq)
-            .WriteLong(pack.id);
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
 
         return buff;
     }
@@ -1482,7 +1495,8 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(109)
             .WriteLong(pack.qq)
-            .WriteLong(pack.id);
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
 
         return buff;
     }

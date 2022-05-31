@@ -563,16 +563,16 @@ public class NettyThread implements IPluginSocket {
                     buff = PackEncode.friendMessageEventPack((FriendMessageEventPack) data);
                     break;
                 case 55:
-                    buff = PackEncode.listGroupPack((ListGroupPack) data);
+                    buff = PackEncode.listGroupPack((ReListGroupPack) data);
                     break;
                 case 56:
-                    buff = PackEncode.listFriendPack((ListFriendPack) data);
+                    buff = PackEncode.listFriendPack((ReListFriendPack) data);
                     break;
                 case 57:
-                    buff = PackEncode.listMemberPack((ListMemberPack) data);
+                    buff = PackEncode.listMemberPack((ReListMemberPack) data);
                     break;
                 case 58:
-                    buff = PackEncode.groupSettingPack((GroupSettingPack) data);
+                    buff = PackEncode.groupSettingPack((ReGroupSettingPack) data);
                     break;
                 case 60:
                     buff = PackEncode.testPack();
@@ -611,19 +611,19 @@ public class NettyThread implements IPluginSocket {
                     buff = PackEncode.groupMessageSyncEventPack((GroupMessageSyncEventPack) data);
                     break;
                 case 90:
-                    buff = PackEncode.getImageUrlPack((GetImageUrlPack) data);
+                    buff = PackEncode.getImageUrlPack((ReGetImageUrlPack) data);
                     break;
                 case 91:
-                    buff = PackEncode.memberInfoPack((MemberInfoPack) data);
+                    buff = PackEncode.memberInfoPack((ReMemberInfoPack) data);
                     break;
                 case 92:
-                    buff = PackEncode.friendInfoPack((FriendInfoPack) data);
+                    buff = PackEncode.friendInfoPack((ReFriendInfoPack) data);
                     break;
                 case 101:
-                    buff = PackEncode.groupFilesPack((GroupFilesPack) data);
+                    buff = PackEncode.groupFilesPack((ReGroupFilesPack) data);
                     break;
                 case 109:
-                    buff = PackEncode.groupAnnouncementsPack((GroupAnnouncementsPack) data);
+                    buff = PackEncode.groupAnnouncementsPack((ReGroupAnnouncementsPack) data);
                     break;
                 case 113:
                     buff = PackEncode.groupDisbandPack((GroupDisbandPack) data);

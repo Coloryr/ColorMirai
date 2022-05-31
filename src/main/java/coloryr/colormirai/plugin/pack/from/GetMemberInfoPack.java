@@ -14,4 +14,8 @@ public class GetMemberInfoPack extends PackBase {
      * 群员QQ号
      */
     public long fid;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

@@ -83,6 +83,7 @@ public class PackDecode {
     public static GetPack getPack(ByteBuf buff) {
         GetPack pack = new GetPack();
         pack.qq = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -90,6 +91,7 @@ public class PackDecode {
         GroupGetMemberInfoPack pack = new GroupGetMemberInfoPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -97,6 +99,7 @@ public class PackDecode {
         GroupGetSettingPack pack = new GroupGetSettingPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -271,6 +274,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.fid = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -278,6 +282,7 @@ public class PackDecode {
         GetFriendInfoPack pack = new GetFriendInfoPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -363,6 +368,7 @@ public class PackDecode {
         GroupGetFilesPack pack = new GroupGetFilesPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 
@@ -431,6 +437,7 @@ public class PackDecode {
         GroupGetAnnouncementsPack pack = new GroupGetAnnouncementsPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.uuid = readString(buff);
         return pack;
     }
 

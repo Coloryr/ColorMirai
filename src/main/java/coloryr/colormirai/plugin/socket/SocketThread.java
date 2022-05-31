@@ -9,6 +9,7 @@ import coloryr.colormirai.plugin.pack.from.*;
 import coloryr.colormirai.robot.BotStart;
 import com.alibaba.fastjson.JSON;
 
+import java.io.PushbackInputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -30,11 +31,45 @@ public class SocketThread implements IPluginSocket {
     }
 
     private RePackObj read() {
-        return PluginSocketServer.read(this.socket);
+        try {
+            PushbackInputStream input = new PushbackInputStream(socket.getInputStream(), 1);
+            while (true) {
+                int bytesToRead = input.available();
+                if (bytesToRead > 0) {
+                    byte[] data = new byte[bytesToRead];
+                    input.read(data);
+                    byte index = data[bytesToRead - 1];
+                    String line = new String(data, 0, bytesToRead - 1, ColorMiraiMain.readCharset);
+                    return new RePackObj(index, line);
+                } else {
+                    int b = input.read(); //此操作会阻塞，直到有数据被读到
+                    if (b < 0) {
+                        return null;
+                    }
+                    input.unread(b);
+                }
+            }
+        } catch (Exception e) {
+            if (socket.isClosed()) {
+                return new RePackObj((byte) -1, "");
+            }
+            ColorMiraiMain.logger.error("插件通信出现问题", e);
+            plugin.close();
+        }
+        return null;
     }
 
-    private void send(byte[] data) {
-        PluginSocketServer.send(data, socket);
+    private boolean send(byte[] data) {
+        try {
+            if (!socket.isConnected() || socket.isOutputShutdown())
+                return true;
+            socket.getOutputStream().write(data);
+            socket.getOutputStream().flush();
+            return false;
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("插件通信出现问题", e);
+            return true;
+        }
     }
 
     private void start() {
@@ -488,7 +523,7 @@ public class SocketThread implements IPluginSocket {
     @Override
     public boolean send(Object data, int index) {
         byte[] temp = PackDo.buildPack(data, index);
-        return PluginSocketServer.send(temp, socket);
+        return send(temp);
     }
 
     @Override

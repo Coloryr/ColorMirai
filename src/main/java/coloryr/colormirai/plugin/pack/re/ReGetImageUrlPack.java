@@ -5,7 +5,7 @@ import coloryr.colormirai.plugin.pack.PackBase;
 /**
  * 90 [插件]获取图片Url
  */
-public class ReImagePack extends PackBase {
+public class ReGetImageUrlPack extends PackBase {
     /**
      * 图片UUID
      */

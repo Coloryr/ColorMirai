@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 101 [插件]获取群文件
  */
-public class GroupFilesPack extends PackBase {
+public class ReGroupFilesPack extends PackBase {
     /**
      * 群号
      */
@@ -16,4 +16,8 @@ public class GroupFilesPack extends PackBase {
      * 文件列表
      */
     public List<GroupFileInfo> files;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

@@ -7,5 +7,8 @@ import coloryr.colormirai.plugin.pack.PackBase;
  * 56 [插件]获取好友列表
  */
 public class GetPack extends PackBase {
-
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

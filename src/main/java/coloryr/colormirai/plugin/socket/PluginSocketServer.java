@@ -13,49 +13,6 @@ public class PluginSocketServer {
     private static Thread serverThread;
     private static boolean isStart;
 
-    public static RePackObj read(Socket socket) {
-        try {
-            byte[] bytes = new byte[8192];
-            int len;
-            byte index = 0;
-            StringBuilder sb = new StringBuilder();
-            if (socket.getInputStream().available() != 0) {
-                while ((len = socket.getInputStream().read(bytes)) != -1) {
-                    if (len == 8192)
-                        sb.append(new String(bytes, 0, len, ColorMiraiMain.readCharset));
-                    else {
-                        index = bytes[len - 1];
-                        bytes[len - 1] = 0;
-                        sb.append(new String(bytes, 0, len - 1, ColorMiraiMain.readCharset));
-                        break;
-                    }
-                }
-                return new RePackObj(index, sb.toString());
-            } else {
-                return null;
-            }
-        } catch (Exception e) {
-            if (socket.isClosed()) {
-                return new RePackObj((byte) -1, "");
-            }
-            ColorMiraiMain.logger.error("插件通信出现问题", e);
-        }
-        return null;
-    }
-
-    public static boolean send(byte[] data, Socket socket) {
-        try {
-            if (!socket.isConnected() || socket.isOutputShutdown())
-                return true;
-            socket.getOutputStream().write(data);
-            socket.getOutputStream().flush();
-            return false;
-        } catch (Exception e) {
-            ColorMiraiMain.logger.error("插件通信出现问题", e);
-            return true;
-        }
-    }
-
     public static void start() {
         try {
             serverSocket = new ServerSocket(ColorMiraiMain.config.socketPort);

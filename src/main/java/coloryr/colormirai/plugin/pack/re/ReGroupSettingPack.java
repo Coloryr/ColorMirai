@@ -6,7 +6,7 @@ import net.mamoe.mirai.contact.GroupSettings;
 /**
  * 58 [插件]获取群设置
  */
-public class GroupSettingPack extends PackBase {
+public class ReGroupSettingPack extends PackBase {
     /**
      * 群号
      */
@@ -15,4 +15,8 @@ public class GroupSettingPack extends PackBase {
      * 设定
      */
     public GroupSettings setting;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

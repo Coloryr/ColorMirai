@@ -10,4 +10,8 @@ public class GroupGetFilesPack extends PackBase {
      * 群号
      */
     public long id;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

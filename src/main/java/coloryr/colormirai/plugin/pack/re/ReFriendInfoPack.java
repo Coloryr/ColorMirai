@@ -6,7 +6,7 @@ import net.mamoe.mirai.data.UserProfile;
 /**
  * 92 [插件]获取朋友信息
  */
-public class FriendInfoPack extends PackBase {
+public class ReFriendInfoPack extends PackBase {
     /**
      * QQ号
      */
@@ -23,4 +23,8 @@ public class FriendInfoPack extends PackBase {
      * 用户详细资料
      */
     public UserProfile userProfile;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

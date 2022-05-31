@@ -6,7 +6,7 @@ import net.mamoe.mirai.contact.MemberPermission;
 /**
  * 91 [插件]获取群成员信息
  */
-public class MemberInfoPack extends PackBase {
+public class ReMemberInfoPack extends PackBase {
     /**
      * 群号
      */
@@ -51,4 +51,8 @@ public class MemberInfoPack extends PackBase {
      * 最后发言时间
      */
     public int lastSpeakTimestamp;
+    /**
+     * 请求UUID
+     */
+    public String uuid;
 }

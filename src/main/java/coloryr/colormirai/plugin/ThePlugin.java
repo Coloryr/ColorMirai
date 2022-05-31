@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ThePlugin {
@@ -129,9 +128,10 @@ public class ThePlugin {
                             List<GroupInfo> data = BotGetData.getGroups(runQQ == 0 ? pack.qq : runQQ);
                             if (data == null)
                                 break;
-                            ListGroupPack pack31 = new ListGroupPack();
+                            ReListGroupPack pack31 = new ReListGroupPack();
                             pack31.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack31.groups = data;
+                            pack31.uuid = pack.uuid;
                             if (socket.send(pack31, 55))
                                 close();
                             break;
@@ -139,11 +139,12 @@ public class ThePlugin {
                         //56 [插件]获取好友列表
                         case 56: {
                             GetPack pack = (GetPack) task.pack;
-                            List<FriendInfoPack> data = BotGetData.getFriends(runQQ == 0 ? pack.qq : runQQ);
+                            List<ReFriendInfoPack> data = BotGetData.getFriends(runQQ == 0 ? pack.qq : runQQ);
                             if (data == null)
                                 break;
-                            ListFriendPack pack1 = new ListFriendPack();
+                            ReListFriendPack pack1 = new ReListFriendPack();
                             pack1.friends = data;
+                            pack1.uuid = pack.uuid;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             if (socket.send(pack1, 56))
                                 close();
@@ -152,12 +153,14 @@ public class ThePlugin {
                         //57 [插件]获取群成员
                         case 57: {
                             GroupGetMemberInfoPack pack = (GroupGetMemberInfoPack) task.pack;
-                            List<MemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<ReMemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 break;
-                            ListMemberPack pack1 = new ListMemberPack();
+                            ReListMemberPack pack1 = new ReListMemberPack();
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.members = data;
+                            pack1.id = pack.id;
+                            pack1.uuid = pack.uuid;
                             if (socket.send(pack1, 57))
                                 close();
                             break;
@@ -168,10 +171,11 @@ public class ThePlugin {
                             GroupSettings data = BotGetData.getGroupInfo(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 break;
-                            GroupSettingPack pack1 = new GroupSettingPack();
+                            ReGroupSettingPack pack1 = new ReGroupSettingPack();
                             pack1.setting = data;
                             pack1.id = pack.id;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
+                            pack1.uuid = pack.uuid;
                             if (socket.send(pack1, 58))
                                 close();
                             break;
@@ -296,7 +300,7 @@ public class ThePlugin {
                             String data4 = BotGetData.getImg(runQQ == 0 ? pack.qq : runQQ, pack.uuid);
                             if (data4 == null)
                                 break;
-                            ReImagePack pack1 = new ReImagePack();
+                            ReGetImageUrlPack pack1 = new ReGetImageUrlPack();
                             pack1.uuid = pack.uuid;
                             pack1.url = data4;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
@@ -307,12 +311,13 @@ public class ThePlugin {
                         //91 [插件]获取群成员信息
                         case 91: {
                             GetMemberInfoPack pack = (GetMemberInfoPack) task.pack;
-                            MemberInfoPack pack1 = BotGetData.getMemberInfo(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            ReMemberInfoPack pack1 = BotGetData.getMemberInfo(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             if (pack1 == null)
                                 break;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.fid = pack.fid;
+                            pack1.uuid = pack.uuid;
                             if (socket.send(pack1, 91))
                                 close();
                             break;
@@ -320,9 +325,10 @@ public class ThePlugin {
                         //92 [插件]获取朋友信息
                         case 92: {
                             GetFriendInfoPack pack = (GetFriendInfoPack) task.pack;
-                            FriendInfoPack pack1 = BotGetData.getFriend(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            ReFriendInfoPack pack1 = BotGetData.getFriend(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (pack1 == null)
                                 break;
+                            pack1.uuid = pack.uuid;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             if (socket.send(pack1, 92))
                                 close();
@@ -384,10 +390,11 @@ public class ThePlugin {
                             List<GroupFileInfo> data = BotGroupFile.getFiles(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
-                            GroupFilesPack pack1 = new GroupFilesPack();
+                            ReGroupFilesPack pack1 = new ReGroupFilesPack();
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.files = data;
+                            pack1.uuid = pack.uuid;
                             if (socket.send(pack1, 101))
                                 close();
                             break;
@@ -458,10 +465,11 @@ public class ThePlugin {
                                 item1.requireConfirmation = item.getParameters().getRequireConfirmation();
                                 list.add(item1);
                             }
-                            GroupAnnouncementsPack pack1 = new GroupAnnouncementsPack();
+                            ReGroupAnnouncementsPack pack1 = new ReGroupAnnouncementsPack();
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
                             pack1.id = pack.id;
                             pack1.list = list;
+                            pack1.uuid = pack.uuid;
                             if (socket.send(pack1, 109))
                                 close();
                             break;
@@ -667,6 +675,7 @@ public class ThePlugin {
         try {
             isRun = false;
             socket.close();
+            semaphore.release();
             PluginUtils.removePlugin(name);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("插件断开失败", e);

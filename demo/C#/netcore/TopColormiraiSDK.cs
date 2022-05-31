@@ -9,55 +9,65 @@ public partial class RobotSDK
     {
         public long QQ { get; set; }
         public long Group { get; set; }
+        public string UUID { get; set; }
     }
     private record QQMember
     {
         public long QQ { get; set; }
         public long Group { get; set; }
         public long Member { get; set; }
+        public string UUID { get; set; }
     }
     private record QQFriend
     {
         public long QQ { get; set; }
         public long Friend { get; set; }
+        public string UUID { get; set; }
     }
-    private readonly Dictionary<long, Action<ListFriendPack>> GetFriendsMap = new();
-    private readonly Dictionary<QQGroup, Action<ListMemberPack>> GetMembersMap = new();
-    private readonly Dictionary<QQGroup, Action<GroupSettingPack>> GetGroupSettingMap = new();
-    private readonly Dictionary<long, Action<ListGroupPack>> GetGroupsMap = new();
+    private record QQCall
+    { 
+        public long QQ { get; set; }
+        public string UUID { get; set; }
+    }
+    private readonly Dictionary<QQCall, Action<ReListFriendPack>> GetFriendsMap = new();
+    private readonly Dictionary<QQGroup, Action<ReListMemberPack>> GetMembersMap = new();
+    private readonly Dictionary<QQGroup, Action<ReGroupSettingPack>> GetGroupSettingMap = new();
+    private readonly Dictionary<QQCall, Action<ReListGroupPack>> GetGroupsMap = new();
     private readonly Dictionary<string, Action<string>> GetImageUrlMap = new();
-    private readonly Dictionary<QQMember, Action<MemberInfoPack>> GetMemberInfoMap = new();
-    private readonly Dictionary<QQFriend, Action<FriendInfoPack>> GetFriendInfoMap = new();
-    private readonly Dictionary<QQGroup, Action<GroupFilesPack>> GetGroupFilesMap = new();
-    private readonly Dictionary<QQGroup, Action<GroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
+    private readonly Dictionary<QQMember, Action<ReMemberInfoPack>> GetMemberInfoMap = new();
+    private readonly Dictionary<QQFriend, Action<ReFriendInfoPack>> GetFriendInfoMap = new();
+    private readonly Dictionary<QQGroup, Action<ReGroupFilesPack>> GetGroupFilesMap = new();
+    private readonly Dictionary<QQGroup, Action<ReGroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
     private partial bool CallTop(byte index, object data)
     {
         switch (index)
         {
             case 55:
                 {
-                    var pack = data as ListGroupPack;
-                    if (GetGroupsMap.TryGetValue(pack.qq, out var action))
+                    var pack = data as ReListGroupPack;
+                    var key = new QQCall { QQ = pack.qq, UUID = pack.uuid };
+                    if (GetGroupsMap.TryGetValue(key, out var action))
                     {
-                        GetGroupsMap.Remove(pack.qq);
+                        GetGroupsMap.Remove(key);
                         action.Invoke(pack);
                     }
                     return true;
                 }
             case 56:
                 {
-                    var pack = data as ListFriendPack;
-                    if (GetFriendsMap.TryGetValue(pack.qq, out var action))
+                    var pack = data as ReListFriendPack;
+                    var key = new QQCall { QQ = pack.qq, UUID = pack.uuid };
+                    if (GetFriendsMap.TryGetValue(key, out var action))
                     {
-                        GetFriendsMap.Remove(pack.qq);
+                        GetFriendsMap.Remove(key);
                         action.Invoke(pack);
                     }
                     return true;
                 }
             case 57:
                 {
-                    var pack = data as ListMemberPack;
-                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                    var pack = data as ReListMemberPack;
+                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id, UUID = pack.uuid };
                     if (GetMembersMap.TryGetValue(key, out var action))
                     {
                         GetMembersMap.Remove(key);
@@ -67,8 +77,8 @@ public partial class RobotSDK
                 }
             case 58:
                 {
-                    var pack = data as GroupSettingPack;
-                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                    var pack = data as ReGroupSettingPack;
+                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id, UUID = pack.uuid };
                     if (GetGroupSettingMap.TryGetValue(key, out var action))
                     {
                         GetGroupSettingMap.Remove(key);
@@ -78,7 +88,7 @@ public partial class RobotSDK
                 }
             case 90:
                 {
-                    var pack = data as ReImagePack;
+                    var pack = data as ReGetImageUrlPack;
                     if (GetImageUrlMap.TryGetValue(pack.uuid, out var action))
                     {
                         GetImageUrlMap.Remove(pack.uuid);
@@ -88,8 +98,8 @@ public partial class RobotSDK
                 }
             case 91:
                 {
-                    var pack = data as MemberInfoPack;
-                    var key = new QQMember() { QQ = pack.qq, Group = pack.id, Member = pack.fid };
+                    var pack = data as ReMemberInfoPack;
+                    var key = new QQMember() { QQ = pack.qq, Group = pack.id, Member = pack.fid, UUID = pack.uuid };
                     if (GetMemberInfoMap.TryGetValue(key, out var action))
                     {
                         GetMemberInfoMap.Remove(key);
@@ -99,8 +109,8 @@ public partial class RobotSDK
                 }
             case 92:
                 {
-                    var pack = data as FriendInfoPack;
-                    var key = new QQFriend() { QQ = pack.qq, Friend = pack.id };
+                    var pack = data as ReFriendInfoPack;
+                    var key = new QQFriend() { QQ = pack.qq, Friend = pack.id, UUID = pack.uuid };
                     if (GetFriendInfoMap.TryGetValue(key, out var action))
                     {
                         GetFriendInfoMap.Remove(key);
@@ -110,8 +120,8 @@ public partial class RobotSDK
                 }
             case 101:
                 {
-                    var pack = data as GroupFilesPack;
-                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                    var pack = data as ReGroupFilesPack;
+                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id, UUID = pack.uuid };
                     if (GetGroupFilesMap.TryGetValue(key, out var action))
                     {
                         GetGroupFilesMap.Remove(key);
@@ -121,8 +131,8 @@ public partial class RobotSDK
                 }
             case 109:
                 {
-                    var pack = data as GroupAnnouncementsPack;
-                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id };
+                    var pack = data as ReGroupAnnouncementsPack;
+                    var key = new QQGroup() { QQ = pack.qq, Group = pack.id, UUID = pack.uuid };
                     if (GetGroupAnnouncementsMap.TryGetValue(key, out var action))
                     {
                         GetGroupAnnouncementsMap.Remove(key);
@@ -134,17 +144,26 @@ public partial class RobotSDK
                 return false;
         }
     }
+    private string GenUUID 
+    { 
+        get
+        {
+            return Guid.NewGuid().ToString().Replace("-", "").ToLower();
+        } 
+    }
     /// <summary>
     /// 55 [插件]获取群列表
     /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="res">获取成功后回调</param>
-    public void GetGroups(long qq, Action<ListGroupPack> res)
+    public void GetGroups(long qq, Action<ReListGroupPack> res)
     {
-        GetGroupsMap.Add(qq, res);
+        var key = new QQCall { QQ = qq, UUID = GenUUID };
+        GetGroupsMap.Add(key, res);
         AddSend(new GetPack()
         {
-            qq = qq
+            qq = qq,
+            uuid = key.UUID
         }, 55);
     }
     /// <summary>
@@ -152,12 +171,14 @@ public partial class RobotSDK
     /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="res">获取成功后回调</param>
-    public void GetFriends(long qq, Action<ListFriendPack> res)
+    public void GetFriends(long qq, Action<ReListFriendPack> res)
     {
-        GetFriendsMap.Add(qq, res);
+        var key = new QQCall { QQ = qq, UUID = GenUUID };
+        GetFriendsMap.Add(key, res);
         AddSend(new GetPack()
         {
-            qq = qq
+            qq = qq,
+            uuid = key.UUID
         }, 56);
     }
     /// <summary>
@@ -166,14 +187,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="res">获取成功后回调</param>
-    public void GetMembers(long qq, long group, Action<ListMemberPack> res)
+    public void GetMembers(long qq, long group, Action<ReListMemberPack> res)
     {
-        var key = new QQGroup() { QQ = qq, Group = group };
+        var key = new QQGroup() { QQ = qq, Group = group, UUID = GenUUID };
         GetMembersMap.Add(key, res);
         AddSend(new GroupGetMemberInfoPack()
         {
             qq = qq,
-            id = group
+            id = group,
+            uuid = key.UUID
         }, 57);
     }
     /// <summary>
@@ -182,14 +204,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="res">获取成功后回调</param>
-    public void GetGroupSetting(long qq, long group, Action<GroupSettingPack> res)
+    public void GetGroupSetting(long qq, long group, Action<ReGroupSettingPack> res)
     {
-        var key = new QQGroup() { QQ = qq, Group = group };
+        var key = new QQGroup() { QQ = qq, Group = group, UUID = GenUUID };
         GetGroupSettingMap.Add(key, res);
         AddSend(new GroupGetSettingPack()
         {
             qq = qq,
-            id = group
+            id = group,
+            uuid = key.UUID
         }, 58);
     }
     /// <summary>
@@ -573,15 +596,16 @@ public partial class RobotSDK
     /// <param name="group">群号</param>
     /// <param name="member">群员</param>
     /// <param name="res">返回回调</param>
-    public void GetMemberInfo(long qq, long group, long member, Action<MemberInfoPack> res)
+    public void GetMemberInfo(long qq, long group, long member, Action<ReMemberInfoPack> res)
     {
-        var key = new QQMember() { QQ = qq, Group = group, Member = member };
+        var key = new QQMember() { QQ = qq, Group = group, Member = member, UUID = GenUUID };
         GetMemberInfoMap.Add(key, res);
         AddSend(new GetMemberInfoPack()
         {
             qq = qq,
             id = group,
-            fid = member
+            fid = member,
+            uuid = key.UUID
         }, 91);
     }
     /// <summary>
@@ -590,14 +614,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="friend">群号</param>
     /// <param name="res">返回回调</param>
-    public void GetFriendInfo(long qq, long friend, Action<FriendInfoPack> res)
+    public void GetFriendInfo(long qq, long friend, Action<ReFriendInfoPack> res)
     {
-        var key = new QQFriend() { QQ = qq, Friend = friend };
+        var key = new QQFriend() { QQ = qq, Friend = friend, UUID = GenUUID };
         GetFriendInfoMap.Add(key, res);
         AddSend(new GetFriendInfoPack()
         {
             qq = qq,
-            id = friend
+            id = friend,
+            uuid = key.UUID
         }, 92);
     }
 
@@ -776,14 +801,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="res">回调</param>
-    public void GroupGetFiles(long qq, long group, Action<GroupFilesPack> res)
+    public void GroupGetFiles(long qq, long group, Action<ReGroupFilesPack> res)
     {
-        var key = new QQGroup() { QQ = qq, Group = group };
+        var key = new QQGroup() { QQ = qq, Group = group, UUID = GenUUID };
         GetGroupFilesMap.Add(key, res);
         AddSend(new GroupGetFilesPack()
         {
             qq = qq,
-            id = group
+            id = group,
+            uuid = key.UUID
         }, 101);
     }
 
@@ -914,14 +940,15 @@ public partial class RobotSDK
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="res">回调</param>
-    public void GroupGetAnnouncements(long qq, long group, Action<GroupAnnouncementsPack> res)
+    public void GroupGetAnnouncements(long qq, long group, Action<ReGroupAnnouncementsPack> res)
     {
-        var key = new QQGroup() { QQ = qq, Group = group };
+        var key = new QQGroup() { QQ = qq, Group = group, UUID = GenUUID };
         GetGroupAnnouncementsMap.Add(key, res);
         AddSend(new GroupGetAnnouncementsPack()
         {
             qq = qq,
-            id = group
+            id = group,
+            uuid = key.UUID
         }, 109);
     }
 

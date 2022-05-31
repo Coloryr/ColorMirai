@@ -11,6 +11,8 @@ import java.util.List;
 
 public class PackEncode {
     public static void writeString(ByteBuf buf, String data) {
+        if (data == null)
+            return;
         byte[] temp = data.getBytes(StandardCharsets.UTF_8);
         buf.writeInt(temp.length);
         buf.writeBytes(temp);
@@ -23,7 +25,7 @@ public class PackEncode {
         }
     }
 
-    public static void writeMemberInfoPack(ByteBuf buf, MemberInfoPack info) {
+    public static void writeMemberInfoPack(ByteBuf buf, ReMemberInfoPack info) {
         buf.writeLong(info.id);
         buf.writeLong(info.fid);
         writeString(buf, info.nick);
@@ -35,9 +37,10 @@ public class PackEncode {
         buf.writeInt(info.muteTimeRemaining);
         buf.writeInt(info.joinTimestamp);
         buf.writeInt(info.lastSpeakTimestamp);
+        writeString(buf, info.uuid);
     }
 
-    public static void writeFriendInfoPack(ByteBuf buf, FriendInfoPack info) {
+    public static void writeFriendInfoPack(ByteBuf buf, ReFriendInfoPack info) {
         buf.writeLong(info.id);
         writeString(buf, info.img);
         writeString(buf, info.remark);
@@ -47,6 +50,7 @@ public class PackEncode {
         buf.writeInt(info.userProfile.getQLevel());
         buf.writeInt(info.userProfile.getSex().ordinal());
         writeString(buf, info.userProfile.getSign());
+        writeString(buf, info.uuid);
     }
 
     public static void writeGroupFileInfo(ByteBuf buf, GroupFileInfo info) {
@@ -88,7 +92,7 @@ public class PackEncode {
         return buf;
     }
 
-    public static ByteBuf listGroupPack(ListGroupPack pack) {
+    public static ByteBuf listGroupPack(ReListGroupPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(55);
         buf.writeLong(pack.qq);
@@ -100,33 +104,36 @@ public class PackEncode {
             buf.writeLong(info.oid);
             buf.writeInt(info.per.getLevel());
         }
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf listFriendPack(ListFriendPack pack) {
+    public static ByteBuf listFriendPack(ReListFriendPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(56);
         buf.writeLong(pack.qq);
         buf.writeInt(pack.friends.size());
-        for (FriendInfoPack info : pack.friends) {
+        for (ReFriendInfoPack info : pack.friends) {
             writeFriendInfoPack(buf, info);
         }
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf listMemberPack(ListMemberPack pack) {
+    public static ByteBuf listMemberPack(ReListMemberPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(57);
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
         buf.writeInt(pack.members.size());
-        for (MemberInfoPack info : pack.members) {
+        for (ReMemberInfoPack info : pack.members) {
             writeMemberInfoPack(buf, info);
         }
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf groupSettingPack(GroupSettingPack pack) {
+    public static ByteBuf groupSettingPack(ReGroupSettingPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(58);
         buf.writeLong(pack.qq);
@@ -135,10 +142,11 @@ public class PackEncode {
         buf.writeBoolean(pack.setting.isAllowMemberInvite());
         buf.writeBoolean(pack.setting.isAutoApproveEnabled());
         buf.writeBoolean(pack.setting.isAnonymousChatEnabled());
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf getImageUrlPack(GetImageUrlPack pack) {
+    public static ByteBuf getImageUrlPack(ReGetImageUrlPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(90);
         buf.writeLong(pack.qq);
@@ -146,23 +154,25 @@ public class PackEncode {
         return buf;
     }
 
-    public static ByteBuf memberInfoPack(MemberInfoPack pack) {
+    public static ByteBuf memberInfoPack(ReMemberInfoPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(91);
         buf.writeLong(pack.qq);
         writeMemberInfoPack(buf, pack);
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf friendInfoPack(FriendInfoPack pack) {
+    public static ByteBuf friendInfoPack(ReFriendInfoPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(92);
         buf.writeLong(pack.qq);
         writeFriendInfoPack(buf, pack);
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf groupFilesPack(GroupFilesPack pack) {
+    public static ByteBuf groupFilesPack(ReGroupFilesPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(101);
         buf.writeLong(pack.qq);
@@ -171,10 +181,11 @@ public class PackEncode {
         for (GroupFileInfo info : pack.files) {
             writeGroupFileInfo(buf, info);
         }
+        writeString(buf, pack.uuid);
         return buf;
     }
 
-    public static ByteBuf groupAnnouncementsPack(GroupAnnouncementsPack pack) {
+    public static ByteBuf groupAnnouncementsPack(ReGroupAnnouncementsPack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeByte(109);
         buf.writeLong(pack.qq);
@@ -183,6 +194,7 @@ public class PackEncode {
         for (GroupAnnouncement info : pack.list) {
             writeGroupAnnouncement(buf, info);
         }
+        writeString(buf, pack.uuid);
         return buf;
     }
 

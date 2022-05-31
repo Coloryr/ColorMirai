@@ -1,6 +1,9 @@
 ﻿using ColoryrSDK;
 using System;
 
+const int type = 3;
+const long qq = 2315986522;
+
 RobotSDK robot = new();
 
 void Message(byte type, object data)
@@ -54,7 +57,6 @@ void State(StateType type)
 RobotConfig config = new()
 {
     IP = "127.0.0.1",
-    Port = 23335,
     Name = "test",
     Pack = new() { 46, 49, 50, 51, 116 },
     RunQQ = 0,
@@ -65,7 +67,22 @@ RobotConfig config = new()
 };
 
 robot.Set(config);
-robot.SetPipe(new ColorMiraiNetty(robot));
+if (type == 1)
+{
+    config.Port = 23333;
+    robot.SetPipe(new ColorMiraiSocket(robot));
+}
+else if (type == 2)
+{
+    config.IP = "ws://127.0.0.1:23334";
+    robot.SetPipe(new ColorMiraiWebSocket(robot));
+}
+else if (type == 3)
+{
+    config.Port = 23335;
+    robot.SetPipe(new ColorMiraiNetty(robot));
+}
+
 robot.Start();
 
 while (!robot.IsConnect) ;
@@ -76,17 +93,7 @@ while (true)
     string[] arg = temp.Split(' ');
     switch (arg[0])
     {
-        case "friends":
-            if (arg.Length != 2)
-            {
-                Console.WriteLine("错误的参数");
-                break;
-            }
-            if (!long.TryParse(arg[1], out long qq))
-            {
-                Console.WriteLine("错误的参数");
-                break;
-            }
+        case "tests":
             robot.GetFriends(qq, (res) =>
             {
                 Console.WriteLine($"{res.qq}的好友：");
@@ -95,10 +102,23 @@ while (true)
                     Console.WriteLine($"{item.id} {item.remark}");
                 }
             });
-            break;
-        case "groups":
-            break;
-        case "members":
+            robot.GetGroups(qq, (res) =>
+            {
+                Console.WriteLine($"{res.qq}的群：");
+                foreach (var item in res.groups)
+                {
+                    Console.WriteLine($"{item.id} {item.name}");
+                }
+                long group = res.groups[0].id;
+                robot.GetMembers(qq, group, (res) =>
+                {
+                    Console.WriteLine($"{res.qq}的群{group}的群员：");
+                    foreach (var item in res.members)
+                    {
+                        Console.WriteLine($"{item.id} {item.nick}");
+                    }
+                });
+            });
             break;
         case "stop":
             robot.Stop();
