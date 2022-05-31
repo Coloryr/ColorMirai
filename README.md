@@ -6,11 +6,12 @@
 注意：目前不能使用stop指令关闭机器人，需要强制杀进程
 
 4.0.0与更低版本的插件完全不兼容
+
+每个版本的数据包都不一样
 ```
 
-**官方QQ群**：[571239090](https://qm.qq.com/cgi-bin/qm/qr?k=85m_MZMJ7BbyZ2vZW4wHVZGGvGnIL2As&jump_from=webapi)
-
-![Gradle构建](https://github.com/Coloryr/ColorMirai/workflows/Gradle%E6%9E%84%E5%BB%BA/badge.svg)
+**官方QQ群1**：[571239090](https://jq.qq.com/?_wv=1027&k=WZxd7h44)  
+**官方QQ群2**：[806493738](https://jq.qq.com/?_wv=1027&k=wl7pBpEw)
 
 **索引列表**
 

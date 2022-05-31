@@ -21,7 +21,7 @@ public class MiraiTerminal extends MiraiConsoleImplementationTerminal implements
     @NotNull
     @Override
     public PluginDataStorage getConfigStorageForJvmPluginLoader() {
-        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_config"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_config_storage"));
     }
 
     @NotNull
@@ -33,7 +33,7 @@ public class MiraiTerminal extends MiraiConsoleImplementationTerminal implements
     @NotNull
     @Override
     public PluginDataStorage getDataStorageForJvmPluginLoader() {
-        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_data"));
+        return MultiFilePluginDataStorage.create(getRootPath().resolve("plugin_data_storage"));
     }
 
     @NotNull

@@ -6,8 +6,7 @@
 
 需要openjdk8环境  
 运行环境看你的构建环境  
-构建不了可以去群里找人要，也可以[从这里下载](https://github.com/Coloryr/ColorMirai/actions)  
-(`workflow runs`里面选择最新的构建，点进去，在`Artifacts`里面选择`ColorMirai`)
+构建不了可以去群里找人要，也可以群里下载
 
 请根据自己的系统先安装openjdk8并且设置好环境变量
 
@@ -23,4 +22,4 @@ cd ColorMirai
 
 在`BUILD SUCCESSFUL`之后, 你会在以下路径找到一个jar文件
 
-`build/libs/ColorMirai-3.x.x-SNAPSHOT-all.jar`
+`build/libs/ColorMirai-4.x.x-SNAPSHOT-all.jar`

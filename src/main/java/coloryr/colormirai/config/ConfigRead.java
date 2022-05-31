@@ -7,6 +7,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 public class ConfigRead {
     private static File configFile;
@@ -21,7 +22,7 @@ public class ConfigRead {
                 return true;
             } else {
                 InputStreamReader reader = new InputStreamReader(
-                        new FileInputStream(configFile), StandardCharsets.UTF_8);
+                        Files.newInputStream(configFile.toPath()), StandardCharsets.UTF_8);
                 BufferedReader bf = new BufferedReader(reader);
                 char[] buf = new char[4096];
                 int length;

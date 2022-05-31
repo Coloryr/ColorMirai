@@ -7,15 +7,14 @@
 目前的SDK代码
 
 [C#](../demo/C%23/netcore/BaseColormiraiSDK.cs)  
-[JAVA](../demo/JAVA/src/coloryr/colormirai/demo/RobotSDK/BaseRobot.java)  
-示例代码不包含Main函数，可以作为库用  
+[JAVA](../demo/JAVA/src/coloryr/colormirai/demo/RobotSDK/BaseRobot.java)
 
 ## 插件教程
 
-ColorMirai使用socket/WebSocket方式让机器人和插件互相链接  
-Socket数据包的接受和封装在SDK已经写完了，只需要引用一下就好了
+ColorMirai使用Socket/WebSocket/Netty方式让机器人和插件互相链接  
+数据包的接受和封装在SDK已经写完了，只需要引用一下就好了
 
-### 数据包
+### Socket数据包
 
 Socket的大部分数据包是一串JSON字符串+数据包ID构成  
 但是发送图片和发送语音用的是FormData格式
@@ -28,7 +27,8 @@ Socket的大部分数据包是一串JSON字符串+数据包ID构成
 
 [ID]对应数据包的ID
 ```
-WebSocket的数据包
+
+### WebSocket的数据包
 ```Json
 {
   "index": 数据包ID,
@@ -36,11 +36,10 @@ WebSocket的数据包
 }
 ```
 
-Netty的数据包(待补充)
+### Netty的数据包
+数据包的拆装较复杂，直接看源码妥当
 
-**注**：经测试Server 2008存在数据包断包和丢包的现象，请切换到Server 2019使用
-
-目前的数据包ID
+### 目前的数据包ID
 
 ```
 0 [插件]插件开始连接
@@ -179,6 +178,8 @@ Netty的数据包(待补充)
 标注为`[插件]`是插件发送给框架的
 
 每个包需要发送的数据[在这里](pack.md)
+
+**注**：经测试Server 2008存在数据包断包和丢包的现象，请切换到Server 2019使用
 
 ### SDK补充说明
 1. 获取图片Url `uuid`是`{xxx-xxx-xxx-xx}.png`，获取的链接可以直接打开

@@ -4,13 +4,13 @@
 
 ## 启动
 
-1. 启动ColorMirai，必须使用openjdk8及以上，推荐使用openjdk15启动  
+1. 启动ColorMirai，必须使用openjdk8及以上，推荐使用openjdk17启动  
    请务必用openjdk启动  
    请务必用openjdk启动  
    请务必用openjdk启动
 
 如果没有openjdk，群文件有openjdk17，下载安装之后新建一个`.cmd`，使用JAVA启动，例如在里面输入
-```Cmd
+```
 "C:\Program Files\AdoptOpenJDK\jdk-17\bin\java.exe" -Xmx1024M -jar ColorMirai-4.x.x-SNAPSHOT-all.jar
 pause
 ```
@@ -19,7 +19,7 @@ pause
 
 如果你的系统环境变量默认是openjdk，则cmd内容是下面
 ```
-java -Xmx1024M -jar ColorMirai-4.X-SNAPSHOT-all.jar
+java -Xmx1024M -jar ColorMirai-4.X.X-SNAPSHOT-all.jar
 pause
 ```
 
@@ -34,56 +34,56 @@ pause
 
 ```Json5
 {
-  "AutoReconnect":true,
-  "HighwayUpload":10,
-  "HttpPort":23335,
-  "MaxList":100000,
-  "Pack":true,
-  "QQs": [
+  "autoReconnect":true,
+  "highwayUpload":10,
+  "maxList":100000,
+  "pack":true,
+  "qqList": [
     {
-      "Info": "device.json",
-      "LoginType": "ANDROID_PHONE",
-      "Password": "请填写你的密码",
-      "QQ": 0
+      "info": "device.json",
+      "loginType": "ANDROID_PHONE",
+      "password": "请填写你的密码",
+      "qq": 0
     }
   ],
-  "ReadEncoding":"UTF-8",
-  "SendEncoding":"UTF-8",
-  "SocketPort":23333,
-  "WebSocketPort":23334,
-  "authKey":"123456789",
-  "authTime":1800,
+  "sendEncoding":"UTF-8",
+  "readEncoding":"UTF-8",
+  "socketPort":23333,
+  "webSocketPort":23334,
+  "nettyPort": 23335,
   "cacheSize":100,
   "escapeSelf":true,
-  "noInput": false
+  "noInput": false,
+  "debug": false,
+  "maxNettyPackSize": 500
 }
 ```
 
-- `MaxList`：最大消息列表
-- `Pack`：是否发送心跳包
-- `SocketPort`：Socket启动的端口
-- `HttpPort`：mirai-http-api启动端口
-- `WebSocketPort`：websocket启动的端口
-- `QQs` : QQ账号列表 (可以添加多个)
-  - `Info`：登录设备信息
-  - `QQ`：登录的QQ号
-  - `Password`：QQ号密码
-  - `LoginType`：登录的方式
-  - 目前支持两种协议:
+- `autoReconnect`：自动重连
+- `highwayUpload`：上传通道数
+- `maxList`：最大消息列表
+- `pack`：是否发送心跳包
+- `socketPort`：Socket启动的端口
+- `webSocketPort`：websocket启动的端口
+- `nettyPort`：netty启动端口
+- `qqList` : QQ账号列表 (可以添加多个)
+  - `info`：登录设备信息
+  - `qq`：登录的QQ号
+  - `password`：QQ号密码
+  - `loginType`：登录的方式
+  - 目前支持协议:
     - 安卓 `ANDROID_PHONE`
     - 手表 `ANDROID_WATCH`
     - 平板 `ANDROID_PAD`
     - iPad `IPAD`
     - MacOS `MACOS`
 - `escapeSelf`：是否跳过自己机器人的信息
-- `ReadEncoding`：读数据包编码
-- `SendEncoding`：发送数据包编码
-- `AutoReconnect`：自动重连
-- `HighwayUpload`：上传通道数
-- `authKey`：mriai-http-api密钥
-- `authTime`：密钥刷新时间
+- `readEncoding`：读数据包编码
+- `sendEncoding`：发送数据包编码
 - `cacheSize`：缓存大小
 - `noInput`：没有输入
+- `debug`: 调试
+- `maxNettyPackSize`: netty数据包最大长度
 
 设置完成后再次启动ColorMirai，出现
 ```

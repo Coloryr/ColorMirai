@@ -194,30 +194,6 @@ while (true)
     string[] arg = temp.Split(' ');
     switch (arg[0])
     {
-        case "friends":
-            if (arg.Length != 2)
-            {
-                Console.WriteLine("错误的参数");
-                break;
-            }
-            if (!long.TryParse(arg[1], out long qq))
-            {
-                Console.WriteLine("错误的参数");
-                break;
-            }
-            robot.GetFriends(qq, (res) =>
-            {
-                Console.WriteLine($"{res.qq}的好友：");
-                foreach (var item in res.friends)
-                {
-                    Console.WriteLine($"{item.id} {item.remark}");
-                }
-            });
-            break;
-        case "groups":
-            break;
-        case "members":
-            break;
         case "stop":
             robot.Stop();
             return;
@@ -225,7 +201,7 @@ while (true)
 }
 ```
 
-## JAVA
+## JAVA(不再更新)
 
 1. 准备工作  
    首先打开[demo代码](../demo/JAVA/)使用IDEA打开文件夹
