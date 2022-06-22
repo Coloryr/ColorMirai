@@ -104,6 +104,15 @@ public class ThePlugin {
                 while (!tasks.isEmpty()) {
                     PluginPack task = tasks.poll();
                     switch (task.index) {
+                        //27 [插件]下载文件
+                        //好友文件还未支持
+//                        case 27: {
+//                            DownloadFilePack pack = (DownloadFilePack) task.pack;
+//                            ReDownloadFilePack pack1 = BotDownload.download(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.internalId, pack.name, pack.size, pack.local, pack.fid, pack.qid, pack.uuid);
+//                            if (socket.send(pack1, 27))
+//                                close();
+//                            break;
+//                        }
                         //52 [插件]发送群消息
                         case 52: {
                             SendGroupMessagePack pack = (SendGroupMessagePack) task.pack;

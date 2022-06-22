@@ -1,6 +1,5 @@
 package coloryr.colormirai.plugin.netty;
 
-import coloryr.colormirai.plugin.pack.from.GetImageUrlPack;
 import coloryr.colormirai.plugin.pack.re.*;
 import coloryr.colormirai.plugin.pack.to.*;
 import io.netty.buffer.ByteBuf;
@@ -418,16 +417,16 @@ public class PackEncode {
         return buf;
     }
 
-    public static ByteBuf groupEntranceAnnouncementChangeEventPack(GroupEntranceAnnouncementChangeEventPack pack) {
-        ByteBuf buf = Unpooled.buffer();
-        buf.writeByte(27);
-        buf.writeLong(pack.qq);
-        buf.writeLong(pack.id);
-        buf.writeLong(pack.fid);
-        writeString(buf, pack.old);
-        writeString(buf, pack.now);
-        return buf;
-    }
+    //好友文件还未支持
+//    public static ByteBuf downloadFilePack(ReDownloadFilePack pack) {
+//        ByteBuf buf = Unpooled.buffer();
+//        buf.writeByte(27);
+//        buf.writeLong(pack.qq);
+//        writeString(buf, pack.uuid);
+//        buf.writeBoolean(pack.done);
+//        writeString(buf, pack.message);
+//        return buf;
+//    }
 
     public static ByteBuf groupMessagePostSendEventPack(GroupMessagePostSendEventPack pack) {
         ByteBuf buf = Unpooled.buffer();

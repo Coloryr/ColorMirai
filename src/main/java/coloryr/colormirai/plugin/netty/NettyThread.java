@@ -5,7 +5,7 @@ import coloryr.colormirai.plugin.IPluginSocket;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
-import coloryr.colormirai.plugin.pack.from.GetImageUrlPack;
+import coloryr.colormirai.plugin.pack.from.DownloadFilePack;
 import coloryr.colormirai.plugin.pack.from.StartPack;
 import coloryr.colormirai.plugin.pack.re.*;
 import coloryr.colormirai.plugin.pack.to.*;
@@ -100,6 +100,11 @@ public class NettyThread implements IPluginSocket {
                         ColorMiraiMain.logger.info("收到数据包：[" + task.index + "]" + task.data + "");
                     }
                     switch (task.index) {
+                        //27 [插件]下载文件
+                        case 27: {
+                            plugin.addPack(new PluginPack(PackDecode.downloadFilePack(task.data), task.index));
+                            break;
+                        }
                         //52 [插件]发送群消息
                         case 52: {
                             plugin.addPack(new PluginPack(PackDecode.sendGroupMessagePack(task.data), task.index));
@@ -487,9 +492,10 @@ public class NettyThread implements IPluginSocket {
                 case 26:
                     buff = PackEncode.groupAllowMemberInviteEventPack((GroupAllowMemberInviteEventPack) data);
                     break;
-                case 27:
-                    buff = PackEncode.groupEntranceAnnouncementChangeEventPack((GroupEntranceAnnouncementChangeEventPack) data);
-                    break;
+                //好友文件还未支持
+//                case 27:
+//                    buff = PackEncode.downloadFilePack((ReDownloadFilePack) data);
+//                    break;
                 case 28:
                     buff = PackEncode.groupMessagePostSendEventPack((GroupMessagePostSendEventPack) data);
                     break;

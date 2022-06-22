@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '6.1.0'
-    id 'org.jetbrains.kotlin.jvm' version '1.6.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
 
 group 'coloryr.colormirai'
-version '4.0.1'
+version '4.0.2'
 
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ dependencies {
     compile 'org.apache.logging.log4j:log4j-api:2.17.2'
     compile 'org.apache.logging.log4j:log4j-core:2.17.2'
 
-    compile 'com.alibaba:fastjson:2.0.3'
+    compile 'com.alibaba:fastjson:2.0.7'
     compile 'org.java-websocket:Java-WebSocket:1.5.3'
     compile "commons-fileupload:commons-fileupload:1.4"
     compile 'javax.servlet:javax.servlet-api:4.0.1'
@@ -33,19 +33,16 @@ dependencies {
     compile 'io.netty:netty-all:4.1.77.Final'
     compile 'com.google.code.gson:gson:2.9.0'
 
-    compile 'net.mamoe:mirai-console:2.11.1' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.11.1'
-    api 'net.mamoe:mirai-core-api:2.11.1'
-    runtimeOnly "net.mamoe:mirai-core:2.11.1"
+    compile 'net.mamoe:mirai-console:2.12.0-RC' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.12.0-RC'
+    api 'net.mamoe:mirai-core-api:2.12.0-RC'
+    runtimeOnly "net.mamoe:mirai-core:2.12.0-RC"
 
 }
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
-task copyToLib(type: Copy) {
-    into "$buildDir/libs"
-    from configurations.compile
-}
+
 jar {
     manifest {
         attributes(

@@ -3,6 +3,7 @@ package coloryr.colormirai.robot;
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.obj.SendPackObj;
+import coloryr.colormirai.plugin.pack.from.DownloadFilePack;
 import coloryr.colormirai.plugin.pack.to.*;
 import coloryr.colormirai.robot.event.EventBase;
 import coloryr.colormirai.robot.event.EventCall;
@@ -350,23 +351,6 @@ public class BotEvent extends SimpleListenerHost {
         long qq = event.getBot().getId();
         GroupAllowMemberInviteEventPack pack = new GroupAllowMemberInviteEventPack(qq, id, fid, old, now);
         BotStart.addTask(new SendPackObj(26, pack, fid, id, qq));
-    }
-
-    //27 [机器人]入群公告改变（事件）
-    @EventHandler
-    public void onGroupEntranceAnnouncementChangeEvent(GroupEntranceAnnouncementChangeEvent event) {
-        if (PluginUtils.havePlugin())
-            return;
-        long id = event.getGroup().getId();
-        long fid = 0;
-        if (event.getOperator() != null) {
-            fid = event.getOperator().getId();
-        }
-        String old = event.getOrigin();
-        String now = event.getNew();
-        long qq = event.getBot().getId();
-        GroupEntranceAnnouncementChangeEventPack pack = new GroupEntranceAnnouncementChangeEventPack(qq, id, fid, old, now);
-        BotStart.addTask(new SendPackObj(27, pack, fid, id, qq));
     }
 
     //28 [机器人]在群消息发送后广播（事件）

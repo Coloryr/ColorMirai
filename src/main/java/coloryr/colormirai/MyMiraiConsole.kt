@@ -59,6 +59,7 @@ fun startupConsoleThread() {
                     continue
                 }
                 if (next.equals("/stop")) {
+                    MiraiConsole.shutdown()
                     ColorMiraiMain.stop()
                 }
                 // consoleLogger.debug("INPUT> $next")

@@ -2,6 +2,7 @@ package coloryr.colormirai.plugin.netty;
 
 import coloryr.colormirai.plugin.pack.from.*;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -535,6 +536,19 @@ public class PackDecode {
         pack.id = buff.readLong();
         pack.data = readBytes(buff);
         pack.ids = readLongList(buff);
+        return pack;
+    }
+
+    public static DownloadFilePack downloadFilePack(ByteBuf buff) {
+        DownloadFilePack pack = new DownloadFilePack();
+        pack.qq = buff.readLong();
+        pack.id = readString(buff);
+        pack.internalId = buff.readInt();
+        pack.name = readString(buff);
+        pack.size = buff.readLong();
+        pack.local = readString(buff);
+        pack.fid = buff.readLong();
+        pack.qid = buff.readLong();
         return pack;
     }
 }
