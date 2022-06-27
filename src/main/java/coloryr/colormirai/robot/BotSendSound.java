@@ -10,6 +10,7 @@ import net.mamoe.mirai.message.data.Audio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BotSendSound {
     public static void sendGroupSound(long qq, long id, byte[] sound, List<Long> ids) {
@@ -25,6 +26,7 @@ public class BotSendSound {
             if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             Audio audio = BotUpload.upAudio(bot, sound);
             for (long item : ids) {
                 Group group = bot.getGroup(item);
@@ -59,9 +61,10 @@ public class BotSendSound {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Group group = bot.getGroup(item);
                 if (group == null) {
@@ -99,9 +102,10 @@ public class BotSendSound {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Friend friend = bot.getFriend(item);
                 if (friend == null) {
@@ -140,9 +144,10 @@ public class BotSendSound {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Stranger stranger = bot.getStranger(item);
                 if (stranger == null) {

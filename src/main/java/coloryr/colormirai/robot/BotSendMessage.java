@@ -13,6 +13,7 @@ import net.mamoe.mirai.message.data.MessageUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BotSendMessage {
 
@@ -28,6 +29,7 @@ public class BotSendMessage {
             if (!ids.contains(group)) {
                 ids.add(group);
             }
+            ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 if (item.startsWith("[mirai:")) {
@@ -36,7 +38,6 @@ public class BotSendMessage {
                     messageChain = messageChain.plus(item);
                 }
             }
-
             for (long item : ids) {
                 Group group1 = BotStart.getBots().get(qq).getGroup(item);
                 if (group1 == null) {
@@ -108,6 +109,7 @@ public class BotSendMessage {
             if (!ids.contains(fid)) {
                 ids.add(fid);
             }
+            ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);

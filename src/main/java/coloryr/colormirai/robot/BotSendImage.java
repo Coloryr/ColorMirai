@@ -11,6 +11,7 @@ import net.mamoe.mirai.message.data.Image;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BotSendImage {
 
@@ -28,6 +29,7 @@ public class BotSendImage {
             if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             Image image = BotUpload.upImage(bot, img);
             for (long item : ids) {
                 Group group = bot.getGroup(item);
@@ -62,9 +64,10 @@ public class BotSendImage {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Group group = bot.getGroup(item);
                 if (group == null) {
@@ -170,9 +173,10 @@ public class BotSendImage {
         if (ids == null) {
             ids = new ArrayList<>();
         }
-        if (id != 0) {
+        if (!ids.contains(id)) {
             ids.add(id);
         }
+        ids.removeIf(Objects::isNull);
         try {
             for (long item : ids) {
                 Friend friend = bot.getFriend(item);
@@ -209,9 +213,10 @@ public class BotSendImage {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Friend friend = bot.getFriend(item);
                 if (friend == null) {
@@ -249,9 +254,10 @@ public class BotSendImage {
         if (ids == null) {
             ids = new ArrayList<>();
         }
-        if (id != 0) {
+        if (!ids.contains(id)) {
             ids.add(id);
         }
+        ids.removeIf(Objects::isNull);
         try {
             for (long item : ids) {
                 Stranger stranger = bot.getStranger(item);
@@ -290,9 +296,10 @@ public class BotSendImage {
             if (ids == null) {
                 ids = new ArrayList<>();
             }
-            if (id != 0) {
+            if (!ids.contains(id)) {
                 ids.add(id);
             }
+            ids.removeIf(Objects::isNull);
             for (long item : ids) {
                 Stranger stranger = bot.getStranger(item);
                 if (stranger == null) {
