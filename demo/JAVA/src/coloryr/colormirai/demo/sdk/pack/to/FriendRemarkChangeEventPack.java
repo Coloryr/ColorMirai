@@ -2,21 +2,20 @@ package coloryr.colormirai.demo.sdk.pack.to;
 
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-/*
-23 [机器人]好友昵称改变（事件）
-id:好友QQ号
-old: 旧的昵称
-now:新的昵称
+/**
+ * 23 [机器人]好友昵称改变（事件）
  */
 public class FriendRemarkChangeEventPack extends PackBase {
+    /**
+     * 好友QQ号
+     */
     public long id;
-    public String now;
+    /**
+     * 旧的昵称
+     */
     public String old;
-
-    public FriendRemarkChangeEventPack(long qq, long id, String old, String name) {
-        this.id = id;
-        this.qq = qq;
-        this.old = old;
-        this.now = name;
-    }
+    /**
+     * 新的昵称
+     */
+    public String now;
 }

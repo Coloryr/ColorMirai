@@ -2,24 +2,40 @@ package coloryr.colormirai.demo.sdk.pack.from;
 
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-/*
-110 [插件]设置群公告
-id:群号
-imageFile:图片路径
-sendToNewMember:发送给新群员
-isPinned:顶置
-showEditCard:显示能够引导群成员修改昵称的窗口
-showPopup:使用弹窗
-requireConfirmation:需要群成员确认
-text:公告内容
+/**
+ * 110 [插件]设置群公告
  */
 public class GroupAddAnnouncementPack extends PackBase {
+    /**
+     * 群号
+     */
     public long id;
+    /**
+     * 图片路径
+     */
     public String imageFile;
+    /**
+     * 发送给新群员
+     */
     public boolean sendToNewMember;
+    /**
+     * 顶置
+     */
     public boolean isPinned;
+    /**
+     * 显示能够引导群成员修改昵称的窗口
+     */
     public boolean showEditCard;
+    /**
+     * 使用弹窗
+     */
     public boolean showPopup;
+    /**
+     * 需要群成员确认
+     */
     public boolean requireConfirmation;
+    /**
+     * 公告内容
+     */
     public String text;
 }

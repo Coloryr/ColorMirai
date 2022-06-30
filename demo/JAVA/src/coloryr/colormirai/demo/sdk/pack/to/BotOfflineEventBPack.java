@@ -1,15 +1,17 @@
 package coloryr.colormirai.demo.sdk.pack.to;
 
-/*
-11 [机器人]被挤下线（事件）
-title:标题
-message:离线原因
- */
-public class BotOfflineEventBPack extends BotOfflineEventAPack {
-    public String title;
+import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-    public BotOfflineEventBPack(long qq, String message, String title) {
-        super(qq, message);
-        this.title = title;
-    }
+/**
+ * 11 [机器人]被挤下线（事件）
+ */
+public class BotOfflineEventBPack extends PackBase {
+    /**
+     * 离线原因
+     */
+    public String message;
+    /**
+     * 标题
+     */
+    public String title;
 }

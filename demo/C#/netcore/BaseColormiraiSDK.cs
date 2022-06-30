@@ -790,25 +790,25 @@ public record GroupAllowMemberInviteEventPack : PackBase
 /// <summary>
 /// 27 [机器人]入群公告改变（事件）
 /// </summary>
-public record GroupEntranceAnnouncementChangeEventPack : PackBase
-{
-    /// <summary>
-    /// 群号
-    /// </summary>
-    public long id { get; set; }
-    /// <summary>
-    /// 执行人QQ号
-    /// </summary>
-    public long fid { get; set; }
-    /// <summary>
-    /// 旧的状态
-    /// </summary>
-    public bool old { get; set; }
-    /// <summary>
-    /// 新的状态
-    /// </summary>
-    public bool now { get; set; }
-}
+//public record GroupEntranceAnnouncementChangeEventPack : PackBase
+//{
+//    / <summary>
+//    / 群号
+//    / </summary>
+//    public long id { get; set; }
+//    / <summary>
+//    / 执行人QQ号
+//    / </summary>
+//    public long fid { get; set; }
+//    / <summary>
+//    / 旧的状态
+//    / </summary>
+//    public bool old { get; set; }
+//    / <summary>
+//    / 新的状态
+//    / </summary>
+//    public bool now { get; set; }
+//}
 /// <summary>
 /// 28 [机器人]在群消息发送后广播（事件）
 /// </summary>
@@ -2631,7 +2631,7 @@ public partial class RobotSDK
         { 24, typeof(GroupAllowAnonymousChatEventPack) },
         { 25, typeof(GroupAllowConfessTalkEventPack) },
         { 26, typeof(GroupAllowMemberInviteEventPack) },
-        { 27, typeof(GroupEntranceAnnouncementChangeEventPack) },
+        //{ 27, typeof(GroupEntranceAnnouncementChangeEventPack) },
         { 28, typeof(GroupMessagePostSendEventPack) },
         { 29, typeof(GroupMessagePreSendEventPack) },
         { 30, typeof(GroupMuteAllEventPack) },
@@ -2665,7 +2665,7 @@ public partial class RobotSDK
         { 58, typeof(ReGroupSettingPack) },
         { 59, typeof(EventCallPack) },
         //60无
-        { 61, typeof(SendGroupPrivateImagePack) },
+        { 61, typeof(SendGroupImagePack) },
         { 62, typeof(SendGroupPrivateImagePack)},
         { 63, typeof(SendFriendImagePack)},
         { 64, typeof(GroupKickMemberPack) },
@@ -2881,6 +2881,7 @@ public partial class RobotSDK
     /// 添加数据包
     /// </summary>
     /// <param name="data">数据包</param>
+    /// <param name="index">包ID</param>
     internal void AddSend(PackBase pack, byte index)
     {
         Pipe.AddSend(pack, index);

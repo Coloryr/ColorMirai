@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.MemberInfoPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReMemberInfoPack;
 
 public interface IMemberInfo {
-    void res(MemberInfoPack pack);
+    void res(ReMemberInfoPack pack);
 }

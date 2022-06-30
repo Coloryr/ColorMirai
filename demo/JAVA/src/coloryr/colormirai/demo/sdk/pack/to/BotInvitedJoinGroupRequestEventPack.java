@@ -2,21 +2,20 @@ package coloryr.colormirai.demo.sdk.pack.to;
 
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-/*
-4 [机器人]被邀请加入一个群（事件）
-eventid:事件ID
-id:群号
-fid:邀请人QQ号
+/**
+ * 4 [机器人]被邀请加入一个群（事件）
  */
 public class BotInvitedJoinGroupRequestEventPack extends PackBase {
-    public long eventid;
+    /**
+     * 群号
+     */
     public long id;
+    /**
+     * 邀请人QQ号
+     */
     public long fid;
-
-    public BotInvitedJoinGroupRequestEventPack(long qq, long id, long fid, long eventid) {
-        this.qq = qq;
-        this.fid = fid;
-        this.id = id;
-        this.eventid = eventid;
-    }
+    /**
+     * 事件ID
+     */
+    public long eventid;
 }

@@ -3,13 +3,19 @@ package coloryr.colormirai.demo.sdk.pack.from;
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
 /*
-65 [插件]禁言群员
-id:群号
-fid:成员QQ号
-time:时间
+ * 65 [插件]禁言群员
  */
 public class GroupMuteMemberPack extends PackBase {
+    /*
+     * 群号
+     */
     public long id;
+    /*
+     * 成员QQ号
+     */
     public long fid;
+    /*
+     * 时间
+     */
     public int time;
 }

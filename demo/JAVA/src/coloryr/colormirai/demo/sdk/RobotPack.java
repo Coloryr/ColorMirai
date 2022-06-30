@@ -7,7 +7,7 @@ import coloryr.colormirai.demo.sdk.pack.to.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RobotSDK {
+public class RobotPack {
     public static final Map<Byte, Class<? extends PackBase>> packType = new HashMap<Byte, Class<? extends PackBase>>() {{
         put((byte) 1, BeforeImageUploadPack.class);
         put((byte) 2, BotAvatarChangedPack.class);
@@ -35,7 +35,7 @@ public class RobotSDK {
         put((byte) 24, GroupAllowAnonymousChatEventPack.class);
         put((byte) 25, GroupAllowConfessTalkEventPack.class);
         put((byte) 26, GroupAllowMemberInviteEventPack.class);
-        put((byte) 27, GroupEntranceAnnouncementChangeEventPack.class);
+        //put((byte) 27, GroupEntranceAnnouncementChangeEventPack.class);
         put((byte) 28, GroupMessagePostSendEventPack.class);
         put((byte) 29, GroupMessagePreSendEventPack.class);
         put((byte) 30, GroupMuteAllEventPack.class);
@@ -68,18 +68,21 @@ public class RobotSDK {
         put((byte) 57, GroupGetMemberInfoPack.class);
         put((byte) 58, GroupGetSettingPack.class);
         put((byte) 59, EventCallPack.class);
-        //60-63无
+        //60无
+        put((byte) 61, SendGroupImagePack.class);
+        put((byte) 62, SendGroupPrivateImagePack.class);
+        put((byte) 63, SendFriendImagePack.class);
         put((byte) 64, GroupKickMemberPack.class);
         put((byte) 65, GroupMuteMemberPack.class);
         put((byte) 66, GroupUnmuteMemberPack.class);
         put((byte) 67, GroupMuteAllPack.class);
         put((byte) 68, GroupUnmuteAllPack.class);
-        put((byte) 69, GroupSetMemberCard.class);
+        put((byte) 69, GroupSetMemberCardPack.class);
         put((byte) 70, GroupSetNamePack.class);
         put((byte) 71, ReCallMessagePack.class);
         put((byte) 72, FriendInputStatusChangedEventPack.class);
         put((byte) 73, FriendNickChangedEventPack.class);
-        //74无
+        put((byte) 74, SendGroupSoundPack.class);
         put((byte) 75, SendGroupImageFilePack.class);
         put((byte) 76, SendGroupPrivateImageFilePack.class);
         put((byte) 77, SendFriendImageFilePack.class);
@@ -96,7 +99,7 @@ public class RobotSDK {
         put((byte) 88, OtherClientMessageEventPack.class);
         put((byte) 89, GroupMessageSyncEventPack.class);
         put((byte) 90, GetImageUrlPack.class);
-        put((byte) 91, GetMemberInfo.class);
+        put((byte) 91, GetMemberInfoPack.class);
         put((byte) 92, GetFriendInfoPack.class);
         put((byte) 93, SendMusicSharePack.class);
         put((byte) 94, GroupSetEssenceMessagePack.class);
@@ -119,5 +122,18 @@ public class RobotSDK {
         put((byte) 111, GroupDeleteAnnouncementPack.class);
         put((byte) 112, SendFriendSoundFilePack.class);
         put((byte) 113, GroupDisbandPack.class);
+        put((byte) 114, GroupSetAllowMemberInvitePack.class);
+        put((byte) 115, GroupSetAnonymousChatEnabledPack.class);
+        put((byte) 116, StrangerMessageEventPack.class);
+        put((byte) 117, SendStrangerMessagePack.class);
+        put((byte) 118, SendStrangerImageFilePack.class);
+        put((byte) 119, SendStrangerDicePack.class);
+        put((byte) 120, SendStrangerNudgePack.class);
+        put((byte) 121, SendStrangerSoundFilePack.class);
+        put((byte) 122, StrangerMessagePreSendEventPack.class);
+        put((byte) 123, StrangerMessagePostSendEventPack.class);
+        put((byte) 124, StrangerRelationChangePack.class);
+        put((byte) 125, StrangerRelationChangePack.class);
+        put((byte) 126, SendFriendSoundPack.class);
     }};
 }

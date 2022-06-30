@@ -1,10 +1,10 @@
 package coloryr.colormirai.demo.sdk;
 
-class RobotTask {
+public class RobotTask {
     public byte index;
-    public String data;
+    public Object data;
 
-    public RobotTask(byte type, String s) {
+    public RobotTask(byte type, Object s) {
         index = type;
         data = s;
     }

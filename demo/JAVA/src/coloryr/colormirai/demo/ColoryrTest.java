@@ -1,20 +1,23 @@
 package coloryr.colormirai.demo;
 
 import coloryr.colormirai.demo.sdk.RobotConfig;
-import coloryr.colormirai.demo.sdk.TopRobot;
+import coloryr.colormirai.demo.sdk.RobotTop;
 import coloryr.colormirai.demo.sdk.enums.FriendCallType;
 import coloryr.colormirai.demo.sdk.enums.LogType;
 import coloryr.colormirai.demo.sdk.enums.StateType;
 import coloryr.colormirai.demo.sdk.pack.PackBase;
-import coloryr.colormirai.demo.sdk.pack.re.FriendInfoPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReFriendInfoPack;
 import coloryr.colormirai.demo.sdk.pack.to.GroupMessageEventPack;
 import coloryr.colormirai.demo.sdk.pack.to.NewFriendRequestEventPack;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiNetty;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiSocket;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiWebSocket;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ColoryrTest {
-    private static TopRobot robot;
+    private static RobotTop robot;
 
     private static void messgae(byte type, PackBase data) {
         switch (type) {
@@ -32,9 +35,9 @@ public class ColoryrTest {
                     System.out.println(item);
                 }
                 System.out.println();
-                robot.sendGroupMessage(pack.qq, pack.id, new ArrayList<String>() {{
-                    this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
-                }});
+//                robot.sendGroupMessage(pack.qq, pack.id, new ArrayList<String>() {{
+//                    this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
+//                }});
                 break;
         }
     }
@@ -48,8 +51,8 @@ public class ColoryrTest {
     }
 
     public static void main(String[] arg) {
-        robot = new TopRobot();
-        RobotConfig Config = new RobotConfig() {{
+        robot = new RobotTop();
+        RobotConfig config = new RobotConfig() {{
             name = "Demo";
             ip = "127.0.0.1";
             port = 23333;
@@ -69,7 +72,16 @@ public class ColoryrTest {
             stateAction = ColoryrTest::state;
         }};
 
-        robot.set(Config);
+        //WebSocket
+        //config.ip = "ws://127.0.0.1:23334";
+        //robot.setPipe(new ColorMiraiWebSocket(robot));
+
+        //Netty
+        config.port = 23335;
+        robot.setPipe(new ColorMiraiNetty(robot));
+
+        //robot.setPipe(new ColorMiraiSocket(robot));
+        robot.set(config);
         robot.start();
         Scanner scanner = new Scanner(System.in);
         while (true) {
@@ -87,7 +99,7 @@ public class ColoryrTest {
                     long qq = Long.parseLong(args[1]);
                     robot.getFriends(qq, (res) -> {
                         System.out.println(res.qq + "的好友：");
-                        for (FriendInfoPack item : res.friends) {
+                        for (ReFriendInfoPack item : res.friends) {
                             System.out.println(item.id + " " + item.remark);
                         }
                     });

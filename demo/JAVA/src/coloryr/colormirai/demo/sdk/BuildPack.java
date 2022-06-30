@@ -3,6 +3,7 @@ package coloryr.colormirai.demo.sdk;
 import com.alibaba.fastjson.JSON;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class BuildPack {
     /**
@@ -29,13 +30,21 @@ public class BuildPack {
      * @param index 包ID
      * @return 构建好的包
      */
-    public static byte[] buildImage(long qq, long id, long fid, String img, int index) {
+    public static byte[] buildImage(long qq, long id, long fid, String img, int index, List<Long> ids) {
         String temp = "";
         if (id != 0) {
             temp += "id=" + id + "&";
         }
         if (fid != 0) {
             temp += "fid=" + fid + "&";
+        }
+        if (ids != null) {
+            String temp1 = "ids=";
+            for (Long item : ids) {
+                temp1 += item + ",";
+            }
+            temp1 = temp1.substring(0, temp.length() - 1);
+            temp += temp1 + "&";
         }
         temp += "qq=" + qq + "&" + "img=" + img + " ";
         byte[] temp1 = temp.getBytes(StandardCharsets.UTF_8);
@@ -52,8 +61,17 @@ public class BuildPack {
      * @param index 包ID
      * @return 构建好的包
      */
-    public static byte[] buildSound(long qq, long id, String sound, byte index) {
-        String temp = "id=" + id + "&qq=" + qq + "&sound=" + sound + " ";
+    public static byte[] buildSound(long qq, long id, String sound, byte index, List<Long> ids) {
+        String temp = "id=" + id + "&qq=" + qq + "&sound=" + sound;
+        if (ids != null) {
+            String temp1 = "ids=";
+            for (Long item : ids) {
+                temp1 += item + ",";
+            }
+            temp1 = temp1.substring(0, temp.length() - 1);
+            temp += temp1 + "&";
+        }
+        temp += " ";
         byte[] data = temp.getBytes(StandardCharsets.UTF_8);
         data[data.length - 1] = index;
         return data;

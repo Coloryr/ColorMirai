@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.GroupSettingPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReGroupSettingPack;
 
 public interface IGroupSetting {
-    void res(GroupSettingPack pack);
+    void res(ReGroupSettingPack pack);
 }

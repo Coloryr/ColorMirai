@@ -41,6 +41,9 @@ public class WebSocketThread implements IPluginSocket {
         if (!object.has("index")) {
             return null;
         }
+        if (!object.has("pack")) {
+            return null;
+        }
         WebSocketPackObj obj = new WebSocketPackObj();
         obj.index = object.get("index").getAsByte();
         obj.pack = object.get("pack").getAsJsonObject();

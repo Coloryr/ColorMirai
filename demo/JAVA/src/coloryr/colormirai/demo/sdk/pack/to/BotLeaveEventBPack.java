@@ -1,15 +1,17 @@
 package coloryr.colormirai.demo.sdk.pack.to;
 
-/*
-8 [机器人]被管理员或群主踢出群（事件）
-id:群号
-fid:执行人QQ
- */
-public class BotLeaveEventBPack extends BotLeaveEventAPack {
-    public long fid;
+import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-    public BotLeaveEventBPack(long qq, long id, long fid) {
-        super(qq, id);
-        this.fid = fid;
-    }
+/**
+ * 8 [机器人]被管理员或群主踢出群（事件）
+ */
+public class BotLeaveEventBPack extends PackBase {
+    /**
+     * 群号
+     */
+    public long id;
+    /**
+     * 执行人QQ
+     */
+    public long fid;
 }

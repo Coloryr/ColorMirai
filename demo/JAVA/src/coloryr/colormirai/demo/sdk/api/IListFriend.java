@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.ListFriendPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReListFriendPack;
 
 public interface IListFriend {
-    void res(ListFriendPack pack);
+    void res(ReListFriendPack pack);
 }

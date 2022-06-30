@@ -22,6 +22,8 @@ public class PluginWebSocketServer {
         try {
             if (websocketsData.containsKey(webSocket)) {
                 Queue<String> list = websocketsData.get(webSocket);
+                if (list == null)
+                    return null;
                 return list.poll();
             } else {
                 return null;

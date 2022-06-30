@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.GroupFilesPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReGroupFilesPack;
 
 public interface IGroupFiles {
-    void res(GroupFilesPack pack);
+    void res(ReGroupFilesPack pack);
 }

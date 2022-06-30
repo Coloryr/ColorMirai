@@ -488,18 +488,18 @@ internal static class PackDecode
         };
         return pack;
     }
-    public static GroupEntranceAnnouncementChangeEventPack GroupEntranceAnnouncementChangeEventPack(this IByteBuffer buff)
-    {
-        GroupEntranceAnnouncementChangeEventPack pack = new()
-        {
-            qq = buff.ReadLong(),
-            id = buff.ReadLong(),
-            fid = buff.ReadLong(),
-            old = buff.ReadBoolean(),
-            now = buff.ReadBoolean()
-        };
-        return pack;
-    }
+    //public static GroupEntranceAnnouncementChangeEventPack GroupEntranceAnnouncementChangeEventPack(this IByteBuffer buff)
+    //{
+    //    GroupEntranceAnnouncementChangeEventPack pack = new()
+    //    {
+    //        qq = buff.ReadLong(),
+    //        id = buff.ReadLong(),
+    //        fid = buff.ReadLong(),
+    //        old = buff.ReadBoolean(),
+    //        now = buff.ReadBoolean()
+    //    };
+    //    return pack;
+    //}
     public static GroupMessagePostSendEventPack GroupMessagePostSendEventPack(this IByteBuffer buff)
     {
         GroupMessagePostSendEventPack pack = new()
@@ -1769,9 +1769,9 @@ internal class ColorMiraiNetty : IColorMiraiPipe
                         case 26:
                             pack = item.GroupAllowMemberInviteEventPack();
                             break;
-                        case 27:
-                            pack = item.GroupEntranceAnnouncementChangeEventPack();
-                            break;
+                        //case 27:
+                        //    pack = item.GroupEntranceAnnouncementChangeEventPack();
+                        //    break;
                         case 28:
                             pack = item.GroupMessagePostSendEventPack();
                             break;

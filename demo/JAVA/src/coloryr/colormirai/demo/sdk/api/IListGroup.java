@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.ListGroupPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReListGroupPack;
 
 public interface IListGroup {
-    void res(ListGroupPack pack);
+    void res(ReListGroupPack pack);
 }

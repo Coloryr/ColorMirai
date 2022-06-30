@@ -2,14 +2,20 @@ package coloryr.colormirai.demo.sdk.pack.from;
 
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-/*
-103 [插件]重命名群文件
-id:群号
-fid:旧群文件ID
-now:新群文件名
+/**
+ * 103 [插件]重命名群文件
  */
 public class GroupRenameFilePack extends PackBase {
+    /**
+     * 群号
+     */
     public long id;
+    /**
+     * 旧群文件ID
+     */
     public String fid;
+    /**
+     * 新群文件名
+     */
     public String now;
 }

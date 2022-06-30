@@ -1,14 +1,36 @@
 package coloryr.colormirai.demo.sdk.pack.to;
 
-/*
-50 [机器人]收到群临时会话消息（事件）
-id:群号
-fid:发送人QQ号
-message:发送的消息
-time:时间
-name:群名片
- */
-public class TempMessageEventPack extends GroupMessageEventPack {
-    public int time;
+import coloryr.colormirai.demo.sdk.enums.MemberPermission;
+import coloryr.colormirai.demo.sdk.pack.PackBase;
 
+import java.util.List;
+
+/**
+ * 50 [机器人]收到群临时会话消息（事件）
+ */
+public class TempMessageEventPack extends PackBase {
+    /**
+     * 群号
+     */
+    public long id;
+    /**
+     * 发送人QQ号
+     */
+    public long fid;
+    /**
+     * 群名片
+     */
+    public String name;
+    /**
+     * 权限
+     */
+    public MemberPermission permission;
+    /**
+     * 发送的消息
+     */
+    public List<String> message;
+    /**
+     * 时间
+     */
+    public int time;
 }

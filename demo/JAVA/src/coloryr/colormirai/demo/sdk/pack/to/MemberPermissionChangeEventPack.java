@@ -3,24 +3,24 @@ package coloryr.colormirai.demo.sdk.pack.to;
 import coloryr.colormirai.demo.sdk.enums.MemberPermission;
 import coloryr.colormirai.demo.sdk.pack.PackBase;
 
-/*
-41 [机器人]成员权限改变（事件）
-id:群号
-fid:执行人QQ号
-old:旧的状态
-now:新的状态
+/**
+ * 41 [机器人]成员权限改变（事件）
  */
 public class MemberPermissionChangeEventPack extends PackBase {
+    /**
+     * 群号
+     */
     public long id;
+    /**
+     * 执行人QQ号
+     */
     public long fid;
+    /**
+     * 旧的状态
+     */
     public MemberPermission old;
+    /**
+     * 新的状态
+     */
     public MemberPermission now;
-
-    public MemberPermissionChangeEventPack(long qq, long id, long fid, MemberPermission old, MemberPermission now) {
-        this.fid = fid;
-        this.qq = qq;
-        this.id = id;
-        this.old = old;
-        this.now = now;
-    }
 }

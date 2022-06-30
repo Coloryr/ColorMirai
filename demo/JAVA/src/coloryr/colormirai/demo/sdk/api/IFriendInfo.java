@@ -1,7 +1,7 @@
 package coloryr.colormirai.demo.sdk.api;
 
-import coloryr.colormirai.demo.sdk.pack.re.FriendInfoPack;
+import coloryr.colormirai.demo.sdk.pack.re.ReFriendInfoPack;
 
 public interface IFriendInfo {
-    void res(FriendInfoPack pack);
+    void res(ReFriendInfoPack pack);
 }

@@ -1,12 +1,8 @@
 package coloryr.colormirai.demo.sdk.pack.to;
 
-/*
-116 [机器人]收到朋友消息（事件）
-id:朋友QQ号
-message:消息
-time:时间
-name:昵称
+/**
+ * 116 [机器人]收到陌生人消息（事件）
  */
-public class StrangerMessageEventPack extends FriendMessageEventPack{
+public class StrangerMessageEventPack extends FriendMessageEventPack {
 
 }
