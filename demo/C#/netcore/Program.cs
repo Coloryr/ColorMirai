@@ -1,7 +1,7 @@
 ﻿using ColoryrSDK;
 using System;
 
-const int type = 3;
+const int type = 2;
 const long qq = 2315986522;
 
 RobotSDK robot = new();
