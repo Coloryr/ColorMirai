@@ -5,7 +5,6 @@ import coloryr.colormirai.config.ConfigRead;
 import coloryr.colormirai.download.DownloadUtils;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.netty.PluginNettyServer;
-import coloryr.colormirai.plugin.socket.PluginSocketServer;
 import coloryr.colormirai.plugin.websocket.PluginWebSocketServer;
 import coloryr.colormirai.robot.BotStart;
 import net.mamoe.mirai.console.MiraiConsoleImplementation;
@@ -18,7 +17,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 public class ColorMiraiMain {
-    public static final String version = "4.0.4";
+    public static final String version = "4.0.6";
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static String runDir;
     public static String tempDir;
@@ -49,7 +48,6 @@ public class ColorMiraiMain {
 
         logger.info("初始化完成");
 
-        PluginSocketServer.start();
         PluginWebSocketServer.start();
         PluginNettyServer.start();
 
@@ -68,7 +66,6 @@ public class ColorMiraiMain {
         logger.info("正在关闭");
         PluginUtils.stop();
         DownloadUtils.stop();
-        PluginSocketServer.stop();
         PluginWebSocketServer.stop();
         PluginNettyServer.stop();
         BotStart.stop();

@@ -398,8 +398,8 @@ public class NettyThread implements IPluginSocket {
                             break;
                         }
                     }
-                    Thread.sleep(10);
                 }
+                Thread.sleep(10);
             } catch (Exception e) {
                 if (!plugin.isRun())
                     break;

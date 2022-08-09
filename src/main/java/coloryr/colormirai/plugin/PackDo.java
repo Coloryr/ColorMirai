@@ -1,4 +1,4 @@
-package coloryr.colormirai.plugin.socket;
+package coloryr.colormirai.plugin;
 
 import coloryr.colormirai.ColorMiraiMain;
 import com.alibaba.fastjson.JSON;

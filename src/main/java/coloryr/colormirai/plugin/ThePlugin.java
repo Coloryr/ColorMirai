@@ -32,7 +32,7 @@ public class ThePlugin {
     private final Map<String, BuffObj> messageBuff = new ConcurrentHashMap<>();
 
     private final Thread doRead;
-    private final Semaphore semaphore = new Semaphore(10, false);
+    private final Semaphore semaphore = new Semaphore(0, false);
 
     private String name;
     private long runQQ;

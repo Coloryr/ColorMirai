@@ -2,11 +2,11 @@ package coloryr.colormirai.plugin.websocket;
 
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.plugin.IPluginSocket;
+import coloryr.colormirai.plugin.PackDo;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
 import coloryr.colormirai.plugin.pack.from.*;
-import coloryr.colormirai.plugin.socket.PackDo;
 import coloryr.colormirai.robot.BotStart;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
@@ -501,8 +501,8 @@ public class WebSocketThread implements IPluginSocket {
                             break;
                         }
                     }
-                    Thread.sleep(10);
                 }
+                Thread.sleep(10);
             } catch (Exception e) {
                 if (!plugin.isRun())
                     break;

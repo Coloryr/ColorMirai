@@ -6,7 +6,6 @@ import java.util.List;
 public class ConfigObj {
     public List<QQsObj> qqList;
     public boolean pack;
-    public int socketPort;
     public int nettyPort;
     public int webSocketPort;
     public boolean escapeSelf;
@@ -26,7 +25,6 @@ public class ConfigObj {
         }};
         pack = true;
         escapeSelf = true;
-        socketPort = 23333;
         webSocketPort = 23334;
         nettyPort = 23335;
         maxList = 100000;

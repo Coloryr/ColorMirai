@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'coloryr.colormirai'
-version '4.0.5'
+version '4.0.7'
 
 repositories {
     mavenCentral()
@@ -20,23 +20,23 @@ compileKotlin {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'junit', name: 'junit', version: '4.13.1'
 
     compile 'org.apache.logging.log4j:log4j-api:2.17.2'
     compile 'org.apache.logging.log4j:log4j-core:2.17.2'
 
     compile 'com.alibaba:fastjson:2.0.9'
     compile 'org.java-websocket:Java-WebSocket:1.5.3'
-    compile "commons-fileupload:commons-fileupload:1.4"
+    //compile "commons-fileupload:commons-fileupload:1.4"
     compile 'javax.servlet:javax.servlet-api:4.0.1'
     compile 'org.jline:jline:3.21.0'
     compile 'io.netty:netty-all:4.1.78.Final'
     compile 'com.google.code.gson:gson:2.9.0'
 
-    compile 'net.mamoe:mirai-console:2.12.0' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.12.0'
-    api 'net.mamoe:mirai-core-api:2.12.0'
-    runtimeOnly "net.mamoe:mirai-core:2.12.0"
+    compile 'net.mamoe:mirai-console:2.12.1' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.12.1'
+    api 'net.mamoe:mirai-core-api:2.12.1'
+    runtimeOnly "net.mamoe:mirai-core:2.12.1"
 
 }
 tasks.withType(JavaCompile) {

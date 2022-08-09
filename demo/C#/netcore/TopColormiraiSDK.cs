@@ -223,6 +223,7 @@ public partial class RobotSDK
     /// <param name="message">消息</param>
     public void SendFriendMessage(long qq, long friend, List<string> message, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendFriendMessagePack()
         {
             qq = qq,
@@ -239,6 +240,7 @@ public partial class RobotSDK
     /// <param name="message">消息</param>
     public void SendGroupMessage(long qq, long group, List<string> message, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendGroupMessagePack()
         {
             qq = qq,
@@ -483,6 +485,7 @@ public partial class RobotSDK
     /// <param name="file">文件位置</param>
     public void SendGroupImageFile(long qq, long group, string file, List<long> ids = null)
     {
+        ids ??= new(); 
         AddSend(new SendGroupImageFilePack()
         {
             qq = qq,
@@ -518,6 +521,7 @@ public partial class RobotSDK
     /// <param name="file">文件位置</param>
     public void SendFriendImageFile(long qq, long friend, string file, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendFriendImageFilePack()
         {
             qq = qq,
@@ -535,6 +539,7 @@ public partial class RobotSDK
     /// <param name="file">文件位置</param>
     public void SendGroupSoundFile(long qq, long group, string file, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendGroupSoundFilePack()
         {
             qq = qq,
@@ -1006,6 +1011,7 @@ public partial class RobotSDK
     /// <param name="file">文件路径</param>
     public void SendFriendSoundFile(long qq, long friend, string file, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendFriendSoundFilePack()
         {
             qq = qq,
@@ -1040,6 +1046,7 @@ public partial class RobotSDK
     /// <param name="ids">陌生人QQ号组</param>
     public void SendStrangerImageFile(long qq, long stranger, string file, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendStrangerImageFilePack()
         {
             qq = qq,
@@ -1088,6 +1095,7 @@ public partial class RobotSDK
     /// <param name="ids">陌生人QQ号组</param>
     public void SendStrangerSoundFile(long qq, long stranger, string file, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendStrangerSoundFilePack()
         {
             qq = qq,
@@ -1106,6 +1114,7 @@ public partial class RobotSDK
     /// <param name="ids">QQ号组</param>
     public void SendFriendSound(long qq, long id, byte[] data, List<long> ids = null)
     {
+        ids ??= new();
         AddSend(new SendFriendSoundPack()
         {
             qq = qq,
