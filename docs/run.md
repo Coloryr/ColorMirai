@@ -48,12 +48,9 @@ pause
   ],
   "sendEncoding":"UTF-8",
   "readEncoding":"UTF-8",
-  "socketPort":23333,
   "webSocketPort":23334,
   "nettyPort": 23335,
-  "cacheSize":100,
   "escapeSelf":true,
-  "noInput": false,
   "debug": false,
   "maxNettyPackSize": 500
 }
@@ -63,7 +60,6 @@ pause
 - `highwayUpload`：上传通道数
 - `maxList`：最大消息列表
 - `pack`：是否发送心跳包
-- `socketPort`：Socket启动的端口
 - `webSocketPort`：websocket启动的端口
 - `nettyPort`：netty启动端口
 - `qqList` : QQ账号列表 (可以添加多个)
@@ -80,20 +76,17 @@ pause
 - `escapeSelf`：是否跳过自己机器人的信息
 - `readEncoding`：读数据包编码
 - `sendEncoding`：发送数据包编码
-- `cacheSize`：缓存大小
-- `noInput`：没有输入
 - `debug`: 调试
 - `maxNettyPackSize`: netty数据包最大长度
 
 设置完成后再次启动ColorMirai，出现
 ```
-[INFO] Socket已启动: 23333
+[INFO] 初始化完成
 ``` 
 说明机器人已成功启动
 
 ## Linux下的挂后台启动
-首先修改配置文件的`noInput`为true  
-然后用下面指令启动
+用下面指令启动
 ```
 nohup java -jar ColorMirai-xxx-all.jar &
 ```

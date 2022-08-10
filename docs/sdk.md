@@ -11,22 +11,8 @@
 
 ## 插件教程
 
-ColorMirai使用Socket/WebSocket/Netty方式让机器人和插件互相链接  
+ColorMirai使用WebSocket/Netty方式让机器人和插件互相链接  
 数据包的接受和封装在SDK已经写完了，只需要引用一下就好了
-
-### Socket数据包
-
-Socket的大部分数据包是一串JSON字符串+数据包ID构成  
-但是发送图片和发送语音用的是FormData格式
-```
-以字符串的方式看
-{...}[ID]
-
-以byte[]的方式看
-123,...,125,[ID]
-
-[ID]对应数据包的ID
-```
 
 ### WebSocket的数据包
 ```Json

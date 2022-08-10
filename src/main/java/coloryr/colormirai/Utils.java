@@ -98,6 +98,7 @@ public class Utils {
             FileInputStream inputStream = new FileInputStream(file);
             byte[] buffer = new byte[inputStream.available()];
             inputStream.read(buffer);
+            inputStream.close();
             return buffer;
         } catch (Exception e) {
             ColorMiraiMain.logger.error("获取文件发生错误", e);

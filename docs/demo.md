@@ -92,7 +92,6 @@ Robot.Set(Config);
 
 设置通信管道，下列中的任意一个
 ```C#
-robot.SetPipe(new ColorMiraiSocket(robot));
 robot.SetPipe(new ColorMiraiWebSocket(robot));
 robot.SetPipe(new ColorMiraiNetty(robot));
 ```
@@ -201,7 +200,7 @@ while (true)
 }
 ```
 
-## JAVA(不再更新)
+## JAVA
 
 1. 准备工作  
    首先打开[demo代码](../demo/JAVA/)使用IDEA打开文件夹
@@ -216,37 +215,38 @@ TopRobot robot = new TopRobot();
 实例化`RobotConfig`类
 
 ```JAVA
-RobotConfig Config = new RobotConfig() {{
-   Name = "Demo";
-   IP = "127.0.0.1";
-   Port = 23333;
-   Pack = new ArrayList<Integer>() {{
-   this.add(46);
-   this.add(49);
-   this.add(50);
-   this.add(51);
-   }};
-   Groups = null;
-   QQs = null;
-   RunQQ = 0;
-   Time = 10000;
-   Check = true;
-   CallAction = ColoryrTest::messgae;
-   LogAction = ColoryrTest::log;
-   StateAction = ColoryrTest::state;
-}};
+ RobotConfig config = new RobotConfig() {{
+        name = "Demo";
+        ip = "127.0.0.1";
+        port = 23333;
+        pack = new ArrayList<Integer>() {{
+        this.add(46);
+        this.add(49);
+        this.add(50);
+        this.add(51);
+        }};
+        groups = null;
+        qqs = null;
+        runQQ = 0;
+        time = 10000;
+        check = true;
+        callAction = ColoryrTest::messgae;
+        logAction = ColoryrTest::log;
+        stateAction = ColoryrTest::state;
+        }};
 ```
 
-根据需求填好参数后，实例化一个`Robot`类，并给机器人设置配置
+根据需求填好参数后，实例化一个`Robot`类，并给机器人设置配置和链接方式
 
 ```JAVA
-robot.Set(Config);
+robot.setPipe(new ColorMiraiNetty(robot));
+robot.set(config);
 ```
 
 启动机器人
 
 ```JAVA
-robot.Start();
+robot.start();
 ```
 
 完整启动代码：
@@ -254,32 +254,30 @@ robot.Start();
 ```JAVA
 package coloryr.colormirai.demo;
 
-import coloryr.colormirai.demo.RobotSDK.BuildPack;
-import coloryr.colormirai.demo.RobotSDK.BaseRobot;
-import coloryr.colormirai.demo.RobotSDK.RobotConfig;
-import coloryr.colormirai.demo.RobotSDK.TopRobot;
-import coloryr.colormirai.demo.RobotSDK.enums.FriendCallType;
-import coloryr.colormirai.demo.RobotSDK.enums.LogType;
-import coloryr.colormirai.demo.RobotSDK.enums.StateType;
-import coloryr.colormirai.demo.RobotSDK.pack.PackBase;
-import coloryr.colormirai.demo.RobotSDK.pack.from.SendGroupMessagePack;
-import coloryr.colormirai.demo.RobotSDK.pack.re.FriendInfoPack;
-import coloryr.colormirai.demo.RobotSDK.pack.to.GroupMessageEventPack;
-import coloryr.colormirai.demo.RobotSDK.pack.to.NewFriendRequestEventPack;
-import com.alibaba.fastjson.JSON;
+import coloryr.colormirai.demo.sdk.RobotConfig;
+import coloryr.colormirai.demo.sdk.RobotTop;
+import coloryr.colormirai.demo.sdk.enums.FriendCallType;
+import coloryr.colormirai.demo.sdk.enums.LogType;
+import coloryr.colormirai.demo.sdk.enums.StateType;
+import coloryr.colormirai.demo.sdk.pack.PackBase;
+import coloryr.colormirai.demo.sdk.pack.re.ReFriendInfoPack;
+import coloryr.colormirai.demo.sdk.pack.to.GroupMessageEventPack;
+import coloryr.colormirai.demo.sdk.pack.to.NewFriendRequestEventPack;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiNetty;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiSocket;
+import coloryr.colormirai.demo.sdk.pipe.ColorMiraiWebSocket;
 
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ColoryrTest {
-   private static TopRobot robot;
+   private static RobotTop robot;
 
    private static void messgae(byte type, PackBase data) {
       switch (type) {
-         case 46:
-         {
-            NewFriendRequestEventPack pack  = (NewFriendRequestEventPack) data;
-            robot.NewFriendRequestCall(pack.qq, pack.eventid, FriendCallType.accept);
+         case 46: {
+            NewFriendRequestEventPack pack = (NewFriendRequestEventPack) data;
+            robot.newFriendRequestCall(pack.qq, pack.eventid, FriendCallType.ACCEPT);
             break;
          }
          case 49:
@@ -291,9 +289,9 @@ public class ColoryrTest {
                System.out.println(item);
             }
             System.out.println();
-            robot.SendGroupMessage(pack.qq, pack.id, new ArrayList<String>(){{
-               this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
-            }});
+//                robot.sendGroupMessage(pack.qq, pack.id, new ArrayList<String>() {{
+//                    this.add(pack.fid + " 你发送了消息 " + pack.message.get(pack.message.size() - 1));
+//                }});
             break;
       }
    }
@@ -307,35 +305,43 @@ public class ColoryrTest {
    }
 
    public static void main(String[] arg) {
-      robot = new TopRobot();
-      RobotConfig Config = new RobotConfig() {{
-         Name = "Demo";
-         IP = "127.0.0.1";
-         Port = 23333;
-         Pack = new ArrayList<Integer>() {{
+      robot = new RobotTop();
+      RobotConfig config = new RobotConfig() {{
+         name = "Demo";
+         ip = "127.0.0.1";
+         port = 23333;
+         pack = new ArrayList<Integer>() {{
             this.add(46);
             this.add(49);
             this.add(50);
             this.add(51);
          }};
-         Groups = null;
-         QQs = null;
-         RunQQ = 0;
-         Time = 10000;
-         Check = true;
-         CallAction = ColoryrTest::messgae;
-         LogAction = ColoryrTest::log;
-         StateAction = ColoryrTest::state;
+         groups = null;
+         qqs = null;
+         runQQ = 0;
+         time = 10000;
+         check = true;
+         callAction = ColoryrTest::messgae;
+         logAction = ColoryrTest::log;
+         stateAction = ColoryrTest::state;
       }};
 
-      robot.Set(Config);
-      robot.Start();
+      //WebSocket
+      //config.ip = "ws://127.0.0.1:23334";
+      //robot.setPipe(new ColorMiraiWebSocket(robot));
+
+      //Netty
+      config.port = 23335;
+      robot.setPipe(new ColorMiraiNetty(robot));
+
+      robot.set(config);
+      robot.start();
       Scanner scanner = new Scanner(System.in);
       while (true) {
          String data = scanner.nextLine();
          String[] args = data.split(" ");
          if (args[0].equals("stop")) {
-            robot.Stop();
+            robot.stop();
             return;
          } else if (args[0].equals("friends")) {
             if (arg.length != 2) {
@@ -344,9 +350,9 @@ public class ColoryrTest {
             }
             try {
                long qq = Long.parseLong(args[1]);
-               robot.GetFriends(qq, (res) -> {
+               robot.getFriends(qq, (res) -> {
                   System.out.println(res.qq + "的好友：");
-                  for (FriendInfoPack item : res.friends) {
+                  for (ReFriendInfoPack item : res.friends) {
                      System.out.println(item.id + " " + item.remark);
                   }
                });

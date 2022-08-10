@@ -7,13 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PackDo {
-    public static byte[] buildPack(Object data, int index) {
-        String str = JSON.toJSONString(data) + " ";
-        byte[] temp = str.getBytes(ColorMiraiMain.sendCharset);
-        temp[temp.length - 1] = (byte) index;
-        return temp;
-    }
-
     public static Map<String, String> parseDataFromPack(String data) {
         Map<String, String> map = new HashMap<>();
         String[] temp = data.split("&");

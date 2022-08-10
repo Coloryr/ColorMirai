@@ -14,8 +14,6 @@ public class ConfigObj {
     public String readEncoding;
     public boolean autoReconnect;
     public int highwayUpload;
-    public int cacheSize;
-    public boolean noInput;
     public boolean debug;
     public int maxNettyPackSize;
 
@@ -32,8 +30,6 @@ public class ConfigObj {
         readEncoding = "UTF-8";
         autoReconnect = true;
         highwayUpload = 10;
-        cacheSize = 100;
-        noInput = false;
         debug = false;
         maxNettyPackSize = 500;
     }

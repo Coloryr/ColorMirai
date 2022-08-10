@@ -41,7 +41,7 @@ public class BotStart {
                 bots.put(item.qq, bot);
                 ColorMiraiMain.logger.info("QQ:" + item.qq + "已登录");
             } catch (WrongPasswordException e) {
-                ColorMiraiMain.logger.error("机器人密码错误", e);
+                ColorMiraiMain.logger.error("机器人登录失败", e);
             } catch (Exception e) {
                 ColorMiraiMain.logger.error("机器人错误", e);
                 return false;

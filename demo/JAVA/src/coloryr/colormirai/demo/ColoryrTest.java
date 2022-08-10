@@ -80,7 +80,6 @@ public class ColoryrTest {
         config.port = 23335;
         robot.setPipe(new ColorMiraiNetty(robot));
 
-        //robot.setPipe(new ColorMiraiSocket(robot));
         robot.set(config);
         robot.start();
         Scanner scanner = new Scanner(System.in);
