@@ -330,6 +330,8 @@ public string now { get; set; }
 - `old`：旧的名字
 - `now`：新的名字
 
+待补充.....
+
 ## 插件发送给机器人
 
 ### [0 [插件]插件开始连接](../src/main/java/Color_yr/ColorMirai/Pack/FromPlugin/StartPack.java)
