@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'coloryr.colormirai'
-version '4.0.7'
+version '4.0.9'
 
 repositories {
     mavenCentral()
@@ -33,10 +33,10 @@ dependencies {
     compile 'io.netty:netty-all:4.1.78.Final'
     compile 'com.google.code.gson:gson:2.9.0'
 
-    compile 'net.mamoe:mirai-console:2.12.1' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.12.1'
-    api 'net.mamoe:mirai-core-api:2.12.1'
-    runtimeOnly "net.mamoe:mirai-core:2.12.1"
+    compile 'net.mamoe:mirai-console:2.12.2' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.12.2'
+    api 'net.mamoe:mirai-core-api:2.12.2'
+    runtimeOnly "net.mamoe:mirai-core:2.12.2"
 
 }
 tasks.withType(JavaCompile) {

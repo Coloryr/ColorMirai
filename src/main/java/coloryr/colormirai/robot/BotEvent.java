@@ -709,8 +709,9 @@ public class BotEvent extends SimpleListenerHost {
         call.id = call.source.getIds()[0];
         long qq = event.getBot().getId();
         String name = event.getSender().getNameCard();
-        BotStart.addMessage(qq, call.id, call);
-        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, message, event.getPermission(), name);
+        int[] ids1 = event.getSource().getIds();
+        int[] ids2 = event.getSource().getInternalIds();
+        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, ids1, ids2, message, event.getPermission(), name);
         BotStart.addTask(new SendPackObj(49, pack, fid, id, qq));
     }
 
@@ -730,8 +731,9 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSender().getNameCard();
-        BotStart.addMessage(qq, call.id, call);
-        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, message, time, event.getSender().getPermission(), name);
+        int[] ids1 = event.getSource().getIds();
+        int[] ids2 = event.getSource().getInternalIds();
+        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, ids1, ids2, message, time, event.getSender().getPermission(), name);
         BotStart.addTask(new SendPackObj(50, pack, fid, id, qq));
     }
 
@@ -750,8 +752,9 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSenderName();
-        BotStart.addMessage(qq, call.id, call);
-        FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, message, time, name);
+        int[] ids1 = event.getSource().getIds();
+        int[] ids2 = event.getSource().getInternalIds();
+        FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, ids1, ids2, message, time, name);
         BotStart.addTask(new SendPackObj(51, pack, id, 0, qq));
     }
 
@@ -954,8 +957,9 @@ public class BotEvent extends SimpleListenerHost {
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSenderName();
-        BotStart.addMessage(qq, call.id, call);
-        StrangerMessageEventPack pack = new StrangerMessageEventPack(qq, id, message, time, name);
+        int[] ids1 = event.getSource().getIds();
+        int[] ids2 = event.getSource().getInternalIds();
+        StrangerMessageEventPack pack = new StrangerMessageEventPack(qq, id, ids1, ids2, message, time, name);
         BotStart.addTask(new SendPackObj(116, pack, id, 0, qq));
     }
 

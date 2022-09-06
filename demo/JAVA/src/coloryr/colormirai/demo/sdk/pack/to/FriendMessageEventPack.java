@@ -17,6 +17,14 @@ public class FriendMessageEventPack extends PackBase {
      */
     public String name;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 消息
      */
     public List<String> message;

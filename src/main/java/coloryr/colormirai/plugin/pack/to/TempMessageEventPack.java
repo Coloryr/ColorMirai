@@ -25,6 +25,14 @@ public class TempMessageEventPack extends PackBase {
      */
     public String name;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 权限
      */
     public MemberPermission permission;
@@ -37,7 +45,8 @@ public class TempMessageEventPack extends PackBase {
      */
     public int time;
 
-    public TempMessageEventPack(long qq, long id, long fid, MessageChain message, int time, MemberPermission permission, String name) {
+    public TempMessageEventPack(long qq, long id, long fid, int[] ids1, int[] ids2,
+                                MessageChain message, int time, MemberPermission permission, String name) {
         this.qq = qq;
         this.id = id;
         this.fid = fid;
@@ -46,6 +55,8 @@ public class TempMessageEventPack extends PackBase {
             this.message.add(item.toString());
         }
         this.permission = permission;
+        this.ids1 = ids1;
+        this.ids2 = ids2;
         this.name = name;
         this.time = time;
     }

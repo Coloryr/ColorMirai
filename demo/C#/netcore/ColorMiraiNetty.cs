@@ -37,6 +37,15 @@ internal static class PackDecode
         }
         return list;
     }
+    public static int[] ReadIntList(this IByteBuffer buff)
+    {
+        var list = new int[buff.ReadInt()];
+        for (int a = 0; a < list.Length; a++)
+        {
+            list[a] = buff.ReadInt();
+        }
+        return list;
+    }
     public static ReMemberInfoPack ReadMemberInfoPack(this IByteBuffer buff)
     {
         return new()
@@ -759,6 +768,8 @@ internal static class PackDecode
             id = buff.ReadLong(),
             fid = buff.ReadLong(),
             name = buff.ReadString(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             permission = (MemberPermission)buff.ReadInt(),
             message = buff.ReadStringList()
         };
@@ -772,6 +783,8 @@ internal static class PackDecode
             id = buff.ReadLong(),
             fid = buff.ReadLong(),
             name = buff.ReadString(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             permission = (MemberPermission)buff.ReadInt(),
             message = buff.ReadStringList(),
             time = buff.ReadInt()
@@ -785,6 +798,8 @@ internal static class PackDecode
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
             name = buff.ReadString(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             message = buff.ReadStringList(),
             time = buff.ReadInt()
         };
@@ -917,6 +932,8 @@ internal static class PackDecode
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
             name = buff.ReadString(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             message = buff.ReadStringList(),
             time = buff.ReadInt()
         };

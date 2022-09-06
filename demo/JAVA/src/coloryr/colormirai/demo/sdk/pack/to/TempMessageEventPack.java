@@ -22,6 +22,14 @@ public class TempMessageEventPack extends PackBase {
      */
     public String name;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 权限
      */
     public MemberPermission permission;

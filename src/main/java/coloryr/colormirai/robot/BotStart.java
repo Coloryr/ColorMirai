@@ -8,6 +8,9 @@ import coloryr.colormirai.plugin.obj.SendPackObj;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.Mirai;
+import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.message.data.MessageSourceBuilder;
+import net.mamoe.mirai.message.data.MessageSourceKind;
 import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
 
@@ -18,7 +21,6 @@ import java.util.concurrent.*;
 public class BotStart {
 
     private static final List<SendPackObj> tasks = new CopyOnWriteArrayList<>();
-    private static final Map<Long, Map<Integer, MessageSaveObj>> messageList = new ConcurrentHashMap<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
     private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
     private static final ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor();
@@ -56,42 +58,23 @@ public class BotStart {
 
         for (Bot item : bots.values()) {
             item.getEventChannel().registerListenerHost(host);
-            messageList.put(item.getId(), new ConcurrentHashMap<>());
             break;
         }
         service.scheduleAtFixedRate(() -> {
             if (!reList.isEmpty()) {
                 for (ReCallObj item : reList) {
-                    if (messageList.containsKey(item.bot)) {
-                        Map<Integer, MessageSaveObj> list = messageList.get(item.bot);
-                        MessageSaveObj obj = list.get(item.mid);
-                        if (obj == null) {
-                            ColorMiraiMain.logger.warn("不存在消息:" + item.mid);
-                            continue;
-                        }
-                        if (obj.time > 0 || obj.time == -1)
-                            try {
-                                Mirai.getInstance().recallMessage(bots.get(item.bot), obj.source);
-                                list.remove(item.mid);
-                                messageList.put(item.bot, list);
-                            } catch (Exception e) {
-                                ColorMiraiMain.logger.error("消息撤回失败", e);
-                            }
+                    try {
+                        Bot bot = bots.get(item.bot);
+                        MessageSource message = new MessageSourceBuilder()
+                                .id(item.ids1)
+                                .internalId(item.ids2)
+                                .build(item.bot, item.kind);
+                        Mirai.getInstance().recallMessage(bot, message);
+                    } catch (Exception e) {
+                        ColorMiraiMain.logger.error("消息撤回失败", e);
                     }
                 }
                 reList.clear();
-            }
-            for (Map<Integer, MessageSaveObj> item : messageList.values()) {
-                for (Map.Entry<Integer, MessageSaveObj> item1 : item.entrySet()) {
-                    item1.getValue().time -= 1;
-                }
-                if (item.size() >= ColorMiraiMain.config.maxList) {
-                    Iterator<Integer> iterator = item.keySet().iterator();
-                    if (iterator.hasNext()) {
-                        iterator.next();
-                        iterator.remove();
-                    }
-                }
             }
         }, 0, 1, TimeUnit.SECONDS);
         service1.scheduleAtFixedRate(() -> {
@@ -124,20 +107,27 @@ public class BotStart {
         }
     }
 
-    public static MessageSaveObj getMessage(long qq, int index) {
-        Map<Integer, MessageSaveObj> list = messageList.get(qq);
-        if (list == null) {
-            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
-            return null;
-        }
-        return list.get(index);
-    }
-
-    public static void reCall(long qq, int id) {
+    public static void reCall(long qq, int[] ids1, int[] ids2, int kind) {
         try {
             ReCallObj obj = new ReCallObj();
-            obj.mid = id;
             obj.bot = qq;
+            obj.ids1 = ids1;
+            obj.ids2 = ids2;
+            switch (kind){
+                case 0:
+                default:
+                    obj.kind = MessageSourceKind.FRIEND;
+                    break;
+                case 1:
+                    obj.kind = MessageSourceKind.GROUP;
+                    break;
+                case 2:
+                    obj.kind = MessageSourceKind.STRANGER;
+                    break;
+                case 3:
+                    obj.kind = MessageSourceKind.TEMP;
+                    break;
+            }
             reList.add(obj);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("消息撤回失败", e);
@@ -146,26 +136,6 @@ public class BotStart {
 
     public static Map<Long, Bot> getBots() {
         return bots;
-    }
-
-    public static void addMessage(long qq, int data, MessageSaveObj obj) {
-        Map<Integer, MessageSaveObj> list = messageList.get(qq);
-        if (list == null) {
-            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
-        } else {
-            list.put(data, obj);
-            messageList.put(qq, list);
-        }
-    }
-
-    public static void removeMessage(long qq, int data) {
-        Map<Integer, MessageSaveObj> list = messageList.get(qq);
-        if (list == null) {
-            ColorMiraiMain.logger.warn("不存在QQ:" + qq);
-        } else {
-            list.remove(data);
-            messageList.put(qq, list);
-        }
     }
 
     public static List<Long> getBotsKey() {

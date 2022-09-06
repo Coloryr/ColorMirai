@@ -9,5 +9,13 @@ public class ReCallMessagePack extends PackBase {
     /**
      * 消息ID
      */
-    public int id;
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
+     * 类型
+     */
+    public int kind;
 }

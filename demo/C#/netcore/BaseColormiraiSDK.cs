@@ -1265,6 +1265,14 @@ public record GroupMessageEventPack : PackBase
     /// </summary>
     public string name { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1291,6 +1299,14 @@ public record TempMessageEventPack : PackBase
     /// </summary>
     public string name { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 发送人权限
     /// </summary>
     public MemberPermission permission { get; set; }
@@ -1316,6 +1332,14 @@ public record FriendMessageEventPack : PackBase
     /// 昵称
     /// </summary>
     public string name { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
     /// <summary>
     /// 消息
     /// </summary>

@@ -20,6 +20,14 @@ public class FriendMessageEventPack extends PackBase {
      */
     public String name;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 消息
      */
     public List<String> message;
@@ -28,7 +36,8 @@ public class FriendMessageEventPack extends PackBase {
      */
     public int time;
 
-    public FriendMessageEventPack(long qq, long id, MessageChain message, int time, String name) {
+    public FriendMessageEventPack(long qq, long id, int[] ids1, int[] ids2,
+                                  MessageChain message, int time, String name) {
         this.id = id;
         this.qq = qq;
         this.message = new ArrayList<>();
@@ -36,6 +45,8 @@ public class FriendMessageEventPack extends PackBase {
             this.message.add(item.toString());
         }
         this.message.add(message.contentToString());
+        this.ids1 = ids1;
+        this.ids2 = ids2;
         this.time = time;
         this.name = name;
     }

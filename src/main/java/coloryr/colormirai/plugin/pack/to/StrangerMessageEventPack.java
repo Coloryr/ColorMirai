@@ -7,7 +7,8 @@ import net.mamoe.mirai.message.data.MessageChain;
  */
 public class StrangerMessageEventPack extends FriendMessageEventPack {
 
-    public StrangerMessageEventPack(long qq, long id, MessageChain message, int time, String name) {
-        super(qq, id, message, time, name);
+    public StrangerMessageEventPack(long qq, long id, int[] ids1, int[] ids2,
+                                    MessageChain message, int time, String name) {
+        super(qq, id, ids1, ids2, message, time, name);
     }
 }

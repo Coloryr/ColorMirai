@@ -648,6 +648,14 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             return list;
         }
 
+        public static int[] readIntList(ByteBuf buff) {
+            int[] temp = new int[buff.readInt()];
+            for (int a = 0; a < temp.length; a++) {
+                temp[a] = buff.readInt();
+            }
+            return temp;
+        }
+
         public static byte[] readBytes(ByteBuf buff) {
             int length = buff.readInt();
             byte[] temp = new byte[length];
@@ -1264,6 +1272,8 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             pack.id = buff.readLong();
             pack.fid = buff.readLong();
             pack.name = readString(buff);
+            pack.ids1 = readIntList(buff);
+            pack.ids2 = readIntList(buff);
             pack.permission = MemberPermission.values()[buff.readInt()];
             pack.message = readStringList(buff);
             return pack;
@@ -1275,6 +1285,8 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             pack.id = buff.readLong();
             pack.fid = buff.readLong();
             pack.name = readString(buff);
+            pack.ids1 = readIntList(buff);
+            pack.ids2 = readIntList(buff);
             pack.permission = MemberPermission.values()[buff.readInt()];
             pack.message = readStringList(buff);
             pack.time = buff.readInt();
@@ -1286,6 +1298,8 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             pack.qq = buff.readLong();
             pack.id = buff.readLong();
             pack.name = readString(buff);
+            pack.ids1 = readIntList(buff);
+            pack.ids2 = readIntList(buff);
             pack.message = readStringList(buff);
             pack.time = buff.readInt();
             return pack;
@@ -1395,6 +1409,8 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             pack.qq = buff.readLong();
             pack.id = buff.readLong();
             pack.name = readString(buff);
+            pack.ids1 = readIntList(buff);
+            pack.ids2 = readIntList(buff);
             pack.message = readStringList(buff);
             pack.time = buff.readInt();
             return pack;

@@ -17,6 +17,14 @@ public class PackEncode {
         buf.writeBytes(temp);
     }
 
+    public static void writeIntList(ByteBuf buf, int[] ids){
+        int temp = ids.length;
+        buf.writeInt(temp);
+        for(int item : ids){
+            buf.writeInt(item);
+        }
+    }
+
     private static void writeStringList(ByteBuf buf, List<String> message) {
         buf.writeInt(message.size());
         for (String item : message) {
@@ -662,6 +670,8 @@ public class PackEncode {
         buf.writeLong(pack.id);
         buf.writeLong(pack.fid);
         writeString(buf, pack.name);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         buf.writeInt(pack.permission.getLevel());
         writeStringList(buf, pack.message);
         return buf;
@@ -674,6 +684,8 @@ public class PackEncode {
         buf.writeLong(pack.id);
         buf.writeLong(pack.fid);
         writeString(buf, pack.name);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         buf.writeInt(pack.permission.getLevel());
         writeStringList(buf, pack.message);
         buf.writeInt(pack.time);
@@ -686,6 +698,8 @@ public class PackEncode {
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
         writeString(buf, pack.name);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         writeStringList(buf, pack.message);
         buf.writeInt(pack.time);
         return buf;
@@ -807,6 +821,8 @@ public class PackEncode {
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
         writeString(buf, pack.name);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         writeStringList(buf, pack.message);
         buf.writeInt(pack.time);
         return buf;

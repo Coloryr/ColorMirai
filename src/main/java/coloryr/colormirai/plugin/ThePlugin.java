@@ -37,6 +37,8 @@ public class ThePlugin {
     private String name;
     private long runQQ;
     private List<Integer> events = null;
+
+    private boolean allEvent = false;
     private boolean isRun;
 
     public ThePlugin(IPluginSocket Socket) {
@@ -63,6 +65,8 @@ public class ThePlugin {
 
     public void setEvents(List<Integer> events) {
         this.events = events;
+        if(events.isEmpty())
+            allEvent = true;
     }
 
     public void setRunQQ(long runQQ) {
@@ -88,7 +92,7 @@ public class ThePlugin {
 
     public String getReg() {
         if (events.size() == 0)
-            return "无";
+            return "全部事件";
         StringBuilder stringBuilder = new StringBuilder();
         for (int item : events) {
             stringBuilder.append(item).append(",");
@@ -258,7 +262,7 @@ public class ThePlugin {
                         //71 [插件]撤回消息
                         case 71: {
                             ReCallMessagePack pack = (ReCallMessagePack) task.pack;
-                            BotStart.reCall(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotStart.reCall(runQQ == 0 ? pack.qq : runQQ, pack.ids1, pack.ids2, pack.kind);
                             break;
                         }
                         //74 [插件]发送语音到群
@@ -655,7 +659,6 @@ public class ThePlugin {
             if (temp1.length != 0 && temp1[0] != -1) {
                 obj.id = temp1[0];
             }
-            BotStart.addMessage(temp.qq, obj.id, obj);
         } else {
             if (temp.type == 0) {
                 messageBuff.put("F:" + temp.id, item);
@@ -674,7 +677,7 @@ public class ThePlugin {
             return;
         if (qqList.size() != 0 && task.qq != 0 && !qqList.contains(task.qq))
             return;
-        if (events.contains((int) task.index) || task.index == 60) {
+        if (allEvent || events.contains((int) task.index) || task.index == 60) {
             if (socket.send(pack, index))
                 close();
         }
