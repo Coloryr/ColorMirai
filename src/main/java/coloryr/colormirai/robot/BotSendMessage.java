@@ -53,7 +53,6 @@ public class BotSendMessage {
                     call.source = source;
                     call.time = 120;
                     call.id = source.getIds()[0];
-                    BotStart.addMessage(qq, call.id, call);
                 }
             }
 
@@ -89,7 +88,6 @@ public class BotSendMessage {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群私聊消息失败", e);
@@ -127,7 +125,6 @@ public class BotSendMessage {
                     call.source = source;
                     call.time = 120;
                     call.id = temp[0];
-                    BotStart.addMessage(qq, call.id, call);
                 }
             }
         } catch (Exception e) {
@@ -158,7 +155,6 @@ public class BotSendMessage {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人消息失败", e);

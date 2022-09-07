@@ -702,11 +702,6 @@ public class BotEvent extends SimpleListenerHost {
         if (ColorMiraiMain.config.escapeSelf && BotStart.getBots().containsKey(fid))
             return;
         MessageChain message = event.getMessage();
-        MessageSaveObj call = new MessageSaveObj();
-        call.sourceQQ = event.getBot().getId();
-        call.source = event.getSource();
-        call.time = -1;
-        call.id = call.source.getIds()[0];
         long qq = event.getBot().getId();
         String name = event.getSender().getNameCard();
         int[] ids1 = event.getSource().getIds();
@@ -723,11 +718,6 @@ public class BotEvent extends SimpleListenerHost {
         long id = event.getGroup().getId();
         long fid = event.getSender().getId();
         MessageChain message = event.getMessage();
-        MessageSaveObj call = new MessageSaveObj();
-        call.sourceQQ = event.getBot().getId();
-        call.source = event.getSource();
-        call.time = -1;
-        call.id = call.source.getIds()[0];
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSender().getNameCard();
@@ -744,11 +734,6 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getSender().getId();
         MessageChain message = event.getMessage();
-        MessageSaveObj call = new MessageSaveObj();
-        call.sourceQQ = event.getBot().getId();
-        call.source = event.getSource();
-        call.time = -1;
-        call.id = call.source.getIds()[0];
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSenderName();
@@ -949,11 +934,6 @@ public class BotEvent extends SimpleListenerHost {
             return;
         long id = event.getSender().getId();
         MessageChain message = event.getMessage();
-        MessageSaveObj call = new MessageSaveObj();
-        call.sourceQQ = event.getBot().getId();
-        call.source = event.getSource();
-        call.time = -1;
-        call.id = call.source.getIds()[0];
         int time = event.getTime();
         long qq = event.getBot().getId();
         String name = event.getSenderName();

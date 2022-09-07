@@ -41,6 +41,14 @@ public class PackDecode {
         return list;
     }
 
+    public static int[] readIntList(ByteBuf buff) {
+        int[] temp = new int[buff.readInt()];
+        for (int a = 0; a < temp.length; a++) {
+            temp[a] = buff.readInt();
+        }
+        return temp;
+    }
+
     public static StartPack startPack(ByteBuf buff) {
         StartPack pack = new StartPack();
         pack.name = readString(buff);
@@ -199,7 +207,9 @@ public class PackDecode {
     public static ReCallMessagePack reCallMessagePack(ByteBuf buff) {
         ReCallMessagePack pack = new ReCallMessagePack();
         pack.qq = buff.readLong();
-        pack.id = buff.readInt();
+        pack.ids1 = readIntList(buff);
+        pack.ids2 = readIntList(buff);
+        pack.kind = buff.readInt();
         return pack;
     }
 
@@ -306,7 +316,8 @@ public class PackDecode {
         GroupSetEssenceMessagePack pack = new GroupSetEssenceMessagePack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
-        pack.mid = buff.readInt();
+        pack.ids1 = readIntList(buff);
+        pack.ids2 = readIntList(buff);
         return pack;
     }
 

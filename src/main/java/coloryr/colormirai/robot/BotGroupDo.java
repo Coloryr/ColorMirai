@@ -6,6 +6,9 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.MemberPermission;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.announcement.*;
+import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.message.data.MessageSourceBuilder;
+import net.mamoe.mirai.message.data.MessageSourceKind;
 
 import java.io.File;
 import java.util.List;
@@ -157,7 +160,7 @@ public class BotGroupDo {
         }
     }
 
-    public static void setEssenceMessage(long qq, long id, int mid) {
+    public static void setEssenceMessage(long qq, long id, int[] ids1, int[] ids2) {
         try {
             if (!BotStart.getBots().containsKey(qq)) {
                 ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
@@ -169,9 +172,11 @@ public class BotGroupDo {
                 ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
                 return;
             }
-            MessageSaveObj obj = BotStart.getMessage(qq, mid);
-            if (obj != null)
-                group.setEssenceMessage(obj.source);
+            MessageSource source = new MessageSourceBuilder()
+                    .id(ids1)
+                    .internalId(ids2)
+                    .build(qq, MessageSourceKind.GROUP);
+            group.setEssenceMessage(source);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("设置群精华消息失败", e);
         }

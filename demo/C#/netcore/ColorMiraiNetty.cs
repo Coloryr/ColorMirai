@@ -1005,6 +1005,15 @@ internal static class PackEncode
         buff.WriteBytes(data, 0, data.Length);
         return buff;
     }
+    public static IByteBuffer WriteIntList(this IByteBuffer buff, int[] data)
+    {
+        buff.WriteInt(data.Length);
+        foreach (var item in data)
+        {
+            buff.WriteInt(item);
+        }
+        return buff;
+    }
 
     public static IByteBuffer ToPack(this StartPack pack)
     {
@@ -1350,7 +1359,8 @@ internal static class PackEncode
         buff.WriteByte(94)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInt(pack.mid);
+            .WriteIntList(pack.ids1)
+            .WriteIntList(pack.ids2);
 
         return buff;
     }

@@ -679,14 +679,16 @@ public partial class RobotSDK
     /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
-    /// <param name="mid">消息ID</param>
-    public void GroupSetEssenceMessage(long qq, long group, int mid)
+    /// <param name="ids1">消息ID</param>
+    /// <param name="ids2">消息ID</param>
+    public void GroupSetEssenceMessage(long qq, long group, int[] ids1, int[] ids2)
     {
         AddSend(new GroupSetEssenceMessagePack()
         {
             qq = qq,
             id = group,
-            mid = mid
+            ids1 = ids1,
+            ids2 = ids2
         }, 94);
     }
 

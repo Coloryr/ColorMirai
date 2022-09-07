@@ -362,7 +362,7 @@ public class ThePlugin {
                         //94 [插件]设置群精华消息
                         case 94: {
                             GroupSetEssenceMessagePack pack = (GroupSetEssenceMessagePack) task.pack;
-                            BotGroupDo.setEssenceMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.mid);
+                            BotGroupDo.setEssenceMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.ids1, pack.ids2);
                             break;
                         }
                         //95 [插件]消息队列
@@ -651,14 +651,7 @@ public class ThePlugin {
             item.message = item.message.plus(image);
         }
         if (temp.send) {
-            MessageReceipt<Contact> message = item.contact.sendMessage(item.message);
-            MessageSaveObj obj = new MessageSaveObj();
-            obj.source = message.getSource();
-            obj.sourceQQ = temp.qq;
-            int[] temp1 = obj.source.getIds();
-            if (temp1.length != 0 && temp1[0] != -1) {
-                obj.id = temp1[0];
-            }
+            item.contact.sendMessage(item.message);
         } else {
             if (temp.type == 0) {
                 messageBuff.put("F:" + temp.id, item);

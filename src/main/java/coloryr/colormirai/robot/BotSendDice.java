@@ -32,7 +32,6 @@ public class BotSendDice {
                 call.source = source;
                 call.time = 120;
                 call.id = source.getIds()[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群骰子失败", e);
@@ -63,7 +62,6 @@ public class BotSendDice {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群私聊骰子失败", e);
@@ -90,7 +88,6 @@ public class BotSendDice {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友骰子失败", e);
@@ -117,7 +114,6 @@ public class BotSendDice {
                 call.source = source;
                 call.time = 120;
                 call.id = temp[0];
-                BotStart.addMessage(qq, call.id, call);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人骰子失败", e);

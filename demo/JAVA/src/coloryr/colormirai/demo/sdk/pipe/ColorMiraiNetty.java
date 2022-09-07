@@ -1471,6 +1471,13 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             buff.writeBytes(data, 0, data.length);
         }
 
+        public static void writeIntList(ByteBuf buff, int[] data) {
+            buff.writeInt(data.length);
+            for (int item : data) {
+                buff.writeInt(item);
+            }
+        }
+
         public static ByteBuf ToPack(StartPack pack) {
             if (pack.qqList == null)
                 pack.qqList = new ArrayList<>();
@@ -1813,8 +1820,9 @@ public class ColorMiraiNetty implements IColorMiraiPipe {
             ByteBuf buff = Unpooled.buffer();
             buff.writeByte(94)
                     .writeLong(pack.qq)
-                    .writeLong(pack.id)
-                    .writeInt(pack.mid);
+                    .writeLong(pack.id);
+            writeIntList(buff, pack.ids1);
+            writeIntList(buff, pack.ids2);
 
             return buff;
         }

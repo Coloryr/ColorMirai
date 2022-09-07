@@ -1,7 +1,7 @@
 ﻿using ColoryrSDK;
 using System;
 
-const int type = 2;
+const int type = 1;
 const long qq = 2315986522;
 
 RobotSDK robot = new();
@@ -69,19 +69,15 @@ RobotConfig config = new()
 robot.Set(config);
 if (type == 1)
 {
-    config.Port = 23333;
-    robot.SetPipe(new ColorMiraiSocket(robot));
+    config.Port = 23335;
+    robot.SetPipe(new ColorMiraiNetty(robot));
 }
 else if (type == 2)
 {
     config.IP = "ws://127.0.0.1:23334";
     robot.SetPipe(new ColorMiraiWebSocket(robot));
 }
-else if (type == 3)
-{
-    config.Port = 23335;
-    robot.SetPipe(new ColorMiraiNetty(robot));
-}
+
 
 robot.Start();
 

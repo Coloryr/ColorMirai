@@ -2029,7 +2029,11 @@ public record GroupSetEssenceMessagePack : PackBase
     /// <summary>
     /// 消息ID
     /// </summary>
-    public int mid { get; set; }
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
 }
 /// <summary>
 /// 95 [插件]消息队列

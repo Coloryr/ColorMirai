@@ -635,13 +635,15 @@ public class RobotTop extends RobotBase {
      *
      * @param qq_    qq号
      * @param group_ 群号
-     * @param mid_   消息ID
+     * @param ids1_   消息ID
+     * @param ids2_   消息ID
      */
-    public void groupSetEssenceMessage(long qq_, long group_, int mid_) {
+    public void groupSetEssenceMessage(long qq_, long group_, int[] ids1_, int[] ids2_) {
         addSend(new GroupSetEssenceMessagePack() {{
             this.qq = qq_;
             this.id = group_;
-            this.mid = mid_;
+            this.ids1 = ids1_;
+            this.ids2 = ids2_;
         }}, (byte) 94);
     }
 

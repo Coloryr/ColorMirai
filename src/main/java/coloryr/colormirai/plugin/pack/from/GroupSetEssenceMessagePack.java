@@ -13,5 +13,9 @@ public class GroupSetEssenceMessagePack extends PackBase {
     /**
      * 消息ID
      */
-    public int mid;
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
 }
