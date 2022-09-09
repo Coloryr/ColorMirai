@@ -3,6 +3,7 @@ package coloryr.colormirai.plugin.netty;
 import coloryr.colormirai.plugin.pack.from.*;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import net.mamoe.mirai.message.data.MessageSourceKind;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -209,7 +210,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.ids1 = readIntList(buff);
         pack.ids2 = readIntList(buff);
-        pack.kind = buff.readInt();
+        pack.kind = MessageSourceKind.values()[buff.readInt()];
         return pack;
     }
 

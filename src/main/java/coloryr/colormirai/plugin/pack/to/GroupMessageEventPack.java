@@ -25,6 +25,10 @@ public class GroupMessageEventPack extends PackBase {
      */
     public String name;
     /**
+     * 发送时间
+     */
+    public int time;
+    /**
      * 消息ID
      */
     public int[] ids1;
@@ -41,7 +45,7 @@ public class GroupMessageEventPack extends PackBase {
      */
     public List<String> message;
 
-    public GroupMessageEventPack(long qq, long id, long fid, int[] ids1, int[] ids2,
+    public GroupMessageEventPack(long qq, long id, long fid, int time, int[] ids1, int[] ids2,
                                  MessageChain message, MemberPermission permission, String name) {
         this.fid = fid;
         this.qq = qq;
@@ -52,6 +56,7 @@ public class GroupMessageEventPack extends PackBase {
             this.message.add(item.toString());
         }
         this.message.add(message.contentToString());
+        this.time = time;
         this.ids1 = ids1;
         this.ids2 = ids2;
         this.name = name;

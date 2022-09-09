@@ -413,6 +413,28 @@ public record GroupSettings
     /// </summary>
     public bool isAnonymousChatEnabled { get; set; }
 }
+/// <summary>
+/// 消息来源类型
+/// </summary>
+public enum MessageSourceKind 
+{
+    /// <summary>
+    /// 群消息
+    /// </summary>
+    GROUP = 0,
+    /// <summary>
+    /// 好友消息
+    /// </summary>
+    FRIEND,
+    /// <summary>
+    /// 来自群成员的临时会话消息
+    /// </summary>
+    TEMP,
+    /// <summary>
+    /// 来自陌生人的消息
+    /// </summary>
+    STRANGER
+}
 //机器人公共数据包
 /// <summary>
 /// 基础包
@@ -1265,6 +1287,10 @@ public record GroupMessageEventPack : PackBase
     /// </summary>
     public string name { get; set; }
     /// <summary>
+    /// 发送时间
+    /// </summary>
+    public int time { get; set; }
+    /// <summary>
     /// 消息ID
     /// </summary>
     public int[] ids1 { get; set; }
@@ -1624,7 +1650,15 @@ public record ReCallMessagePack : PackBase
     /// <summary>
     /// 消息ID
     /// </summary>
-    public int id { get; set; }
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
+    /// 消息类型
+    /// </summary>
+    public MessageSourceKind kind { get; set; }
 }
 /// <summary>
 /// 72 [机器人]友输入状态改变（事件）

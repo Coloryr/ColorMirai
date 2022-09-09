@@ -24,15 +24,7 @@ public class BotSendDice {
                 return;
             }
             MessageChain messageChain = MessageUtils.newChain(dice == -1 ? Dice.random() : new Dice(dice));
-            MessageSource source = group1.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.sourceQQ = qq;
-                call.source = source;
-                call.time = 120;
-                call.id = source.getIds()[0];
-            }
+            group1.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群骰子失败", e);
         }
@@ -55,14 +47,7 @@ public class BotSendDice {
                 ColorMiraiMain.logger.warn("群：" + group + "不存在群员:" + fid);
                 return;
             }
-            MessageSource source = member.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-            }
+            member.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群私聊骰子失败", e);
         }
@@ -81,14 +66,7 @@ public class BotSendDice {
                 ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
                 return;
             }
-            MessageSource source = friend.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-            }
+            friend.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友骰子失败", e);
         }
@@ -107,14 +85,7 @@ public class BotSendDice {
                 ColorMiraiMain.logger.warn("机器人" + qq + "不存在陌生人:" + fid);
                 return;
             }
-            MessageSource source = stranger.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-            }
+            stranger.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人骰子失败", e);
         }

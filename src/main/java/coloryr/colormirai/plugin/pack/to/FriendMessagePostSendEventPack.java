@@ -20,6 +20,14 @@ public class FriendMessagePostSendEventPack extends PackBase {
      */
     public boolean res;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 消息
      */
     public List<String> message;
@@ -28,7 +36,8 @@ public class FriendMessagePostSendEventPack extends PackBase {
      */
     public String error;
 
-    public FriendMessagePostSendEventPack(long qq, MessageSource message, long id, boolean res, String error) {
+    public FriendMessagePostSendEventPack(long qq, MessageSource message, long id, boolean res,
+                                          int[] ids1, int[] ids2, String error) {
         this.qq = qq;
         this.error = error;
         this.id = id;
@@ -39,6 +48,8 @@ public class FriendMessagePostSendEventPack extends PackBase {
                 this.message.add(item.toString());
             }
         }
+        this.ids1 = ids1;
+        this.ids2 = ids2;
         this.res = res;
     }
 }

@@ -35,14 +35,7 @@ public class BotSendSound {
                     return;
                 }
 
-                MessageReceipt<Group> message = group.sendMessage(audio);
-                MessageSaveObj obj = new MessageSaveObj();
-                obj.source = message.getSource();
-                obj.sourceQQ = qq;
-                int[] temp = obj.source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    obj.id = temp[0];
-                }
+                group.sendMessage(audio);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
@@ -75,14 +68,8 @@ public class BotSendSound {
                     if (audio == null)
                         throw new Exception("声音为空");
                 }
-                MessageReceipt<Group> message = group.sendMessage(audio);
-                MessageSaveObj obj = new MessageSaveObj();
-                obj.source = message.getSource();
-                obj.sourceQQ = qq;
-                int[] temp = obj.source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    obj.id = temp[0];
-                }
+
+                group.sendMessage(audio);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群语音失败", e);
@@ -116,14 +103,7 @@ public class BotSendSound {
                         throw new Exception("声音为空");
                 }
 
-                MessageReceipt<Friend> message = friend.sendMessage(audio);
-                MessageSaveObj obj = new MessageSaveObj();
-                obj.source = message.getSource();
-                obj.sourceQQ = qq;
-                int[] temp = obj.source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    obj.id = temp[0];
-                }
+                friend.sendMessage(audio);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送好友语音失败", e);
@@ -157,14 +137,7 @@ public class BotSendSound {
                         throw new Exception("声音为空");
                 }
 
-                MessageReceipt<Stranger> message = stranger.sendMessage(audio);
-                MessageSaveObj obj = new MessageSaveObj();
-                obj.source = message.getSource();
-                obj.sourceQQ = qq;
-                int[] temp = obj.source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    obj.id = temp[0];
-                }
+                stranger.sendMessage(audio);
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人语音失败", e);

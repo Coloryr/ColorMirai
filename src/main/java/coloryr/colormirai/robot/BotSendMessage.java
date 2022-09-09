@@ -7,9 +7,7 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.Stranger;
 import net.mamoe.mirai.message.code.MiraiCode;
-import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageSource;
-import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,25 @@ public class BotSendMessage {
             ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
-                if (item.startsWith("[mirai:")) {
+                if (item.startsWith("quote:")) {
+                    String temp = item.replaceFirst("quote:", "");
+                    String[] args = temp.split(",");
+                    int b = 0;
+                    int a = Integer.parseInt(args[b++]);
+                    int[] ids1 = new int[a];
+                    for (int c = 0; c < a; c++) {
+                        ids1[c] = Integer.parseInt(args[b++]);
+                    }
+                    int d = Integer.parseInt(args[b++]);
+                    int[] ids2 = new int[d];
+                    for (int c = 0; c < d; c++) {
+                        ids2[c] = Integer.parseInt(args[b++]);
+                    }
+                    MessageKey key = new MessageKey(ids1, ids2);
+                    MessageSource messageSource = BotStart.getMessage(qq, key);
+                    QuoteReply reply = new QuoteReply(messageSource);
+                    messageChain = messageChain.plus(reply);
+                } else if (item.startsWith("[mirai:")) {
                     messageChain = messageChain.plus(MiraiCode.deserializeMiraiCode(item));
                 } else {
                     messageChain = messageChain.plus(item);
@@ -45,15 +61,7 @@ public class BotSendMessage {
                     continue;
                 }
 
-                MessageSource source = group1.sendMessage(messageChain).getSource();
-                int[] temp = source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    MessageSaveObj call = new MessageSaveObj();
-                    call.sourceQQ = qq;
-                    call.source = source;
-                    call.time = 120;
-                    call.id = source.getIds()[0];
-                }
+                group1.sendMessage(messageChain).getSource();
             }
 
         } catch (Exception e) {
@@ -81,14 +89,8 @@ public class BotSendMessage {
                 ColorMiraiMain.logger.warn("群：" + group + "不存在群员:" + fid);
                 return;
             }
-            MessageSource source = member.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-            }
+
+            member.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送群私聊消息失败", e);
         }
@@ -118,14 +120,8 @@ public class BotSendMessage {
                     ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
                     continue;
                 }
-                MessageSource source = friend.sendMessage(messageChain).getSource();
-                int[] temp = source.getIds();
-                if (temp.length != 0 && temp[0] != -1) {
-                    MessageSaveObj call = new MessageSaveObj();
-                    call.source = source;
-                    call.time = 120;
-                    call.id = temp[0];
-                }
+
+                friend.sendMessage(messageChain).getSource();
             }
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送朋友消息失败", e);
@@ -148,14 +144,8 @@ public class BotSendMessage {
                 ColorMiraiMain.logger.warn("机器人" + qq + "不存在陌生人:" + fid);
                 return;
             }
-            MessageSource source = stranger.sendMessage(messageChain).getSource();
-            int[] temp = source.getIds();
-            if (temp.length != 0 && temp[0] != -1) {
-                MessageSaveObj call = new MessageSaveObj();
-                call.source = source;
-                call.time = 120;
-                call.id = temp[0];
-            }
+
+            stranger.sendMessage(messageChain).getSource();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("发送陌生人消息失败", e);
         }

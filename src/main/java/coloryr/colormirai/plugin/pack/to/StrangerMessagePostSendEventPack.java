@@ -7,7 +7,8 @@ import net.mamoe.mirai.message.data.MessageSource;
  */
 public class StrangerMessagePostSendEventPack extends FriendMessagePostSendEventPack {
 
-    public StrangerMessagePostSendEventPack(long qq, MessageSource message, long id, boolean res, String error) {
-        super(qq, message, id, res, error);
+    public StrangerMessagePostSendEventPack(long qq, MessageSource message, long id,
+                                            int[] ids1, int[] ids2, boolean res, String error) {
+        super(qq, message, id, res, ids1, ids2, error);
     }
 }

@@ -768,6 +768,7 @@ internal static class PackDecode
             id = buff.ReadLong(),
             fid = buff.ReadLong(),
             name = buff.ReadString(),
+            time = buff.ReadInt(),
             ids1 = buff.ReadIntList(),
             ids2 = buff.ReadIntList(),
             permission = (MemberPermission)buff.ReadInt(),
@@ -1225,7 +1226,9 @@ internal static class PackEncode
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(71)
             .WriteLong(pack.qq)
-            .WriteInt(pack.id);
+            .WriteIntList(pack.ids1)
+            .WriteIntList(pack.ids2)
+            .WriteInt((int)pack.kind);
 
         return buff;
     }

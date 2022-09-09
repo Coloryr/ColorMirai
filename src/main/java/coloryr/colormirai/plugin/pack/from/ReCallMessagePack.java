@@ -1,6 +1,7 @@
 package coloryr.colormirai.plugin.pack.from;
 
 import coloryr.colormirai.plugin.pack.PackBase;
+import net.mamoe.mirai.message.data.MessageSourceKind;
 
 /**
  * 71 [插件]撤回消息
@@ -17,5 +18,5 @@ public class ReCallMessagePack extends PackBase {
     /**
      * 类型
      */
-    public int kind;
+    public MessageSourceKind kind;
 }

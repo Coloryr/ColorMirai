@@ -10,7 +10,6 @@ import coloryr.colormirai.demo.sdk.pack.re.ReFriendInfoPack;
 import coloryr.colormirai.demo.sdk.pack.to.GroupMessageEventPack;
 import coloryr.colormirai.demo.sdk.pack.to.NewFriendRequestEventPack;
 import coloryr.colormirai.demo.sdk.pipe.ColorMiraiNetty;
-import coloryr.colormirai.demo.sdk.pipe.ColorMiraiSocket;
 import coloryr.colormirai.demo.sdk.pipe.ColorMiraiWebSocket;
 
 import java.util.ArrayList;

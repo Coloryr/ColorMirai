@@ -30,6 +30,29 @@ void Message(byte type, object data)
                 }
                 Console.WriteLine();
                 robot.SendGroupMessage(pack.qq, pack.id, new() { $"{pack.fid} 你发送了消息 {pack.message[^1]}" });
+
+                if (pack.permission == MemberPermission.MEMBER)
+                {
+                    if (pack.message[^1] == "撤回")
+                    {
+                        robot.SendGroupMessage(pack.qq, pack.id, new() { $"撤回消息" });
+                        robot.ReCallMessage(pack.qq, pack.ids1, pack.ids2, MessageSourceKind.GROUP);
+                    }
+                }
+                else if (pack.message[^1] == "精华")
+                {
+                    robot.SendGroupMessage(pack.qq, pack.id, new() { $"设置精华消息" });
+                    robot.GroupSetEssenceMessage(pack.qq, pack.id, pack.ids1, pack.ids2);
+                }
+                else if (pack.message[^1] == "回复")
+                {
+                    robot.SendGroupMessage(pack.qq, pack.id, new()
+                    {
+                        robot.BuildQuoteReply(pack.ids1, pack.ids2),
+                        "回复消息"
+                    });
+                }
+
                 break;
             }
         case 50:

@@ -3,7 +3,6 @@ package coloryr.colormirai.robot;
 import coloryr.colormirai.ColorMiraiMain;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.obj.SendPackObj;
-import coloryr.colormirai.plugin.pack.from.DownloadFilePack;
 import coloryr.colormirai.plugin.pack.to.*;
 import coloryr.colormirai.robot.event.EventBase;
 import coloryr.colormirai.robot.event.EventCall;
@@ -267,17 +266,22 @@ public class BotEvent extends SimpleListenerHost {
         if (PluginUtils.havePlugin())
             return;
         long id = event.getTarget().getId();
+        int[] ids1 = new int[0];
+        int[] ids2 = new int[0];
         boolean res = event.getReceipt() != null;
         MessageSource message = null;
         if (res) {
             message = event.getReceipt().getSource();
+            BotStart.addMessage(event.getBot(), message);
+            ids1 = message.getIds();
+            ids2 = message.getInternalIds();
         }
         String error = "";
         if (event.getException() != null) {
             error = event.getException().getMessage();
         }
         long qq = event.getBot().getId();
-        FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(qq, message, id, res, error);
+        FriendMessagePostSendEventPack pack = new FriendMessagePostSendEventPack(qq, message, id, res, ids1, ids2, error);
         BotStart.addTask(new SendPackObj(21, pack, id, 0, qq));
     }
 
@@ -358,18 +362,23 @@ public class BotEvent extends SimpleListenerHost {
     public void onGroupMessagePostSendEvent(GroupMessagePostSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        int[] ids1 = new int[0];
+        int[] ids2 = new int[0];
         long id = event.getTarget().getId();
         boolean res = event.getReceipt() != null;
         MessageSource message = null;
         if (res) {
             message = event.getReceipt().getSource();
+            BotStart.addMessage(event.getBot(), message);
+            ids1 = message.getIds();
+            ids2 = message.getInternalIds();
         }
         String error = "";
         if (event.getException() != null) {
             error = event.getException().getMessage();
         }
         long qq = event.getBot().getId();
-        GroupMessagePostSendEventPack pack = new GroupMessagePostSendEventPack(qq, id, res, message, error);
+        GroupMessagePostSendEventPack pack = new GroupMessagePostSendEventPack(qq, id, res, ids1, ids2, message, error);
         BotStart.addTask(new SendPackObj(28, pack, 0, id, qq));
     }
 
@@ -663,19 +672,24 @@ public class BotEvent extends SimpleListenerHost {
     public void onTempMessagePostSendEvent(GroupTempMessagePostSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        int[] ids1 = new int[0];
+        int[] ids2 = new int[0];
         long id = event.getGroup().getId();
         long fid = event.getTarget().getId();
         boolean res = event.getReceipt() != null;
         MessageSource message = null;
         if (res) {
             message = event.getReceipt().getSource();
+            BotStart.addMessage(event.getBot(), message);
+            ids1 = message.getIds();
+            ids2 = message.getInternalIds();
         }
         String error = "";
         if (event.getException() != null) {
             error = event.getException().getMessage();
         }
         long qq = event.getBot().getId();
-        TempMessagePostSendEventPack pack = new TempMessagePostSendEventPack(qq, id, fid, res, message, error);
+        TempMessagePostSendEventPack pack = new TempMessagePostSendEventPack(qq, id, fid, res, ids1, ids2, message, error);
         BotStart.addTask(new SendPackObj(47, pack, fid, id, qq));
     }
 
@@ -697,16 +711,19 @@ public class BotEvent extends SimpleListenerHost {
     public void onGroupMessageEvent(GroupMessageEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        BotStart.addMessage(event.getBot(), event.getSource());
         long id = event.getSubject().getId();
         long fid = event.getSender().getId();
         if (ColorMiraiMain.config.escapeSelf && BotStart.getBots().containsKey(fid))
             return;
         MessageChain message = event.getMessage();
         long qq = event.getBot().getId();
-        String name = event.getSender().getNameCard();
         int[] ids1 = event.getSource().getIds();
         int[] ids2 = event.getSource().getInternalIds();
-        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, ids1, ids2, message, event.getPermission(), name);
+        String name = event.getSender().getNameCard();
+        int time = event.getSource().getTime();
+        GroupMessageEventPack pack = new GroupMessageEventPack(qq, id, fid, time, ids1, ids2,
+                message, event.getPermission(), name);
         BotStart.addTask(new SendPackObj(49, pack, fid, id, qq));
     }
 
@@ -715,15 +732,17 @@ public class BotEvent extends SimpleListenerHost {
     public void onTempMessageEvent(GroupTempMessageEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        BotStart.addMessage(event.getBot(), event.getSource());
         long id = event.getGroup().getId();
         long fid = event.getSender().getId();
         MessageChain message = event.getMessage();
         int time = event.getTime();
         long qq = event.getBot().getId();
-        String name = event.getSender().getNameCard();
         int[] ids1 = event.getSource().getIds();
         int[] ids2 = event.getSource().getInternalIds();
-        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, ids1, ids2, message, time, event.getSender().getPermission(), name);
+        String name = event.getSender().getNameCard();
+        TempMessageEventPack pack = new TempMessageEventPack(qq, id, fid, ids1, ids2,
+                message, time, event.getSender().getPermission(), name);
         BotStart.addTask(new SendPackObj(50, pack, fid, id, qq));
     }
 
@@ -732,13 +751,14 @@ public class BotEvent extends SimpleListenerHost {
     public void onFriendMessageEvent(FriendMessageEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        BotStart.addMessage(event.getBot(), event.getSource());
         long id = event.getSender().getId();
         MessageChain message = event.getMessage();
         int time = event.getTime();
         long qq = event.getBot().getId();
-        String name = event.getSenderName();
         int[] ids1 = event.getSource().getIds();
         int[] ids2 = event.getSource().getInternalIds();
+        String name = event.getSenderName();
         FriendMessageEventPack pack = new FriendMessageEventPack(qq, id, ids1, ids2, message, time, name);
         BotStart.addTask(new SendPackObj(51, pack, id, 0, qq));
     }
@@ -932,13 +952,14 @@ public class BotEvent extends SimpleListenerHost {
     public void onStrangerMessageEvent(StrangerMessageEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        BotStart.addMessage(event.getBot(), event.getSource());
         long id = event.getSender().getId();
         MessageChain message = event.getMessage();
         int time = event.getTime();
         long qq = event.getBot().getId();
-        String name = event.getSenderName();
         int[] ids1 = event.getSource().getIds();
         int[] ids2 = event.getSource().getInternalIds();
+        String name = event.getSenderName();
         StrangerMessageEventPack pack = new StrangerMessageEventPack(qq, id, ids1, ids2, message, time, name);
         BotStart.addTask(new SendPackObj(116, pack, id, 0, qq));
     }
@@ -960,18 +981,23 @@ public class BotEvent extends SimpleListenerHost {
     public void onStrangerMessagePostSendEvent(StrangerMessagePostSendEvent event) {
         if (PluginUtils.havePlugin())
             return;
+        int[] ids1 = new int[0];
+        int[] ids2 = new int[0];
         long id = event.getTarget().getId();
         boolean res = event.getReceipt() != null;
         MessageSource message = null;
         if (res) {
             message = event.getReceipt().getSource();
+            BotStart.addMessage(event.getBot(), message);
+            ids1 = message.getIds();
+            ids2 = message.getInternalIds();
         }
         String error = "";
         if (event.getException() != null) {
             error = event.getException().getMessage();
         }
         long qq = event.getBot().getId();
-        StrangerMessagePostSendEventPack pack = new StrangerMessagePostSendEventPack(qq, message, id, res, error);
+        StrangerMessagePostSendEventPack pack = new StrangerMessagePostSendEventPack(qq, message, id, ids1, ids2, res, error);
         BotStart.addTask(new SendPackObj(123, pack, id, 0, qq));
     }
 

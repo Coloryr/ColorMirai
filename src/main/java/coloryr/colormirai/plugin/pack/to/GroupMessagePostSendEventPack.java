@@ -20,6 +20,14 @@ public class GroupMessagePostSendEventPack extends PackBase {
      */
     public boolean res;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 发送的消息
      */
     public List<String> message;
@@ -28,7 +36,8 @@ public class GroupMessagePostSendEventPack extends PackBase {
      */
     public String error;
 
-    public GroupMessagePostSendEventPack(long qq, long id, boolean res, MessageSource message, String error) {
+    public GroupMessagePostSendEventPack(long qq, long id, boolean res, int[] ids1, int[] ids2,
+                                         MessageSource message, String error) {
         this.error = error;
         this.id = id;
         this.qq = qq;
@@ -39,6 +48,8 @@ public class GroupMessagePostSendEventPack extends PackBase {
                 this.message.add(item.toString());
             }
         }
+        this.ids1 = ids1;
+        this.ids2 = ids2;
         this.res = res;
     }
 }

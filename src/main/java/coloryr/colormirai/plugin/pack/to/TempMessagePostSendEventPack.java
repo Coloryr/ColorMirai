@@ -24,6 +24,14 @@ public class TempMessagePostSendEventPack extends PackBase {
      */
     public boolean res;
     /**
+     * 消息ID
+     */
+    public int[] ids1;
+    /**
+     * 消息ID
+     */
+    public int[] ids2;
+    /**
      * 消息
      */
     public List<String> message;
@@ -32,7 +40,8 @@ public class TempMessagePostSendEventPack extends PackBase {
      */
     public String error;
 
-    public TempMessagePostSendEventPack(long qq, long id, long fid, boolean res, MessageSource message, String error) {
+    public TempMessagePostSendEventPack(long qq, long id, long fid, boolean res, int[] ids1, int[] ids2,
+                                        MessageSource message, String error) {
         this.error = error;
         this.qq = qq;
         this.id = id;
@@ -44,6 +53,8 @@ public class TempMessagePostSendEventPack extends PackBase {
                 this.message.add(item.toString());
             }
         }
+        this.ids1 = ids1;
+        this.ids2 = ids2;
         this.res = res;
     }
 }

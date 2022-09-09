@@ -9,7 +9,6 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.Mirai;
 import net.mamoe.mirai.message.data.MessageSource;
-import net.mamoe.mirai.message.data.MessageSourceBuilder;
 import net.mamoe.mirai.message.data.MessageSourceKind;
 import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
@@ -20,6 +19,7 @@ import java.util.concurrent.*;
 
 public class BotStart {
 
+    private static final Map<Bot, PooledMap<MessageKey, MessageSource>> botMessageList = new HashMap<>();
     private static final List<SendPackObj> tasks = new CopyOnWriteArrayList<>();
     private static final Map<Long, Bot> bots = new HashMap<>();
     private static final List<ReCallObj> reList = new CopyOnWriteArrayList<>();
@@ -58,6 +58,7 @@ public class BotStart {
 
         for (Bot item : bots.values()) {
             item.getEventChannel().registerListenerHost(host);
+            botMessageList.put(item, new PooledMap<>(ColorMiraiMain.config.maxMessageSave));
             break;
         }
         service.scheduleAtFixedRate(() -> {
@@ -65,10 +66,9 @@ public class BotStart {
                 for (ReCallObj item : reList) {
                     try {
                         Bot bot = bots.get(item.bot);
-                        MessageSource message = new MessageSourceBuilder()
-                                .id(item.ids1)
-                                .internalId(item.ids2)
-                                .build(item.bot, item.kind);
+                        PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
+                        MessageKey key = new MessageKey(item.ids1, item.ids2);
+                        MessageSource message = list.remove(key);
                         Mirai.getInstance().recallMessage(bot, message);
                     } catch (Exception e) {
                         ColorMiraiMain.logger.error("消息撤回失败", e);
@@ -107,27 +107,13 @@ public class BotStart {
         }
     }
 
-    public static void reCall(long qq, int[] ids1, int[] ids2, int kind) {
+    public static void reCall(long qq, int[] ids1, int[] ids2, MessageSourceKind kind) {
         try {
             ReCallObj obj = new ReCallObj();
             obj.bot = qq;
             obj.ids1 = ids1;
             obj.ids2 = ids2;
-            switch (kind){
-                case 0:
-                default:
-                    obj.kind = MessageSourceKind.FRIEND;
-                    break;
-                case 1:
-                    obj.kind = MessageSourceKind.GROUP;
-                    break;
-                case 2:
-                    obj.kind = MessageSourceKind.STRANGER;
-                    break;
-                case 3:
-                    obj.kind = MessageSourceKind.TEMP;
-                    break;
-            }
+            obj.kind = kind;
             reList.add(obj);
         } catch (Exception e) {
             ColorMiraiMain.logger.error("消息撤回失败", e);
@@ -140,5 +126,17 @@ public class BotStart {
 
     public static List<Long> getBotsKey() {
         return new ArrayList<>(bots.keySet());
+    }
+
+    public synchronized static void addMessage(Bot bot, MessageSource messages){
+        PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
+        MessageKey key = new MessageKey(messages.getIds(), messages.getInternalIds());
+        list.put(key, messages);
+    }
+
+    public static MessageSource getMessage(long qq, MessageKey key){
+        Bot bot = bots.get(qq);
+        PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
+        return list.get(key);
     }
 }

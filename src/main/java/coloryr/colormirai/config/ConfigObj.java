@@ -9,7 +9,7 @@ public class ConfigObj {
     public int nettyPort;
     public int webSocketPort;
     public boolean escapeSelf;
-    public long maxList;
+    public long maxMessageSave;
     public String sendEncoding;
     public String readEncoding;
     public boolean autoReconnect;
@@ -25,7 +25,7 @@ public class ConfigObj {
         escapeSelf = true;
         webSocketPort = 23334;
         nettyPort = 23335;
-        maxList = 100000;
+        maxMessageSave = 100000;
         sendEncoding = "UTF-8";
         readEncoding = "UTF-8";
         autoReconnect = true;
