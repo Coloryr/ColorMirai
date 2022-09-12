@@ -681,6 +681,15 @@ public partial class RobotSDK
     /// <summary>
     /// 94 [插件]设置群精华消息
     /// </summary>
+    /// <param name="pack">消息事件包</param>
+    public void GroupSetEssenceMessage(GroupMessageEventPack pack)
+    {
+        GroupSetEssenceMessage(pack.qq, pack.id, pack.ids1, pack.ids2);
+    }
+
+    /// <summary>
+    /// 94 [插件]设置群精华消息
+    /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
     /// <param name="ids1">消息ID</param>
@@ -1130,7 +1139,37 @@ public partial class RobotSDK
         }, 126);
     }
 
-    public string BuildQuoteReply(int[] ids1, int[] ids2)
+    /// <summary>
+    /// 构建一个回复指令
+    /// </summary>
+    /// <param name="pack">群消息数据包</param>
+    /// <returns>指令</returns>
+    public static string BuildQuoteReply(GroupMessageEventPack pack)
+    {
+        return BuildQuoteReply(pack.ids1, pack.ids2);
+    }
+
+    /// <summary>
+    /// 构建一个回复指令
+    /// </summary>
+    /// <param name="pack">朋友消息数据包</param>
+    /// <returns>指令</returns>
+    public static string BuildQuoteReply(FriendMessageEventPack pack)
+    {
+        return BuildQuoteReply(pack.ids1, pack.ids2);
+    }
+
+    /// <summary>
+    /// 构建一个回复指令
+    /// </summary>
+    /// <param name="pack">朋友消息数据包</param>
+    /// <returns>指令</returns>
+    public static string BuildQuoteReply(FriendMessageEventPack pack)
+    {
+        return BuildQuoteReply(pack.ids1, pack.ids2);
+    }
+
+    public static string BuildQuoteReply(int[] ids1, int[] ids2)
     {
         string temp = $"quote:";
         temp += $"{ids1.Length},";

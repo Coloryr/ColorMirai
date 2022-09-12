@@ -707,6 +707,14 @@ public record FriendMessagePostSendEventPack : PackBase
     /// </summary>
     public bool res { get; set; }
     /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
+    /// <summary>
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
@@ -844,6 +852,14 @@ public record GroupMessagePostSendEventPack : PackBase
     /// 是否发送成功
     /// </summary>
     public bool res { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
     /// <summary>
     /// 发送的消息
     /// </summary>
@@ -1242,6 +1258,14 @@ public record TempMessagePostSendEventPack : PackBase
     /// 是否成功发送
     /// </summary>
     public bool res { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids1 { get; set; }
+    /// <summary>
+    /// 消息ID
+    /// </summary>
+    public int[] ids2 { get; set; }
     /// <summary>
     /// 消息
     /// </summary>

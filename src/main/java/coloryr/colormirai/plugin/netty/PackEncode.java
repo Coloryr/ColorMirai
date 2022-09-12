@@ -371,6 +371,8 @@ public class PackEncode {
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
         buf.writeBoolean(pack.res);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         writeStringList(buf, pack.message);
         writeString(buf, pack.error);
         return buf;
@@ -442,6 +444,8 @@ public class PackEncode {
         buf.writeLong(pack.qq);
         buf.writeLong(pack.id);
         buf.writeBoolean(pack.res);
+        writeIntList(buf, pack.ids1);
+        writeIntList(buf, pack.ids2);
         writeStringList(buf, pack.message);
         writeString(buf, pack.error);
         return buf;

@@ -438,6 +438,8 @@ internal static class PackDecode
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
             res = buff.ReadBoolean(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             message = buff.ReadStringList(),
             error = buff.ReadString()
         };
@@ -516,6 +518,8 @@ internal static class PackDecode
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
             res = buff.ReadBoolean(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             message = buff.ReadStringList(),
             error = buff.ReadString()
         };
@@ -746,6 +750,8 @@ internal static class PackDecode
             qq = buff.ReadLong(),
             id = buff.ReadLong(),
             res = buff.ReadBoolean(),
+            ids1 = buff.ReadIntList(),
+            ids2 = buff.ReadIntList(),
             message = buff.ReadStringList(),
             error = buff.ReadString()
         };
@@ -1039,8 +1045,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendGroupMessagePack pack)
     {
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(52)
             .WriteLong(pack.qq)
@@ -1234,10 +1239,8 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendGroupSoundPack pack)
     {
-        if (pack.data == null)
-            pack.data = Array.Empty<byte>();
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.data ??= Array.Empty<byte>();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(74)
             .WriteLong(pack.qq)
@@ -2247,7 +2250,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
     {
         Robot.IsConnect = false;
         Robot.RobotStateEvent.Invoke(StateType.Disconnect);
-        client.CloseAsync().Wait();
+        client?.CloseAsync().Wait();
     }
 }
 

@@ -48,7 +48,7 @@ void Message(byte type, object data)
                 {
                     robot.SendGroupMessage(pack.qq, pack.id, new()
                     {
-                        robot.BuildQuoteReply(pack.ids1, pack.ids2),
+                        RobotSDK.BuildQuoteReply(pack),
                         "回复消息"
                     });
                 }
@@ -56,10 +56,16 @@ void Message(byte type, object data)
                 break;
             }
         case 50:
+            {
+                var pack = data as TempMessageEventPack;
 
+            }
             break;
         case 51:
+            {
+                var pack = data as FriendMessageEventPack;
 
+            }
             break;
         case 116:
 
