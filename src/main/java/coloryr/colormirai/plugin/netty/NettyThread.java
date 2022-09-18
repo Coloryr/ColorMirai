@@ -66,8 +66,7 @@ public class NettyThread implements IPluginSocket {
             int[] res = new int[1];
             StartPack StartPack = PackDecode.startPack(task.data, res);
             if (res[0] != NettyVersion) {
-                ColorMiraiMain.logger.warn("插件连接器版本不正确");
-                return;
+                ColorMiraiMain.logger.warn("插件连接器版本不正确，有可能会出现异常");
             }
             if (StartPack.name != null && StartPack.reg != null) {
                 socketThread.setName("Plugin[" + StartPack.name + "]NettyThread");
