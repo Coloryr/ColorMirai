@@ -1159,16 +1159,6 @@ public partial class RobotSDK
         return BuildQuoteReply(pack.ids1, pack.ids2);
     }
 
-    /// <summary>
-    /// 构建一个回复指令
-    /// </summary>
-    /// <param name="pack">朋友消息数据包</param>
-    /// <returns>指令</returns>
-    public static string BuildQuoteReply(FriendMessageEventPack pack)
-    {
-        return BuildQuoteReply(pack.ids1, pack.ids2);
-    }
-
     public static string BuildQuoteReply(int[] ids1, int[] ids2)
     {
         string temp = $"quote:";

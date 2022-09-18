@@ -50,7 +50,7 @@ public class PackDecode {
         return temp;
     }
 
-    public static StartPack startPack(ByteBuf buff) {
+    public static StartPack startPack(ByteBuf buff, int[] res) {
         StartPack pack = new StartPack();
         pack.name = readString(buff);
         int length = buff.readInt();
@@ -61,6 +61,11 @@ public class PackDecode {
         pack.groups = readLongList(buff);
         pack.qqList = readLongList(buff);
         pack.qq = buff.readLong();
+        try {
+            res[0] = buff.readInt();
+        } catch (Exception e) {
+            res[0] = -1;
+        }
         return pack;
     }
 

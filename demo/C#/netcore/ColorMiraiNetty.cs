@@ -13,6 +13,7 @@ namespace ColoryrSDK;
 
 internal static class PackDecode
 {
+    public const int NettyVersion = 100;
     public static string ReadString(this IByteBuffer buff)
     {
         return buff.ReadString(buff.ReadInt(), Encoding.UTF8);
@@ -1024,12 +1025,9 @@ internal static class PackEncode
 
     public static IByteBuffer ToPack(this StartPack pack)
     {
-        if (pack.qqList == null)
-            pack.qqList = new();
-        if (pack.groups == null)
-            pack.groups = new();
-        if (pack.reg == null)
-            pack.reg = new();
+        pack.qqList ??= new();
+        pack.groups ??= new();
+        pack.reg ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(0)
             .WriteString(pack.name)
@@ -1040,7 +1038,8 @@ internal static class PackEncode
         }
         buff.WriteLongList(pack.groups)
             .WriteLongList(pack.qqList)
-            .WriteLong(pack.qq);
+            .WriteLong(pack.qq)
+            .WriteInt(PackDecode.NettyVersion);
         return buff;
     }
     public static IByteBuffer ToPack(this SendGroupMessagePack pack)
@@ -1117,10 +1116,8 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendGroupImagePack pack)
     {
-        if (pack.data == null)
-            pack.data = Array.Empty<byte>();
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.data ??= Array.Empty<byte>();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(61)
             .WriteLong(pack.qq)
@@ -1132,8 +1129,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendGroupPrivateImagePack pack)
     {
-        if (pack.data == null)
-            pack.data = Array.Empty<byte>();
+        pack.data ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(62)
             .WriteLong(pack.qq)
@@ -1145,8 +1141,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendFriendImagePack pack)
     {
-        if (pack.data == null)
-            pack.data = Array.Empty<byte>();
+        pack.data ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(63)
             .WriteLong(pack.qq)
@@ -1372,8 +1367,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this MessageBuffPack pack)
     {
-        if (pack.imgData == null)
-            pack.imgData = Array.Empty<byte>();
+        pack.imgData ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(95)
             .WriteLong(pack.qq)
@@ -1561,8 +1555,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendFriendSoundFilePack pack)
     {
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(112)
             .WriteLong(pack.qq)
@@ -1604,8 +1597,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendStrangerImageFilePack pack)
     {
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(118)
             .WriteLong(pack.qq)
@@ -1636,8 +1628,7 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendStrangerSoundFilePack pack)
     {
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(121)
             .WriteLong(pack.qq)
@@ -1649,10 +1640,8 @@ internal static class PackEncode
     }
     public static IByteBuffer ToPack(this SendFriendSoundPack pack)
     {
-        if (pack.data == null)
-            pack.data = Array.Empty<byte>();
-        if (pack.ids == null)
-            pack.ids = new();
+        pack.data ??= Array.Empty<byte>();
+        pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
         buff.WriteByte(126)
             .WriteLong(pack.qq)
@@ -2205,17 +2194,6 @@ internal class ColorMiraiNetty : IColorMiraiPipe
 
         Robot.RobotStateEvent.Invoke(StateType.Connecting);
 
-        bootstrap = new Bootstrap();
-        bootstrap
-            .Group(group)
-            .Channel<TcpSocketChannel>()
-            .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
-            {
-                IChannelPipeline pipeline = channel.Pipeline;
-                pipeline.AddLast(new LengthFieldPrepender(4))
-                        .AddLast(new LengthFieldBasedFrameDecoder(1024 * 500, 0, 4, 0, 4))
-                        .AddLast(new ClientHandler(this));
-            }));
         client = bootstrap.ConnectAsync(Robot.Config.IP, Robot.Config.Port).Result;
 
         var pack = Robot.PackStart.ToPack();
@@ -2243,6 +2221,18 @@ internal class ColorMiraiNetty : IColorMiraiPipe
 
     public void StartRead()
     {
+        bootstrap = new Bootstrap();
+        bootstrap
+            .Group(group)
+            .Channel<TcpSocketChannel>()
+            .Handler(new ActionChannelInitializer<ISocketChannel>(channel =>
+            {
+                IChannelPipeline pipeline = channel.Pipeline;
+                pipeline.AddLast(new LengthFieldPrepender(4))
+                        .AddLast(new LengthFieldBasedFrameDecoder(1024 * 500, 0, 4, 0, 4))
+                        .AddLast(new ClientHandler(this));
+            }));
+
         thread.Start();
     }
 
@@ -2256,7 +2246,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
 
 internal class ClientHandler : ChannelHandlerAdapter
 {
-    private ColorMiraiNetty netty;
+    private readonly ColorMiraiNetty netty;
     internal ClientHandler(ColorMiraiNetty netty)
     {
         this.netty = netty;
