@@ -340,4 +340,31 @@ public class BotGroupDo {
             ColorMiraiMain.logger.error("删除群公告失败", e);
         }
     }
+
+    public static void editSpecialTitle(long qq, long id, long fid, String name){
+        try {
+            if (!BotStart.getBots().containsKey(qq)) {
+                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+                return;
+            }
+            Bot bot = BotStart.getBots().get(qq);
+            Group group = bot.getGroup(id);
+            if (group == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+                return;
+            }
+            if (group.getBotPermission() != MemberPermission.OWNER) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "不是群主");
+                return;
+            }
+            NormalMember member = group.get(fid);
+            if (member == null) {
+                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "中没有群员:" + fid);
+                return;
+            }
+            member.setSpecialTitle(name);
+        } catch (Exception e) {
+            ColorMiraiMain.logger.error("设置群头衔失败", e);
+        }
+    }
 }

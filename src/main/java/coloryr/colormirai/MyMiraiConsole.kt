@@ -58,29 +58,33 @@ fun startupConsoleThread() {
                     ColorMiraiMain.logger.warn("不能使用这个指令")
                     continue
                 }
-                if (next.equals("/stop")) {
+                if (next == "/stop") {
                     MiraiConsole.shutdown()
                     ColorMiraiMain.stop()
                 }
-                // consoleLogger.debug("INPUT> $next")
                 when (val result = ConsoleCommandSender.executeCommand(next)) {
                     is Success -> {
                     }
-                    is IllegalArgument -> { // user wouldn't want stacktrace for a parser error unless it is in debugging mode (to do).
+
+                    is IllegalArgument -> {
                         val message = result.exception.message
                         if (message != null) {
                             ColorMiraiMain.logger.warn(message)
                         } else ColorMiraiMain.logger.warn(result.exception)
                     }
+
                     is ExecutionFailed -> {
                         ColorMiraiMain.logger.error(result.exception)
                     }
+
                     is UnresolvedCommand -> {
                         ColorMiraiMain.logger.warn("未知指令: ${next}, 输入 ? 获取帮助")
                     }
+
                     is PermissionDenied -> {
                         ColorMiraiMain.logger.warn("权限不足.")
                     }
+
                     is UnmatchedSignature -> {
                         ColorMiraiMain.logger.warn(
                             "参数不匹配, 你是否想执行: \n" + result.failureReasons.render(
@@ -89,6 +93,7 @@ fun startupConsoleThread() {
                             )
                         )
                     }
+
                     is Failure -> {
                         ColorMiraiMain.logger.warn(result.toString())
                     }
@@ -142,7 +147,6 @@ internal fun FailureReason.render(): String {
         is FailureReason.NotEnoughArguments -> "参数不足"
         is FailureReason.ResolutionAmbiguity -> "调用歧义"
         is FailureReason.ArgumentLengthMismatch -> {
-            // should not happen, render it anyway.
             "参数长度不匹配"
         }
     }
@@ -159,6 +163,11 @@ internal fun CommandReceiverParameter<*>.renderAsName(): String {
         classifier.isSubclassOf(MemberCommandSender::class) -> "群成员"
         classifier.isSubclassOf(GroupTempCommandSenderOnMessage::class) -> "群临时会话"
         classifier.isSubclassOf(GroupTempCommandSender::class) -> "群临时好友"
+        classifier.isSubclassOf(StrangerCommandSender::class) -> "陌生人"
+        classifier.isSubclassOf(StrangerCommandSenderOnMessage::class) -> "陌生人会话"
+        classifier.isSubclassOf(OtherClientCommandSender::class) -> "其他客户端"
+        classifier.isSubclassOf(OtherClientCommandSenderOnMessage::class) -> "其他客户端会话"
+        classifier.isSubclassOf(OtherClientCommandSenderOnMessageSync::class) -> "其他客户端主动会话"
         classifier.isSubclassOf(UserCommandSender::class) -> "用户"
         else -> classifier.simpleName ?: classifier.toString()
     }

@@ -38,7 +38,9 @@ public partial class RobotSDK
     private readonly Dictionary<QQFriend, Action<ReFriendInfoPack>> GetFriendInfoMap = new();
     private readonly Dictionary<QQGroup, Action<ReGroupFilesPack>> GetGroupFilesMap = new();
     private readonly Dictionary<QQGroup, Action<ReGroupAnnouncementsPack>> GetGroupAnnouncementsMap = new();
-    private partial bool CallTop(byte index, object data)
+    private readonly Dictionary<QQCall, Action<ReListFriendGroupPack>> GetFriendGroupsMap = new();
+    private readonly Dictionary<QQFriend, Action<ReFriendGroupPack>> GetFriendGroupMap = new();
+    private partial bool CallTop(int index, object data)
     {
         switch (index)
         {
@@ -140,6 +142,28 @@ public partial class RobotSDK
                     }
                     return true;
                 }
+            case 128:
+                {
+                    var pack = data as ReFriendGroupPack;
+                    var key = new QQFriend() { QQ = pack.qq, Friend = pack.info.id, UUID = pack.uuid };
+                    if (GetFriendGroupMap.TryGetValue(key, out var action))
+                    {
+                        GetFriendGroupMap.Remove(key);
+                        action.Invoke(pack);
+                    }
+                    return true;
+                }
+            case 129:
+                {
+                    var pack = data as ReListFriendGroupPack;
+                    var key = new QQCall() { QQ = pack.qq, UUID = pack.uuid };
+                    if (GetFriendGroupsMap.TryGetValue(key, out var action))
+                    {
+                        GetFriendGroupsMap.Remove(key);
+                        action.Invoke(pack);
+                    }
+                    return true;
+                }
             default:
                 return false;
         }
@@ -186,8 +210,9 @@ public partial class RobotSDK
     /// </summary>
     /// <param name="qq">qq号</param>
     /// <param name="group">群号</param>
+    /// <param name="fast">只获取关键信息</param>
     /// <param name="res">获取成功后回调</param>
-    public void GetMembers(long qq, long group, Action<ReListMemberPack> res)
+    public void GetMembers(long qq, long group, bool fast, Action<ReListMemberPack> res)
     {
         var key = new QQGroup() { QQ = qq, Group = group, UUID = GenUUID };
         GetMembersMap.Add(key, res);
@@ -195,6 +220,7 @@ public partial class RobotSDK
         {
             qq = qq,
             id = group,
+            fast = fast,
             uuid = key.UUID
         }, 57);
     }
@@ -1137,6 +1163,98 @@ public partial class RobotSDK
             data = data,
             ids = ids
         }, 126);
+    }
+
+    /// <summary>
+    /// 128 [插件]获取好友分组信息
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="id">分组ID</param>
+    public void GetFriendGroup(long qq, int id, Action<ReFriendGroupPack> res)
+    {
+        var key = new QQFriend() { QQ = qq, Friend = id, UUID = GenUUID };
+        GetFriendGroupMap.Add(key, res);
+        AddSend(new GetFriendGroupPack()
+        {
+            qq = qq,
+            id = id,
+            uuid = key.UUID
+        }, 128);
+    }
+
+    /// <summary>
+    /// 129 [插件]获取所有好友分组信息
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    public void GetFriendGroups(long qq, Action<ReListFriendGroupPack> res)
+    {
+        var key = new QQCall() { QQ = qq, UUID = GenUUID };
+        GetFriendGroupsMap.Add(key, res);
+        AddSend(new GetPack()
+        {
+            qq = qq,
+            uuid = key.UUID
+        }, 129);
+    }
+
+    /// <summary>
+    /// 130 [插件]创建好友分组
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="name">分组名</param>
+    public void FriendGroupCreate(long qq, string name)
+    {
+        AddSend(new FriendGroupCreatePack()
+        {
+            qq = qq,
+            name = name
+        }, 130);
+    }
+
+    /// <summary>
+    /// 131 [插件]修改好友分组名
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="id">分组id</param>
+    /// <param name="name">新的分组名</param>
+    public void FriendGroupRename(long qq, int id, string name)
+    {
+        AddSend(new FriendGroupRenamePack()
+        {
+            qq = qq,
+            id = id,
+            name = name,
+        }, 131);
+    }
+
+    /// <summary>
+    /// 132 [插件]移动好友到分组
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="id">分组id</param>
+    /// <param name="fid">好友qq号</param>
+    public void FriendGroupMove(long qq, int id, long fid)
+    {
+        AddSend(new FriendGroupMovePack()
+        {
+            qq = qq,
+            id = id,
+            fid = fid
+        }, 132);
+    }
+
+    /// <summary>
+    /// 133 [插件]删除好友分组
+    /// </summary>
+    /// <param name="qq">qq号</param>
+    /// <param name="id">分组id</param>
+    public void FriendGroupDelete(long qq, int id)
+    {
+        AddSend(new FriendGroupDeletePack()
+        {
+            qq = qq,
+            id = id
+        }, 133);
     }
 
     /// <summary>

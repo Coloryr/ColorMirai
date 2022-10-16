@@ -6,7 +6,7 @@ const long qq = 2315986522;
 
 RobotSDK robot = new();
 
-void Message(byte type, object data)
+void Message(int type, object data)
 {
     switch (type)
     {
@@ -119,31 +119,39 @@ while (true)
     switch (arg[0])
     {
         case "tests":
-            robot.GetFriends(qq, (res) =>
-            {
-                Console.WriteLine($"{res.qq}的好友：");
-                foreach (var item in res.friends)
-                {
-                    Console.WriteLine($"{item.id} {item.remark}");
-                }
-            });
-            robot.GetGroups(qq, (res) =>
-            {
-                Console.WriteLine($"{res.qq}的群：");
-                foreach (var item in res.groups)
-                {
-                    Console.WriteLine($"{item.id} {item.name}");
-                }
-                long group = res.groups[0].id;
-                robot.GetMembers(qq, group, (res) =>
-                {
-                    Console.WriteLine($"{res.qq}的群{group}的群员：");
-                    foreach (var item in res.members)
-                    {
-                        Console.WriteLine($"{item.id} {item.nick}");
-                    }
-                });
-            });
+            //robot.GetFriends(qq, (res) =>
+            //{
+            //    Console.WriteLine($"{res.qq}的好友：");
+            //    foreach (var item in res.friends)
+            //    {
+            //        Console.WriteLine($"{item.id} {item.remark}");
+            //    }
+            //});
+            //robot.GetGroups(qq, (res) =>
+            //{
+            //    Console.WriteLine($"{res.qq}的群：");
+            //    foreach (var item in res.groups)
+            //    {
+            //        Console.WriteLine($"{item.id} {item.name}");
+            //    }
+            //    long group = res.groups[0].id;
+            //    robot.GetMembers(qq, group, (res) =>
+            //    {
+            //        Console.WriteLine($"{res.qq}的群{group}的群员：");
+            //        foreach (var item in res.members)
+            //        {
+            //            Console.WriteLine($"{item.id} {item.nick}");
+            //        }
+            //    });
+            //});
+            //robot.GetFriendGroups(qq, (res) =>
+            //{
+            //    Console.WriteLine($"{res.qq}的好友分组：");
+            //    foreach (var item in res.infos)
+            //    {
+            //        Console.WriteLine($"{item.id} {item.name}");
+            //    }
+            //});
             break;
         case "stop":
             robot.Stop();

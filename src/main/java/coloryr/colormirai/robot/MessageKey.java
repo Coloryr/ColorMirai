@@ -1,7 +1,5 @@
 package coloryr.colormirai.robot;
 
-import java.lang.reflect.Array;
-
 public class MessageKey {
     private final int[] ids1;
     private final int[] ids2;

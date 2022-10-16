@@ -5,7 +5,6 @@ import coloryr.colormirai.plugin.IPluginSocket;
 import coloryr.colormirai.plugin.PluginUtils;
 import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.obj.PluginPack;
-import coloryr.colormirai.plugin.pack.from.DownloadFilePack;
 import coloryr.colormirai.plugin.pack.from.StartPack;
 import coloryr.colormirai.plugin.pack.re.*;
 import coloryr.colormirai.plugin.pack.to.*;
@@ -17,7 +16,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class NettyThread implements IPluginSocket {
-    public static final int NettyVersion = 100;
+    public static final int NettyVersion = 102;
     private ThePlugin plugin;
     private final ChannelHandlerContext context;
     private final Thread socketThread;
@@ -37,7 +36,7 @@ public class NettyThread implements IPluginSocket {
         ByteBuf buff = list.poll();
         if (buff == null)
             return null;
-        return new RePackObj(buff.readByte(), buff);
+        return new RePackObj(buff.readInt(), buff);
     }
 
     public void add(ByteBuf byteBuf) {
@@ -394,6 +393,41 @@ public class NettyThread implements IPluginSocket {
                             plugin.close();
                             break;
                         }
+                        //128 [插件]获取好友分组信息
+                        case 128: {
+                            plugin.addPack(new PluginPack(PackDecode.getFriendGroupPack(task.data), task.index));
+                            break;
+                        }
+                        //129 [插件]获取所有好友分组信息
+                        case 129: {
+                            plugin.addPack(new PluginPack(PackDecode.getPack(task.data), task.index));
+                            break;
+                        }
+                        //130 [插件]创建好友分组
+                        case 130: {
+                            plugin.addPack(new PluginPack(PackDecode.friendGroupCreatePack(task.data), task.index));
+                            break;
+                        }
+                        //131 [插件]修改好友分组名
+                        case 131: {
+                            plugin.addPack(new PluginPack(PackDecode.friendGroupRenamePack(task.data), task.index));
+                            break;
+                        }
+                        //132 [插件]移动好友到分组
+                        case 132: {
+                            plugin.addPack(new PluginPack(PackDecode.friendGroupMovePack(task.data), task.index));
+                            break;
+                        }
+                        //133 [插件]删除好友分组
+                        case 133: {
+                            plugin.addPack(new PluginPack(PackDecode.friendGroupDeletePack(task.data), task.index));
+                            break;
+                        }
+                        //134 [插件]修改群成员头衔
+                        case 134: {
+                            plugin.addPack(new PluginPack(PackDecode.groupEditMemberSpecialTitlePack(task.data), task.index));
+                            break;
+                        }
                         //60 心跳包
                         case 60: {
                             break;
@@ -653,6 +687,12 @@ public class NettyThread implements IPluginSocket {
                     break;
                 case 125:
                     buff = PackEncode.strangerRelationChangePack((StrangerRelationChangePack) data, 125);
+                    break;
+                case 128:
+                    buff = PackEncode.reFriendGroupPack((ReFriendGroupPack) data);
+                    break;
+                case 129:
+                    buff = PackEncode.reListFriendGroupPack((ReListFriendGroupPack) data);
                     break;
             }
             if (buff != null) {

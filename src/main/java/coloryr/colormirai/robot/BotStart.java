@@ -14,8 +14,14 @@ import net.mamoe.mirai.network.WrongPasswordException;
 import net.mamoe.mirai.utils.BotConfiguration;
 
 import java.io.File;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class BotStart {
 
@@ -128,13 +134,13 @@ public class BotStart {
         return new ArrayList<>(bots.keySet());
     }
 
-    public synchronized static void addMessage(Bot bot, MessageSource messages){
+    public synchronized static void addMessage(Bot bot, MessageSource messages) {
         PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
         MessageKey key = new MessageKey(messages.getIds(), messages.getInternalIds());
         list.put(key, messages);
     }
 
-    public static MessageSource getMessage(long qq, MessageKey key){
+    public static MessageSource getMessage(long qq, MessageKey key) {
         Bot bot = bots.get(qq);
         PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
         return list.get(key);

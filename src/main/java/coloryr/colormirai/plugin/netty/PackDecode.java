@@ -2,7 +2,6 @@ package coloryr.colormirai.plugin.netty;
 
 import coloryr.colormirai.plugin.pack.from.*;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import net.mamoe.mirai.message.data.MessageSourceKind;
 
 import java.nio.charset.StandardCharsets;
@@ -106,6 +105,7 @@ public class PackDecode {
         GroupGetMemberInfoPack pack = new GroupGetMemberInfoPack();
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
+        pack.fast = buff.readBoolean();
         pack.uuid = readString(buff);
         return pack;
     }
@@ -566,6 +566,53 @@ public class PackDecode {
         pack.local = readString(buff);
         pack.fid = buff.readLong();
         pack.qid = buff.readLong();
+        return pack;
+    }
+
+    public static GetFriendGroupPack getFriendGroupPack(ByteBuf buff) {
+        GetFriendGroupPack pack = new GetFriendGroupPack();
+        pack.qq = buff.readLong();
+        pack.id = buff.readInt();
+        pack.uuid = readString(buff);
+        return pack;
+    }
+
+    public static FriendGroupCreatePack friendGroupCreatePack(ByteBuf buff) {
+        FriendGroupCreatePack pack = new FriendGroupCreatePack();
+        pack.qq = buff.readLong();
+        pack.name = readString(buff);
+        return pack;
+    }
+
+    public static FriendGroupRenamePack friendGroupRenamePack(ByteBuf buff) {
+        FriendGroupRenamePack pack = new FriendGroupRenamePack();
+        pack.qq = buff.readLong();
+        pack.id = buff.readInt();
+        pack.name = readString(buff);
+        return pack;
+    }
+
+    public static FriendGroupMovePack friendGroupMovePack(ByteBuf buff) {
+        FriendGroupMovePack pack = new FriendGroupMovePack();
+        pack.qq = buff.readLong();
+        pack.id = buff.readInt();
+        pack.fid = buff.readLong();
+        return pack;
+    }
+
+    public static FriendGroupDeletePack friendGroupDeletePack(ByteBuf buff) {
+        FriendGroupDeletePack pack = new FriendGroupDeletePack();
+        pack.qq = buff.readLong();
+        pack.id = buff.readInt();
+        return pack;
+    }
+
+    public static GroupMemberEditSpecialTitlePack groupEditMemberSpecialTitlePack(ByteBuf buff) {
+        GroupMemberEditSpecialTitlePack pack = new GroupMemberEditSpecialTitlePack();
+        pack.qq = buff.readLong();
+        pack.id = buff.readLong();
+        pack.fid = buff.readLong();
+        pack.name = readString(buff);
         return pack;
     }
 }

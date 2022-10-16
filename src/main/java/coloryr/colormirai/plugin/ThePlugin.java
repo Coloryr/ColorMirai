@@ -9,9 +9,11 @@ import coloryr.colormirai.plugin.pack.re.*;
 import coloryr.colormirai.robot.*;
 import coloryr.colormirai.robot.event.EventCall;
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.contact.*;
+import net.mamoe.mirai.contact.Friend;
+import net.mamoe.mirai.contact.Group;
+import net.mamoe.mirai.contact.GroupSettings;
+import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.announcement.OnlineAnnouncement;
-import net.mamoe.mirai.message.MessageReceipt;
 import net.mamoe.mirai.message.code.MiraiCode;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageUtils;
@@ -65,7 +67,7 @@ public class ThePlugin {
 
     public void setEvents(List<Integer> events) {
         this.events = events;
-        if(events.isEmpty())
+        if (events.isEmpty())
             allEvent = true;
     }
 
@@ -166,7 +168,7 @@ public class ThePlugin {
                         //57 [插件]获取群成员
                         case 57: {
                             GroupGetMemberInfoPack pack = (GroupGetMemberInfoPack) task.pack;
-                            List<ReMemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<ReMemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fast);
                             if (data == null)
                                 break;
                             ReListMemberPack pack1 = new ReListMemberPack();
@@ -551,6 +553,54 @@ public class ThePlugin {
                         case 126: {
                             SendFriendSoundPack pack = (SendFriendSoundPack) task.pack;
                             BotSendSound.sendFriend(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
+                            break;
+                        }
+                        //128 [插件]获取好友分组信息
+                        case 128: {
+                            GetFriendGroupPack pack = (GetFriendGroupPack) task.pack;
+                            FriendGroupInfo info = BotGetData.getFriendGroup(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            ReFriendGroupPack pack1 = new ReFriendGroupPack();
+                            pack1.uuid = pack.uuid;
+                            pack1.qq = pack.qq;
+                            pack1.info = info;
+                            if (socket.send(pack1, 128))
+                                close();
+                            break;
+                        }
+                        //129 [插件]获取所有好友分组信息
+                        case 129: {
+                            GetPack pack = (GetPack) task.pack;
+                            List<FriendGroupInfo> list = BotGetData.getFriendGroups(runQQ == 0 ? pack.qq : runQQ);
+                            ReListFriendGroupPack pack1 = new ReListFriendGroupPack();
+                            pack1.uuid = pack.uuid;
+                            pack1.qq = pack.qq;
+                            pack1.infos = list;
+                            if (socket.send(pack1, 129))
+                                close();
+                            break;
+                        }
+                        //130 [插件]创建好友分组
+                        case 130: {
+                            FriendGroupCreatePack pack = (FriendGroupCreatePack) task.pack;
+                            BotFriendDo.create(runQQ == 0 ? pack.qq : runQQ, pack.name);
+                            break;
+                        }
+                        //131 [插件]修改好友分组名
+                        case 131: {
+                            FriendGroupRenamePack pack = (FriendGroupRenamePack) task.pack;
+                            BotFriendDo.rename(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            break;
+                        }
+                        //132 [插件]移动好友到分组
+                        case 132: {
+                            FriendGroupMovePack pack = (FriendGroupMovePack) task.pack;
+                            BotFriendDo.move(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            break;
+                        }
+                        //133 [插件]删除好友分组
+                        case 133: {
+                            FriendGroupDeletePack pack = (FriendGroupDeletePack) task.pack;
+                            BotFriendDo.delete(runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         default: {

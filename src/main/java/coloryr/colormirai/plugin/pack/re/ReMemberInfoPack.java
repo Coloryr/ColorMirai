@@ -52,6 +52,14 @@ public class ReMemberInfoPack extends PackBase {
      */
     public int lastSpeakTimestamp;
     /**
+     * 群等级头衔
+     */
+    public String rankTitle;
+    /**
+     * 群活跃度相关属性
+     */
+    public MemberActiveInfo active;
+    /**
      * 请求UUID
      */
     public String uuid;

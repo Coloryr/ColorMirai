@@ -8,7 +8,6 @@ import coloryr.colormirai.robot.BotStart;
 import io.netty.channel.ChannelHandlerContext;
 import org.java_websocket.WebSocket;
 
-import java.net.Socket;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

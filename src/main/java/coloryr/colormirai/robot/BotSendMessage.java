@@ -7,7 +7,10 @@ import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.NormalMember;
 import net.mamoe.mirai.contact.Stranger;
 import net.mamoe.mirai.message.code.MiraiCode;
-import net.mamoe.mirai.message.data.*;
+import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageSource;
+import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.QuoteReply;
 
 import java.util.ArrayList;
 import java.util.List;

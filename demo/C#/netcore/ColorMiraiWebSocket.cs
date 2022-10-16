@@ -14,7 +14,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
     private record PackTask
     {
         public PackBase pack;
-        public byte index;
+        public int index;
     }
     private ConcurrentBag<PackTask> queue1;
     private ConcurrentBag<string> queue2;
@@ -43,7 +43,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
                     ReConnect();
                     robot.IsFirst = false;
                     robot.Times = 0;
-                    robot.RobotStateEvent.Invoke(StateType.Connect);
+                    robot.Config.StateAction(StateType.Connect);
                 }
                 else if (queue2.TryTake(out var item))
                 {
@@ -75,7 +75,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
             catch (Exception e)
             {
                 robot.IsConnect = false;
-                robot.RobotStateEvent.Invoke(StateType.Disconnect);
+                robot.Config.StateAction(StateType.Disconnect);
                 if (robot.IsFirst)
                 {
                     robot.IsRun = false;
@@ -115,7 +115,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
         queue2.Add(temp);
     }
 
-    public void AddSend(PackBase pack, byte index)
+    public void AddSend(PackBase pack, int index)
     {
         queue1.Add(new PackTask
         {
@@ -131,7 +131,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
 
         queue2.Clear();
 
-        robot.RobotStateEvent.Invoke(StateType.Connecting);
+        robot.Config.StateAction(StateType.Connecting);
 
         string temp = JsonConvert.SerializeObject(new PackTask
         {
@@ -161,7 +161,7 @@ internal class ColorMiraiWebSocket : IColorMiraiPipe
     private void Client_OnClose(object sender, CloseEventArgs e)
     {
         robot.IsConnect = false;
-        robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        robot.Config.StateAction(StateType.Disconnect);
     }
 
     public void SendStop()

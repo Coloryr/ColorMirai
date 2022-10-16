@@ -13,7 +13,7 @@ namespace ColoryrSDK;
 
 internal static class PackDecode
 {
-    public const int NettyVersion = 100;
+    public const int NettyVersion = 102;
     public static string ReadString(this IByteBuffer buff)
     {
         return buff.ReadString(buff.ReadInt(), Encoding.UTF8);
@@ -47,6 +47,31 @@ internal static class PackDecode
         }
         return list;
     }
+
+    private static List<GroupHonorType> ReadGroupHonorTypeList(this IByteBuffer buff)
+    {
+        List<GroupHonorType> list = new();
+        int size = buff.ReadInt();
+        for (int a = 0; a < size; a++)
+        {
+            list.Add((GroupHonorType)buff.ReadInt());
+        }
+
+        return list;
+    }
+
+    private static List<MemberMedalType> ReadMemberMedalTypeList(this IByteBuffer buff)
+    {
+        List<MemberMedalType> list = new();
+        int size = buff.ReadInt();
+        for (int a = 0; a < size; a++)
+        {
+            list.Add((MemberMedalType)buff.ReadInt());
+        }
+
+        return list;
+    }
+
     public static ReMemberInfoPack ReadMemberInfoPack(this IByteBuffer buff)
     {
         return new()
@@ -62,6 +87,18 @@ internal static class PackDecode
             muteTimeRemaining = buff.ReadInt(),
             joinTimestamp = buff.ReadInt(),
             lastSpeakTimestamp = buff.ReadInt(),
+            rankTitle = buff.ReadString(),
+            active = new()
+            {
+                rank = buff.ReadInt(),
+                point = buff.ReadInt(),
+                honors = buff.ReadGroupHonorTypeList(),
+                temperature = buff.ReadInt(),
+                title = buff.ReadString(),
+                color = buff.ReadString(),
+                wearing = (MemberMedalType)buff.ReadInt(),
+                medals = buff.ReadMemberMedalTypeList(),
+            },
             uuid = buff.ReadString()
         };
     }
@@ -81,6 +118,7 @@ internal static class PackDecode
                 sex = (Sex)buff.ReadInt(),
                 sign = buff.ReadString()
             },
+            groupId = buff.ReadInt(),
             uuid = buff.ReadString()
         };
     }
@@ -129,6 +167,16 @@ internal static class PackDecode
             img = buff.ReadString(),
             oid = buff.ReadLong(),
             per = (MemberPermission)buff.ReadInt()
+        };
+    }
+    public static FriendGroupInfo ReadFriendGroupInfo(this IByteBuffer buff)
+    {
+        return new()
+        {
+            id = buff.ReadInt(),
+            name = buff.ReadString(),
+            count = buff.ReadInt(),
+            friends = buff.ReadLongList()
         };
     }
     public static List<long> StartPack(this IByteBuffer buff)
@@ -979,6 +1027,31 @@ internal static class PackDecode
         };
         return pack;
     }
+    public static ReFriendGroupPack ReFriendGroupPack(this IByteBuffer buff)
+    {
+        ReFriendGroupPack pack = new()
+        {
+            qq = buff.ReadLong(),
+            info = buff.ReadFriendGroupInfo(),
+            uuid = buff.ReadString()
+        };
+        return pack;
+    }
+    public static ReListFriendGroupPack ReListFriendGroupPack(this IByteBuffer buff)
+    {
+        ReListFriendGroupPack pack = new()
+        {
+            qq = buff.ReadLong(),
+            infos = new()
+        };
+        int size = buff.ReadInt();
+        for (int a = 0; a < size; a++)
+        {
+            pack.infos.Add(buff.ReadFriendGroupInfo());
+        }
+        pack.uuid = buff.ReadString();
+        return pack;
+    }
 }
 
 internal static class PackEncode
@@ -986,7 +1059,7 @@ internal static class PackEncode
     public static IByteBuffer WriteString(this IByteBuffer buff, string data)
     {
         var temp = Encoding.UTF8.GetBytes(data);
-        buff.WriteBytes1(temp);
+        buff.WriteInts1(temp);
         return buff;
     }
     public static IByteBuffer WriteStringList(this IByteBuffer buff, List<string> list)
@@ -1007,7 +1080,7 @@ internal static class PackEncode
         }
         return buff;
     }
-    public static IByteBuffer WriteBytes1(this IByteBuffer buff, byte[] data)
+    public static IByteBuffer WriteInts1(this IByteBuffer buff, byte[] data)
     {
         buff.WriteInt(data.Length);
         buff.WriteBytes(data, 0, data.Length);
@@ -1029,7 +1102,7 @@ internal static class PackEncode
         pack.groups ??= new();
         pack.reg ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(0)
+        buff.WriteInt(0)
             .WriteString(pack.name)
             .WriteInt(pack.reg.Count);
         foreach (var item in pack.reg)
@@ -1046,7 +1119,7 @@ internal static class PackEncode
     {
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(52)
+        buff.WriteInt(52)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteStringList(pack.message)
@@ -1057,7 +1130,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupPrivateMessagePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(53)
+        buff.WriteInt(53)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1068,7 +1141,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendFriendMessagePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(54)
+        buff.WriteInt(54)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteStringList(pack.message)
@@ -1079,16 +1152,17 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GetPack pack, byte index)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(index).WriteLong(pack.qq).WriteString(pack.uuid);
+        buff.WriteInt(index).WriteLong(pack.qq).WriteString(pack.uuid);
 
         return buff;
     }
     public static IByteBuffer ToPack(this GroupGetMemberInfoPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(57)
+        buff.WriteInt(57)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
+            .WriteBoolean(pack.fast)
             .WriteString(pack.uuid);
 
         return buff;
@@ -1096,7 +1170,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupGetSettingPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(58)
+        buff.WriteInt(58)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.uuid);
@@ -1106,7 +1180,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this EventCallPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(59)
+        buff.WriteInt(59)
             .WriteLong(pack.qq)
             .WriteLong(pack.eventid)
             .WriteInt(pack.dofun)
@@ -1119,10 +1193,10 @@ internal static class PackEncode
         pack.data ??= Array.Empty<byte>();
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(61)
+        buff.WriteInt(61)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteBytes1(pack.data)
+            .WriteInts1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1131,11 +1205,11 @@ internal static class PackEncode
     {
         pack.data ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(62)
+        buff.WriteInt(62)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
-            .WriteBytes1(pack.data);
+            .WriteInts1(pack.data);
 
         return buff;
     }
@@ -1143,17 +1217,17 @@ internal static class PackEncode
     {
         pack.data ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(63)
+        buff.WriteInt(63)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteBytes1(pack.data);
+            .WriteInts1(pack.data);
 
         return buff;
     }
     public static IByteBuffer ToPack(this GroupKickMemberPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(64)
+        buff.WriteInt(64)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1164,7 +1238,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupMuteMemberPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(65)
+        buff.WriteInt(65)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1175,7 +1249,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupUnmuteMemberPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(66)
+        buff.WriteInt(66)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid);
@@ -1185,7 +1259,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupMuteAllPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(67)
+        buff.WriteInt(67)
             .WriteLong(pack.qq)
             .WriteLong(pack.id);
 
@@ -1194,7 +1268,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupUnmuteAllPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(68)
+        buff.WriteInt(68)
             .WriteLong(pack.qq)
             .WriteLong(pack.id);
 
@@ -1203,7 +1277,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetMemberCardPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(69)
+        buff.WriteInt(69)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1214,7 +1288,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetNamePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(70)
+        buff.WriteInt(70)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.name);
@@ -1224,7 +1298,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this ReCallMessagePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(71)
+        buff.WriteInt(71)
             .WriteLong(pack.qq)
             .WriteIntList(pack.ids1)
             .WriteIntList(pack.ids2)
@@ -1237,10 +1311,10 @@ internal static class PackEncode
         pack.data ??= Array.Empty<byte>();
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(74)
+        buff.WriteInt(74)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteBytes1(pack.data)
+            .WriteInts1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1248,7 +1322,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupImageFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(75)
+        buff.WriteInt(75)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1259,7 +1333,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupPrivateImageFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(76)
+        buff.WriteInt(76)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1270,7 +1344,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendFriendImageFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(77)
+        buff.WriteInt(77)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLongList(pack.ids);
@@ -1280,7 +1354,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupSoundFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(78)
+        buff.WriteInt(78)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1291,7 +1365,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendFriendNudgePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(83)
+        buff.WriteInt(83)
             .WriteLong(pack.qq)
             .WriteLong(pack.id);
 
@@ -1300,7 +1374,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupMemberNudgePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(84)
+        buff.WriteInt(84)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid);
@@ -1310,7 +1384,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GetImageUrlPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(90)
+        buff.WriteInt(90)
             .WriteLong(pack.qq)
             .WriteString(pack.uuid);
 
@@ -1319,10 +1393,11 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GetMemberInfoPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(91)
+        buff.WriteInt(91)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
+            .WriteBoolean(pack.fast)
             .WriteString(pack.uuid);
 
         return buff;
@@ -1330,7 +1405,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GetFriendInfoPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(92)
+        buff.WriteInt(92)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.uuid);
@@ -1340,7 +1415,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendMusicSharePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(93)
+        buff.WriteInt(93)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1357,7 +1432,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetEssenceMessagePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(94)
+        buff.WriteInt(94)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteIntList(pack.ids1)
@@ -1369,7 +1444,7 @@ internal static class PackEncode
     {
         pack.imgData ??= Array.Empty<byte>();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(95)
+        buff.WriteInt(95)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1377,7 +1452,7 @@ internal static class PackEncode
             .WriteBoolean(pack.send)
             .WriteStringList(pack.text)
             .WriteString(pack.imgurl)
-            .WriteBytes1(pack.imgData);
+            .WriteInts1(pack.imgData);
 
         return buff;
     }
@@ -1393,7 +1468,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupDicePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(97)
+        buff.WriteInt(97)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteInt(pack.dice);
@@ -1403,7 +1478,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendGroupPrivateDicePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(98)
+        buff.WriteInt(98)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1414,7 +1489,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupAddFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(99)
+        buff.WriteInt(99)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1425,7 +1500,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupDeleteFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(100)
+        buff.WriteInt(100)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.fid);
@@ -1435,7 +1510,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupGetFilesPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(101)
+        buff.WriteInt(101)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.uuid);
@@ -1445,7 +1520,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupMoveFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(102)
+        buff.WriteInt(102)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.fid)
@@ -1456,7 +1531,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupRenameFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(103)
+        buff.WriteInt(103)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.fid)
@@ -1467,7 +1542,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupAddDirPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(104)
+        buff.WriteInt(104)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.dir);
@@ -1477,7 +1552,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupDeleteDirPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(105)
+        buff.WriteInt(105)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.dir);
@@ -1487,7 +1562,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupRenameDirPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(106)
+        buff.WriteInt(106)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.old)
@@ -1498,7 +1573,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupDownloadFilePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(107)
+        buff.WriteInt(107)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.fid)
@@ -1509,7 +1584,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetAdminPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(108)
+        buff.WriteInt(108)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
@@ -1520,7 +1595,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupGetAnnouncementsPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(109)
+        buff.WriteInt(109)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.uuid);
@@ -1530,7 +1605,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupAddAnnouncementPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(110)
+        buff.WriteInt(110)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.imageFile)
@@ -1546,7 +1621,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupDeleteAnnouncementPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(111)
+        buff.WriteInt(111)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.fid);
@@ -1557,7 +1632,7 @@ internal static class PackEncode
     {
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(112)
+        buff.WriteInt(112)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1568,7 +1643,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetAllowMemberInvitePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(114)
+        buff.WriteInt(114)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteBoolean(pack.enable);
@@ -1578,7 +1653,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this GroupSetAnonymousChatEnabledPack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(115)
+        buff.WriteInt(115)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteBoolean(pack.enable);
@@ -1588,7 +1663,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendStrangerMessagePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(117)
+        buff.WriteInt(117)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteStringList(pack.message);
@@ -1599,7 +1674,7 @@ internal static class PackEncode
     {
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(118)
+        buff.WriteInt(118)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1610,7 +1685,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendStrangerDicePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(119)
+        buff.WriteInt(119)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteInt(pack.dice);
@@ -1620,7 +1695,7 @@ internal static class PackEncode
     public static IByteBuffer ToPack(this SendStrangerNudgePack pack)
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(120)
+        buff.WriteInt(120)
             .WriteLong(pack.qq)
             .WriteLong(pack.id);
 
@@ -1630,7 +1705,7 @@ internal static class PackEncode
     {
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(121)
+        buff.WriteInt(121)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteString(pack.file)
@@ -1643,18 +1718,73 @@ internal static class PackEncode
         pack.data ??= Array.Empty<byte>();
         pack.ids ??= new();
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(126)
+        buff.WriteInt(126)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteBytes1(pack.data)
+            .WriteInts1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
     }
+    public static IByteBuffer ToPack(this GetFriendGroupPack pack)
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteInt(128)
+            .WriteLong(pack.qq)
+            .WriteLong(pack.id)
+            .WriteString(pack.uuid);
+
+        return buff;
+    }
+    public static IByteBuffer ToPack(this FriendGroupCreatePack pack)
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteLong(pack.qq).
+            WriteString(pack.name);
+
+        return buff;
+    }
+    public static IByteBuffer ToPack(this FriendGroupRenamePack pack)
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteLong(pack.qq)
+            .WriteInt(pack.id)
+            .WriteString(pack.name);
+
+        return buff;
+    }
+    public static IByteBuffer ToPack(this FriendGroupMovePack pack)
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteLong(pack.qq)
+            .WriteInt(pack.id)
+            .WriteLong(pack.fid);
+
+        return buff;
+    }
+    public static IByteBuffer ToPack(this FriendGroupDeletePack pack)
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteLong(pack.qq)
+            .WriteInt(pack.id);
+
+        return buff;
+    }
+    public static IByteBuffer ToPack(this GroupMemberEditSpecialTitlePack pack) 
+    {
+        IByteBuffer buff = Unpooled.Buffer();
+        buff.WriteLong(pack.qq)
+            .WriteLong(pack.id)
+            .WriteLong(pack.fid)
+            .WriteString(pack.name);
+
+        return buff;
+    }
+
     public static IByteBuffer TestPack()
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(60);
+        buff.WriteInt(60);
         return buff;
     }
 }
@@ -1666,11 +1796,11 @@ internal class ColorMiraiNetty : IColorMiraiPipe
     private record PackTask
     {
         public PackBase pack;
-        public byte index;
+        public int index;
     }
     private ConcurrentBag<PackTask> queue1;
     private ConcurrentBag<IByteBuffer> queue2;
-    
+
     private Thread thread;
     private MultithreadEventLoopGroup group;
     private IChannel client;
@@ -1699,7 +1829,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
                     ReConnect();
                     Robot.IsFirst = false;
                     Robot.Times = 0;
-                    Robot.RobotStateEvent.Invoke(StateType.Connect);
+                    Robot.Config.StateAction(StateType.Connect);
                 }
                 else if (queue2.TryTake(out var item))
                 {
@@ -1707,244 +1837,92 @@ internal class ColorMiraiNetty : IColorMiraiPipe
                     {
                         continue;
                     }
-                    byte index = item.ReadByte();
+                    int index = item.ReadInt();
                     if (index == 60)
                         continue;
-                    PackBase pack = null;
-                    switch (index)
+                    PackBase pack = index switch
                     {
-                        case 1:
-                            pack = item.BeforeImageUploadPack();
-                            break;
-                        case 2:
-                            pack = item.BotAvatarChangedPack();
-                            break;
-                        case 3:
-                            pack = item.BotGroupPermissionChangePack();
-                            break;
-                        case 4:
-                            pack = item.BotInvitedJoinGroupRequestEventPack();
-                            break;
-                        case 5:
-                            pack = item.BotJoinGroupEventAPack();
-                            break;
-                        case 6:
-                            pack = item.BotJoinGroupEventBPack();
-                            break;
-                        case 7:
-                            pack = item.BotLeaveEventAPack();
-                            break;
-                        case 8:
-                            pack = item.BotLeaveEventBPack();
-                            break;
-                        case 9:
-                            pack = item.BotMuteEventPack();
-                            break;
-                        case 10:
-                            pack = item.BotOfflineEventAPack();
-                            break;
-                        case 11:
-                            pack = item.BotOfflineEventBPack();
-                            break;
-                        case 12:
-                            pack = item.BotOfflineEventAPack();
-                            break;
-                        case 13:
-                            pack = item.BotOfflineEventAPack();
-                            break;
-                        case 14:
-                            pack = item.BotOfflineEventCPack();
-                            break;
-                        case 15:
-                            pack = item.BotOnlineEventPack();
-                            break;
-                        case 16:
-                            pack = item.BotReloginEventPack();
-                            break;
-                        case 17:
-                            pack = item.BotUnmuteEventPack();
-                            break;
-                        case 18:
-                            pack = item.FriendAddEventPack();
-                            break;
-                        case 19:
-                            pack = item.FriendAvatarChangedEventPack();
-                            break;
-                        case 20:
-                            pack = item.FriendDeleteEventPack();
-                            break;
-                        case 21:
-                            pack = item.FriendMessagePostSendEventPack();
-                            break;
-                        case 22:
-                            pack = item.FriendMessagePreSendEventPack();
-                            break;
-                        case 23:
-                            pack = item.FriendRemarkChangeEventPack();
-                            break;
-                        case 24:
-                            pack = item.GroupAllowAnonymousChatEventPack();
-                            break;
-                        case 25:
-                            pack = item.GroupAllowConfessTalkEventPack();
-                            break;
-                        case 26:
-                            pack = item.GroupAllowMemberInviteEventPack();
-                            break;
-                        //case 27:
-                        //    pack = item.GroupEntranceAnnouncementChangeEventPack();
-                        //    break;
-                        case 28:
-                            pack = item.GroupMessagePostSendEventPack();
-                            break;
-                        case 29:
-                            pack = item.GroupMessagePreSendEventPack();
-                            break;
-                        case 30:
-                            pack = item.GroupMuteAllEventPack();
-                            break;
-                        case 31:
-                            pack = item.GroupNameChangeEventPack();
-                            break;
-                        case 32:
-                            pack = item.ImageUploadEventAPack();
-                            break;
-                        case 33:
-                            pack = item.ImageUploadEventBPack();
-                            break;
-                        case 34:
-                            pack = item.MemberCardChangeEventPack();
-                            break;
-                        case 35:
-                            pack = item.InviteMemberJoinEventPack();
-                            break;
-                        case 36:
-                            pack = item.MemberJoinEventPack();
-                            break;
-                        case 37:
-                            pack = item.MemberJoinRequestEventPack();
-                            break;
-                        case 38:
-                            pack = item.MemberLeaveEventAPack();
-                            break;
-                        case 39:
-                            pack = item.MemberLeaveEventBPack();
-                            break;
-                        case 40:
-                            pack = item.MemberMuteEventPack();
-                            break;
-                        case 41:
-                            pack = item.MemberPermissionChangeEventPack();
-                            break;
-                        case 42:
-                            pack = item.MemberSpecialTitleChangeEventPack();
-                            break;
-                        case 43:
-                            pack = item.MemberUnmuteEventPack();
-                            break;
-                        case 44:
-                            pack = item.MessageRecallEventAPack();
-                            break;
-                        case 45:
-                            pack = item.MessageRecallEventBPack();
-                            break;
-                        case 46:
-                            pack = item.NewFriendRequestEventPack();
-                            break;
-                        case 47:
-                            pack = item.TempMessagePostSendEventPack();
-                            break;
-                        case 48:
-                            pack = item.TempMessagePreSendEventPack();
-                            break;
-                        case 49:
-                            pack = item.GroupMessageEventPack();
-                            break;
-                        case 50:
-                            pack = item.TempMessageEventPack();
-                            break;
-                        case 51:
-                            pack = item.FriendMessageEventPack();
-                            break;
-                        case 55:
-                            pack = item.ListGroupPack();
-                            break;
-                        case 56:
-                            pack = item.ListFriendPack();
-                            break;
-                        case 57:
-                            pack = item.ListMemberPack();
-                            break;
-                        case 58:
-                            pack = item.GroupSettingPack();
-                            break;
-                        case 72:
-                            pack = item.FriendInputStatusChangedEventPack();
-                            break;
-                        case 73:
-                            pack = item.FriendNickChangedEventPack();
-                            break;
-                        case 79:
-                            pack = item.MemberJoinRetrieveEventPack();
-                            break;
-                        case 80:
-                            pack = item.BotJoinGroupEventRetrieveEventPack();
-                            break;
-                        case 81:
-                            pack = item.NudgedEventPack();
-                            break;
-                        case 82:
-                            pack = item.NudgedEventPack();
-                            break;
-                        case 85:
-                            pack = item.GroupTalkativeChangePack();
-                            break;
-                        case 86:
-                            pack = item.OtherClientOnlineEventPack();
-                            break;
-                        case 87:
-                            pack = item.OtherClientOfflineEventPack();
-                            break;
-                        case 88:
-                            pack = item.OtherClientMessageEventPack();
-                            break;
-                        case 89:
-                            pack = item.GroupMessageSyncEventPack();
-                            break;
-                        case 90:
-                            pack = item.GetImageUrlPack();
-                            break;
-                        case 91:
-                            pack = item.MemberInfoPack();
-                            break;
-                        case 92:
-                            pack = item.FriendInfoPack();
-                            break;
-                        case 101:
-                            pack = item.GroupFilesPack();
-                            break;
-                        case 109:
-                            pack = item.GroupAnnouncementsPack();
-                            break;
-                        case 113:
-                            pack = item.GroupDisbandPack();
-                            break;
-                        case 116:
-                            pack = item.StrangerMessageEventPack();
-                            break;
-                        case 122:
-                            pack = item.StrangerMessagePreSendEventPack();
-                            break;
-                        case 123:
-                            pack = item.StrangerMessagePostSendEventPack();
-                            break;
-                        case 124:
-                            pack = item.StrangerRelationChangePack();
-                            break;
-                        case 125:
-                            pack = item.StrangerRelationChangePack();
-                            break;
-                    }
+                        1 => item.BeforeImageUploadPack(),
+                        2 => item.BotAvatarChangedPack(),
+                        3 => item.BotGroupPermissionChangePack(),
+                        4 => item.BotInvitedJoinGroupRequestEventPack(),
+                        5 => item.BotJoinGroupEventAPack(),
+                        6 => item.BotJoinGroupEventBPack(),
+                        7 => item.BotLeaveEventAPack(),
+                        8 => item.BotLeaveEventBPack(),
+                        9 => item.BotMuteEventPack(),
+                        10 => item.BotOfflineEventAPack(),
+                        11 => item.BotOfflineEventBPack(),
+                        12 => item.BotOfflineEventAPack(),
+                        13 => item.BotOfflineEventAPack(),
+                        14 => item.BotOfflineEventCPack(),
+                        15 => item.BotOnlineEventPack(),
+                        16 => item.BotReloginEventPack(),
+                        17 => item.BotUnmuteEventPack(),
+                        18 => item.FriendAddEventPack(),
+                        19 => item.FriendAvatarChangedEventPack(),
+                        20 => item.FriendDeleteEventPack(),
+                        21 => item.FriendMessagePostSendEventPack(),
+                        22 => item.FriendMessagePreSendEventPack(),
+                        23 => item.FriendRemarkChangeEventPack(),
+                        24 => item.GroupAllowAnonymousChatEventPack(),
+                        25 => item.GroupAllowConfessTalkEventPack(),
+                        26 => item.GroupAllowMemberInviteEventPack(),
+                        //27 => item.GroupEntranceAnnouncementChangeEventPack(),
+                        28 => item.GroupMessagePostSendEventPack(),
+                        29 => item.GroupMessagePreSendEventPack(),
+                        30 => item.GroupMuteAllEventPack(),
+                        31 => item.GroupNameChangeEventPack(),
+                        32 => item.ImageUploadEventAPack(),
+                        33 => item.ImageUploadEventBPack(),
+                        34 => item.MemberCardChangeEventPack(),
+                        35 => item.InviteMemberJoinEventPack(),
+                        36 => item.MemberJoinEventPack(),
+                        37 => item.MemberJoinRequestEventPack(),
+                        38 => item.MemberLeaveEventAPack(),
+                        39 => item.MemberLeaveEventBPack(),
+                        40 => item.MemberMuteEventPack(),
+                        41 => item.MemberPermissionChangeEventPack(),
+                        42 => item.MemberSpecialTitleChangeEventPack(),
+                        43 => item.MemberUnmuteEventPack(),
+                        44 => item.MessageRecallEventAPack(),
+                        45 => item.MessageRecallEventBPack(),
+                        46 => item.NewFriendRequestEventPack(),
+                        47 => item.TempMessagePostSendEventPack(),
+                        48 => item.TempMessagePreSendEventPack(),
+                        49 => item.GroupMessageEventPack(),
+                        50 => item.TempMessageEventPack(),
+                        51 => item.FriendMessageEventPack(),
+                        55 => item.ListGroupPack(),
+                        56 => item.ListFriendPack(),
+                        57 => item.ListMemberPack(),
+                        58 => item.GroupSettingPack(),
+                        72 => item.FriendInputStatusChangedEventPack(),
+                        73 => item.FriendNickChangedEventPack(),
+                        79 => item.MemberJoinRetrieveEventPack(),
+                        80 => item.BotJoinGroupEventRetrieveEventPack(),
+                        81 => item.NudgedEventPack(),
+                        82 => item.NudgedEventPack(),
+                        85 => item.GroupTalkativeChangePack(),
+                        86 => item.OtherClientOnlineEventPack(),
+                        87 => item.OtherClientOfflineEventPack(),
+                        88 => item.OtherClientMessageEventPack(),
+                        89 => item.GroupMessageSyncEventPack(),
+                        90 => item.GetImageUrlPack(),
+                        91 => item.MemberInfoPack(),
+                        92 => item.FriendInfoPack(),
+                        101 => item.GroupFilesPack(),
+                        109 => item.GroupAnnouncementsPack(),
+                        113 => item.GroupDisbandPack(),
+                        116 => item.StrangerMessageEventPack(),
+                        122 => item.StrangerMessagePreSendEventPack(),
+                        123 => item.StrangerMessagePostSendEventPack(),
+                        124 => item.StrangerRelationChangePack(),
+                        125 => item.StrangerRelationChangePack(),
+                        128 => item.ReFriendGroupPack(),
+                        129 => item.ReListFriendGroupPack(),
+                        _ => null
+                    };
 
                     Robot.AddRead(pack, index);
                 }
@@ -1955,184 +1933,75 @@ internal class ColorMiraiNetty : IColorMiraiPipe
                 }
                 else if (queue1.TryTake(out PackTask item1))
                 {
-                    IByteBuffer pack = null;
-                    switch (item1.index)
+                    IByteBuffer pack = item1.index switch
                     {
-                        case 52:
-                            pack = (item1.pack as SendGroupMessagePack).ToPack();
-                            break;
-                        case 53:
-                            pack = (item1.pack as SendGroupPrivateMessagePack).ToPack();
-                            break;
-                        case 54:
-                            pack = (item1.pack as SendFriendMessagePack).ToPack();
-                            break;
-                        case 55:
-                            pack = (item1.pack as GetPack).ToPack(55);
-                            break;
-                        case 56:
-                            pack = (item1.pack as GetPack).ToPack(56);
-                            break;
-                        case 57:
-                            pack = (item1.pack as GroupGetMemberInfoPack).ToPack();
-                            break;
-                        case 58:
-                            pack = (item1.pack as GroupGetSettingPack).ToPack();
-                            break;
-                        case 59:
-                            pack = (item1.pack as EventCallPack).ToPack();
-                            break;
-                        case 60:
-                            pack = PackEncode.TestPack();
-                            break;
-                        case 61:
-                            pack = (item1.pack as SendGroupImagePack).ToPack();
-                            break;
-                        case 62:
-                            pack = (item1.pack as SendGroupPrivateImagePack).ToPack();
-                            break;
-                        case 63:
-                            pack = (item1.pack as SendFriendImagePack).ToPack();
-                            break;
-                        case 64:
-                            pack = (item1.pack as GroupKickMemberPack).ToPack();
-                            break;
-                        case 65:
-                            pack = (item1.pack as GroupMuteMemberPack).ToPack();
-                            break;
-                        case 66:
-                            pack = (item1.pack as GroupUnmuteMemberPack).ToPack();
-                            break;
-                        case 67:
-                            pack = (item1.pack as GroupMuteAllPack).ToPack();
-                            break;
-                        case 68:
-                            pack = (item1.pack as GroupUnmuteAllPack).ToPack();
-                            break;
-                        case 69:
-                            pack = (item1.pack as GroupSetMemberCardPack).ToPack();
-                            break;
-                        case 70:
-                            pack = (item1.pack as GroupSetNamePack).ToPack();
-                            break;
-                        case 71:
-                            pack = (item1.pack as ReCallMessagePack).ToPack();
-                            break;
-                        case 74:
-                            pack = (item1.pack as SendGroupSoundPack).ToPack();
-                            break;
-                        case 75:
-                            pack = (item1.pack as SendGroupImageFilePack).ToPack();
-                            break;
-                        case 76:
-                            pack = (item1.pack as SendGroupPrivateImageFilePack).ToPack();
-                            break;
-                        case 77:
-                            pack = (item1.pack as SendFriendImageFilePack).ToPack();
-                            break;
-                        case 78:
-                            pack = (item1.pack as SendGroupSoundFilePack).ToPack();
-                            break;
-                        case 83:
-                            pack = (item1.pack as SendFriendNudgePack).ToPack();
-                            break;
-                        case 84:
-                            pack = (item1.pack as SendGroupMemberNudgePack).ToPack();
-                            break;
-                        case 90:
-                            pack = (item1.pack as GetImageUrlPack).ToPack();
-                            break;
-                        case 91:
-                            pack = (item1.pack as GetMemberInfoPack).ToPack();
-                            break;
-                        case 92:
-                            pack = (item1.pack as GetFriendInfoPack).ToPack();
-                            break;
-                        case 93:
-                            pack = (item1.pack as SendMusicSharePack).ToPack();
-                            break;
-                        case 94:
-                            pack = (item1.pack as GroupSetEssenceMessagePack).ToPack();
-                            break;
-                        case 95:
-                            pack = (item1.pack as MessageBuffPack).ToPack();
-                            break;
-                        case 96:
-                            pack = (item1.pack as SendFriendDicePack).ToPack();
-                            break;
-                        case 97:
-                            pack = (item1.pack as SendGroupDicePack).ToPack();
-                            break;
-                        case 98:
-                            pack = (item1.pack as SendGroupPrivateDicePack).ToPack();
-                            break;
-                        case 99:
-                            pack = (item1.pack as GroupAddFilePack).ToPack();
-                            break;
-                        case 100:
-                            pack = (item1.pack as GroupDeleteFilePack).ToPack();
-                            break;
-                        case 101:
-                            pack = (item1.pack as GroupGetFilesPack).ToPack();
-                            break;
-                        case 102:
-                            pack = (item1.pack as GroupMoveFilePack).ToPack();
-                            break;
-                        case 103:
-                            pack = (item1.pack as GroupRenameFilePack).ToPack();
-                            break;
-                        case 104:
-                            pack = (item1.pack as GroupAddDirPack).ToPack();
-                            break;
-                        case 105:
-                            pack = (item1.pack as GroupDeleteDirPack).ToPack();
-                            break;
-                        case 106:
-                            pack = (item1.pack as GroupRenameDirPack).ToPack();
-                            break;
-                        case 107:
-                            pack = (item1.pack as GroupDownloadFilePack).ToPack();
-                            break;
-                        case 108:
-                            pack = (item1.pack as GroupSetAdminPack).ToPack();
-                            break;
-                        case 109:
-                            pack = (item1.pack as GroupGetAnnouncementsPack).ToPack();
-                            break;
-                        case 110:
-                            pack = (item1.pack as GroupAddAnnouncementPack).ToPack();
-                            break;
-                        case 111:
-                            pack = (item1.pack as GroupDeleteAnnouncementPack).ToPack();
-                            break;
-                        case 112:
-                            pack = (item1.pack as SendFriendSoundFilePack).ToPack();
-                            break;
-                        case 114:
-                            pack = (item1.pack as GroupSetAllowMemberInvitePack).ToPack();
-                            break;
-                        case 115:
-                            pack = (item1.pack as GroupSetAnonymousChatEnabledPack).ToPack();
-                            break;
-                        case 117:
-                            pack = (item1.pack as SendStrangerMessagePack).ToPack();
-                            break;
-                        case 118:
-                            pack = (item1.pack as SendStrangerImageFilePack).ToPack();
-                            break;
-                        case 119:
-                            pack = (item1.pack as SendStrangerDicePack).ToPack();
-                            break;
-                        case 120:
-                            pack = (item1.pack as SendStrangerNudgePack).ToPack();
-                            break;
-                        case 121:
-                            pack = (item1.pack as SendStrangerSoundFilePack).ToPack();
-                            break;
-                        case 126:
-                            pack = (item1.pack as SendFriendSoundPack).ToPack();
-                            break;
-                    }
+                        52 => (item1.pack as SendGroupMessagePack).ToPack(),
+                        53 => (item1.pack as SendGroupPrivateMessagePack).ToPack(),
+                        54 => (item1.pack as SendFriendMessagePack).ToPack(),
+                        55 => (item1.pack as GetPack).ToPack(55),
+                        56 => (item1.pack as GetPack).ToPack(56),
+                        57 => (item1.pack as GroupGetMemberInfoPack).ToPack(),
+                        58 => (item1.pack as GroupGetSettingPack).ToPack(),
+                        59 => (item1.pack as EventCallPack).ToPack(),
+                        60 => PackEncode.TestPack(),
+                        61 => (item1.pack as SendGroupImagePack).ToPack(),
+                        62 => (item1.pack as SendGroupPrivateImagePack).ToPack(),
+                        63 => (item1.pack as SendFriendImagePack).ToPack(),
+                        64 => (item1.pack as GroupKickMemberPack).ToPack(),
+                        65 => (item1.pack as GroupMuteMemberPack).ToPack(),
+                        66 => (item1.pack as GroupUnmuteMemberPack).ToPack(),
+                        67 => (item1.pack as GroupMuteAllPack).ToPack(),
+                        68 => (item1.pack as GroupUnmuteAllPack).ToPack(),
+                        69 => (item1.pack as GroupSetMemberCardPack).ToPack(),
+                        70 => (item1.pack as GroupSetNamePack).ToPack(),
+                        71 => (item1.pack as ReCallMessagePack).ToPack(),
+                        74 => (item1.pack as SendGroupSoundPack).ToPack(),
+                        75 => (item1.pack as SendGroupImageFilePack).ToPack(),
+                        76 => (item1.pack as SendGroupPrivateImageFilePack).ToPack(),
+                        77 => (item1.pack as SendFriendImageFilePack).ToPack(),
+                        78 => (item1.pack as SendGroupSoundFilePack).ToPack(),
+                        83 => (item1.pack as SendFriendNudgePack).ToPack(),
+                        84 => (item1.pack as SendGroupMemberNudgePack).ToPack(),
+                        90 => (item1.pack as GetImageUrlPack).ToPack(),
+                        91 => (item1.pack as GetMemberInfoPack).ToPack(),
+                        92 => (item1.pack as GetFriendInfoPack).ToPack(),
+                        93 => (item1.pack as SendMusicSharePack).ToPack(),
+                        94 => (item1.pack as GroupSetEssenceMessagePack).ToPack(),
+                        95 => (item1.pack as MessageBuffPack).ToPack(),
+                        96 => (item1.pack as SendFriendDicePack).ToPack(),
+                        97 => (item1.pack as SendGroupDicePack).ToPack(),
+                        98 => (item1.pack as SendGroupPrivateDicePack).ToPack(),
+                        99 => (item1.pack as GroupAddFilePack).ToPack(),
+                        100 => (item1.pack as GroupDeleteFilePack).ToPack(),
+                        101 => (item1.pack as GroupGetFilesPack).ToPack(),
+                        102 => (item1.pack as GroupMoveFilePack).ToPack(),
+                        103 => (item1.pack as GroupRenameFilePack).ToPack(),
+                        104 => (item1.pack as GroupAddDirPack).ToPack(),
+                        105 => (item1.pack as GroupDeleteDirPack).ToPack(),
+                        106 => (item1.pack as GroupRenameDirPack).ToPack(),
+                        107 => (item1.pack as GroupDownloadFilePack).ToPack(),
+                        108 => (item1.pack as GroupSetAdminPack).ToPack(),
+                        109 => (item1.pack as GroupGetAnnouncementsPack).ToPack(),
+                        110 => (item1.pack as GroupAddAnnouncementPack).ToPack(),
+                        111 => (item1.pack as GroupDeleteAnnouncementPack).ToPack(),
+                        112 => (item1.pack as SendFriendSoundFilePack).ToPack(),
+                        114 => (item1.pack as GroupSetAllowMemberInvitePack).ToPack(),
+                        115 => (item1.pack as GroupSetAnonymousChatEnabledPack).ToPack(),
+                        117 => (item1.pack as SendStrangerMessagePack).ToPack(),
+                        118 => (item1.pack as SendStrangerImageFilePack).ToPack(),
+                        119 => (item1.pack as SendStrangerDicePack).ToPack(),
+                        120 => (item1.pack as SendStrangerNudgePack).ToPack(),
+                        121 => (item1.pack as SendStrangerSoundFilePack).ToPack(),
+                        126 => (item1.pack as SendFriendSoundPack).ToPack(),
+                        128 => (item1.pack as GetFriendGroupPack).ToPack(),
+                        129 => (item1.pack as GetPack).ToPack(129),
+                        130 => (item1.pack as FriendGroupCreatePack).ToPack(),
+                        131 => (item1.pack as FriendGroupRenamePack).ToPack(),
+                        132 => (item1.pack as FriendGroupMovePack).ToPack(),
+                        133 => (item1.pack as FriendGroupDeletePack).ToPack(),
+                        134 => (item1.pack as GroupMemberEditSpecialTitlePack).ToPack(),
+                        _ => null
+                    };
                     if (pack != null)
                     {
                         client.WriteAndFlushAsync(pack);
@@ -2143,7 +2012,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
             catch (Exception e)
             {
                 Robot.IsConnect = false;
-                Robot.RobotStateEvent.Invoke(StateType.Disconnect);
+                Robot.Config.StateAction(StateType.Disconnect);
                 if (Robot.IsFirst)
                 {
                     Robot.IsRun = false;
@@ -2168,7 +2037,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
         }
     }
 
-    public void AddSend(PackBase pack, byte index)
+    public void AddSend(PackBase pack, int index)
     {
         queue1.Add(new PackTask
         {
@@ -2177,7 +2046,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
         });
     }
 
-    internal void AddReadPack(IByteBuffer pack) 
+    internal void AddReadPack(IByteBuffer pack)
     {
         queue2.Add(pack);
     }
@@ -2192,7 +2061,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
 
         queue2.Clear();
 
-        Robot.RobotStateEvent.Invoke(StateType.Connecting);
+        Robot.Config.StateAction(StateType.Connecting);
 
         client = bootstrap.ConnectAsync(Robot.Config.IP, Robot.Config.Port).Result;
 
@@ -2215,7 +2084,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
     public void SendStop()
     {
         IByteBuffer buff = Unpooled.Buffer();
-        buff.WriteByte(127);
+        buff.WriteInt(127);
         client.WriteAndFlushAsync(buff).Wait();
     }
 
@@ -2239,7 +2108,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
     public void Stop()
     {
         Robot.IsConnect = false;
-        Robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        Robot.Config.StateAction(StateType.Disconnect);
         client?.CloseAsync().Wait();
     }
 }
@@ -2261,7 +2130,7 @@ internal class ClientHandler : ChannelHandlerAdapter
     public override void ChannelInactive(IChannelHandlerContext context)
     {
         netty.Robot.IsConnect = false;
-        netty.Robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        netty.Robot.Config.StateAction(StateType.Disconnect);
     }
 
     public override void ChannelReadComplete(IChannelHandlerContext context) => context.Flush();
@@ -2269,7 +2138,7 @@ internal class ClientHandler : ChannelHandlerAdapter
     public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
     {
         netty.Robot.IsConnect = false;
-        netty.Robot.RobotStateEvent.Invoke(StateType.Disconnect);
+        netty.Robot.Config.StateAction(StateType.Disconnect);
         context.CloseAsync();
     }
 }

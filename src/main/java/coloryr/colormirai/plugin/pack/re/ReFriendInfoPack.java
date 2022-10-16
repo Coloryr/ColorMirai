@@ -24,6 +24,10 @@ public class ReFriendInfoPack extends PackBase {
      */
     public UserProfile userProfile;
     /**
+     * 用户分组ID
+     */
+    public int groupId;
+    /**
      * 请求UUID
      */
     public String uuid;
