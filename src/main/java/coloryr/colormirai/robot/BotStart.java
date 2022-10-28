@@ -73,8 +73,7 @@ public class BotStart {
                     try {
                         Bot bot = bots.get(item.bot);
                         PooledMap<MessageKey, MessageSource> list = botMessageList.get(bot);
-                        MessageKey key = new MessageKey(item.ids1, item.ids2);
-                        MessageSource message = list.remove(key);
+                        MessageSource message = list.remove(item);
                         Mirai.getInstance().recallMessage(bot, message);
                     } catch (Exception e) {
                         ColorMiraiMain.logger.error("消息撤回失败", e);
@@ -115,10 +114,8 @@ public class BotStart {
 
     public static void reCall(long qq, int[] ids1, int[] ids2, MessageSourceKind kind) {
         try {
-            ReCallObj obj = new ReCallObj();
+            ReCallObj obj = new ReCallObj(ids1, ids2);
             obj.bot = qq;
-            obj.ids1 = ids1;
-            obj.ids2 = ids2;
             obj.kind = kind;
             reList.add(obj);
         } catch (Exception e) {

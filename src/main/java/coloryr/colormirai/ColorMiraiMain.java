@@ -17,7 +17,7 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 public class ColorMiraiMain {
-    public static final String version = "4.0.6";
+    public static final String version = "4.1.0";
     public static final Logger logger = LogManager.getLogger("ColorMirai");
     public static String runDir;
     public static String tempDir;

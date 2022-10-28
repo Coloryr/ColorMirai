@@ -921,4 +921,13 @@ public class PackEncode {
         writeString(buf, pack.uuid);
         return buf;
     }
+
+    public static ByteBuf reMessagePack(ReMessagePack pack){
+        ByteBuf buf = Unpooled.buffer();
+        buf.writeInt(0);
+        buf.writeLong(pack.qq);
+        writeString(buf, pack.uuid);
+        writeString(buf, pack.msg);
+        return buf;
+    }
 }

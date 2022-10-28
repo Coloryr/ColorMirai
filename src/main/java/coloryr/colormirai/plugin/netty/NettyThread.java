@@ -453,6 +453,9 @@ public class NettyThread implements IPluginSocket {
         try {
             ByteBuf buff = null;
             switch (index) {
+                case 0:
+                    buff = PackEncode.reMessagePack((ReMessagePack) data);
+                    break;
                 case 1:
                     buff = PackEncode.beforeImageUploadPack((BeforeImageUploadPack) data);
                     break;

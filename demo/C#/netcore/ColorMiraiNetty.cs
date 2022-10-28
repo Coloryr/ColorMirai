@@ -1052,6 +1052,15 @@ internal static class PackDecode
         pack.uuid = buff.ReadString();
         return pack;
     }
+    public static ReMessagePack ReMessagePack(this IByteBuffer buff)
+    {
+        return new ReMessagePack()
+        {
+            qq = buff.ReadLong(),
+            uuid = buff.ReadString(),
+            msg = buff.ReadString()
+        };
+    }
 }
 
 internal static class PackEncode
@@ -1842,6 +1851,7 @@ internal class ColorMiraiNetty : IColorMiraiPipe
                         continue;
                     PackBase pack = index switch
                     {
+                        0 => item.ReMessagePack(),
                         1 => item.BeforeImageUploadPack(),
                         2 => item.BotAvatarChangedPack(),
                         3 => item.BotGroupPermissionChangePack(),

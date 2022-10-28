@@ -1,6 +1,7 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.pack.re.*;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.Mirai;
@@ -20,10 +21,9 @@ import java.util.HashSet;
 import java.util.List;
 
 public class BotGetData {
-    public static List<GroupInfo> getGroups(long qq) {
+    public static List<GroupInfo> getGroups(ThePlugin plugin, String uuid, long qq) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -44,10 +44,9 @@ public class BotGetData {
         }
     }
 
-    public static ReFriendInfoPack getFriend(long qq, long id) {
+    public static ReFriendInfoPack getFriend(ThePlugin plugin, String uuid, long qq, long id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -70,10 +69,9 @@ public class BotGetData {
         }
     }
 
-    public static List<ReFriendInfoPack> getFriends(long qq) {
+    public static List<ReFriendInfoPack> getFriends(ThePlugin plugin, String uuid,long qq) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -94,10 +92,9 @@ public class BotGetData {
         }
     }
 
-    public static List<ReMemberInfoPack> getMembers(long qq, long id, boolean fast) {
+    public static List<ReMemberInfoPack> getMembers(ThePlugin plugin, String uuid, long qq, long id, boolean fast) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -166,10 +163,9 @@ public class BotGetData {
         return info;
     }
 
-    public static ReMemberInfoPack getMemberInfo(long qq, long id, long fid) {
+    public static ReMemberInfoPack getMemberInfo(ThePlugin plugin, String uuid, long qq, long id, long fid) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -196,10 +192,9 @@ public class BotGetData {
         }
     }
 
-    public static GroupSettings getGroupInfo(long qq, long id) {
+    public static GroupSettings getGroupInfo(ThePlugin plugin, String uuid,long qq, long id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -220,10 +215,9 @@ public class BotGetData {
         }
     }
 
-    public static List<FriendGroupInfo> getFriendGroups(long qq) {
+    public static List<FriendGroupInfo> getFriendGroups(ThePlugin plugin, String uuid,long qq) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -246,10 +240,9 @@ public class BotGetData {
         }
     }
 
-    public static FriendGroupInfo getFriendGroup(long qq, int id) {
+    public static FriendGroupInfo getFriendGroup(ThePlugin plugin, String uuid,long qq, int id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            if (!BotCheck.qq(plugin, uuid, qq)) {
                 return null;
             }
             Bot bot = BotStart.getBots().get(qq);
@@ -274,13 +267,12 @@ public class BotGetData {
         }
     }
 
-    public static String getImg(long qq, String uuid) {
-        if (!BotStart.getBots().containsKey(qq)) {
-            ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+    public static String getImg(ThePlugin plugin, String uuid, long qq, String img) {
+        if (!BotCheck.qq(plugin, uuid, qq)) {
             return null;
         }
         Bot bot = BotStart.getBots().get(qq);
-        Image image = Mirai.getInstance().createImage(uuid);
+        Image image = Mirai.getInstance().createImage(img);
         return Mirai.getInstance().queryImageUrl(bot, image);
     }
 }

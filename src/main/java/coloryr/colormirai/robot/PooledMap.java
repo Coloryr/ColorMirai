@@ -43,7 +43,7 @@ public class PooledMap<Key, Value> extends AbstractMap<Key, Value> {
     @Override
     public Value put(Key key, Value value) {
         while (queue.size() >= maxCount) {
-            queue.remove();
+            queue.poll();
         }
         queue.add(new Entry<>(key, value));
         return value;

@@ -1,17 +1,19 @@
 package coloryr.colormirai.plugin.netty;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.plugin.PluginUtils;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PluginNettyServer {
     private static ChannelFuture channelFuture;
@@ -58,6 +60,42 @@ public class PluginNettyServer {
             workerGroup.shutdownGracefully();
         } catch (Exception e) {
             ColorMiraiMain.logger.error("netty服务器关闭失败", e);
+        }
+    }
+
+    public static class ServerHandler extends ChannelInboundHandlerAdapter {
+        public static final Map<ChannelHandlerContext, NettyThread> contexts = new ConcurrentHashMap<>();
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) {
+            contexts.put(ctx, PluginUtils.addPlugin(ctx));
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) {
+            ByteBuf byteBuf = (ByteBuf) msg;
+            if (contexts.containsKey(ctx)) {
+                NettyThread thread = contexts.get(ctx);
+                thread.add(byteBuf);
+            }
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) {
+            if (contexts.containsKey(ctx)) {
+                NettyThread thread = contexts.remove(ctx);
+                thread.close();
+                PluginUtils.removePlugin(thread.getPlugin().getName());
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            if (contexts.containsKey(ctx)) {
+                NettyThread thread = contexts.remove(ctx);
+                thread.close();
+                PluginUtils.removePlugin(thread.getPlugin().getName());
+            }
         }
     }
 }

@@ -1,11 +1,9 @@
 package coloryr.colormirai;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -113,5 +111,19 @@ public class Utils {
             ColorMiraiMain.logger.error("编码转换发生错误", e);
         }
         return null;
+    }
+
+    public static String printError(Exception e) {
+        try {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            PrintStream stream1 = new PrintStream(stream, false, "UTF-8");
+            e.printStackTrace(stream1);
+            String temp = stream.toString("UTF-8");
+            stream.close();
+            return temp;
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        return "";
     }
 }

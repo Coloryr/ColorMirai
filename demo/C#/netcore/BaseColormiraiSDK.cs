@@ -12,6 +12,20 @@ namespace ColoryrSDK;
 //机器人返回数据包
 //////////////////////////////////////////////////////////
 /// <summary>
+/// 0 [插件]插件消息回调
+/// </summary>
+public record ReMessagePack : PackBase
+{
+    /// <summary>
+    /// 请求UUID
+    /// </summary>
+    public string uuid { get; set; }
+    /// <summary>
+    /// 消息内容
+    /// </summary>
+    public string msg { get; set; }
+}
+/// <summary>
 /// 55 [插件]获取群列表
 /// </summary>
 public record ReListGroupPack : PackBase
@@ -2961,7 +2975,7 @@ public partial class RobotSDK
 {
     public static readonly Dictionary<int, Type> PackType = new()
     {
-        { 0, typeof(StartPack)},
+        { 0, typeof(ReMessagePack)},
         { 1, typeof(BeforeImageUploadPack) },
         { 2, typeof(BotAvatarChangedPack) },
         { 3, typeof(BotGroupPermissionChangePack) },

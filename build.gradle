@@ -32,12 +32,12 @@ dependencies {
     compile 'io.netty:netty-all:4.1.82.Final'
     compile 'com.google.code.gson:gson:2.9.0'
 
-    compile 'net.mamoe:mirai-console:2.13.0-RC' // 后端
-    compile 'net.mamoe:mirai-console-terminal:2.13.0-RC'
-    compile "net.mamoe:mirai-core:2.13.0-RC"
-    compile "net.mamoe:mirai-console-frontend-base:2.13.0-RC"
-    api 'net.mamoe:mirai-core-api:2.13.0-RC'
-    api 'net.mamoe:mirai-core:2.13.0-RC'
+    compile 'net.mamoe:mirai-console:2.13.0-RC2' // 后端
+    compile 'net.mamoe:mirai-console-terminal:2.13.0-RC2'
+    compile "net.mamoe:mirai-core:2.13.0-RC2"
+    compile "net.mamoe:mirai-console-frontend-base:2.13.0-RC2"
+    api 'net.mamoe:mirai-core-api:2.13.0-RC2'
+    api 'net.mamoe:mirai-core:2.13.0-RC2'
 
 }
 tasks.withType(JavaCompile) {

@@ -140,7 +140,7 @@ public class ThePlugin {
                         //55 [插件]获取群列表
                         case 55: {
                             GetPack pack = (GetPack) task.pack;
-                            List<GroupInfo> data = BotGetData.getGroups(runQQ == 0 ? pack.qq : runQQ);
+                            List<GroupInfo> data = BotGetData.getGroups(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ);
                             if (data == null)
                                 break;
                             ReListGroupPack pack31 = new ReListGroupPack();
@@ -154,7 +154,7 @@ public class ThePlugin {
                         //56 [插件]获取好友列表
                         case 56: {
                             GetPack pack = (GetPack) task.pack;
-                            List<ReFriendInfoPack> data = BotGetData.getFriends(runQQ == 0 ? pack.qq : runQQ);
+                            List<ReFriendInfoPack> data = BotGetData.getFriends(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ);
                             if (data == null)
                                 break;
                             ReListFriendPack pack1 = new ReListFriendPack();
@@ -168,7 +168,7 @@ public class ThePlugin {
                         //57 [插件]获取群成员
                         case 57: {
                             GroupGetMemberInfoPack pack = (GroupGetMemberInfoPack) task.pack;
-                            List<ReMemberInfoPack> data = BotGetData.getMembers(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fast);
+                            List<ReMemberInfoPack> data = BotGetData.getMembers(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fast);
                             if (data == null)
                                 break;
                             ReListMemberPack pack1 = new ReListMemberPack();
@@ -183,7 +183,7 @@ public class ThePlugin {
                         //58 [插件]获取群设置
                         case 58: {
                             GroupGetSettingPack pack = (GroupGetSettingPack) task.pack;
-                            GroupSettings data = BotGetData.getGroupInfo(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            GroupSettings data = BotGetData.getGroupInfo(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 break;
                             ReGroupSettingPack pack1 = new ReGroupSettingPack();
@@ -312,7 +312,7 @@ public class ThePlugin {
                         //90 [插件]获取图片Url
                         case 90: {
                             GetImageUrlPack pack = (GetImageUrlPack) task.pack;
-                            String data4 = BotGetData.getImg(runQQ == 0 ? pack.qq : runQQ, pack.uuid);
+                            String data4 = BotGetData.getImg(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.uuid);
                             if (data4 == null)
                                 break;
                             ReGetImageUrlPack pack1 = new ReGetImageUrlPack();
@@ -326,7 +326,7 @@ public class ThePlugin {
                         //91 [插件]获取群成员信息
                         case 91: {
                             GetMemberInfoPack pack = (GetMemberInfoPack) task.pack;
-                            ReMemberInfoPack pack1 = BotGetData.getMemberInfo(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            ReMemberInfoPack pack1 = BotGetData.getMemberInfo(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             if (pack1 == null)
                                 break;
                             pack1.qq = runQQ == 0 ? pack.qq : runQQ;
@@ -340,7 +340,7 @@ public class ThePlugin {
                         //92 [插件]获取朋友信息
                         case 92: {
                             GetFriendInfoPack pack = (GetFriendInfoPack) task.pack;
-                            ReFriendInfoPack pack1 = BotGetData.getFriend(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            ReFriendInfoPack pack1 = BotGetData.getFriend(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (pack1 == null)
                                 break;
                             pack1.uuid = pack.uuid;
@@ -558,7 +558,7 @@ public class ThePlugin {
                         //128 [插件]获取好友分组信息
                         case 128: {
                             GetFriendGroupPack pack = (GetFriendGroupPack) task.pack;
-                            FriendGroupInfo info = BotGetData.getFriendGroup(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            FriendGroupInfo info = BotGetData.getFriendGroup(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             ReFriendGroupPack pack1 = new ReFriendGroupPack();
                             pack1.uuid = pack.uuid;
                             pack1.qq = pack.qq;
@@ -570,7 +570,7 @@ public class ThePlugin {
                         //129 [插件]获取所有好友分组信息
                         case 129: {
                             GetPack pack = (GetPack) task.pack;
-                            List<FriendGroupInfo> list = BotGetData.getFriendGroups(runQQ == 0 ? pack.qq : runQQ);
+                            List<FriendGroupInfo> list = BotGetData.getFriendGroups(this, pack.uuid, runQQ == 0 ? pack.qq : runQQ);
                             ReListFriendGroupPack pack1 = new ReListFriendGroupPack();
                             pack1.uuid = pack.uuid;
                             pack1.qq = pack.qq;
@@ -582,25 +582,25 @@ public class ThePlugin {
                         //130 [插件]创建好友分组
                         case 130: {
                             FriendGroupCreatePack pack = (FriendGroupCreatePack) task.pack;
-                            BotFriendDo.create(runQQ == 0 ? pack.qq : runQQ, pack.name);
+                            BotFriendDo.create(this, runQQ == 0 ? pack.qq : runQQ, pack.name);
                             break;
                         }
                         //131 [插件]修改好友分组名
                         case 131: {
                             FriendGroupRenamePack pack = (FriendGroupRenamePack) task.pack;
-                            BotFriendDo.rename(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            BotFriendDo.rename(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
                         //132 [插件]移动好友到分组
                         case 132: {
                             FriendGroupMovePack pack = (FriendGroupMovePack) task.pack;
-                            BotFriendDo.move(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotFriendDo.move(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //133 [插件]删除好友分组
                         case 133: {
                             FriendGroupDeletePack pack = (FriendGroupDeletePack) task.pack;
-                            BotFriendDo.delete(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotFriendDo.delete(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         default: {
@@ -720,7 +720,7 @@ public class ThePlugin {
             return;
         if (qqList.size() != 0 && task.qq != 0 && !qqList.contains(task.qq))
             return;
-        if (allEvent || events.contains((int) task.index) || task.index == 60) {
+        if (allEvent || events.contains(task.index) || task.index == 60) {
             if (socket.send(pack, index))
                 close();
         }
@@ -735,5 +735,13 @@ public class ThePlugin {
         } catch (Exception e) {
             ColorMiraiMain.logger.error("插件断开失败", e);
         }
+    }
+
+    public void sendPluginMessage(long qq, String uuid, String msg) {
+        ReMessagePack pack = new ReMessagePack();
+        pack.qq = qq;
+        pack.uuid = uuid;
+        pack.msg = msg;
+        addPack(new PluginPack(pack, 0));
     }
 }
