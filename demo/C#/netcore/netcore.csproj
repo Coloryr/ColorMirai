@@ -2,14 +2,15 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
+	  <PublishAot>true</PublishAot>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetty.Buffers" Version="0.7.4" />
-    <PackageReference Include="DotNetty.Codecs" Version="0.7.4" />
-    <PackageReference Include="DotNetty.Common" Version="0.7.4" />
-    <PackageReference Include="DotNetty.Transport" Version="0.7.4" />
+    <PackageReference Include="DotNetty.Buffers" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Codecs" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Common" Version="0.7.5" />
+    <PackageReference Include="DotNetty.Transport" Version="0.7.5" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
     <PackageReference Include="websocketsharp.core" Version="1.0.0" />
   </ItemGroup>

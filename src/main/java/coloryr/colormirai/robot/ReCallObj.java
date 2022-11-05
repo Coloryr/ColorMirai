@@ -2,7 +2,7 @@ package coloryr.colormirai.robot;
 
 import net.mamoe.mirai.message.data.MessageSourceKind;
 
-public class ReCallObj extends MessageKey{
+public class ReCallObj extends MessageKey {
     public long bot;
     public MessageSourceKind kind;
 

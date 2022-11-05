@@ -222,43 +222,43 @@ public class ThePlugin {
                         //64 [插件]删除群员
                         case 64: {
                             GroupKickMemberPack pack = (GroupKickMemberPack) task.pack;
-                            BotGroupDo.deleteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.black);
+                            BotGroupDo.deleteGroupMember(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.black);
                             break;
                         }
                         //65 [插件]禁言群员
                         case 65: {
                             GroupMuteMemberPack pack = (GroupMuteMemberPack) task.pack;
-                            BotGroupDo.muteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
+                            BotGroupDo.muteGroupMember(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
                             GroupUnmuteMemberPack pack = (GroupUnmuteMemberPack) task.pack;
-                            BotGroupDo.unmuteGroupMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.unmuteGroupMember(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //67 [插件]开启全员禁言
                         case 67: {
                             GroupMuteAllPack pack = (GroupMuteAllPack) task.pack;
-                            BotGroupDo.groupMuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupMuteAll(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //68 [插件]关闭全员禁言
                         case 68: {
                             GroupUnmuteAllPack pack = (GroupUnmuteAllPack) task.pack;
-                            BotGroupDo.groupUnmuteAll(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupUnmuteAll(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //69 [插件]设置群名片
                         case 69: {
                             GroupSetMemberCardPack pack = (GroupSetMemberCardPack) task.pack;
-                            BotGroupDo.setGroupMemberCard(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
+                            BotGroupDo.setGroupMemberCard(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
                         }
                         //70 [插件]设置群名
                         case 70: {
                             GroupSetNamePack pack = (GroupSetNamePack) task.pack;
-                            BotGroupDo.setGroupName(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            BotGroupDo.setGroupName(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
                         //71 [插件]撤回消息
@@ -364,7 +364,7 @@ public class ThePlugin {
                         //94 [插件]设置群精华消息
                         case 94: {
                             GroupSetEssenceMessagePack pack = (GroupSetEssenceMessagePack) task.pack;
-                            BotGroupDo.setEssenceMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.ids1, pack.ids2);
+                            BotGroupDo.setEssenceMessage(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.ids1, pack.ids2);
                             break;
                         }
                         //95 [插件]消息队列
@@ -453,13 +453,13 @@ public class ThePlugin {
                         //108 [插件]设置取消管理员
                         case 108: {
                             GroupSetAdminPack pack = (GroupSetAdminPack) task.pack;
-                            BotGroupDo.setAdmin(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
+                            BotGroupDo.setAdmin(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
                             break;
                         }
                         //109 [插件]获取群公告
                         case 109: {
                             GroupGetAnnouncementsPack pack = (GroupGetAnnouncementsPack) task.pack;
-                            List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
                             List<GroupAnnouncement> list = new ArrayList<>();
@@ -492,13 +492,13 @@ public class ThePlugin {
                         //110 [插件]设置群公告
                         case 110: {
                             GroupAddAnnouncementPack pack = (GroupAddAnnouncementPack) task.pack;
-                            BotGroupDo.setAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
+                            BotGroupDo.setAnnouncement(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
                             break;
                         }
                         //111 [插件]删除群公告
                         case 111: {
                             GroupDeleteAnnouncementPack pack = (GroupDeleteAnnouncementPack) task.pack;
-                            BotGroupDo.deleteAnnouncement(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.deleteAnnouncement(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //112 [插件]发送好友语言文件
@@ -510,13 +510,13 @@ public class ThePlugin {
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {
                             GroupSetAllowMemberInvitePack pack = (GroupSetAllowMemberInvitePack) task.pack;
-                            BotGroupDo.setAllowMemberInvite(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            BotGroupDo.setAllowMemberInvite(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
                             break;
                         }
                         //115 [插件]设置允许匿名聊天
                         case 115: {
                             GroupSetAnonymousChatEnabledPack pack = (GroupSetAnonymousChatEnabledPack) task.pack;
-                            BotGroupDo.setAnonymousChatEnabled(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            BotGroupDo.setAnonymousChatEnabled(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
                             break;
                         }
                         //117 [插件]发送陌生人消息
@@ -582,25 +582,31 @@ public class ThePlugin {
                         //130 [插件]创建好友分组
                         case 130: {
                             FriendGroupCreatePack pack = (FriendGroupCreatePack) task.pack;
-                            BotFriendDo.create(this, runQQ == 0 ? pack.qq : runQQ, pack.name);
+                            BotFriendGroup.create(this, runQQ == 0 ? pack.qq : runQQ, pack.name);
                             break;
                         }
                         //131 [插件]修改好友分组名
                         case 131: {
                             FriendGroupRenamePack pack = (FriendGroupRenamePack) task.pack;
-                            BotFriendDo.rename(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            BotFriendGroup.rename(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
                         //132 [插件]移动好友到分组
                         case 132: {
                             FriendGroupMovePack pack = (FriendGroupMovePack) task.pack;
-                            BotFriendDo.move(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotFriendGroup.move(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //133 [插件]删除好友分组
                         case 133: {
                             FriendGroupDeletePack pack = (FriendGroupDeletePack) task.pack;
-                            BotFriendDo.delete(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotFriendGroup.delete(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            break;
+                        }
+                        //134 [插件]修改群成员头衔
+                        case 134 : {
+                            GroupMemberEditSpecialTitlePack pack = (GroupMemberEditSpecialTitlePack) task.pack;
+                            BotGroupDo.setMemberSpecialTitle(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.name);
                             break;
                         }
                         default: {

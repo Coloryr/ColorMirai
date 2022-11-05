@@ -1,6 +1,9 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.Msg;
+import coloryr.colormirai.Utils;
+import coloryr.colormirai.plugin.ThePlugin;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.contact.MemberPermission;
@@ -14,231 +17,182 @@ import java.io.File;
 import java.util.List;
 
 public class BotGroupDo {
-    public static void deleteGroupMember(long qq, long id, long fid, boolean black) {
+    public static void deleteGroupMember(ThePlugin plugin, long qq, long id, long fid, boolean black) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            NormalMember member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.kick("", black);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("踢出成员失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.kick + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void muteGroupMember(long qq, long id, long fid, int time) {
+    public static void muteGroupMember(ThePlugin plugin, long qq, long id, long fid, int time) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            NormalMember member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.mute(time);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("禁言成员失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.mute + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void unmuteGroupMember(long qq, long id, long fid) {
+    public static void unmuteGroupMember(ThePlugin plugin, long qq, long id, long fid) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            NormalMember member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.unmute();
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("解禁成员失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.unmute + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void groupMuteAll(long qq, long id) {
+    public static void groupMuteAll(ThePlugin plugin, long qq, long id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getSettings().setMuteAll(true);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("全群禁言失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.all + Msg.mute + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void groupUnmuteAll(long qq, long id) {
+    public static void groupUnmuteAll(ThePlugin plugin, long qq, long id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getSettings().setMuteAll(false);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("全群解禁失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.all + Msg.unmute + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setGroupMemberCard(long qq, long id, long fid, String card) {
+    public static void setGroupMemberCard(ThePlugin plugin, long qq, long id, long fid, String card) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            NormalMember member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("群:" + id + "不存在群成员:" + fid);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.setNameCard(card);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("修改群员名片失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.name_card + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setGroupName(long qq, long id, String name) {
+    public static void setGroupName(ThePlugin plugin, long qq, long id, String name) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.setName(name);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("设置群名失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.name + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setEssenceMessage(long qq, long id, int[] ids1, int[] ids2) {
+    public static void setEssenceMessage(ThePlugin plugin, long qq, long id, int[] ids1, int[] ids2) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             MessageSource source = new MessageSourceBuilder()
                     .id(ids1)
                     .internalId(ids2)
                     .build(qq, MessageSourceKind.GROUP);
-            group.setEssenceMessage(source);
+            boolean res = group.setEssenceMessage(source);
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.essence_message(ids1, ids2) + Msg.set + Msg.fail;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
+            }
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("设置群精华消息失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.essence_message(ids1, ids2) + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setAdmin(long qq, long id, long fid, boolean set) {
+    public static void setAdmin(ThePlugin plugin, long qq, long id, long fid, boolean set) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            if (group.getBotAsMember().getPermission() != MemberPermission.OWNER) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.set + Msg.admin + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            NormalMember member = group.getBotAsMember();
-            if (member.getPermission() != MemberPermission.OWNER) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "不是群主");
-                return;
-            }
-            member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "中没有群员:" + fid);
-                return;
-            }
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.modifyAdmin(set);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("设置群精华消息失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.admin + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static List<OnlineAnnouncement> getAnnouncements(long qq, long id) {
+    public static List<OnlineAnnouncement> getAnnouncements(ThePlugin plugin, long qq, long id, String uuid) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return null;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return null;
-            }
+            Bot bot = BotCheck.qq(plugin, uuid, qq);
+            if (bot == null) return null;
+            Group group = BotCheck.group(plugin, bot, id, uuid);
+            if (group == null) return null;
             return group.getAnnouncements().toList();
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("获取群公告失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement + Msg.get + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
         return null;
     }
 
-    public static void setAnnouncement(long qq, long id, String image, boolean sendToNewMember, boolean isPinned, boolean showEditCard, boolean showPopup, boolean requireConfirmation, String text) {
+    public static void setAnnouncement(ThePlugin plugin, long qq, long id, String image, boolean sendToNewMember, boolean isPinned, boolean showEditCard, boolean showPopup, boolean requireConfirmation, String text) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            if (group.getBotAsMember().getPermission() == MemberPermission.MEMBER) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement + Msg.set + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
             Announcements announcements = group.getAnnouncements();
@@ -246,7 +200,9 @@ public class BotGroupDo {
             if (image != null && !image.isEmpty()) {
                 File file = new File(image);
                 if (!file.exists()) {
-                    ColorMiraiMain.logger.warn("不存在图片:" + image);
+                    String temp = Msg.non_existent + Msg.image(image);
+                    plugin.sendPluginMessage(qq, "", temp);
+                    ColorMiraiMain.logger.warn(temp);
                     return;
                 }
                 image1 = announcements.uploadImage(BotUpload.up(file));
@@ -263,108 +219,106 @@ public class BotGroupDo {
             OfflineAnnouncement announcement = OfflineAnnouncement.create(text, builder.build());
             announcements.publish(announcement);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("设置群公告失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement + Msg.get + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void deleteAnnouncement(long qq, long id, String fid) {
+    public static void deleteAnnouncement(ThePlugin plugin, long qq, long id, String fid) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
-            if (group.getBotPermission() == MemberPermission.MEMBER) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "权限不足");
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
+            if (group.getBotAsMember().getPermission() == MemberPermission.MEMBER) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement(fid) + Msg.delete + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
             Announcements announcements = group.getAnnouncements();
             List<OnlineAnnouncement> list = announcements.toList();
             for (OnlineAnnouncement item : list) {
                 if (item.getFid().equalsIgnoreCase(fid)) {
-                    item.delete();
+                    boolean res = item.delete();
+                    if (!res) {
+                        String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement(fid) + Msg.delete + Msg.fail;
+                        plugin.sendPluginMessage(qq, "", temp);
+                        ColorMiraiMain.logger.warn(temp);
+                    }
                     return;
                 }
             }
-            ColorMiraiMain.logger.warn("机器人:" + qq + "群:" + id + "不存在公告:" + fid);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement(fid) + Msg.non_existent;
+            plugin.sendPluginMessage(qq, "", temp);
+            ColorMiraiMain.logger.warn(temp);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("删除群公告失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.announcement(fid) + Msg.delete + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setAnonymousChatEnabled(long qq, long id, boolean enable) {
+    public static void setAnonymousChatEnabled(ThePlugin plugin, long qq, long id, boolean enable) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             if (group.getBotPermission() == MemberPermission.MEMBER) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "权限不足");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.anonymous_chat + Msg.set + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
             group.getSettings().setAnonymousChatEnabled(enable);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("删除群公告失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.anonymous_chat + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void setAllowMemberInvite(long qq, long id, boolean enable) {
+    public static void setAllowMemberInvite(ThePlugin plugin, long qq, long id, boolean enable) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             if (group.getBotPermission() == MemberPermission.MEMBER) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "权限不足");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.allow_member_invite + Msg.set + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
             group.getSettings().setAllowMemberInvite(enable);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("删除群公告失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.allow_member_invite + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void editSpecialTitle(long qq, long id, long fid, String name){
+    public static void setMemberSpecialTitle(ThePlugin plugin, long qq, long id, long fid, String name) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             if (group.getBotPermission() != MemberPermission.OWNER) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "不是群主");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.special_title + Msg.set + Msg.non_permission;
+                plugin.sendPluginMessage(qq, "", temp);
+                ColorMiraiMain.logger.warn(temp);
                 return;
             }
-            NormalMember member = group.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "在群:" + id + "中没有群员:" + fid);
-                return;
-            }
+            NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+            if (member == null) return;
             member.setSpecialTitle(name);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("设置群头衔失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.special_title + Msg.set + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 }
