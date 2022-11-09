@@ -1068,7 +1068,7 @@ internal static class PackEncode
     public static IByteBuffer WriteString(this IByteBuffer buff, string data)
     {
         var temp = Encoding.UTF8.GetBytes(data);
-        buff.WriteInts1(temp);
+        buff.WriteBytes1(temp);
         return buff;
     }
     public static IByteBuffer WriteStringList(this IByteBuffer buff, List<string> list)
@@ -1098,7 +1098,7 @@ internal static class PackEncode
         }
         return buff;
     }
-    public static IByteBuffer WriteInts1(this IByteBuffer buff, byte[] data)
+    public static IByteBuffer WriteBytes1(this IByteBuffer buff, byte[] data)
     {
         buff.WriteInt(data.Length);
         buff.WriteBytes(data, 0, data.Length);
@@ -1215,7 +1215,7 @@ internal static class PackEncode
         buff.WriteInt(61)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInts1(pack.data)
+            .WriteBytes1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1228,7 +1228,7 @@ internal static class PackEncode
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
-            .WriteInts1(pack.data)
+            .WriteBytes1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1240,7 +1240,7 @@ internal static class PackEncode
         buff.WriteInt(63)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInts1(pack.data)
+            .WriteBytes1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1335,7 +1335,7 @@ internal static class PackEncode
         buff.WriteInt(74)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInts1(pack.data)
+            .WriteBytes1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
@@ -1475,7 +1475,7 @@ internal static class PackEncode
             .WriteBoolean(pack.send)
             .WriteStringList(pack.text)
             .WriteString(pack.imgurl)
-            .WriteInts1(pack.imgData);
+            .WriteBytes1(pack.imgData);
 
         return buff;
     }
@@ -1744,7 +1744,7 @@ internal static class PackEncode
         buff.WriteInt(126)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInts1(pack.data)
+            .WriteBytes1(pack.data)
             .WriteLongList(pack.ids);
 
         return buff;
