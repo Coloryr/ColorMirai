@@ -2,6 +2,8 @@ package coloryr.colormirai.plugin.pack.from;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
+import java.util.Set;
+
 /**
  * 93 [插件]发送音乐分享
  */
@@ -42,4 +44,8 @@ public class SendMusicSharePack extends PackBase {
      * 音乐Url
      */
     public String musicUrl;
+    /**
+     * 号码组
+     */
+    public Set<Long> ids;
 }

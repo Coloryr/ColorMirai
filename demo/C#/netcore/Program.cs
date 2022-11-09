@@ -10,6 +10,12 @@ void Message(int type, object data)
 {
     switch (type)
     {
+        case 0:
+            {
+                var pack = data as ReMessagePack;
+                Console.WriteLine($"qq={pack.qq} uuid={pack.uuid} msg={pack.msg}");
+                break;
+            }
         case 46:
             {
                 var pack = data as NewFriendRequestEventPack;

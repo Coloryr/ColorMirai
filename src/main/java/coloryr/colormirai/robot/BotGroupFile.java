@@ -1,8 +1,10 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.Msg;
 import coloryr.colormirai.Utils;
 import coloryr.colormirai.download.DownloadUtils;
+import coloryr.colormirai.plugin.ThePlugin;
 import coloryr.colormirai.plugin.pack.re.GroupFileInfo;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Group;
@@ -15,77 +17,69 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BotGroupFile {
-    public static void addFile(long qq, long id, String file, String name) {
+    public static void addFile(ThePlugin plugin, long qq, long id, String file, String name) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             RemoteFiles remoteFile = group.getFiles();
             remoteFile.uploadNewFile(name, BotUpload.up(file.substring(1)));
         } catch (PermissionDeniedException e) {
-            ColorMiraiMain.logger.error("上传群文件失败，只允许管理员上传");
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(name) + Msg.update + Msg.non_permission;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("上传群文件失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(name) + Msg.update + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void deleteFile(long qq, long id, String name) {
+    public static void deleteFile(ThePlugin plugin, long qq, long id, String fid) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFile file = group.getFiles().getRoot().resolveFileById(name);
-            if (file == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 不存在");
-                return;
+            AbsoluteFile file = BotCheck.file(plugin, bot, group, fid);
+            if (file == null) return;
+            boolean res = file.delete();
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.delete + Msg.fail;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
             }
-            file.delete();
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("删除群文件失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.delete + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static List<GroupFileInfo> getFiles(long qq, long id) {
+    public static List<GroupFileInfo> getFiles(ThePlugin plugin, long qq, long id) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return null;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return null;
-            }
-            group.getFiles().getRoot().refreshed();
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return null;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return null;
             List<GroupFileInfo> fileList = new ArrayList<>();
             RemoteFiles remoteFile = group.getFiles();
             remoteFile.getRoot().filesStream().forEach(str -> {
                 GroupFileInfo info = get(str);
                 fileList.add(info);
             });
-            remoteFile.getRoot().foldersStream().forEach(item -> item.filesStream().forEach(item1 -> {
-                GroupFileInfo info = get(item1);
-                fileList.add(info);
-            }));
+            remoteFile.getRoot().foldersStream().forEach(item ->
+                    item.filesStream().forEach(item1 -> {
+                        GroupFileInfo info = get(item1);
+                        fileList.add(info);
+                    }));
             return fileList;
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("获取群文件列表失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.files + Msg.get + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
         return null;
     }
@@ -109,166 +103,152 @@ public class BotGroupFile {
         return info;
     }
 
-    public static void moveFile(long qq, long id, String fid, String dir) {
+    public static void moveFile(ThePlugin plugin, long qq, long id, String fid, String dir) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(fid);
-            if (remoteFile == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
-                return;
-            }
+            AbsoluteFile remoteFile = BotCheck.file(plugin, bot, group, fid);
+            if (remoteFile == null) return;
             AbsoluteFolder dir1 = group.getFiles().getRoot().resolveFolder(dir);
             if (dir1 == null) {
                 dir1 = group.getFiles().getRoot().createFolder(dir);
             }
-            remoteFile.moveTo(dir1);
+            boolean res = remoteFile.moveTo(dir1);
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.move + Msg.fail;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
+            }
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件移动失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.move + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void renameFile(long qq, long id, String fid, String now) {
+    public static void renameFile(ThePlugin plugin, long qq, long id, String fid, String now) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(fid);
-            if (remoteFile == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + fid + " 不存在");
-                return;
+            AbsoluteFile remoteFile = BotCheck.file(plugin, bot, group, fid);
+            if (remoteFile == null) return;
+            boolean res = remoteFile.renameTo(now);
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.rename + Msg.fail;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
             }
-            remoteFile.renameTo(now);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件重命名失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.rename + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void addGroupDir(long qq, long id, String dir) {
+    public static void addGroupDir(ThePlugin plugin, long qq, long id, String dir) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
             group.getFiles().getRoot().createFolder(dir);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件夹创建失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(dir) + Msg.create + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void removeGroupDir(long qq, long id, String dir) {
+    public static void removeGroupDir(ThePlugin plugin, long qq, long id, String dir) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFolder remoteFile = group.getFiles().getRoot().resolveFolder(dir);
-            if (remoteFile == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件夹：" + dir + " 不存在");
-                return;
-            }
+            AbsoluteFolder remoteFile = BotCheck.folder(plugin, bot, group, dir);
+            if (remoteFile == null) return;
             if (remoteFile.isFile()) {
-                ColorMiraiMain.logger.warn("不能对文件:" + dir + " 进行创造群文件夹操作");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(dir) + Msg.type_error;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
                 return;
             }
-            remoteFile.delete();
+            boolean res = remoteFile.delete();
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(dir) + Msg.delete + Msg.fail;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
+            }
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件夹创建失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(dir) + Msg.delete + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void renameGroupDir(long qq, long id, String old, String now) {
+    public static void renameGroupDir(ThePlugin plugin, long qq, long id, String old, String now) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFolder remoteFile = group.getFiles().getRoot().resolveFolder(old);
-
-            if (remoteFile == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件夹：" + old + " 不存在");
-                return;
-            }
+            AbsoluteFolder remoteFile = BotCheck.folder(plugin, bot, group, old);
+            if (remoteFile == null) return;
             if (remoteFile.isFile()) {
-                ColorMiraiMain.logger.warn("不能对文件:" + old + " 进行创造群文件夹操作");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(old) + Msg.type_error;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
                 return;
             }
-            remoteFile.renameTo(now);
+            boolean res = remoteFile.renameTo(now);
+            if (!res) {
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(old) + Msg.rename + Msg.fail;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
+            }
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件夹创建失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.dir(old) + Msg.rename + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void downloadGroupFile(long qq, long id, String name, String dir) {
+    public static void downloadGroupFile(ThePlugin plugin, long qq, long id, String fid, String dir) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
-            Group group = bot.getGroup(id);
-            if (group == null) {
-                ColorMiraiMain.logger.warn("机器人:" + qq + "不存在群:" + id);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             group.getFiles().getRoot().refreshed();
-            AbsoluteFile remoteFile = group.getFiles().getRoot().resolveFileById(name);
-
-            if (remoteFile == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 不存在");
-                return;
-            }
+            AbsoluteFile remoteFile = BotCheck.file(plugin, bot, group, fid);
+            if (remoteFile == null) return;
             if (!remoteFile.isFile()) {
-                ColorMiraiMain.logger.warn(name + " 不是文件");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.type_error;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
                 return;
             }
             String url = remoteFile.getUrl();
             if (url == null) {
-                ColorMiraiMain.logger.warn("群：" + id + "文件：" + name + " 信息获取失败");
+                String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.url + Msg.get + Msg.file;
+                ColorMiraiMain.logger.warn(temp);
+                plugin.sendPluginMessage(qq, "", temp);
                 return;
             }
-            DownloadUtils.addTask(url, remoteFile.getName(), dir);
-            ColorMiraiMain.logger.info("添加下载群：" + id + " 文件：" + name + " 任务");
+            DownloadUtils.addTask(plugin, qq, id, url, remoteFile.getName(), dir);
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("群文件夹创建失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.file(fid) + Msg.download + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 }

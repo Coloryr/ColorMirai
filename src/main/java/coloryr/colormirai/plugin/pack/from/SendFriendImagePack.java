@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.pack.from;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 63 [插件]发送图片到朋友
@@ -19,5 +19,5 @@ public class SendFriendImagePack extends PackBase {
     /**
      * QQ号组
      */
-    public List<Long> ids;
+    public Set<Long> ids;
 }

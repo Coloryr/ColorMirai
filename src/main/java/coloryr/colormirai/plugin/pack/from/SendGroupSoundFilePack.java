@@ -2,7 +2,7 @@ package coloryr.colormirai.plugin.pack.from;
 
 import coloryr.colormirai.plugin.pack.PackBase;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * 78 [插件]从本地文件加载语音发送到群
@@ -19,5 +19,5 @@ public class SendGroupSoundFilePack extends PackBase {
     /**
      * 群组
      */
-    public List<Long> ids;
+    public Set<Long> ids;
 }

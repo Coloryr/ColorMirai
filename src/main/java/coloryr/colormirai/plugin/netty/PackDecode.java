@@ -6,6 +6,7 @@ import net.mamoe.mirai.message.data.MessageSourceKind;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class PackDecode {
@@ -73,7 +74,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.message = readStringList(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -83,6 +84,7 @@ public class PackDecode {
         pack.id = buff.readLong();
         pack.fid = buff.readLong();
         pack.message = readStringList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -90,7 +92,7 @@ public class PackDecode {
         SendFriendMessagePack pack = new SendFriendMessagePack();
         pack.qq = buff.readLong();
         pack.message = readStringList(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -132,7 +134,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.data = readBytes(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -142,6 +144,7 @@ public class PackDecode {
         pack.id = buff.readLong();
         pack.fid = buff.readLong();
         pack.data = readBytes(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -224,7 +227,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.data = readBytes(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -233,7 +236,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -243,6 +246,7 @@ public class PackDecode {
         pack.id = buff.readLong();
         pack.fid = buff.readLong();
         pack.file = readString(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -251,7 +255,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -260,7 +264,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -315,6 +319,7 @@ public class PackDecode {
         pack.jumpUrl = readString(buff);
         pack.pictureUrl = readString(buff);
         pack.musicUrl = readString(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -486,7 +491,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -519,7 +524,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -543,7 +548,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.file = readString(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 
@@ -552,7 +557,7 @@ public class PackDecode {
         pack.qq = buff.readLong();
         pack.id = buff.readLong();
         pack.data = readBytes(buff);
-        pack.ids = readLongList(buff);
+        pack.ids = new HashSet<>(readLongList(buff));
         return pack;
     }
 

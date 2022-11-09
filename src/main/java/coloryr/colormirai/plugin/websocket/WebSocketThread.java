@@ -15,6 +15,7 @@ import org.java_websocket.WebSocket;
 
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Map;
 
 public class WebSocketThread implements IPluginSocket {
@@ -162,7 +163,7 @@ public class WebSocketThread implements IPluginSocket {
                                     String ids = formdata.get("ids");
                                     SendGroupImagePack pack = new SendGroupImagePack();
                                     if (ids != null) {
-                                        pack.ids = new ArrayList<>();
+                                        pack.ids = new HashSet<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
                                         }
@@ -207,7 +208,7 @@ public class WebSocketThread implements IPluginSocket {
                                     SendFriendImagePack pack = new SendFriendImagePack();
                                     String ids = formdata.get("ids");
                                     if (ids != null) {
-                                        pack.ids = new ArrayList<>();
+                                        pack.ids = new HashSet<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
                                         }
@@ -272,7 +273,7 @@ public class WebSocketThread implements IPluginSocket {
                                     SendGroupSoundPack pack = new SendGroupSoundPack();
                                     String ids = formdata.get("ids");
                                     if (ids != null) {
-                                        pack.ids = new ArrayList<>();
+                                        pack.ids = new HashSet<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
                                         }
@@ -474,7 +475,7 @@ public class WebSocketThread implements IPluginSocket {
                                     SendFriendSoundPack pack = new SendFriendSoundPack();
                                     String ids = formdata.get("ids");
                                     if (ids != null) {
-                                        pack.ids = new ArrayList<>();
+                                        pack.ids = new HashSet<>();
                                         for (String item : ids.split(",")) {
                                             pack.ids.add(Long.parseLong(item));
                                         }

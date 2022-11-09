@@ -1609,7 +1609,7 @@ public record SendGroupMessagePack : PackBase
     /// <summary>
     /// 群列表
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 53 [插件]发送私聊消息
@@ -1628,6 +1628,10 @@ public record SendGroupPrivateMessagePack : PackBase
     /// 消息
     /// </summary>
     public List<string> message { get; set; }
+    /// <summary>
+    /// 成员QQ号组
+    /// </summary>
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 54 [插件]发送好友消息
@@ -1645,7 +1649,7 @@ public record SendFriendMessagePack : PackBase
     /// <summary>
     /// QQ号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 55 [插件]获取群列表
@@ -1725,7 +1729,7 @@ public record SendGroupImagePack : PackBase
     /// <summary>
     /// 群号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 62 [插件]发送图片到私聊
@@ -1744,6 +1748,10 @@ public record SendGroupPrivateImagePack : PackBase
     /// 图片数据
     /// </summary>
     public byte[] data { get; set; }
+    /// <summary>
+    /// QQ号组
+    /// </summary>
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 63 [插件]发送图片到朋友
@@ -1931,7 +1939,7 @@ public record SendGroupSoundPack : PackBase
     /// <summary>
     /// QQ号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 75 [插件]从本地文件加载图片发送到群
@@ -1949,7 +1957,7 @@ public record SendGroupImageFilePack : PackBase
     /// <summary>
     /// 群号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 76 [插件]从本地文件加载图片发送到群私聊
@@ -1968,6 +1976,10 @@ public record SendGroupPrivateImageFilePack : PackBase
     /// 文件路径
     /// </summary>
     public string file { get; set; }
+    /// <summary>
+    /// 群员QQ号组
+    /// </summary>
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 77 [插件]从本地文件加载图片发送到朋友
@@ -1985,7 +1997,7 @@ public record SendFriendImageFilePack : PackBase
     /// <summary>
     /// QQ号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 78 [插件]从本地文件加载语音发送到群
@@ -2003,7 +2015,7 @@ public record SendGroupSoundFilePack : PackBase
     /// <summary>
     /// 群组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 79 [机器人]成员群恢复（事件）
@@ -2277,6 +2289,10 @@ public record SendMusicSharePack : PackBase
     /// 音乐Url
     /// </summary>
     public string musicUrl { get; set; }
+    /// <summary>
+    /// 号码组
+    /// </summary>
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 94 [插件]设置群精华消息
@@ -2623,7 +2639,7 @@ public record SendFriendSoundFilePack : PackBase
     /// <summary>
     /// QQ号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 113 [机器人]群解散消息（事件）
@@ -2750,7 +2766,7 @@ public record SendFriendSoundPack : PackBase
     /// <summary>
     /// QQ号组
     /// </summary>
-    public List<long> ids { get; set; }
+    public HashSet<long> ids { get; set; }
 }
 /// <summary>
 /// 128 [插件]获取好友分组信息
@@ -2857,7 +2873,7 @@ public static class BuildPack
     /// <param name="img">图片BASE64流</param>
     /// <param name="index">包ID</param>
     /// <returns>构建好的包</returns>
-    public static byte[] BuildImage(long qq, long id, long fid, string img, byte index, List<long> ids)
+    public static byte[] BuildImage(long qq, long id, long fid, string img, byte index, HashSet<long> ids)
     {
         string temp = "";
         if (id != 0)
@@ -2891,7 +2907,7 @@ public static class BuildPack
     /// <param name="sound">音频BASE64</param>
     /// <param name="index">包ID</param>
     /// <returns>构建好的包</returns>
-    public static byte[] BuildSound(long qq, long id, string sound, byte index, List<long> ids)
+    public static byte[] BuildSound(long qq, long id, string sound, byte index, HashSet<long> ids)
     {
         string temp = $"id={id}&qq={qq}&sound={sound}";
         if (ids != null)

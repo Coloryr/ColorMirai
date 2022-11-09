@@ -9,29 +9,22 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.io.*;
 
 public class BotUpload {
-    public static Image upImage(Bot bot, String file) {
+    public static Image upImage(Bot bot, String file) throws IOException {
         ExternalResource resource;
-        try {
-            Image image;
-            if (file.startsWith("http")) {
-                byte[] data = Utils.getUrlBytes(file);
-                if (data == null)
-                    return null;
-                ByteArrayInputStream stream = new ByteArrayInputStream(data);
-                resource = ExternalResource.create(stream).toAutoCloseable();
-                image = bot.getAsFriend().uploadImage(resource);
-                stream.close();
-            } else {
-                FileInputStream stream = new FileInputStream(file);
-                resource = ExternalResource.create(stream).toAutoCloseable();
-                image = bot.getAsFriend().uploadImage(resource);
-                stream.close();
-            }
-            return image;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        Image image;
+        if (file.startsWith("http")) {
+            byte[] data = Utils.getUrlBytes(file);
+            ByteArrayInputStream stream = new ByteArrayInputStream(data);
+            resource = ExternalResource.create(stream).toAutoCloseable();
+            image = bot.getAsFriend().uploadImage(resource);
+            stream.close();
+        } else {
+            FileInputStream stream = new FileInputStream(file);
+            resource = ExternalResource.create(stream).toAutoCloseable();
+            image = bot.getAsFriend().uploadImage(resource);
+            stream.close();
         }
+        return image;
     }
 
     public static Image upImage(Bot bot, InputStream stream) {
@@ -56,29 +49,22 @@ public class BotUpload {
         return bot.getAsFriend().uploadAudio(resource);
     }
 
-    public static Audio upAudio(Bot bot, String file) {
+    public static Audio upAudio(Bot bot, String file) throws IOException {
         ExternalResource resource;
-        try {
-            Audio audio;
-            if (file.startsWith("http")) {
-                byte[] data = Utils.getUrlBytes(file);
-                if (data == null)
-                    return null;
-                ByteArrayInputStream stream = new ByteArrayInputStream(data);
-                resource = ExternalResource.create(stream).toAutoCloseable();
-                audio = bot.getAsFriend().uploadAudio(resource);
-                stream.close();
-            } else {
-                FileInputStream stream = new FileInputStream(file);
-                resource = ExternalResource.create(stream).toAutoCloseable();
-                audio = bot.getAsFriend().uploadAudio(resource);
-                stream.close();
-            }
-            return audio;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+        Audio audio;
+        if (file.startsWith("http")) {
+            byte[] data = Utils.getUrlBytes(file);
+            ByteArrayInputStream stream = new ByteArrayInputStream(data);
+            resource = ExternalResource.create(stream).toAutoCloseable();
+            audio = bot.getAsFriend().uploadAudio(resource);
+            stream.close();
+        } else {
+            FileInputStream stream = new FileInputStream(file);
+            resource = ExternalResource.create(stream).toAutoCloseable();
+            audio = bot.getAsFriend().uploadAudio(resource);
+            stream.close();
         }
+        return audio;
     }
 
     public static Image upImage(Bot bot, byte[] file) {

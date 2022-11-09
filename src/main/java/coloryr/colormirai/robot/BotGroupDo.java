@@ -183,7 +183,9 @@ public class BotGroupDo {
         return null;
     }
 
-    public static void setAnnouncement(ThePlugin plugin, long qq, long id, String image, boolean sendToNewMember, boolean isPinned, boolean showEditCard, boolean showPopup, boolean requireConfirmation, String text) {
+    public static void setAnnouncement(ThePlugin plugin, long qq, long id, String image, boolean sendToNewMember,
+                                       boolean isPinned, boolean showEditCard, boolean showPopup,
+                                       boolean requireConfirmation, String text) {
         try {
             Bot bot = BotCheck.qq(plugin, "", qq);
             if (bot == null) return;

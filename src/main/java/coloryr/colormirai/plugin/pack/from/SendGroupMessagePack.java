@@ -3,6 +3,7 @@ package coloryr.colormirai.plugin.pack.from;
 import coloryr.colormirai.plugin.pack.PackBase;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * 52 [插件]发送群消息
@@ -19,5 +20,5 @@ public class SendGroupMessagePack extends PackBase {
     /**
      * 群列表
      */
-    public List<Long> ids;
+    public Set<Long> ids;
 }

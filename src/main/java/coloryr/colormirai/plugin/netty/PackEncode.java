@@ -922,7 +922,7 @@ public class PackEncode {
         return buf;
     }
 
-    public static ByteBuf reMessagePack(ReMessagePack pack){
+    public static ByteBuf reMessagePack(ReMessagePack pack) {
         ByteBuf buf = Unpooled.buffer();
         buf.writeInt(0);
         buf.writeLong(pack.qq);

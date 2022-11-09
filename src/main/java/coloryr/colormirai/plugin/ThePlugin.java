@@ -18,6 +18,7 @@ import net.mamoe.mirai.message.code.MiraiCode;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageUtils;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -122,19 +123,19 @@ public class ThePlugin {
                         //52 [插件]发送群消息
                         case 52: {
                             SendGroupMessagePack pack = (SendGroupMessagePack) task.pack;
-                            BotSendMessage.sendGroupMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
+                            BotSendMessage.sendGroupMessage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
                             break;
                         }
                         //53 [插件]发送私聊消息
                         case 53: {
                             SendGroupPrivateMessagePack pack = (SendGroupPrivateMessagePack) task.pack;
-                            BotSendMessage.sendGroupPrivateMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.message);
+                            BotSendMessage.sendGroupPrivateMessage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.message, pack.ids);
                             break;
                         }
                         //54 [插件]发送好友消息
                         case 54: {
                             SendFriendMessagePack pack = (SendFriendMessagePack) task.pack;
-                            BotSendMessage.sendFriendMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
+                            BotSendMessage.sendFriendMessage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
                             break;
                         }
                         //55 [插件]获取群列表
@@ -204,19 +205,19 @@ public class ThePlugin {
                         //61 [插件]发送图片到群
                         case 61: {
                             SendGroupImagePack pack = (SendGroupImagePack) task.pack;
-                            BotSendImage.sendGroupImage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
+                            BotSendImage.sendGroupImage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
                             break;
                         }
                         //62 [插件]发送图片到私聊
                         case 62: {
                             SendGroupPrivateImagePack pack = (SendGroupPrivateImagePack) task.pack;
-                            BotSendImage.sendGroupPrivateImage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.data);
+                            BotSendImage.sendGroupPrivateImage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.data, pack.ids);
                             break;
                         }
                         //63 [插件]发送图片到朋友
                         case 63: {
                             SendFriendImagePack pack = (SendFriendImagePack) task.pack;
-                            BotSendImage.sendFriendImage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, null);
+                            BotSendImage.sendFriendImage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, null);
                             break;
                         }
                         //64 [插件]删除群员
@@ -228,37 +229,37 @@ public class ThePlugin {
                         //65 [插件]禁言群员
                         case 65: {
                             GroupMuteMemberPack pack = (GroupMuteMemberPack) task.pack;
-                            BotGroupDo.muteGroupMember(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
+                            BotGroupDo.muteGroupMember(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.time);
                             break;
                         }
                         //66 [插件]解除禁言
                         case 66: {
                             GroupUnmuteMemberPack pack = (GroupUnmuteMemberPack) task.pack;
-                            BotGroupDo.unmuteGroupMember(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.unmuteGroupMember(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //67 [插件]开启全员禁言
                         case 67: {
                             GroupMuteAllPack pack = (GroupMuteAllPack) task.pack;
-                            BotGroupDo.groupMuteAll(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupMuteAll(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //68 [插件]关闭全员禁言
                         case 68: {
                             GroupUnmuteAllPack pack = (GroupUnmuteAllPack) task.pack;
-                            BotGroupDo.groupUnmuteAll(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotGroupDo.groupUnmuteAll(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //69 [插件]设置群名片
                         case 69: {
                             GroupSetMemberCardPack pack = (GroupSetMemberCardPack) task.pack;
-                            BotGroupDo.setGroupMemberCard(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
+                            BotGroupDo.setGroupMemberCard(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.card);
                             break;
                         }
                         //70 [插件]设置群名
                         case 70: {
                             GroupSetNamePack pack = (GroupSetNamePack) task.pack;
-                            BotGroupDo.setGroupName(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
+                            BotGroupDo.setGroupName(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.name);
                             break;
                         }
                         //71 [插件]撤回消息
@@ -270,43 +271,43 @@ public class ThePlugin {
                         //74 [插件]发送语音到群
                         case 74: {
                             SendGroupSoundPack pack = (SendGroupSoundPack) task.pack;
-                            BotSendSound.sendGroupSound(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
+                            BotSendSound.sendGroupSound(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.data, pack.ids);
                             break;
                         }
                         //75 [插件]从文件加载图片发送到群
                         case 75: {
                             SendGroupImageFilePack pack = (SendGroupImageFilePack) task.pack;
-                            BotSendImage.sendGroupImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendImage.sendGroupImageFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //76 [插件]从文件加载图片发送到群私聊
                         case 76: {
                             SendGroupPrivateImageFilePack pack = (SendGroupPrivateImageFilePack) task.pack;
-                            BotSendImage.sendGroupPrivateImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.file);
+                            BotSendImage.sendGroupPrivateImageFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.file, pack.ids);
                             break;
                         }
                         //77 [插件]从文件加载图片发送到朋友
                         case 77: {
                             SendFriendImageFilePack pack = (SendFriendImageFilePack) task.pack;
-                            BotSendImage.sendFriendImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendImage.sendFriendImageFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //78 [插件]从文件加载语音发送到群
                         case 78: {
                             SendGroupSoundFilePack pack = (SendGroupSoundFilePack) task.pack;
-                            BotSendSound.sendGroupSoundFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendSound.sendGroupSoundFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //83 [插件]发送私聊戳一戳
                         case 83: {
                             SendFriendNudgePack pack = (SendFriendNudgePack) task.pack;
-                            BotSendNudge.sendFriendNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotSendNudge.sendFriendNudge(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //84 [插件]发送群戳一戳
                         case 84: {
                             SendGroupMemberNudgePack pack = (SendGroupMemberNudgePack) task.pack;
-                            BotSendNudge.sendGroupNudge(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotSendNudge.sendGroupNudge(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //90 [插件]获取图片Url
@@ -353,18 +354,24 @@ public class ThePlugin {
                         case 93: {
                             SendMusicSharePack pack = (SendMusicSharePack) task.pack;
                             if (pack.type1 == 0) {
-                                BotSendMusicShare.sendFriendMusicShare(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendFriendMusicShare(this, runQQ == 0 ? pack.qq : runQQ, pack.id,
+                                        pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl,
+                                        pack.ids);
                             } else if (pack.type1 == 1) {
-                                BotSendMusicShare.sendMusicShareGroup(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendMusicShareGroup(this, runQQ == 0 ? pack.qq : runQQ, pack.id,
+                                        pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl,
+                                        pack.ids);
                             } else if (pack.type1 == 2) {
-                                BotSendMusicShare.sendMusicShareMember(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl, pack.musicUrl);
+                                BotSendMusicShare.sendMusicShareMember(this, runQQ == 0 ? pack.qq : runQQ, pack.id,
+                                        pack.fid, pack.type, pack.title, pack.summary, pack.jumpUrl, pack.pictureUrl,
+                                        pack.musicUrl, pack.ids);
                             }
                             break;
                         }
                         //94 [插件]设置群精华消息
                         case 94: {
                             GroupSetEssenceMessagePack pack = (GroupSetEssenceMessagePack) task.pack;
-                            BotGroupDo.setEssenceMessage(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.ids1, pack.ids2);
+                            BotGroupDo.setEssenceMessage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.ids1, pack.ids2);
                             break;
                         }
                         //95 [插件]消息队列
@@ -375,34 +382,34 @@ public class ThePlugin {
                         //96 [插件]发送朋友骰子
                         case 96: {
                             SendFriendDicePack pack = (SendFriendDicePack) task.pack;
-                            BotSendDice.sendFriendDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
+                            BotSendDice.sendFriendDice(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
                         }
                         //97 [插件]发送群骰子
                         case 97: {
                             SendGroupDicePack pack = (SendGroupDicePack) task.pack;
-                            BotSendDice.sendGroupDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
+                            BotSendDice.sendGroupDice(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
                         }
                         //98 [插件]发送群私聊骰子
                         case 98: {
                             SendGroupPrivateDicePack pack = (SendGroupPrivateDicePack) task.pack;
-                            BotSendDice.sendGroupPrivateDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dice);
+                            BotSendDice.sendGroupPrivateDice(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dice);
                         }
                         //99 [插件]上传群文件
                         case 99: {
                             GroupAddFilePack pack = (GroupAddFilePack) task.pack;
-                            BotGroupFile.addFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.name);
+                            BotGroupFile.addFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.name);
                             break;
                         }
                         //100 [插件]删除群文件
                         case 100: {
                             GroupDeleteFilePack pack = (GroupDeleteFilePack) task.pack;
-                            BotGroupFile.deleteFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupFile.deleteFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //101 [插件]获取群文件
                         case 101: {
                             GroupGetFilesPack pack = (GroupGetFilesPack) task.pack;
-                            List<GroupFileInfo> data = BotGroupFile.getFiles(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<GroupFileInfo> data = BotGroupFile.getFiles(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             if (data == null)
                                 return;
                             ReGroupFilesPack pack1 = new ReGroupFilesPack();
@@ -417,49 +424,49 @@ public class ThePlugin {
                         //102 [插件]移动群文件
                         case 102: {
                             GroupMoveFilePack pack = (GroupMoveFilePack) task.pack;
-                            BotGroupFile.moveFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
+                            BotGroupFile.moveFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
                             break;
                         }
                         //103 [插件]重命名群文件
                         case 103: {
                             GroupRenameFilePack pack = (GroupRenameFilePack) task.pack;
-                            BotGroupFile.renameFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.now);
+                            BotGroupFile.renameFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.now);
                             break;
                         }
                         //104 [插件]创新群文件文件夹
                         case 104: {
                             GroupAddDirPack pack = (GroupAddDirPack) task.pack;
-                            BotGroupFile.addGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
+                            BotGroupFile.addGroupDir(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
                             break;
                         }
                         //105 [插件]删除群文件文件夹
                         case 105: {
                             GroupDeleteDirPack pack = (GroupDeleteDirPack) task.pack;
-                            BotGroupFile.removeGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
+                            BotGroupFile.removeGroupDir(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dir);
                             break;
                         }
                         //106 [插件]重命名群文件文件夹
                         case 106: {
                             GroupRenameDirPack pack = (GroupRenameDirPack) task.pack;
-                            BotGroupFile.renameGroupDir(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
+                            BotGroupFile.renameGroupDir(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.old, pack.now);
                             break;
                         }
                         //107 [插件]下载群文件到指定位置
                         case 107: {
                             GroupDownloadFilePack pack = (GroupDownloadFilePack) task.pack;
-                            BotGroupFile.downloadGroupFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
+                            BotGroupFile.downloadGroupFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.dir);
                             break;
                         }
                         //108 [插件]设置取消管理员
                         case 108: {
                             GroupSetAdminPack pack = (GroupSetAdminPack) task.pack;
-                            BotGroupDo.setAdmin(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
+                            BotGroupDo.setAdmin(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.type);
                             break;
                         }
                         //109 [插件]获取群公告
                         case 109: {
                             GroupGetAnnouncementsPack pack = (GroupGetAnnouncementsPack) task.pack;
-                            List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(this,runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            List<OnlineAnnouncement> data = BotGroupDo.getAnnouncements(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.uuid);
                             if (data == null)
                                 return;
                             List<GroupAnnouncement> list = new ArrayList<>();
@@ -492,61 +499,61 @@ public class ThePlugin {
                         //110 [插件]设置群公告
                         case 110: {
                             GroupAddAnnouncementPack pack = (GroupAddAnnouncementPack) task.pack;
-                            BotGroupDo.setAnnouncement(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
+                            BotGroupDo.setAnnouncement(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.imageFile, pack.sendToNewMember, pack.isPinned, pack.showEditCard, pack.showPopup, pack.requireConfirmation, pack.text);
                             break;
                         }
                         //111 [插件]删除群公告
                         case 111: {
                             GroupDeleteAnnouncementPack pack = (GroupDeleteAnnouncementPack) task.pack;
-                            BotGroupDo.deleteAnnouncement(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
+                            BotGroupDo.deleteAnnouncement(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid);
                             break;
                         }
                         //112 [插件]发送好友语言文件
                         case 112: {
                             SendFriendSoundFilePack pack = (SendFriendSoundFilePack) task.pack;
-                            BotSendSound.sendFriendFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendSound.sendFriendFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //114 [插件]设置允许群员邀请好友入群的状态
                         case 114: {
                             GroupSetAllowMemberInvitePack pack = (GroupSetAllowMemberInvitePack) task.pack;
-                            BotGroupDo.setAllowMemberInvite(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            BotGroupDo.setAllowMemberInvite(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
                             break;
                         }
                         //115 [插件]设置允许匿名聊天
                         case 115: {
                             GroupSetAnonymousChatEnabledPack pack = (GroupSetAnonymousChatEnabledPack) task.pack;
-                            BotGroupDo.setAnonymousChatEnabled(this,runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
+                            BotGroupDo.setAnonymousChatEnabled(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.enable);
                             break;
                         }
                         //117 [插件]发送陌生人消息
                         case 117: {
                             SendStrangerMessagePack pack = (SendStrangerMessagePack) task.pack;
-                            BotSendMessage.sendStrangerMessage(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message);
+                            BotSendMessage.sendStrangerMessage(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.message, pack.ids);
                             break;
                         }
                         //118 [插件]从文件加载图片发送到陌生人
                         case 118: {
                             SendStrangerImageFilePack pack = (SendStrangerImageFilePack) task.pack;
-                            BotSendImage.sendStrangerImageFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendImage.sendStrangerImageFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //119 [插件]发送陌生人骰子
                         case 119: {
                             SendStrangerDicePack pack = (SendStrangerDicePack) task.pack;
-                            BotSendDice.sendStrangerDice(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
+                            BotSendDice.sendStrangerDice(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.dice);
                             break;
                         }
                         //120 [插件]发送陌生人戳一戳
                         case 120: {
                             SendStrangerNudgePack pack = (SendStrangerNudgePack) task.pack;
-                            BotSendNudge.sendStrangerNudge(runQQ == 0 ? pack.qq : runQQ, pack.id);
+                            BotSendNudge.sendStrangerNudge(this, runQQ == 0 ? pack.qq : runQQ, pack.id);
                             break;
                         }
                         //121 [插件]从文件加载语音发送到陌生人
                         case 121: {
                             SendStrangerSoundFilePack pack = (SendStrangerSoundFilePack) task.pack;
-                            BotSendSound.sendStrangerFile(runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
+                            BotSendSound.sendStrangerFile(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.file, pack.ids);
                             break;
                         }
                         //126 [插件]发送好友语音
@@ -604,7 +611,7 @@ public class ThePlugin {
                             break;
                         }
                         //134 [插件]修改群成员头衔
-                        case 134 : {
+                        case 134: {
                             GroupMemberEditSpecialTitlePack pack = (GroupMemberEditSpecialTitlePack) task.pack;
                             BotGroupDo.setMemberSpecialTitle(this, runQQ == 0 ? pack.qq : runQQ, pack.id, pack.fid, pack.name);
                             break;
@@ -624,7 +631,7 @@ public class ThePlugin {
         }
     }
 
-    public void addBuff(MessageBuffPack temp) {
+    public void addBuff(MessageBuffPack temp) throws IOException {
         if (temp == null)
             return;
         temp.qq = runQQ == 0 ? temp.qq : runQQ;
@@ -699,8 +706,7 @@ public class ThePlugin {
         }
         if (temp.imgurl != null && !temp.imgurl.isEmpty()) {
             Image image = BotUpload.upImage(bot, temp.imgurl);
-            if (image != null)
-                item.message = item.message.plus(image);
+            item.message = item.message.plus(image);
         }
         if (temp.imgData != null && temp.imgData.length != 0) {
             Image image = BotUpload.upImage(bot, temp.imgData);

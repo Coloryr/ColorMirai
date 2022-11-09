@@ -1080,6 +1080,15 @@ internal static class PackEncode
         }
         return buff;
     }
+    public static IByteBuffer WriteLongList(this IByteBuffer buff, HashSet<long> list)
+    {
+        buff.WriteInt(list.Count);
+        foreach (var item in list)
+        {
+            buff.WriteLong(item);
+        }
+        return buff;
+    }
     public static IByteBuffer WriteLongList(this IByteBuffer buff, List<long> list)
     {
         buff.WriteInt(list.Count);
@@ -1143,7 +1152,8 @@ internal static class PackEncode
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
-            .WriteStringList(pack.message);
+            .WriteStringList(pack.message)
+            .WriteLongList(pack.ids);
 
         return buff;
     }
@@ -1218,7 +1228,8 @@ internal static class PackEncode
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
-            .WriteInts1(pack.data);
+            .WriteInts1(pack.data)
+            .WriteLongList(pack.ids);
 
         return buff;
     }
@@ -1229,7 +1240,8 @@ internal static class PackEncode
         buff.WriteInt(63)
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
-            .WriteInts1(pack.data);
+            .WriteInts1(pack.data)
+            .WriteLongList(pack.ids);
 
         return buff;
     }
@@ -1346,7 +1358,8 @@ internal static class PackEncode
             .WriteLong(pack.qq)
             .WriteLong(pack.id)
             .WriteLong(pack.fid)
-            .WriteString(pack.file);
+            .WriteString(pack.file)
+            .WriteLongList(pack.ids);
 
         return buff;
     }
@@ -1434,7 +1447,8 @@ internal static class PackEncode
             .WriteString(pack.summary)
             .WriteString(pack.jumpUrl)
             .WriteString(pack.pictureUrl)
-            .WriteString(pack.musicUrl);
+            .WriteString(pack.musicUrl)
+            .WriteLongList(pack.ids);
 
         return buff;
     }

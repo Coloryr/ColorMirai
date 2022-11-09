@@ -1,6 +1,9 @@
 package coloryr.colormirai.robot;
 
 import coloryr.colormirai.ColorMiraiMain;
+import coloryr.colormirai.Msg;
+import coloryr.colormirai.Utils;
+import coloryr.colormirai.plugin.ThePlugin;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.contact.Friend;
 import net.mamoe.mirai.contact.Group;
@@ -12,24 +15,21 @@ import net.mamoe.mirai.message.data.MessageSource;
 import net.mamoe.mirai.message.data.MessageUtils;
 import net.mamoe.mirai.message.data.QuoteReply;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class BotSendMessage {
 
-    public static void sendGroupMessage(long qq, long group, List<String> message, List<Long> ids) {
+    public static void sendGroupMessage(ThePlugin plugin, long qq, long id, List<String> message, Set<Long> ids) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
             if (ids == null) {
-                ids = new ArrayList<>();
+                ids = new HashSet<>();
             }
-            if (!ids.contains(group)) {
-                ids.add(group);
-            }
+            ids.add(id);
             ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
@@ -58,99 +58,97 @@ public class BotSendMessage {
                 }
             }
             for (long item : ids) {
-                Group group1 = BotStart.getBots().get(qq).getGroup(item);
-                if (group1 == null) {
-                    ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
-                    continue;
-                }
+                id = item;
+                Group group = BotCheck.group(plugin, bot, id, "");
+                if (group == null) continue;
 
-                group1.sendMessage(messageChain).getSource();
+                group.sendMessage(messageChain).getSource();
             }
 
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("发送群消息失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.message + Msg.send + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void sendGroupPrivateMessage(long qq, long group, long fid, List<String> message) {
+    public static void sendGroupPrivateMessage(ThePlugin plugin, long qq, long id, long fid, List<String> message, Set<Long> ids) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Group group1 = BotStart.getBots().get(qq).getGroup(group);
-            if (group1 == null) {
-                ColorMiraiMain.logger.warn("机器人" + qq + "不存在群:" + group);
-                return;
-            }
-            MessageChain messageChain = MessageUtils.newChain();
-            for (String item : message) {
-                messageChain = messageChain.plus(item);
-            }
-            NormalMember member = group1.get(fid);
-            if (member == null) {
-                ColorMiraiMain.logger.warn("群：" + group + "不存在群员:" + fid);
-                return;
-            }
-
-            member.sendMessage(messageChain).getSource();
-        } catch (Exception e) {
-            ColorMiraiMain.logger.error("发送群私聊消息失败", e);
-        }
-    }
-
-    public static void sendFriendMessage(long qq, long fid, List<String> message, List<Long> ids) {
-        try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
-            }
-            Bot bot = BotStart.getBots().get(qq);
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            Group group = BotCheck.group(plugin, bot, id, "");
+            if (group == null) return;
             if (ids == null) {
-                ids = new ArrayList<>();
+                ids = new HashSet<>();
             }
-            if (!ids.contains(fid)) {
-                ids.add(fid);
-            }
+            ids.add(id);
             ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);
             }
             for (long item : ids) {
-                Friend friend = bot.getFriend(item);
-                if (friend == null) {
-                    ColorMiraiMain.logger.warn("机器人" + qq + "不存在朋友:" + fid);
-                    continue;
-                }
-
-                friend.sendMessage(messageChain).getSource();
+                fid = item;
+                NormalMember member = BotCheck.member(plugin, bot, group, fid, "");
+                if (member == null) continue;
+                member.sendMessage(messageChain);
             }
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("发送朋友消息失败", e);
+            String temp = Msg.qq(qq) + Msg.group(id) + Msg.member(fid) + Msg.message + Msg.send + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 
-    public static void sendStrangerMessage(long qq, long fid, List<String> message) {
+    public static void sendFriendMessage(ThePlugin plugin, long qq, long fid, List<String> message, Set<Long> ids) {
         try {
-            if (!BotStart.getBots().containsKey(qq)) {
-                ColorMiraiMain.logger.warn("不存在QQ号:" + qq);
-                return;
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            if (ids == null) {
+                ids = new HashSet<>();
             }
-            Bot bot = BotStart.getBots().get(qq);
+            ids.add(fid);
+            ids.removeIf(Objects::isNull);
             MessageChain messageChain = MessageUtils.newChain();
             for (String item : message) {
                 messageChain = messageChain.plus(item);
             }
-            Stranger stranger = bot.getStranger(fid);
-            if (stranger == null) {
-                ColorMiraiMain.logger.warn("机器人" + qq + "不存在陌生人:" + fid);
-                return;
+            for (long item : ids) {
+                fid = item;
+                Friend friend = BotCheck.friend(plugin, bot, fid, "");
+                if (friend == null) continue;
+                friend.sendMessage(messageChain);
             }
-
-            stranger.sendMessage(messageChain).getSource();
         } catch (Exception e) {
-            ColorMiraiMain.logger.error("发送陌生人消息失败", e);
+            String temp = Msg.qq(qq) + Msg.friend(fid) + Msg.message + Msg.send + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
+        }
+    }
+
+    public static void sendStrangerMessage(ThePlugin plugin, long qq, long fid, List<String> message, Set<Long> ids) {
+        try {
+            Bot bot = BotCheck.qq(plugin, "", qq);
+            if (bot == null) return;
+            if (ids == null) {
+                ids = new HashSet<>();
+            }
+            ids.add(fid);
+            ids.removeIf(Objects::isNull);
+            MessageChain messageChain = MessageUtils.newChain();
+            for (String item : message) {
+                messageChain = messageChain.plus(item);
+            }
+            for (long item : ids) {
+                fid = item;
+                Stranger stranger = BotCheck.stranger(plugin, bot, fid);
+                if (stranger == null) continue;
+                stranger.sendMessage(messageChain);
+            }
+        } catch (Exception e) {
+            String temp = Msg.qq(qq) + Msg.stranger(fid) + Msg.message + Msg.send + Msg.fail;
+            ColorMiraiMain.logger.error(temp, e);
+            plugin.sendPluginMessage(qq, "", temp + "\r\n" + Utils.printError(e));
         }
     }
 }

@@ -3,39 +3,33 @@ package coloryr.colormirai;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;
 
 public class Utils {
-    public static byte[] getUrlBytes(String url) {
-        try {
-            URL url1 = new URL(url);
-            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(1500);
-            connection.setReadTimeout(6000);
-            connection.connect();
-            byte[] buffer = null;
-            if (connection.getResponseCode() == 200) {
-                int length = connection.getContentLength();
-                buffer = new byte[length];
-                InputStream is = connection.getInputStream();
-                int i = 0;
-                while (length > 0) {
-                    i += is.read(buffer, i, length);
-                    if (i == -1)
-                        break;
-                    length -= i;
-                }
-                is.close();
+    public static byte[] getUrlBytes(String url) throws IOException {
+        URL url1 = new URL(url);
+        HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+        connection.setRequestMethod("GET");
+        connection.setConnectTimeout(1500);
+        connection.setReadTimeout(6000);
+        connection.connect();
+        byte[] buffer = null;
+        if (connection.getResponseCode() == 200) {
+            int length = connection.getContentLength();
+            buffer = new byte[length];
+            InputStream is = connection.getInputStream();
+            int i = 0;
+            while (length > 0) {
+                i += is.read(buffer, i, length);
+                if (i == -1)
+                    break;
+                length -= i;
             }
-            connection.disconnect();// 关闭远程连接
-            return buffer;
-        } catch (Exception e) {
-            ColorMiraiMain.logger.error("获取图片发生错误", e);
+            is.close();
         }
-        return null;
+        connection.disconnect();// 关闭远程连接
+        return buffer;
     }
 
     public static String toUHexString(byte[] data) {
