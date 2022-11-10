@@ -32,7 +32,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.19.0")
     implementation("org.apache.logging.log4j:log4j-core:2.19.0")
 
-    implementation("com.alibaba:fastjson:2.0.17")
+    implementation("com.alibaba:fastjson:2.0.18")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
     implementation("org.jline:jline:3.21.0")
