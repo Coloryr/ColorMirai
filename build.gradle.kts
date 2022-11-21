@@ -6,7 +6,7 @@ plugins {
     java
     id("com.github.johnrengelman.shadow") version "6.1.0"
 
-    if (enableNative == true) {
+    if (enableNative) {
         kotlin("multiplatform") version "1.7.20"
     } else
         kotlin("jvm") version "1.7.20"
