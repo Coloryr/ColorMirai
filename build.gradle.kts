@@ -32,14 +32,14 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.19.0")
     implementation("org.apache.logging.log4j:log4j-core:2.19.0")
 
-    implementation("com.alibaba:fastjson:2.0.18")
+    implementation("com.alibaba:fastjson:2.0.20")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
     implementation("org.jline:jline:3.21.0")
     implementation("io.netty:netty-all:4.1.84.Final")
     implementation("com.google.code.gson:gson:2.10")
 
-    val miraiVersion = "2.13.0"
+    val miraiVersion = "2.13.2"
 
     compile("net.mamoe", "mirai-core", miraiVersion)
     compile("net.mamoe", "mirai-core-utils", miraiVersion)
@@ -69,4 +69,10 @@ kotlin {
 //        val nativeMain by getting
 //        val nativeTest by getting
 //    }
+}
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "coloryr.colormirai.ColorMiraiMain"
+    }
 }
