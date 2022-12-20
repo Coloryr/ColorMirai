@@ -2,7 +2,7 @@
 
 一个基于[Mirai](https://github.com/mamoe/mirai) 的机器人框架
 
-- 自定义了一套通信协议，支持socket的编程语言都可以写插件
+- 自定义了一套通信协议，支持socket的编程语言都可以写插件（但是最好是有支持netty或者websocket的语言）
 - 提供netty和websocket两种接口
 - 可以直接安装mirai插件
 
