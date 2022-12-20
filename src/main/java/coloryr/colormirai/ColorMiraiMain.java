@@ -41,11 +41,6 @@ public class ColorMiraiMain {
         PluginUtils.init();
         DownloadUtils.start();
 
-        if (!BotStart.start()) {
-            logger.error("机器人启动失败");
-            return;
-        }
-
         logger.info("初始化完成");
 
         PluginWebSocketServer.start();
@@ -60,6 +55,10 @@ public class ColorMiraiMain {
 
         CommandManager.INSTANCE.registerCommand(ColorMiraiCommand.INSTANCE, false);
         MyMiraiConsoleKt.startupConsoleThread();
+
+        if (!BotStart.start()) {
+            logger.error("机器人登录失败");
+        }
     }
 
     public static void stop() {
