@@ -14,6 +14,8 @@
 2. 右键打开git bash
 3. 输入下面的指令（如果慢的话, 可能需要梯子等工具辅助下载）
 
+修改文件`gradle.properties`下的JAVA路径为jdk8的路径
+
 ```bash
 git clone https://github.com/Coloryr/ColorMirai.git
 cd ColorMirai
