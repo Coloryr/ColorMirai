@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "coloryr.colormirai"
-version = "4.1.1"
+version = "4.1.2"
 
 repositories {
     mavenCentral()
@@ -32,11 +32,11 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.19.0")
     implementation("org.apache.logging.log4j:log4j-core:2.19.0")
 
-    implementation("com.alibaba:fastjson:2.0.20")
+    implementation("com.alibaba:fastjson:2.0.21")
     implementation("org.java-websocket:Java-WebSocket:1.5.3")
     implementation("javax.servlet:javax.servlet-api:4.0.1")
     implementation("org.jline:jline:3.21.0")
-    implementation("io.netty:netty-all:4.1.84.Final")
+    implementation("io.netty:netty-all:4.1.86.Final")
     implementation("com.google.code.gson:gson:2.10")
 
     val miraiVersion = "2.13.2"
