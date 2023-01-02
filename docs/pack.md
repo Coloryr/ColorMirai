@@ -352,3 +352,6 @@ public long RunQQ { get; set; }
 - `Groups`：只监听的群号，可以为null
 - `QQs`：只监听的QQ号，可以为null
 - `RunQQ`：插件运行的机器人QQ号，可以为0
+
+
+## netty装拆包

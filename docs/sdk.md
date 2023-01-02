@@ -9,12 +9,12 @@
 [C#](../demo/C%23/netcore/BaseColormiraiSDK.cs)  
 
 ~~[JAVA](../demo/JAVA/src/coloryr/colormirai/demo/RobotSDK/BaseRobot.java)~~
-**JAVA/Kotlin建议去写mirai插件**
+[**JAVA/Kotlin建议去写mirai插件**](https://github.com/mamoe/mirai/blob/dev/docs/Preparations.md#mirai---preparations)
 
 ## 插件教程
 
 ColorMirai使用WebSocket/Netty方式让机器人和插件互相链接  
-数据包的接受和封装在SDK已经写完了，只需要引用一下就好了
+数据包的接受和封装在SDK已经写完了(C#)，只需要引用一下就好了
 
 ### WebSocket的数据包
 ```Json
@@ -25,6 +25,14 @@ ColorMirai使用WebSocket/Netty方式让机器人和插件互相链接
 ```
 
 ### Netty的数据包
+
+插件如果是使用netty请务必加上这两个管道
+
+```
+pipeline.AddLast(new LengthFieldPrepender(4))
+.AddLast(new LengthFieldBasedFrameDecoder(1024 * 500, 0, 4, 0, 4))
+```
+
 数据包的拆装较复杂，直接看源码妥当
 
 ### 目前的数据包ID

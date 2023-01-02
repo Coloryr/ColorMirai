@@ -437,6 +437,7 @@ public class NettyThread implements IPluginSocket {
                             break;
                         }
                     }
+                    task.data.release();
                 }
                 Thread.sleep(10);
             } catch (Exception e) {
