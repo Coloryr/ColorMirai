@@ -53,12 +53,12 @@ public class ColorMiraiMain {
             return;
         }
 
-        CommandManager.INSTANCE.registerCommand(ColorMiraiCommand.INSTANCE, false);
-        MyMiraiConsoleKt.startupConsoleThread();
-
         if (!BotStart.start()) {
             logger.error("机器人登录失败");
         }
+
+        CommandManager.INSTANCE.registerCommand(ColorMiraiCommand.INSTANCE, false);
+        MyMiraiConsoleKt.startupConsoleThread();
     }
 
     public static void stop() {
