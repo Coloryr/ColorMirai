@@ -128,7 +128,8 @@ class MiraiTerminal : MiraiConsoleImplementationTerminal(), CoroutineScope {
         ),
         level = DeprecationLevel.ERROR
     )
-    override fun createLogger(identity: String?): MiraiLogger {
+
+    fun createLogger(identity: String?): MiraiLogger {
         return ColorMiraiLogger
     }
 
