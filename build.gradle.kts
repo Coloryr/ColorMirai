@@ -14,7 +14,7 @@ plugins {
 }
 
 group = "coloryr.colormirai"
-version = "4.1.4-dev"
+version = "4.1.5"
 
 repositories {
     mavenCentral()
@@ -41,8 +41,8 @@ dependencies {
     implementation("io.netty:netty-all:4.1.86.Final")
     implementation("com.google.code.gson:gson:2.10")
 
-    //val miraiVersion = "2.13.2"
-    val miraiVersion = "2.14.0-dev-974be884"
+    val miraiVersion = "2.13.3"
+//    val miraiVersion = "2.14.0-dev-974be884"
 
     compile("net.mamoe", "mirai-core", miraiVersion)
     compile("net.mamoe", "mirai-core-utils", miraiVersion)
