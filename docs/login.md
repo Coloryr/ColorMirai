@@ -2,34 +2,19 @@
 
 [返回](../README.md)
 
-## 新新版方法（小白必看）
-1. 下载并在你的**手机**上安装`MiraiAndroid`
-```
-https://install.appcenter.ms/users/mzdluo123/apps/miraiandroid/distribution_groups/release
-```
-不能装在任何模拟器上
-2. 在`MiraiAndroid`登录需要的QQ号并完成验证过程
-3. 导出`device.json`
-4. 替换原来的`device.json`
 
-## 新版本方法
-https://mirai.mamoe.net/topic/223/%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95%E7%9A%84%E4%B8%B4%E6%97%B6%E5%A4%84%E7%90%86%E6%96%B9%E6%A1%88
-
-~~注：在ColorMirai中设备的信息文件名叫info.json~~
-
-## 旧版本方法
-(这个是旧版本的使用说明)
+## 方法
 
 1. 使用安卓模式登录
 ```
 "LoginType":"ANDROID_PHONE"
 ```
-2. 启动之后会出现一个网址
+2. 启动之后打开最新的botlog，拉到最下面，有个`Captcha link`，复制网址
 3. 打开**浏览器**
 4. 按下`F12`打开**浏览器**控制台
 5. **浏览器**切换到**手机模式**(不懂自行百度)
-6. 复制**ColorMirai控制台**的网址打开
-7. 复制下面的内容到**浏览器**控制台(console)，并回车
+6. 粘贴网址打开
+7. 如果你不会从F12获取`ticket`复制下面的内容到**浏览器**控制台(console)，并回车
 ```js
 /*
  * Copyright 2019-2021 Mamoe Technologies and contributors.
@@ -107,8 +92,8 @@ https://mirai.mamoe.net/topic/223/%E6%97%A0%E6%B3%95%E7%99%BB%E5%BD%95%E7%9A%84%
 })()
 ```
 
-7. 复制**网页**弹窗的内容复制到**ColorMirai控制台**中回车
-8. 如果需要设备锁认证就打开网址完成设备锁认证
+8. 把ticker打在控制台里面回车
+9. 之后可能还需要发送手机短信，手机验证码也是直接打在控制台里面回车
 
 ## 图解
 
